@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, Heart, Trophy, CheckCircle, Info, Star, Building, 
   ChevronDown, ChevronUp, Play, Presentation, ExternalLink, 
@@ -89,29 +89,17 @@ const App = () => {
     },
     {
         q: "Are the drawings required?",
-        a: "No. Participation in any drawings or appreciation rewards is provided solely as a thank-you for consistent giving."
+        a: "No. Participation in any drawings or appreciation rewards is completely optional and is provided solely as a thank-you for consistent giving."
     }
   ];
 
   const tierData = {
-    silver: { 
-      price: 250, prize: "$20,000", totalOdds: "1 / 100", 
-      otherPrizes: ["1 × $1,250", "2 × $750"], 
-      perks: ["Impact Reports", "Member Events"]
-    },
-    gold: { 
-      price: 500, prize: "$50,000", totalOdds: "1 / 50", 
-      otherPrizes: ["1 × $2,500", "6 × $1,000"], 
-      perks: ["Impact Reports", "Member Events", "Impact Book"]
-    },
-    diamond: { 
-      price: 1000, prize: "$100,000", totalOdds: "1 / 25", 
-      otherPrizes: ["1 × $5,000", "2 × $3,000", "12 × $2,000"], 
-      perks: ["Impact Reports", "VIP Event Access", "Seasonal Gifts", "Founder Plaque"]
-    }
+    silver: { price: 250, prize: "$20,000", totalOdds: "1 / 100", otherPrizes: ["1 × $1,250", "2 × $750"], perks: ["Impact Reports", "Member Events"]},
+    gold: { price: 500, prize: "$50,000", totalOdds: "1 / 50", otherPrizes: ["1 × $2,500", "6 × $1,000"], perks: ["Impact Reports", "Member Events", "Impact Book"]},
+    diamond: { price: 1000, prize: "$100,000", totalOdds: "1 / 25", otherPrizes: ["1 × $5,000", "2 × $3,000", "12 × $2,000"], perks: ["Impact Reports", "VIP Event Access", "Seasonal Gifts", "Founder Plaque"]}
   };
 
-  const LogoIcon = () => (
+  const Logo = () => (
     <svg viewBox="0 0 100 100" className="w-8 h-8" fill="none">
       <rect x="28" y="55" width="8" height="15" rx="2" fill="white" />
       <rect x="40" y="40" width="8" height="30" rx="2" fill="white" />
@@ -125,7 +113,7 @@ const App = () => {
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth">
       <div id="top" className="absolute top-0"></div>
 
-      {/* Top Banner */}
+      {/* Top Announcement Banner */}
       <div className="bg-indigo-900 text-white text-center py-2 text-[10px] font-black uppercase tracking-[0.3em] fixed w-full z-[100] top-0 px-4">
         The Founders Circle is Now Open • Reserve Your Spot
       </div>
@@ -135,7 +123,7 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <button onClick={() => scrollToSection('top')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="bg-indigo-900 text-white p-1.5 rounded-xl">
-              <LogoIcon />
+              <Logo />
             </div>
             <span className="text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
           </button>
@@ -154,28 +142,28 @@ const App = () => {
 
           <button 
             onClick={() => scrollToSection('tiers')}
-            className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest"
+            className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-200 uppercase tracking-widest"
           >
             Reserve My Spot
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu Sidebar */}
+      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[150] md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col">
-            <div className="p-6 flex justify-between items-center border-b border-slate-100 shrink-0">
+            <div className="p-6 flex justify-between items-center border-b border-slate-100">
                 <span className="text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
                 <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2"><X size={32}/></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 text-xl font-black text-slate-900 uppercase tracking-tighter text-left">
+            <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 text-xl font-black text-slate-900 uppercase tracking-tighter">
                 <button onClick={() => scrollToSection('how')} className="text-left border-b border-slate-50 pb-4">How it works</button>
                 <button onClick={() => scrollToSection('beneficiary')} className="text-left border-b border-slate-50 pb-4">Beneficiary</button>
                 <button onClick={() => scrollToSection('communities')} className="text-left border-b border-slate-50 pb-4">Communities</button>
                 <button onClick={() => scrollToSection('tiers')} className="text-left border-b border-slate-50 pb-4">The Circles</button>
                 <button onClick={() => scrollToSection('faq')} className="text-left border-b border-slate-50 pb-4">FAQ</button>
             </div>
-            <div className="p-8 border-t border-slate-50 shrink-0">
+            <div className="p-8 border-t border-slate-50">
                 <button 
                     onClick={() => { setIsMenuOpen(false); scrollToSection('tiers'); }}
                     className="w-full py-6 bg-indigo-900 text-white rounded-full font-black uppercase tracking-widest shadow-2xl shadow-indigo-200 text-sm"
@@ -187,7 +175,7 @@ const App = () => {
       )}
 
       {/* Hero Section */}
-      <header className="pt-44 md:pt-56 pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
+      <header className="pt-40 md:pt-56 pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <div className="text-left lg:col-span-7">
@@ -195,15 +183,15 @@ const App = () => {
                 Give Together. <br />
                 <div className="relative inline-block mt-1 md:mt-0">
                     <span className="text-indigo-900 italic">Amplify</span>
-                    <div className="absolute left-0 bottom-[-4px] md:-bottom-2 w-full h-1.5 md:h-2.5 bg-indigo-200 rounded-full"></div>
+                    <div className="absolute left-[-1%] bottom-[-2px] md:-bottom-2 w-[102%] h-1.5 md:h-2.5 bg-indigo-200 rounded-full"></div>
                 </div> 
-                <span className="italic text-indigo-900 inline-block md:inline md:ml-4 mt-0 md:mt-0">Your Impact.</span>
+                <span className="italic text-indigo-900 inline-block md:inline md:ml-4 mt-1 md:mt-0">Your Impact.</span>
               </h1>
-              <p className="text-xl md:text-2xl text-slate-600 mb-6 font-medium max-w-2xl leading-snug mt-4 md:mt-0">
+              <p className="text-xl md:text-2xl text-slate-600 mb-6 font-medium max-w-2xl leading-snug">
                 Pool your monthly donation with a global community to make a massive impact. <strong>Win Up To $100,000</strong> <em>every month</em> as a reward for your commitment.
               </p>
               
-              <div className="space-y-4 mb-10 text-left">
+              <div className="space-y-4 mb-10">
                 {[
                   "Pooled Tzedakah for transformational monthly grants.",
                   "Fixed 1-in-400 odds per raffle. Never diluted.",
@@ -216,12 +204,14 @@ const App = () => {
                 ))}
               </div>
 
-              <button 
-                onClick={() => scrollToSection('tiers')}
-                className="w-full md:w-auto px-12 py-5 bg-indigo-900 text-white rounded-2xl font-black text-xl hover:shadow-2xl hover:bg-black transition-all transform hover:-translate-y-1 uppercase tracking-tighter"
-              >
-                Join the Circle
-              </button>
+              <div className="flex flex-wrap gap-4">
+                <button 
+                  onClick={() => scrollToSection('tiers')}
+                  className="w-full md:w-auto px-12 py-5 bg-indigo-900 text-white rounded-2xl font-black text-xl hover:shadow-2xl hover:bg-black transition-all transform hover:-translate-y-1 uppercase tracking-tighter"
+                >
+                  Join the Circle
+                </button>
+              </div>
             </div>
 
             <div className="lg:col-span-5 relative">
@@ -231,11 +221,12 @@ const App = () => {
                   src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" 
                   title="Mission Video" 
                   frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                   allowFullScreen
                 ></iframe>
               </div>
-              <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 bg-amber-400 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl hidden sm:block border-4 md:border-8 border-white text-center">
-                <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-indigo-950 mb-1">Collective Goal</p>
+              <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 bg-amber-400 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl hidden sm:block border-4 md:border-8 border-white">
+                <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-indigo-950 mb-1 text-center md:text-left">Collective Goal</p>
                 <p className="text-3xl md:text-4xl font-black text-indigo-950 tracking-tighter">$4.5M+ <span className="text-base md:text-lg uppercase">/ Year</span></p>
               </div>
             </div>
@@ -243,50 +234,61 @@ const App = () => {
         </div>
       </header>
 
-      {/* How it Works Section */}
+      {/* The Amplify Process */}
       <section id="how" className="py-24 bg-indigo-950 text-white px-4 text-center">
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-7xl mx-auto">
           <div className="mb-16">
-            <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase italic text-white text-center">How it Works</h2>
-            <p className="text-indigo-200 text-lg font-medium max-w-2xl mx-auto text-center">Strategic Tzedakah, simplified and amplified.</p>
+            <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase italic text-white text-center text-white">How it Works</h2>
+            <p className="text-indigo-200 text-lg font-medium max-w-2xl mx-auto text-center">
+              Strategic Tzedakah, simplified and amplified.
+            </p>
           </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform">
                 <Users className="text-amber-400" size={32} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter">We Join Forces</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">
+                Donors join specialized circles, pooling their recurring contributions to create a transformational monthly gift.
+              </p>
             </div>
+
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform">
                 <Sparkles className="text-amber-400" size={32} />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center text-white w-full">Huge Impact</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, ensuring the majority of every dollar creates immediate change.</p>
+              <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter">Huge Impact</h3>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">
+                Combined donations are issued as a single massive grant, ensuring the <strong>majority of every dollar</strong> creates immediate change.
+              </p>
             </div>
+
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform">
                 <Trophy className="text-amber-400" size={32} />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center text-white w-full">A Monthly Reward</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive exclusive perks and entry into a raffle capped at 400 members.</p>
+              <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter">A Monthly Reward</h3>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">
+                As a thank you for your consistency, you receive exclusive perks and entry into a raffle <strong>capped at 400</strong> members.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Beneficiary Section - LOGO SIZE FIXED */}
+      {/* This Month's Beneficiary - UPDATED FOR ACTUAL IMAGES */}
       <section id="beneficiary" className="py-24 bg-white px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-10 items-stretch">
             <div className="bg-slate-50 rounded-[3rem] p-10 md:p-16 border border-slate-100 flex flex-col justify-center text-center md:text-left">
               <p className="text-xs font-black text-indigo-600 uppercase tracking-[0.4em] mb-4">This Month's Mission</p>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 md:mb-8 tracking-tighter uppercase italic text-center md:text-left">Chai Lifeline</h2>
-              <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed mb-10 text-center md:text-left">
-                Our collective grant supports critical programs for children battling pediatric illness. Every dollar goes toward restoring hope and normalcy to families in their darkest hours.
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 md:mb-8 tracking-tighter uppercase italic">Chai Lifeline</h2>
+              <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed mb-10">
+                Our collective grant this month supports critical social and emotional programs for children battling pediatric illness. Every dollar from this circle goes directly toward restoring hope and normalcy to families in their darkest hours.
               </p>
-              <div className="flex flex-col sm:flex-row items-center gap-6 justify-center md:justify-start">
+              <div className="flex flex-col sm:flex-row items-center gap-6">
                 <div className="flex items-center gap-3 text-slate-400">
                     <Building size={28} />
                     <p className="text-xs font-black uppercase tracking-widest leading-none">Vetted 501(c)(3) Partner</p>
@@ -299,25 +301,33 @@ const App = () => {
               </div>
             </div>
 
-            <div className="relative group overflow-hidden rounded-[3rem] shadow-2xl bg-slate-900 min-h-[400px]">
+            {/* ACTUAL IMAGE CONTAINER */}
+            <div className="relative group overflow-hidden rounded-[3rem] shadow-2xl bg-slate-900">
                <img 
-                 src="/impact-photo.jpg" 
-                 alt="Impact" 
-                 className="absolute inset-0 w-full h-full object-cover opacity-80"
-                 onError={(e) => { e.target.style.display='none'; }}
+                 src="./impact-photo.jpg" 
+                 alt="Chai Lifeline Impact" 
+                 className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
+                 onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentNode.innerHTML += '<div class="absolute inset-0 flex items-center justify-center text-white/20 uppercase font-black tracking-widest">Impact Photo Placeholder</div>';
+                 }}
                />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
-               
-               {/* Logo Overlay - Made much larger and more prominent */}
-               <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-xl p-6 md:p-8 rounded-[2.5rem] flex items-center justify-center shadow-3xl border border-white/20">
-                  <img src="/ChaiLifeline.png" alt="Logo" className="max-h-28 md:max-h-40 w-auto object-contain" />
+
+               {/* Logo Overlay */}
+               <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-xl border border-white/20 p-8 rounded-[2rem] flex items-center justify-center">
+                  <img 
+                    src="./ChaiLifeline.png" 
+                    alt="Chai Lifeline Logo" 
+                    className="max-h-20 w-auto object-contain"
+                  />
                </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Community Section */}
+      {/* Amplify Communities */}
       <section id="communities" className="py-24 bg-slate-50 border-t border-slate-100 px-4 text-center">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16">
@@ -335,8 +345,8 @@ const App = () => {
                 <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4 ${activeCommunity === name ? 'bg-indigo-600 text-white' : 'bg-slate-50 text-slate-400'}`}>
                   <MapPin size={20} />
                 </div>
-                <h4 className="font-black text-indigo-950 uppercase tracking-tight text-xs md:text-sm mb-1 leading-tight text-center">{name}</h4>
-                <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">{communityData[name].members} Givers</p>
+                <h4 className="font-black text-indigo-950 uppercase tracking-tight text-xs md:text-sm mb-1 leading-tight">{name}</h4>
+                <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">{communityData[name].members} Givers</p>
               </button>
             ))}
           </div>
@@ -347,18 +357,28 @@ const App = () => {
                     className="absolute inset-0 bg-indigo-950/80 backdrop-blur-md" 
                     onClick={() => setActiveCommunity(null)}
                 ></div>
-                <div className="relative bg-indigo-950 p-6 md:p-10 rounded-[2.5rem] text-white animate-in fade-in zoom-in-95 slide-in-from-bottom-6 w-full max-w-lg shadow-2xl border border-white/10 text-center">
+                <div className="relative bg-indigo-950 p-6 md:p-10 rounded-[2.5rem] text-white animate-in fade-in zoom-in-95 slide-in-from-bottom-6 w-full max-w-lg shadow-2xl border border-white/10">
                     <button onClick={() => setActiveCommunity(null)} className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors z-20"><X size={24} /></button>
                     <div className="text-center">
-                        <div className="bg-amber-400 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-950 mx-auto mb-4 text-center text-center"><BarChart3 size={28}/></div>
-                        <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none text-center">{activeCommunity} Stats</h3>
-                        <div className="grid grid-cols-3 gap-3 my-8 text-center text-center">
-                            <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center"><p className="text-[8px] font-black uppercase text-slate-400 mb-1 text-center">Silver</p><p className="text-lg font-black text-center">{communityData[activeCommunity].silver}</p></div>
-                            <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center"><p className="text-[8px] font-black uppercase text-amber-400 mb-1 text-center">Gold</p><p className="text-lg font-black text-center">{communityData[activeCommunity].gold}</p></div>
-                            <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center"><p className="text-[8px] font-black uppercase text-indigo-300 mb-1 text-center">Diamond</p><p className="text-lg font-black text-center">{communityData[activeCommunity].diamond}</p></div>
-                        </div>
-                        <button onClick={() => { setSelectedCommunity(activeCommunity); scrollToSection('tiers'); setActiveCommunity(null); }} className="w-full py-4 bg-white text-indigo-900 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 text-center text-center">Join Community <ArrowRight size={14}/></button>
+                        <div className="bg-amber-400 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-950 mx-auto mb-4"><BarChart3 size={28}/></div>
+                        <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">{activeCommunity} Stats</h3>
+                        <p className="text-indigo-200 text-sm mt-2 leading-snug">Monthly impact: <br/> <span className="text-white font-black text-lg">{communityData[activeCommunity].monthly}</span></p>
                     </div>
+                    <div className="grid grid-cols-3 gap-3 my-8">
+                        <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
+                            <p className="text-[8px] font-black uppercase text-slate-400 mb-1">Silver</p>
+                            <p className="text-lg font-black">{communityData[activeCommunity].silver}</p>
+                        </div>
+                        <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
+                            <p className="text-[8px] font-black uppercase text-amber-400 mb-1">Gold</p>
+                            <p className="text-lg font-black">{communityData[activeCommunity].gold}</p>
+                        </div>
+                        <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
+                            <p className="text-[8px] font-black uppercase text-indigo-300 mb-1">Diamond</p>
+                            <p className="text-lg font-black">{communityData[activeCommunity].diamond}</p>
+                        </div>
+                    </div>
+                    <button onClick={() => { setSelectedCommunity(activeCommunity); scrollToSection('tiers'); setActiveCommunity(null); }} className="w-full py-4 bg-white text-indigo-900 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 text-center">Join Community <ArrowRight size={14}/></button>
                 </div>
              </div>
           )}
@@ -369,8 +389,8 @@ const App = () => {
       <section id="founders" className="py-12 bg-white border-y border-slate-100 px-4 text-center text-slate-600">
         <div className="max-w-5xl mx-auto">
           <Award size={36} className="mx-auto text-amber-500 mb-4" />
-          <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight uppercase text-indigo-950 italic text-center">The Founders Circle</h2>
-          <div className="space-y-4 text-base md:text-lg font-medium leading-relaxed max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight uppercase text-indigo-950 italic">The Founders Circle</h2>
+          <div className="space-y-4 text-base md:text-lg font-medium leading-relaxed max-w-3xl mx-auto">
             <p>
               Becoming a founding member is a statement of leadership. Founders are the cornerstone of a smarter way for us to give back, securing the mission with consistent support.
             </p>
@@ -378,7 +398,7 @@ const App = () => {
               Permanent recognition on our donor wall, exclusive strategy briefings, and a custom Founder's Seal.
             </p>
           </div>
-          <p className="mt-8 text-red-600 font-black uppercase tracking-[0.2em] text-[10px] text-center">
+          <p className="mt-8 text-red-600 font-black uppercase tracking-[0.2em] text-[10px]">
             Only a limited number of founding spots remaining.
           </p>
         </div>
@@ -389,7 +409,7 @@ const App = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase text-indigo-950 leading-none text-center">Pick Your Impact</h2>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.4em] italic text-center">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.4em] italic text-center text-center">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
           </div>
 
           {/* MOBILE VIEW: Card-based selection with full details */}
@@ -403,20 +423,20 @@ const App = () => {
                         </div>
                         {tier === 'diamond' && <div className="bg-amber-400 p-2 rounded-lg text-indigo-950 shadow-md"><Star size={20} fill="currentColor"/></div>}
                     </div>
-                    <div className="space-y-4 mb-8 border-t border-slate-50 pt-6 text-center text-center">
+                    <div className="space-y-4 mb-8 border-t border-slate-50 pt-6 text-center">
                         <div className="flex justify-between text-sm"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Grand Prize</span><span className="font-black text-indigo-900">{tierData[tier].prize}</span></div>
-                        <div className="flex justify-between text-sm"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Raffle Odds</span><span className="font-black text-slate-900">1 / 400</span></div>
+                        <div className="flex justify-between text-sm"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Grand Prize Odds</span><span className="font-black text-slate-900">1 / 400</span></div>
                         <div className="border-t border-slate-50 pt-4 text-center">
-                            <p className="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-3 text-center">Other Monthly Prizes</p>
-                            <div className="space-y-1 text-center">{tierData[tier].otherPrizes.map((p, idx) => <p key={idx} className="text-sm font-bold text-slate-800 text-center">{p}</p>)}</div>
+                            <p className="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-3">Other Monthly Prizes</p>
+                            <div className="space-y-1">{tierData[tier].otherPrizes.map((p, idx) => <p key={idx} className="text-sm font-bold text-slate-800 text-center">{p}</p>)}</div>
                         </div>
-                        <div className="flex justify-between text-sm border-t border-slate-50 pt-4 text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Combined Odds</span><span className="font-black text-indigo-950">{tierData[tier].totalOdds}</span></div>
-                        <div className="border-t border-slate-50 pt-4 text-center">
-                            <p className="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-3 text-center">Exclusive Perks</p>
-                            <div className="space-y-1 text-left text-center">{tierData[tier].perks.map((p, idx) => <p key={idx} className={`text-xs uppercase tracking-tight text-center ${tier === 'diamond' ? 'font-black text-indigo-900' : 'font-bold text-slate-600'}`}>• {p}</p>)}</div>
+                        <div className="flex justify-between text-sm border-t border-slate-50 pt-4"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Combined Odds</span><span className="font-black text-indigo-950">{tierData[tier].totalOdds}</span></div>
+                        <div className="border-t border-slate-50 pt-4">
+                            <p className="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-3">Exclusive Perks</p>
+                            <div className="space-y-1 text-left">{tierData[tier].perks.map((p, idx) => <p key={idx} className={`text-xs uppercase tracking-tight ${tier === 'diamond' ? 'font-black text-indigo-900' : 'font-bold text-slate-600'}`}>• {p}</p>)}</div>
                         </div>
                     </div>
-                    <button onClick={() => { setSelectedTier(tier); setIsFormOpen(true); }} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-100 text-center text-center">Select {tier} impact</button>
+                    <button onClick={() => { setSelectedTier(tier); setIsFormOpen(true); }} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-100 text-center">Select {tier} impact</button>
                 </div>
             ))}
           </div>
@@ -426,27 +446,27 @@ const App = () => {
             <table className="w-full text-left border-separate border-spacing-0 rounded-[3rem] overflow-hidden shadow-2xl border border-slate-200 bg-white">
               <thead>
                 <tr className="bg-slate-900 text-white text-center">
-                  <th className="p-10 text-xs font-black uppercase tracking-widest border-r border-slate-800 text-slate-400 text-center">The Benefit</th>
-                  <th className="p-10 border-r border-slate-800 text-xs font-black uppercase text-slate-400 text-center">Silver</th>
-                  <th className="p-10 border-r border-slate-800 text-xs font-black uppercase text-amber-400 text-center">Gold</th>
-                  <th className="p-10 text-xs font-black uppercase text-indigo-300 text-center">Diamond</th>
+                  <th className="p-10 text-xs font-black uppercase tracking-widest border-r border-slate-800 text-slate-400">The Benefit</th>
+                  <th className="p-10 border-r border-slate-800 text-xs font-black uppercase text-slate-400">Silver</th>
+                  <th className="p-10 border-r border-slate-800 text-xs font-black uppercase text-amber-400">Gold</th>
+                  <th className="p-10 text-xs font-black uppercase text-indigo-300">Diamond</th>
                 </tr>
               </thead>
-              <tbody className="bg-white text-center text-center">
-                <tr className="bg-slate-50 text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left">Monthly Gift</td>
-                  <td className="p-6 font-black text-2xl md:text-3xl border-r border-slate-200 text-center">$250</td>
-                  <td className="p-6 font-black text-2xl md:text-3xl border-r border-slate-200 text-center">$500</td>
-                  <td className="p-6 font-black text-2xl md:text-3xl text-center">$1,000</td>
+              <tbody className="bg-white text-center">
+                <tr className="bg-slate-50">
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest">Monthly Gift</td>
+                  <td className="p-6 font-black text-2xl md:text-3xl border-r border-slate-200">$250</td>
+                  <td className="p-6 font-black text-2xl md:text-3xl border-r border-slate-200">$500</td>
+                  <td className="p-6 font-black text-2xl md:text-3xl">$1,000</td>
                 </tr>
                 <tr>
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left">Grand Prize</td>
-                  <td className="p-6 font-bold text-xl md:text-2xl border-r border-slate-200 text-indigo-900 text-center">{tierData.silver.prize}</td>
-                  <td className="p-6 font-bold text-xl md:text-2xl border-r border-slate-200 text-indigo-900 text-center">{tierData.gold.prize}</td>
-                  <td className="p-6 font-black text-2xl md:text-3xl text-indigo-950 text-center">{tierData.diamond.prize}</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest">Grand Prize</td>
+                  <td className="p-6 font-bold text-xl md:text-2xl border-r border-slate-200 text-indigo-900">{tierData.silver.prize}</td>
+                  <td className="p-6 font-bold text-xl md:text-2xl border-r border-slate-200 text-indigo-900">{tierData.gold.prize}</td>
+                  <td className="p-6 font-black text-2xl md:text-3xl text-indigo-950">{tierData.diamond.prize}</td>
                 </tr>
                 <tr className="bg-slate-50">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest leading-none text-left">Raffle Odds</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest leading-none">Grand Prize Odds</td>
                   <td className="p-6 border-r border-slate-200 font-bold text-sm md:text-base text-center">1 / 400</td>
                   <td className="p-6 border-r border-slate-200 font-bold text-sm md:text-base text-center">1 / 400</td>
                   <td className="p-6 font-bold text-sm md:text-base text-center">1 / 400</td>
@@ -481,7 +501,7 @@ const App = () => {
           
           <div className="mt-16 text-center px-4">
             <p className="text-slate-400 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] max-w-2xl mx-auto leading-relaxed text-center">
-              * Participation involves securing your recurring place in an exclusive circle. Pending regulatory approval. Monthly contributions begin only once your circle reaches its capacity.
+              * Participation involves securing your place in an exclusive circle. Pending regulatory approval. Monthly contributions begin only once your circle reaches capacity.
             </p>
           </div>
         </div>
@@ -490,29 +510,29 @@ const App = () => {
       {/* FAQ */}
       <section id="faq" className="py-24 bg-white border-t border-slate-100 px-4 text-center">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black mb-4 uppercase text-indigo-950 italic text-center">Questions?</h2>
-          <p className="text-slate-400 font-bold uppercase tracking-[0.4em] mb-12 text-xs text-center">Everything you need to know</p>
+          <h2 className="text-4xl md:text-5xl font-black mb-4 uppercase text-indigo-950 italic">Questions?</h2>
+          <p className="text-slate-400 font-bold uppercase tracking-[0.4em] mb-12 text-xs">Everything you need to know</p>
           <div className="space-y-4 text-left">
             {primaryFaqs.map((faq, i) => (
               <div key={i} className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 hover:bg-slate-50 transition-colors">
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-6 md:p-8 text-left flex justify-between items-center transition-colors text-left">
-                  <span className="font-black text-indigo-950 text-base md:text-lg uppercase pr-4">{faq.q}</span>
-                  {openFaq === i ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                  <span className="font-black text-indigo-950 pr-4 text-base md:text-lg uppercase tracking-tight">{faq.q}</span>
+                  {openFaq === i ? <ChevronUp size={24} className="text-indigo-900" /> : <ChevronDown size={24} className="text-slate-300" />}
                 </button>
-                {openFaq === i && <div className="p-6 md:p-8 pt-0 text-slate-600 font-medium leading-relaxed text-left">{faq.a}</div>}
+                {openFaq === i && <div className="p-6 md:p-8 pt-0 text-slate-600 leading-relaxed text-base md:text-lg font-medium">{faq.a}</div>}
               </div>
             ))}
             {showAllFaqs && secondaryFaqs.map((faq, i) => (
               <div key={`sec-${i}`} className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 hover:bg-slate-50 transition-colors animate-in fade-in slide-in-from-top-4">
-                <button onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} className="w-full p-6 md:p-8 text-left flex justify-between items-center transition-colors text-left text-left">
+                <button onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} className="w-full p-6 md:p-8 text-left flex justify-between items-center transition-colors text-left">
                   <span className="font-black text-indigo-950 pr-4 text-base md:text-lg uppercase tracking-tight">{faq.q}</span>
                   {openFaq === `sec-${i}` ? <ChevronUp size={24} className="text-indigo-900" /> : <ChevronDown size={24} className="text-slate-300" />}
                 </button>
-                {openFaq === `sec-${i}` && <div className="p-6 md:p-8 pt-0 text-slate-600 leading-relaxed text-base md:text-lg font-medium text-left">{faq.a}</div>}
+                {openFaq === `sec-${i}` && <div className="p-6 md:p-8 pt-0 text-slate-600 leading-relaxed text-base md:text-lg font-medium">{faq.a}</div>}
               </div>
             ))}
           </div>
-          <button onClick={() => setShowAllFaqs(!showAllFaqs)} className="mt-12 px-8 py-3 bg-slate-200 text-slate-600 rounded-2xl font-black uppercase text-xs hover:bg-slate-200 transition-all text-center">{showAllFaqs ? "See Fewer Questions" : "See All Questions"}</button>
+          <button onClick={() => setShowAllFaqs(!showAllFaqs)} className="mt-12 px-8 py-3 bg-slate-100 text-slate-600 rounded-2xl font-black uppercase text-xs hover:bg-slate-200 transition-all">{showAllFaqs ? "See Fewer Questions" : "See All Questions"}</button>
         </div>
       </section>
 
@@ -520,30 +540,36 @@ const App = () => {
       <section className="py-20 bg-indigo-950 text-white px-4 text-center">
         <div className="max-w-5xl mx-auto">
           <Shield size={48} className="mx-auto mb-8 text-indigo-400" />
-          <h2 className="text-3xl font-bold mb-6 uppercase text-indigo-100 text-center">Commitment to Integrity</h2>
+          <h2 className="text-3xl font-bold mb-6 uppercase text-indigo-100">Commitment to Integrity</h2>
           <p className="text-indigo-200 text-lg mb-10 max-w-2xl mx-auto leading-relaxed text-center">
             Amplify is built on a foundation of transparency. We are currently pending regulatory approval and will complete all required registrations and bonding prior to circle activation.
           </p>
-          <div className="inline-flex flex-wrap justify-center gap-4 md:gap-8 items-center px-6 md:px-10 py-6 border border-indigo-800 rounded-3xl bg-indigo-900/50 text-center">
-            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Status</p><p className="font-bold text-sm text-center">Pending Approval</p></div>
+          <div className="inline-flex flex-wrap justify-center gap-4 md:gap-8 items-center px-6 md:px-10 py-6 border border-indigo-800 rounded-3xl bg-indigo-900/50">
+            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Status</p><p className="font-bold text-sm">Pending Approval</p></div>
             <div className="hidden md:block w-px h-10 bg-indigo-800 text-center"></div>
-            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Impact Vetting</p><p className="font-bold text-sm text-center">Proven 501(c)(3) Partners</p></div>
+            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Impact Vetting</p><p className="font-bold text-sm">Proven 501(c)(3) Partners</p></div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-slate-500 py-16 px-4 text-center md:text-left">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 mb-12">
-            <div className="flex items-center gap-2"><LogoIcon /><span className="text-2xl font-black text-white tracking-tighter uppercase">Amplify</span></div>
-            <div className="flex gap-6 text-[10px] font-black uppercase tracking-[0.2em]"><button>Privacy</button><button>Terms</button><button>Contact</button></div>
+      <footer className="bg-slate-950 text-slate-500 py-24 px-4 text-center md:text-left">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-12 mb-16">
+            <button onClick={() => scrollToSection('top')} className="flex items-center gap-2 text-center md:text-left text-left"><Logo /><span className="text-2xl font-black text-white tracking-tighter uppercase">Amplify</span></button>
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10 text-[11px] font-black uppercase tracking-[0.3em]"><button onClick={() => scrollToSection('top')} className="hover:text-white transition-colors">Privacy Policy</button><button onClick={() => scrollToSection('top')} className="hover:text-white transition-colors">Terms & Conditions</button><button onClick={() => scrollToSection('top')} className="hover:text-white transition-colors">Contact</button></div>
+          </div>
+          <div className="pt-10 border-t border-slate-900">
+            <p className="text-[10px] leading-relaxed max-w-5xl opacity-40 uppercase tracking-widest font-bold mx-auto md:mx-0 text-center md:text-left">
+              DISCLOSURE: Amplify is currently in pre-launch. Participation involves a recurring commitment to join a specific giving circle. Official rules and registration numbers will be provided upon activation. No purchase necessary for optional rewards.
+            </p>
+          </div>
         </div>
-        <p className="text-[10px] leading-relaxed max-w-4xl opacity-40 uppercase tracking-widest font-bold mx-auto text-center">DISCLOSURE: Amplify is currently in pre-launch. Monthly contributions begin only once your circle reaches capacity. Official rules provided upon activation.</p>
       </footer>
 
       {/* SIGNUP MODAL */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-[130] flex items-center justify-center px-4 overflow-y-auto pt-10 pb-10 text-center">
+        <div className="fixed inset-0 z-[130] flex items-center justify-center px-4 overflow-y-auto pt-10 pb-10 text-center text-center">
           <div className="absolute inset-0 bg-indigo-950/80 backdrop-blur-xl" onClick={() => !signupSuccess && setIsFormOpen(false)}></div>
           <div className="relative bg-white rounded-[3rem] shadow-2xl w-full max-w-4xl overflow-hidden transform transition-all border border-white/20 my-auto text-left">
             <div className="p-8 md:p-12 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
@@ -551,15 +577,15 @@ const App = () => {
               {!signupSuccess && <button onClick={() => setIsFormOpen(false)} className="text-slate-300 hover:text-slate-600 font-bold text-4xl leading-none">&times;</button>}
             </div>
             {signupSuccess ? (
-              <div className="p-12 md:p-24 text-center animate-in zoom-in-95 duration-500 text-center"><div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10"><CheckCircle size={64} className="text-green-600" /></div><h4 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 italic uppercase tracking-tighter text-center">You're in.</h4><p className="text-slate-500 text-lg md:text-xl font-medium max-w-md mx-auto leading-relaxed text-center text-center">We've reserved your spot{selectedCommunity !== 'General Circle' ? ` in the ${selectedCommunity} community` : ''}. We will notify you once the circle reaches capacity.</p><div className="mt-12 pt-12 border-t border-slate-100 text-center"><button onClick={() => setIsFormOpen(false)} className="px-12 py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all text-center">Back to Site</button></div></div>
+              <div className="p-12 md:p-24 text-center animate-in zoom-in-95 duration-500 text-center"><div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10"><CheckCircle size={64} className="text-green-600" /></div><h4 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 italic uppercase tracking-tighter text-center">You're in.</h4><p className="text-slate-500 text-lg md:text-xl font-medium max-w-md mx-auto leading-relaxed text-center text-center">We've reserved your spot{selectedCommunity !== 'General Circle' ? ` in the ${selectedCommunity} community` : ''}. We will notify you once the circle reaches capacity.</p><div className="mt-12 pt-12 border-t border-slate-100 text-center text-center"><button onClick={() => setIsFormOpen(false)} className="px-12 py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all text-center">Back to Site</button></div></div>
             ) : (
               <div className="flex flex-col md:flex-row h-full">
                 <div className="md:w-3/5 p-8 md:p-12 border-r border-slate-100 text-center md:text-left text-left">
                   <div className="mb-8 p-6 bg-slate-50 rounded-3xl border border-slate-200 text-center md:text-left text-left"><label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Select Your Community</label><select value={selectedCommunity} onChange={(e) => setSelectedCommunity(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 font-bold text-indigo-950 focus:ring-2 focus:ring-indigo-500 outline-none">{Object.keys(communityData).map(name => <option key={name} value={name}>{name}</option>)}</select></div>
                   {INTEGRATION_CONFIG.useJotform ? (
-                    <div className="h-[300px] md:h-[350px] w-full rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 bg-white shadow-inner overflow-hidden relative"><iframe id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} title="Enrollment" src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} className="w-full h-full border-none"></iframe><div className="absolute bottom-4 left-0 right-0 px-10 text-center text-center"><button onClick={handleRedirectToPayment} className="w-full py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 text-center">{isLoading ? <span className="animate-pulse italic text-center">Securing...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
+                    <div className="h-[300px] md:h-[350px] w-full rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 bg-white shadow-inner overflow-hidden relative"><iframe id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} title="Enrollment" src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} className="w-full h-full border-none"></iframe><div className="absolute bottom-4 left-0 right-0 px-10 text-center"><button onClick={handleRedirectToPayment} className="w-full py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 text-center">{isLoading ? <span className="animate-pulse italic text-center">Securing...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
                   ) : (
-                    <div className="space-y-6 text-center py-10 text-center"><div className="p-10 bg-indigo-50 rounded-3xl border-2 border-indigo-100 flex flex-col items-center text-center"><CreditCard size={64} className="text-indigo-900 mb-8" /><h4 className="text-3xl font-black text-indigo-950 mb-4 uppercase tracking-tighter text-center">Reserve Spot</h4><p className="text-sm text-indigo-700/60 mb-8 text-center text-center">Secure your place in the {selectedCommunity} Circle. You will be notified before your first charge.</p><button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 transform hover:-translate-y-1 text-center">Join the Circle</button></div></div>
+                    <div className="space-y-6 text-center py-10 text-center"><div className="p-10 bg-indigo-50 rounded-3xl border-2 border-indigo-100 flex flex-col items-center text-center"><CreditCard size={64} className="text-indigo-900 mb-8" /><h4 className="text-3xl font-black text-indigo-950 mb-4 uppercase tracking-tighter text-center">Reserve Spot</h4><p className="text-sm text-indigo-700/60 mb-8 text-center text-center">Secure your place in the {selectedCommunity} Circle. You will be notified before your first charge.</p><button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 transform hover:-translate-y-1 text-center">{isLoading ? <span className="animate-pulse italic text-center">Connecting...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
                   )}
                 </div>
                 <div className="md:w-2/5 p-8 md:p-12 bg-slate-50 flex flex-col justify-center text-center md:text-left text-left">
@@ -567,8 +593,8 @@ const App = () => {
                     <div><h5 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 text-center md:text-left text-left">Membership Summary</h5><div className="space-y-4"><div className="flex justify-between text-sm font-black uppercase tracking-tighter"><span className="text-slate-500">Circle</span><span className="text-indigo-950">{selectedTier}</span></div>
                         {selectedCommunity !== 'General Circle' && <div className="flex justify-between text-sm font-black uppercase tracking-tighter"><span className="text-slate-500">Community</span><span className="text-indigo-600">{selectedCommunity}</span></div>}
                         <div className="flex justify-between text-sm font-black uppercase tracking-tighter"><span className="text-slate-500">Commitment</span><span className="text-indigo-900">${tierData[selectedTier].price}/mo</span></div>
-                        <div className="pt-4 border-t border-slate-200 text-left"><div className="flex justify-between text-xs font-bold mb-1 text-left"><span className="text-slate-400 uppercase tracking-tighter text-left">Grand Prize</span><span className="text-indigo-950 text-right">{tierData[selectedTier].prize}</span></div><div className="flex justify-between text-[10px] font-bold text-slate-500 text-left"><span>Raffle Odds</span><span>1 / 400</span></div><div className="flex justify-between text-[10px] font-black text-slate-900 mt-1 uppercase text-left text-left text-left"><span className="text-left tracking-widest">Winning Odds</span><span className="text-right">{tierData[selectedTier].totalOdds}</span></div></div></div></div>
-                    <div className="pt-6 border-t border-slate-200 text-center"><div className="bg-amber-100/50 p-4 rounded-2xl border border-amber-200 text-center"><p className="text-[10px] text-indigo-950 font-black uppercase leading-tight tracking-tight text-center mx-auto text-center">First monthly contribution occurs only when circle reaches capacity.</p></div></div>
+                        <div className="pt-4 border-t border-slate-200 text-left"><div className="flex justify-between text-xs font-bold mb-1 text-left"><span className="text-slate-400 uppercase tracking-tighter text-left">Grand Prize</span><span className="text-indigo-950 text-right">{tierData[selectedTier].prize}</span></div><div className="flex justify-between text-[10px] font-bold text-slate-500 text-left"><span>Raffle Odds</span><span>1 / 400</span></div><div className="flex justify-between text-[10px] font-black text-slate-900 mt-1 uppercase text-left text-left"><span className="text-left tracking-widest">Winning Odds</span><span className="text-right">{tierData[selectedTier].totalOdds}</span></div></div></div></div>
+                    <div className="pt-6 border-t border-slate-200 text-center text-center"><div className="bg-amber-100/50 p-4 rounded-2xl border border-amber-200 text-center"><p className="text-[10px] text-indigo-950 font-black uppercase leading-tight tracking-tight text-center text-center mx-auto">First contribution occurs only when circle reaches capacity.</p></div></div>
                   </div>
                 </div>
               </div>
