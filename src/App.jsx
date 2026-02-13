@@ -123,6 +123,11 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth">
+      {/* Placeholder CSS for missing local images */}
+      <style>{`
+        img { background-color: #f1f5f9; min-height: 20px; }
+      `}</style>
+      
       <div id="top" className="absolute top-0"></div>
 
       {/* Top Banner */}
@@ -141,7 +146,7 @@ const App = () => {
           </button>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8 text-[11px] font-black text-slate-500 uppercase tracking-widest">
+          <div className="hidden md:flex items-center gap-8 text-[11px] font-black text-slate-500 uppercase tracking-widest text-left">
             <button onClick={() => scrollToSection('how')} className="hover:text-indigo-900 transition-colors">How it works</button>
             <button onClick={() => scrollToSection('beneficiary')} className="hover:text-indigo-900 transition-colors">Beneficiary</button>
             <button onClick={() => scrollToSection('communities')} className="hover:text-indigo-900 transition-colors">Communities</button>
@@ -252,27 +257,27 @@ const App = () => {
             <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase italic text-white text-center">How it Works</h2>
             <p className="text-indigo-200 text-lg font-medium max-w-2xl mx-auto text-center">Strategic Tzedakah, simplified and amplified.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-left">
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform">
                 <Users className="text-amber-400" size={32} />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter">We Join Forces</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p>
+              <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center">We Join Forces</h3>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p>
             </div>
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform">
                 <Sparkles className="text-amber-400" size={32} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center text-white w-full">Huge Impact</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, ensuring the majority of every dollar creates immediate change.</p>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center">Combined donations are issued as a single massive grant, ensuring the majority of every dollar creates immediate change.</p>
             </div>
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform">
                 <Trophy className="text-amber-400" size={32} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center text-white w-full">A Monthly Reward</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive exclusive perks and entry into a raffle capped at 400 members.</p>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center">As a thank you for your commitment, you receive exclusive perks and entry into a raffle capped at 400 members.</p>
             </div>
           </div>
         </div>
@@ -302,6 +307,7 @@ const App = () => {
             </div>
 
             <div className="relative group overflow-hidden rounded-[3rem] shadow-2xl bg-slate-900 min-h-[400px]">
+               {/* This image might be missing in preview, hence standard placeholder style above */}
                <img 
                  src="/impact-photo.jpg" 
                  alt="Impact" 
@@ -310,9 +316,11 @@ const App = () => {
                />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
                
-               {/* Logo Overlay - Made much larger and more prominent */}
-               <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-xl p-6 md:p-8 rounded-[2.5rem] flex items-center justify-center shadow-3xl border border-white/20">
-                  <img src="/ChaiLifeline.png" alt="Logo" className="max-h-28 md:max-h-40 w-auto object-contain" />
+               {/* Logo Overlay - Updated to be smaller and centered */}
+               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl p-4 md:p-6 rounded-[2rem] flex items-center justify-center shadow-2xl border border-white/20 w-auto max-w-[90%]">
+                  <img src="/ChaiLifeline.png" alt="Logo" className="max-h-16 md:max-h-24 w-auto object-contain" />
+                  {/* Text fallback if local image is missing */}
+                  <span className="text-indigo-900 font-black uppercase text-2xl tracking-tighter absolute opacity-10">Chai Lifeline Logo</span>
                </div>
             </div>
           </div>
@@ -516,7 +524,7 @@ const App = () => {
                   <td className="p-6 border-r border-slate-200"></td>
                   <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('silver'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all">Select</button></td>
                   <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('gold'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all">Select</button></td>
-                  <td className="p-6 text-center"><button onClick={() => { setSelectedTier('diamond'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
+                  <td className="p-6 text-center"><button onClick={() => { setSelectedTier('diamond'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center text-center">Select</button></td>
                 </tr>
               </tbody>
             </table>
@@ -568,9 +576,9 @@ const App = () => {
             Amplify is built on a foundation of transparency. We are currently pending regulatory approval and will complete all required registrations and bonding prior to circle activation.
           </p>
           <div className="inline-flex flex-wrap justify-center gap-4 md:gap-8 items-center px-6 md:px-10 py-6 border border-indigo-800 rounded-3xl bg-indigo-900/50 text-center">
-            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Status</p><p className="font-bold text-sm text-center">Pending Approval</p></div>
+            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Status</p><p className="font-bold text-sm text-center text-center">Pending Approval</p></div>
             <div className="hidden md:block w-px h-10 bg-indigo-800 text-center"></div>
-            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Impact Vetting</p><p className="font-bold text-sm text-center">Proven 501(c)(3) Partners</p></div>
+            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center text-center">Impact Vetting</p><p className="font-bold text-sm text-center text-center">Proven 501(c)(3) Partners</p></div>
           </div>
         </div>
       </section>
@@ -590,11 +598,11 @@ const App = () => {
           <div className="absolute inset-0 bg-indigo-950/80 backdrop-blur-xl" onClick={() => !signupSuccess && setIsFormOpen(false)}></div>
           <div className="relative bg-white rounded-[3rem] shadow-2xl w-full max-w-4xl overflow-hidden transform transition-all border border-white/20 my-auto text-left">
             <div className="p-8 md:p-12 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-              <div><h3 className="text-3xl md:text-4xl font-black italic uppercase text-indigo-950 tracking-tighter leading-none">Secure Your Spot</h3><p className="text-slate-400 font-bold text-[11px] uppercase tracking-[0.3em] mt-2">Welcome to the {selectedTier} Circle</p></div>
+              <div><h3 className="text-3xl md:text-4xl font-black italic uppercase text-indigo-950 tracking-tighter leading-none text-left">Secure Your Spot</h3><p className="text-slate-400 font-bold text-[11px] uppercase tracking-[0.3em] mt-2 text-left">Welcome to the {selectedTier} Circle</p></div>
               {!signupSuccess && <button onClick={() => setIsFormOpen(false)} className="text-slate-300 hover:text-slate-600 font-bold text-4xl leading-none">&times;</button>}
             </div>
             {signupSuccess ? (
-              <div className="p-12 md:p-24 text-center animate-in zoom-in-95 duration-500 text-center"><div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10"><CheckCircle size={64} className="text-green-600" /></div><h4 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 italic uppercase tracking-tighter text-center">You're in.</h4><p className="text-slate-500 text-lg md:text-xl font-medium max-w-md mx-auto leading-relaxed text-center text-center">We've reserved your spot{selectedCommunity !== 'General Circle' ? ` in the ${selectedCommunity} community` : ''}. We will notify you once the circle reaches capacity.</p><div className="mt-12 pt-12 border-t border-slate-100 text-center"><button onClick={() => setIsFormOpen(false)} className="px-12 py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all text-center">Back to Site</button></div></div>
+              <div className="p-12 md:p-24 text-center animate-in zoom-in-95 duration-500 text-center"><div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10 text-center"><CheckCircle size={64} className="text-green-600" /></div><h4 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 italic uppercase tracking-tighter text-center">You're in.</h4><p className="text-slate-500 text-lg md:text-xl font-medium max-w-md mx-auto leading-relaxed text-center text-center">We've reserved your spot{selectedCommunity !== 'General Circle' ? ` in the ${selectedCommunity} community` : ''}. We will notify you once the circle reaches capacity.</p><div className="mt-12 pt-12 border-t border-slate-100 text-center"><button onClick={() => setIsFormOpen(false)} className="px-12 py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all text-center">Back to Site</button></div></div>
             ) : (
               <div className="flex flex-col md:flex-row h-full">
                 <div className="md:w-3/5 p-8 md:p-12 border-r border-slate-100 text-center md:text-left text-left">
@@ -602,7 +610,7 @@ const App = () => {
                   {INTEGRATION_CONFIG.useJotform ? (
                     <div className="h-[300px] md:h-[350px] w-full rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 bg-white shadow-inner overflow-hidden relative"><iframe id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} title="Enrollment" src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} className="w-full h-full border-none"></iframe><div className="absolute bottom-4 left-0 right-0 px-10 text-center text-center"><button onClick={handleRedirectToPayment} className="w-full py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 text-center">{isLoading ? <span className="animate-pulse italic text-center">Securing...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
                   ) : (
-                    <div className="space-y-6 text-center py-10 text-center"><div className="p-10 bg-indigo-50 rounded-3xl border-2 border-indigo-100 flex flex-col items-center text-center text-center"><CreditCard size={64} className="text-indigo-900 mb-8" /><h4 className="text-3xl font-black text-indigo-950 mb-4 uppercase tracking-tighter text-center">Reserve Spot</h4><p className="text-sm text-indigo-700/60 mb-8 text-center text-center">Secure your place in the {selectedCommunity} Circle. You will be notified before your first charge.</p><button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 transform hover:-translate-y-1 text-center">{isLoading ? <span className="animate-pulse italic text-center">Connecting...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
+                    <div className="space-y-6 text-center py-10 text-center"><div className="p-10 bg-indigo-50 rounded-3xl border-2 border-indigo-100 flex flex-col items-center text-center text-center"><CreditCard size={64} className="text-indigo-900 mb-8" /><h4 className="text-3xl font-black text-indigo-950 mb-4 uppercase tracking-tighter text-center">Reserve Spot</h4><p className="text-sm text-indigo-700/60 mb-8 text-center text-center">Secure your place in the {selectedCommunity} Circle. You will be notified before your first charge.</p><button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 transform hover:-translate-y-1 text-center">{isLoading ? <span className="animate-pulse italic text-center text-center">Connecting...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
                   )}
                 </div>
                 <div className="md:w-2/5 p-8 md:p-12 bg-slate-50 flex flex-col justify-center text-center md:text-left text-left">
@@ -610,8 +618,8 @@ const App = () => {
                     <div><h5 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 text-center md:text-left text-left">Membership Summary</h5><div className="space-y-4"><div className="flex justify-between text-sm font-black uppercase tracking-tighter"><span className="text-slate-500">Circle</span><span className="text-indigo-950">{selectedTier}</span></div>
                         {selectedCommunity !== 'General Circle' && <div className="flex justify-between text-sm font-black uppercase tracking-tighter"><span className="text-slate-500">Community</span><span className="text-indigo-600">{selectedCommunity}</span></div>}
                         <div className="flex justify-between text-sm font-black uppercase tracking-tighter"><span className="text-slate-500">Commitment</span><span className="text-indigo-900">${tierData[selectedTier].price}/mo</span></div>
-                        <div className="pt-4 border-t border-slate-200 text-left"><div className="flex justify-between text-xs font-bold mb-1 text-left"><span className="text-slate-400 uppercase tracking-tighter text-left">Grand Prize</span><span className="text-indigo-950 text-right">{tierData[selectedTier].prize}</span></div><div className="flex justify-between text-[10px] font-bold text-slate-500 text-left"><span>Raffle Odds</span><span>1 / 400</span></div><div className="flex justify-between text-[10px] font-black text-slate-900 mt-1 uppercase text-left text-left text-left"><span className="text-left tracking-widest">Winning Odds</span><span className="text-right">{tierData[selectedTier].totalOdds}</span></div></div></div></div>
-                    <div className="pt-6 border-t border-slate-200 text-center text-center"><div className="bg-amber-100/50 p-4 rounded-2xl border border-amber-200 text-center text-center"><p className="text-[10px] text-indigo-950 font-black uppercase leading-tight tracking-tight text-center text-center mx-auto text-center">First monthly contribution occurs only when circle reaches capacity.</p></div></div>
+                        <div className="pt-4 border-t border-slate-200 text-left"><div className="flex justify-between text-xs font-bold mb-1 text-left text-left"><span className="text-slate-400 uppercase tracking-tighter text-left">Grand Prize</span><span className="text-indigo-950 text-right">{tierData[selectedTier].prize}</span></div><div className="flex justify-between text-[10px] font-bold text-slate-500 text-left"><span>Raffle Odds</span><span>1 / 400</span></div><div className="flex justify-between text-[10px] font-black text-slate-900 mt-1 uppercase text-left text-left text-left"><span className="text-left tracking-widest text-left">Winning Odds</span><span className="text-right text-right">{tierData[selectedTier].totalOdds}</span></div></div></div></div>
+                    <div className="pt-6 border-t border-slate-200 text-center text-center"><div className="bg-amber-100/50 p-4 rounded-2xl border border-amber-200 text-center text-center"><p className="text-[10px] text-indigo-950 font-black uppercase leading-tight tracking-tight text-center text-center mx-auto text-center text-center">First monthly contribution occurs only when circle reaches capacity.</p></div></div>
                   </div>
                 </div>
               </div>
