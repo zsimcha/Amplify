@@ -240,9 +240,10 @@ const App = () => {
                   loop 
                   playsInline
                   poster="/impact-photo.jpg" 
+                  onError={(e) => console.error("Video failed to load:", e)}
                 >
-                  {/* Added cache buster ?v=1 to force reload and simplified path */}
-                  <source src="amplify-video.mp4?v=1" type="video/mp4" />
+                  {/* Reverted to string path. Ensure amplify-video.mp4 is in PUBLIC folder */}
+                  <source src="amplify-video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
