@@ -232,22 +232,23 @@ const App = () => {
             </div>
 
             <div className="lg:col-span-5 relative">
-              <div className="aspect-square w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
+              {/* Changed aspect-square to aspect-video for 16:9 ratio */}
+              <div className="aspect-video w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
                 <video 
                   className="w-full h-full object-cover"
-                  autoPlay 
-                  muted 
-                  loop 
+                  controls 
                   playsInline
-                  poster="/impact-photo.jpg" // Added poster fallback for loading/error states
+                  onError={(e) => console.error("Video failed to load:", e)}
                 >
-                  <source src="./amplify-video.mp4" type="video/mp4" />
+                  <source src="amplify-video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
-              <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 bg-amber-400 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl hidden sm:block border-4 md:border-8 border-white text-center">
-                <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-indigo-950 mb-1 text-center">Collective Goal</p>
-                <p className="text-3xl md:text-4xl font-black text-indigo-950 tracking-tighter text-center">$4.5M+ <span className="text-base md:text-lg uppercase">/ Year</span></p>
+              
+              {/* Updated Collective Goal Box: Reduced size, padding, and text size */}
+              <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-amber-400 p-4 md:p-5 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl hidden sm:block border-4 md:border-6 border-white text-center max-w-[160px] md:max-w-[200px]">
+                <p className="text-[8px] font-black uppercase tracking-widest text-indigo-950 mb-0.5 text-center">Collective Goal</p>
+                <p className="text-xl md:text-2xl font-black text-indigo-950 tracking-tighter text-center leading-none">$4.5M+ <span className="text-[10px] md:text-xs uppercase block md:inline">/ Year</span></p>
               </div>
             </div>
           </div>
