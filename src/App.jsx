@@ -123,11 +123,6 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth">
-      {/* Placeholder CSS for missing local images */}
-      <style>{`
-        img { background-color: #f1f5f9; min-height: 20px; }
-      `}</style>
-      
       <div id="top" className="absolute top-0"></div>
 
       {/* Top Banner */}
@@ -233,17 +228,13 @@ const App = () => {
 
             <div className="lg:col-span-5 relative">
               <div className="aspect-square w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
-                <video 
-                  className="w-full h-full object-cover"
-                  autoPlay 
-                  muted 
-                  loop 
-                  playsInline
-                  poster="/impact-photo.jpg" // Added poster fallback for loading/error states
-                >
-                  <source src="./amplify-video.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                <iframe 
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" 
+                  title="Mission Video" 
+                  frameBorder="0" 
+                  allowFullScreen
+                ></iframe>
               </div>
               <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 bg-amber-400 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl hidden sm:block border-4 md:border-8 border-white text-center">
                 <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-indigo-950 mb-1 text-center">Collective Goal</p>
@@ -319,9 +310,9 @@ const App = () => {
                />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
                
-               {/* Updated Logo Overlay - Reduced height (py-1) but kept width (w-[70%]) and logo size */}
-               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[70%] bg-white/95 backdrop-blur-xl py-1 rounded-xl flex items-center justify-center shadow-3xl border border-white/20">
-                  <img src="/ChaiLifeline.png" alt="Logo" className="max-h-20 md:max-h-28 w-auto object-contain" />
+               {/* Updated Logo Overlay - Smaller padding and tighter container */}
+               <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl p-3 md:p-5 rounded-2xl flex items-center justify-center shadow-xl border border-white/20 w-auto max-w-[85%]">
+                  <img src="/ChaiLifeline.png" alt="Logo" className="max-h-12 md:max-h-20 w-auto object-contain" />
                </div>
             </div>
           </div>
@@ -524,7 +515,7 @@ const App = () => {
                 <tr className="bg-slate-100 text-center">
                   <td className="p-6 border-r border-slate-200 text-center"></td>
                   <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('silver'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
-                  <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('gold'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all">Select</button></td>
+                  <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('gold'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
                   <td className="p-6 text-center"><button onClick={() => { setSelectedTier('diamond'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
                 </tr>
               </tbody>
