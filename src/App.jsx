@@ -233,13 +233,16 @@ const App = () => {
 
             <div className="lg:col-span-5 relative">
               <div className="aspect-square w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
-                <iframe 
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" 
-                  title="Mission Video" 
-                  frameBorder="0" 
-                  allowFullScreen
-                ></iframe>
+                <video 
+                  className="w-full h-full object-cover"
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline
+                >
+                  <source src="/amplify-video.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
               <div className="absolute -bottom-6 -right-4 md:-bottom-8 md:-right-8 bg-amber-400 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl hidden sm:block border-4 md:border-8 border-white text-center">
                 <p className="text-[10px] md:text-[11px] font-black uppercase tracking-widest text-indigo-950 mb-1 text-center">Collective Goal</p>
