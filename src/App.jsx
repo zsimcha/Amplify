@@ -239,9 +239,10 @@ const App = () => {
                   muted 
                   loop 
                   playsInline
-                  poster="/impact-photo.jpg" // Added poster fallback for loading/error states
+                  poster="/impact-photo.jpg" 
                 >
-                  <source src="./amplify-video.mp4" type="video/mp4" />
+                  {/* Added cache buster ?v=1 to force reload and simplified path */}
+                  <source src="amplify-video.mp4?v=1" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
