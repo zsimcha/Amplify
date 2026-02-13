@@ -192,7 +192,7 @@ const App = () => {
       )}
 
       {/* Hero Section */}
-      <header className="pt-44 md:pt-56 pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
+      <header className="pt-32 md:pt-40 pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <div className="text-left lg:col-span-7">
@@ -232,8 +232,8 @@ const App = () => {
             </div>
 
             <div className="lg:col-span-5 relative">
-              {/* Changed aspect-square to aspect-video for 16:9 ratio */}
-              <div className="aspect-video w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
+              {/* Changed aspect ratio to make video 25% taller (16:11.25) */}
+              <div className="aspect-[16/11.25] w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
                 <video 
                   className="w-full h-full object-cover"
                   controls 
