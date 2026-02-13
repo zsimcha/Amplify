@@ -315,8 +315,8 @@ const App = () => {
                />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
                
-               {/* Updated Logo Overlay */}
-               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[70%] bg-white/95 backdrop-blur-xl p-2 md:p-3 rounded-[2rem] flex items-center justify-center shadow-3xl border border-white/20">
+               {/* Updated Logo Overlay - Reduced height (py-1) but kept width (w-[70%]) and logo size */}
+               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[70%] bg-white/95 backdrop-blur-xl py-1 rounded-xl flex items-center justify-center shadow-3xl border border-white/20">
                   <img src="/ChaiLifeline.png" alt="Logo" className="max-h-20 md:max-h-28 w-auto object-contain" />
                </div>
             </div>
