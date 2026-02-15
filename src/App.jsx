@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Shield, Heart, Trophy, CheckCircle, Info, Star, Building, 
   ChevronDown, ChevronUp, Play, Presentation, ExternalLink, 
   CreditCard, FileText, Award, Users, Gift, Sparkles, Check, 
-  MapPin, BarChart3, ArrowRight, X, Search, Menu
+  MapPin, BarChart3, ArrowRight, X, Search, Menu, ArrowLeft
 } from 'lucide-react';
 
 const INTEGRATION_CONFIG = {
@@ -23,7 +23,8 @@ const communityData = {
 };
 
 const App = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  // 'home' or 'checkout'
+  const [currentView, setCurrentView] = useState('home'); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState('diamond');
   const [openFaq, setOpenFaq] = useState(null);
@@ -33,8 +34,23 @@ const App = () => {
   const [activeCommunity, setActiveCommunity] = useState(null);
   const [selectedCommunity, setSelectedCommunity] = useState("General Circle");
 
+  // Reset scroll when view changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [currentView]);
+
   const scrollToSection = (id) => {
     setIsMenuOpen(false);
+    if (currentView !== 'home') {
+      setCurrentView('home');
+      // Wait for render to find element
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) element.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
+    
     if (id === 'top') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
@@ -50,6 +66,15 @@ const App = () => {
 
   const toggleCommunity = (name) => {
     setActiveCommunity(prev => prev === name ? null : name);
+  };
+
+  const handleJoinClick = (tier) => {
+    setSelectedTier(tier);
+    // If a community was selected in the dashboard, keep it, otherwise default
+    if (activeCommunity) {
+      setSelectedCommunity(activeCommunity);
+    }
+    setCurrentView('checkout');
   };
 
   const handleRedirectToPayment = () => {
@@ -95,7 +120,7 @@ const App = () => {
 
   const tierData = {
     silver: { 
-      price: 250, prize: "$20,000", totalOdds: "1 / 100", 
+      price: 250, prize: "$25,000", totalOdds: "1 / 100", 
       otherPrizes: ["1 × $1,250", "2 × $750"], 
       perks: ["Impact Reports", "Member Events"]
     },
@@ -121,9 +146,149 @@ const App = () => {
     </svg>
   );
 
+  // --- CHECKOUT PAGE COMPONENT ---
+  const CheckoutPage = () => (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+      {/* Checkout Navbar */}
+      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+          <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <div className="bg-indigo-900 text-white p-1.5 rounded-xl"><LogoIcon /></div>
+            <span className="text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
+          </button>
+          <button onClick={() => setCurrentView('home')} className="text-slate-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:text-indigo-900">
+            <ArrowLeft size={16} /> Back to Home
+          </button>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-20">
+        <div className="max-w-5xl mx-auto">
+          {signupSuccess ? (
+             <div className="bg-white rounded-[3rem] shadow-xl p-12 md:p-24 text-center animate-in zoom-in-95 duration-500 border border-slate-100">
+                <div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10"><CheckCircle size={64} className="text-green-600" /></div>
+                <h4 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 italic uppercase tracking-tighter">You're in.</h4>
+                <p className="text-slate-500 text-lg md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-12">
+                  We've reserved your spot{selectedCommunity !== 'General Circle' ? ` in the ${selectedCommunity} community` : ''}. We will notify you once the circle reaches capacity.
+                </p>
+                <button onClick={() => setCurrentView('home')} className="px-12 py-5 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</button>
+             </div>
+          ) : (
+            <div className="grid lg:grid-cols-12 gap-8 md:gap-12">
+              {/* Left Column: Form */}
+              <div className="lg:col-span-7 space-y-8">
+                <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
+                   <h2 className="text-3xl font-black uppercase italic text-indigo-950 mb-8 tracking-tight">Secure Your Spot</h2>
+                   
+                   <div className="mb-8">
+                      <label className="block text-xs font-black uppercase tracking-widest text-slate-400 mb-3">Select Community</label>
+                      <div className="relative">
+                        <select 
+                          value={selectedCommunity} 
+                          onChange={(e) => setSelectedCommunity(e.target.value)} 
+                          className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-4 px-6 font-bold text-indigo-950 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none cursor-pointer"
+                        >
+                          {Object.keys(communityData).map(name => <option key={name} value={name}>{name}</option>)}
+                        </select>
+                        <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20}/>
+                      </div>
+                   </div>
+
+                   {INTEGRATION_CONFIG.useJotform ? (
+                      <div className="w-full rounded-[2rem] border border-slate-200 bg-white overflow-hidden relative">
+                         <div className="aspect-[4/5] w-full relative">
+                            <iframe id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} title="Enrollment" src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} className="w-full h-full border-none absolute inset-0"></iframe>
+                         </div>
+                         <div className="p-6 bg-slate-50 border-t border-slate-100 text-center">
+                            <button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3">
+                              {isLoading ? <span className="animate-pulse italic">Securing...</span> : <><Shield size={18} /> Complete Reservation</>}
+                            </button>
+                         </div>
+                      </div>
+                   ) : (
+                      <div className="p-12 bg-indigo-50/50 rounded-[2rem] border-2 border-indigo-100/50 flex flex-col items-center text-center">
+                          <CreditCard size={48} className="text-indigo-900 mb-6" />
+                          <h4 className="text-2xl font-black text-indigo-950 mb-3 uppercase tracking-tighter">Reserve Spot</h4>
+                          <p className="text-sm text-indigo-900/60 mb-8 max-w-xs font-medium">Secure your place in the {selectedCommunity} Circle. You will be notified before your first charge.</p>
+                          <button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                             {isLoading ? <span className="animate-pulse italic">Connecting...</span> : <><Shield size={18} /> Join the Circle</>}
+                          </button>
+                      </div>
+                   )}
+                </div>
+              </div>
+
+              {/* Right Column: Summary */}
+              <div className="lg:col-span-5 space-y-6">
+                 <div className="bg-indigo-950 text-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+                    <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-8">
+                           <h3 className="text-xl font-black uppercase tracking-widest text-indigo-300">Summary</h3>
+                           <div className="bg-white/10 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider text-white">Pre-Launch</div>
+                        </div>
+
+                        <div className="space-y-6">
+                           <div>
+                              <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Selected Circle</p>
+                              <p className="text-3xl font-black uppercase italic tracking-tighter">{selectedTier}</p>
+                           </div>
+                           <div className="w-full h-px bg-white/10"></div>
+                           <div className="flex justify-between items-end">
+                              <div>
+                                <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Monthly Gift</p>
+                                <p className="text-xl font-bold">${tierData[selectedTier].price}</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Grand Prize</p>
+                                <p className="text-xl font-bold text-amber-400">{tierData[selectedTier].prize}</p>
+                              </div>
+                           </div>
+                           <div className="w-full h-px bg-white/10"></div>
+                           
+                           <div className="grid grid-cols-2 gap-4">
+                              <div className="bg-white/5 p-3 rounded-xl">
+                                  <p className="text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Raffle Odds</p>
+                                  <p className="font-bold">1 / 400</p>
+                              </div>
+                              <div className="bg-white/5 p-3 rounded-xl border border-amber-400/30">
+                                  <p className="text-[9px] font-bold text-amber-400 uppercase tracking-wider mb-1">Total Odds</p>
+                                  <p className="font-bold">{tierData[selectedTier].totalOdds}</p>
+                              </div>
+                           </div>
+                        </div>
+
+                        <div className="mt-8 p-4 bg-indigo-900/50 rounded-2xl border border-indigo-800/50 text-center">
+                           <p className="text-[10px] text-indigo-200 font-medium leading-relaxed">
+                             Your first monthly contribution will only be processed once this circle reaches full capacity.
+                           </p>
+                        </div>
+                    </div>
+                 </div>
+
+                 <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 text-center">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Included Perks</p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                       {tierData[selectedTier].perks.map((perk, i) => (
+                          <span key={i} className="bg-slate-100 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase text-slate-600 tracking-wide">{perk}</span>
+                       ))}
+                    </div>
+                 </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- MAIN RENDER LOGIC ---
+  if (currentView === 'checkout') {
+    return <CheckoutPage />;
+  }
+
+  // --- LANDING PAGE ---
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth">
-      {/* Placeholder CSS for missing local images */}
       <style>{`
         img { background-color: #f1f5f9; min-height: 20px; }
       `}</style>
@@ -191,7 +356,7 @@ const App = () => {
         </div>
       )}
 
-      {/* Hero Section - Padding further reduced to bring headline closer to nav */}
+      {/* Hero Section */}
       <header className="pt-24 md:pt-28 pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
@@ -204,7 +369,7 @@ const App = () => {
                 </div> 
                 <span className="italic text-indigo-900 inline-block md:inline md:ml-4 mt-1 md:mt-0">Your Impact.</span>
               </h1>
-              <p className="text-xl md:text-2xl text-slate-600 mb-6 font-medium max-w-2xl leading-snug text-left">
+              <p className="text-xl md:text-2xl text-slate-600 mb-6 font-medium max-w-2xl leading-snug">
                 Pool your monthly donation with a global community to make a massive impact. <strong>Win Up To $100,000</strong> <em>every month</em> as a reward for your commitment.
               </p>
               
@@ -214,9 +379,9 @@ const App = () => {
                   "Fixed 1-in-400 odds per raffle. Never diluted.",
                   "Combined winning odds as high as 1/25."
                 ].map((text, i) => (
-                  <div key={i} className="flex items-center gap-3 text-left">
+                  <div key={i} className="flex items-center gap-3">
                     <div className="bg-indigo-100 p-1 rounded-full text-indigo-600"><Check size={16} strokeWidth={3}/></div>
-                    <span className="text-xs md:text-sm font-bold text-slate-700 uppercase tracking-tight text-left">{text}</span>
+                    <span className="text-xs md:text-sm font-bold text-slate-700 uppercase tracking-tight">{text}</span>
                   </div>
                 ))}
               </div>
@@ -231,24 +396,25 @@ const App = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative text-center">
-              {/* Video container with custom aspect ratio (16 / 11.25 to make it ~25% taller than 16:9) */}
+            <div className="lg:col-span-5 relative">
               <div className="aspect-[16/11.25] w-full rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[8px] md:border-[12px] border-white bg-slate-900 relative">
                 <video 
                   className="w-full h-full object-cover"
                   controls 
                   playsInline
-                  onError={() => console.error("Amplify Video: Resource failed to load.")}
+                  onError={(e) => console.error("Video failed to load:", e)}
                 >
+                  {/* Using relative path to correct for potential subfolder deployment issues */}
                   <source src="amplify-video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
               
-              {/* Shrunk Collective Goal Box - Moved lower (-bottom-10) to clear subtitles */}
-              <div className="absolute -bottom-10 -right-4 md:-bottom-12 md:-right-6 bg-amber-400 p-3 md:p-4 rounded-[1.2rem] md:rounded-[1.5rem] shadow-2xl hidden sm:block border-4 md:border-6 border-white text-center max-w-[140px] md:max-w-[180px]">
-                <p className="text-[7px] md:text-[8px] font-black uppercase tracking-widest text-indigo-950 mb-0.5 text-center">Collective Goal</p>
-                <p className="text-lg md:text-xl font-black text-indigo-950 tracking-tighter text-center leading-none">$4.5M+ <span className="text-[9px] md:text-[10px] uppercase block">/ Year</span></p>
+              {/* Updated Collective Goal Box: Larger font, Long & Narrow, No obstruction */}
+              <div className="absolute -bottom-10 right-0 md:-bottom-12 md:right-0 bg-amber-400 px-6 py-4 rounded-[1.5rem] shadow-2xl hidden sm:flex items-center gap-4 border-4 border-white max-w-fit z-20">
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0 leading-none">Collective Goal</p>
+                <div className="w-px h-8 bg-indigo-950/20"></div>
+                <p className="text-2xl md:text-3xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">$4.5M+/yr</p>
               </div>
             </div>
           </div>
@@ -268,21 +434,21 @@ const App = () => {
                 <Users className="text-amber-400" size={32} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center">We Join Forces</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center text-center">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p>
             </div>
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform text-center">
                 <Sparkles className="text-amber-400" size={32} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center text-white w-full text-center">Huge Impact</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center text-center">Combined donations are issued as a single massive grant, ensuring the majority of every dollar creates immediate change.</p>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center">Combined donations are issued as a single massive grant, ensuring the majority of every dollar creates immediate change.</p>
             </div>
             <div className="bg-indigo-900/40 p-8 md:p-12 rounded-[2.5rem] md:rounded-[3rem] border border-white/10 hover:bg-indigo-900 transition-all duration-500 group flex flex-col items-center">
               <div className="bg-white/10 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mb-6 md:mb-10 group-hover:scale-110 transition-transform text-center">
                 <Trophy className="text-amber-400" size={32} />
               </div>
               <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tighter text-center text-white w-full text-center">A Monthly Reward</h3>
-              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center text-center">As a thank you for your commitment, you receive exclusive perks and entry into a raffle capped at 400 members.</p>
+              <p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium text-center">As a thank you for your commitment, you receive exclusive perks and entry into a raffle capped at 400 members.</p>
             </div>
           </div>
         </div>
@@ -364,7 +530,7 @@ const App = () => {
                                 <div className="bg-amber-400 p-1.5 rounded-lg text-indigo-950 text-left"><BarChart3 size={20}/></div>
                                 <h3 className="text-2xl font-black uppercase italic tracking-tighter leading-none text-left">{activeCommunity} Dashboard</h3>
                             </div>
-                            <p className="text-indigo-200 text-sm font-medium leading-relaxed max-w-md text-left text-left">Currently generating {communityData[activeCommunity].monthly} in monthly throughput for our partner charities.</p>
+                            <p className="text-indigo-200 text-sm font-medium leading-relaxed max-w-md text-left">Currently generating {communityData[activeCommunity].monthly} in monthly throughput for our partner charities.</p>
                         </div>
                         <div className="col-span-5 grid grid-cols-3 gap-4 text-center">
                             <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
@@ -382,7 +548,7 @@ const App = () => {
                         </div>
                     </div>
                     <div className="mt-6 pt-6 border-t border-white/10 flex justify-center text-center">
-                        <button onClick={() => { setSelectedCommunity(activeCommunity); scrollToSection('tiers'); }} className="px-10 py-3 bg-white text-indigo-900 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-amber-400 transition-all flex items-center gap-3 shadow-lg text-center">Join Community <ArrowRight size={14}/></button>
+                        <button onClick={() => { handleJoinClick(selectedTier); }} className="px-10 py-3 bg-white text-indigo-900 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-amber-400 transition-all flex items-center gap-3 shadow-lg text-center">Join Community <ArrowRight size={14}/></button>
                     </div>
                 </div>
 
@@ -394,7 +560,7 @@ const App = () => {
                         <div className="text-center mb-6 text-center">
                             <div className="bg-amber-400 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-950 mx-auto mb-4 text-center"><BarChart3 size={28}/></div>
                             <h3 className="text-2xl font-black uppercase italic tracking-tighter leading-none text-center">{activeCommunity} Dashboard</h3>
-                            <p className="text-indigo-200 text-sm mt-2 leading-snug text-center text-center">Monthly impact: <span className="text-white font-black">{communityData[activeCommunity].monthly}</span></p>
+                            <p className="text-indigo-200 text-sm mt-2 leading-snug text-center">Monthly impact: <span className="text-white font-black">{communityData[activeCommunity].monthly}</span></p>
                         </div>
                         <div className="grid grid-cols-3 gap-3 mb-8 text-center">
                             <div className="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
@@ -410,7 +576,7 @@ const App = () => {
                                 <p className="text-lg font-black text-center">{communityData[activeCommunity].diamond}</p>
                             </div>
                         </div>
-                        <button onClick={() => { setSelectedCommunity(activeCommunity); scrollToSection('tiers'); setActiveCommunity(null); }} className="w-full py-4 bg-white text-indigo-900 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 text-center">Join Community <ArrowRight size={14}/></button>
+                        <button onClick={() => { handleJoinClick(selectedTier); setActiveCommunity(null); }} className="w-full py-4 bg-white text-indigo-900 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 text-center">Join Community <ArrowRight size={14}/></button>
                     </div>
                 </div>
              </>
@@ -424,10 +590,10 @@ const App = () => {
           <Award size={36} className="mx-auto text-amber-500 mb-4 text-center" />
           <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight uppercase text-indigo-950 italic text-center">The Founders Circle</h2>
           <div className="space-y-4 text-base md:text-lg font-medium leading-relaxed max-w-3xl mx-auto text-center">
-            <p className="text-center text-center">
+            <p className="text-center">
               Becoming a founding member of Amplify is a statement of leadership. Founders are the cornerstone of a smarter way for us to give back, securing the mission with consistent support.
             </p>
-            <p className="text-slate-400 text-sm md:text-base italic text-center text-center">
+            <p className="text-slate-400 text-sm md:text-base italic text-center">
               Permanent recognition on our donor wall, exclusive strategy briefings, and a custom Founder's Seal.
             </p>
           </div>
@@ -442,7 +608,7 @@ const App = () => {
         <div className="max-w-6xl mx-auto text-center">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase text-indigo-950 leading-none text-center">Pick Your Impact</h2>
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.4em] italic text-center text-center">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-[0.4em] italic text-center">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
           </div>
 
           {/* MOBILE VIEW: Card-based selection with full details */}
@@ -457,19 +623,19 @@ const App = () => {
                         {tier === 'diamond' && <div className="bg-amber-400 p-2 rounded-lg text-indigo-950 shadow-md text-center"><Star size={20} fill="currentColor"/></div>}
                     </div>
                     <div className="space-y-4 mb-8 border-t border-slate-50 pt-6 text-center">
-                        <div className="flex justify-between text-sm text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px] text-center">Grand Prize</span><span className="font-black text-indigo-900 text-center text-center">{tierData[tier].prize}</span></div>
-                        <div className="flex justify-between text-sm text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px] text-center">Grand Prize Odds</span><span className="font-black text-slate-900 text-center text-center">1 / 400</span></div>
+                        <div className="flex justify-between text-sm text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px] text-center">Grand Prize</span><span className="font-black text-indigo-900 text-center">{tierData[tier].prize}</span></div>
+                        <div className="flex justify-between text-sm text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px] text-center">Grand Prize Odds</span><span className="font-black text-slate-900 text-center">1 / 400</span></div>
                         <div className="border-t border-slate-50 pt-4 text-center">
                             <p className="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-3 text-center">Other Monthly Prizes</p>
                             <div className="space-y-1 text-center">{tierData[tier].otherPrizes.map((p, idx) => <p key={idx} className="text-sm font-bold text-slate-800 text-center">{p}</p>)}</div>
                         </div>
-                        <div className="flex justify-between text-sm border-t border-slate-50 pt-4 text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px] text-center">Combined Odds</span><span className="font-black text-indigo-950 text-center text-center">{tierData[tier].totalOdds}</span></div>
+                        <div className="flex justify-between text-sm border-t border-slate-50 pt-4 text-center"><span className="font-bold text-slate-400 uppercase tracking-widest text-[10px] text-center">Combined Odds</span><span className="font-black text-indigo-950 text-center">{tierData[tier].totalOdds}</span></div>
                         <div className="border-t border-slate-50 pt-4 text-center">
                             <p className="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-3 text-center">Exclusive Perks</p>
                             <div className="space-y-1 text-center">{tierData[tier].perks.map((p, idx) => <p key={idx} className={`text-xs uppercase tracking-tight text-center ${tier === 'diamond' ? 'font-black text-indigo-900' : 'font-bold text-slate-600'}`}>• {p}</p>)}</div>
                         </div>
                     </div>
-                    <button onClick={() => { setSelectedTier(tier); setIsFormOpen(true); }} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-100 text-center">Select {tier} impact</button>
+                    <button onClick={() => handleJoinClick(tier)} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-indigo-100 text-center">Select {tier} impact</button>
                 </div>
             ))}
           </div>
@@ -487,52 +653,52 @@ const App = () => {
               </thead>
               <tbody className="bg-white text-center">
                 <tr className="bg-slate-50 text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left">Monthly Gift</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest">Monthly Gift</td>
                   <td className="p-6 font-black text-2xl md:text-3xl border-r border-slate-200 text-center">$250</td>
                   <td className="p-6 font-black text-2xl md:text-3xl border-r border-slate-200 text-center">$500</td>
                   <td className="p-6 font-black text-2xl md:text-3xl text-center">$1,000</td>
                 </tr>
                 <tr className="text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left">Grand Prize</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest">Grand Prize</td>
                   <td className="p-6 font-bold text-xl md:text-2xl border-r border-slate-200 text-indigo-900 text-center">{tierData.silver.prize}</td>
                   <td className="p-6 font-bold text-xl md:text-2xl border-r border-slate-200 text-indigo-900 text-center">{tierData.gold.prize}</td>
                   <td className="p-6 font-black text-2xl md:text-3xl text-indigo-950 text-center">{tierData.diamond.prize}</td>
                 </tr>
                 <tr className="bg-slate-50 text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left leading-none">Grand Prize Odds</td>
-                  <td className="p-6 border-r border-slate-200 font-bold text-sm md:text-base text-center text-center">1 / 400</td>
-                  <td className="p-6 border-r border-slate-200 font-bold text-sm md:text-base text-center text-center">1 / 400</td>
-                  <td className="p-6 font-bold text-sm md:text-base text-center text-center">1 / 400</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest leading-none">Grand Prize Odds</td>
+                  <td className="p-6 border-r border-slate-200 font-bold text-sm md:text-base text-center">1 / 400</td>
+                  <td className="p-6 border-r border-slate-200 font-bold text-sm md:text-base text-center">1 / 400</td>
+                  <td className="p-6 font-bold text-sm md:text-base text-center">1 / 400</td>
                 </tr>
                 <tr className="text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left">Other Prizes</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-center">Other Prizes</td>
                   <td className="p-6 md:p-10 border-r border-slate-200 space-y-1 text-center">{tierData.silver.otherPrizes.map((p, i) => <p key={i} className="text-base font-bold text-slate-800 tracking-tight text-center">{p}</p>)}</td>
                   <td className="p-6 md:p-10 border-r border-slate-200 space-y-1 text-center">{tierData.gold.otherPrizes.map((p, i) => <p key={i} className="text-base font-bold text-slate-800 tracking-tight text-center">{p}</p>)}</td>
                   <td className="p-6 md:p-10 space-y-1 text-center">{tierData.diamond.otherPrizes.map((p, i) => <p key={i} className="text-base font-black text-indigo-950 tracking-tighter text-center">{p}</p>)}</td>
                 </tr>
                 <tr className="bg-slate-50 text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left">Combined Odds</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-center">Combined Odds</td>
                   <td className="p-6 font-black border-r border-slate-200 text-black text-sm md:text-lg text-center">{tierData.silver.totalOdds}</td>
                   <td className="p-6 font-black border-r border-slate-200 text-black text-sm md:text-lg text-center">{tierData.gold.totalOdds}</td>
                   <td className="p-6 font-black text-black text-lg md:text-2xl text-center">{tierData.diamond.totalOdds}</td>
                 </tr>
                 <tr className="text-center">
-                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest text-left leading-none">Exclusive Perks</td>
+                  <td className="p-6 font-black border-r border-slate-200 text-slate-700 text-left uppercase text-xs md:text-sm tracking-widest leading-none">Exclusive Perks</td>
                   <td className="p-6 md:p-10 border-r border-slate-200 space-y-3 text-xs font-black text-slate-500 uppercase tracking-tighter leading-relaxed text-center">{tierData.silver.perks.map((p, i) => <p key={i} className="text-center">{p}</p>)}</td>
                   <td className="p-6 md:p-10 border-r border-slate-200 space-y-3 text-xs font-black text-slate-500 uppercase tracking-tighter leading-relaxed text-center">{tierData.gold.perks.map((p, i) => <p key={i} className="text-center">{p}</p>)}</td>
                   <td className="p-6 md:p-10 space-y-3 text-xs font-black text-indigo-900 uppercase tracking-tighter leading-relaxed text-center">{tierData.diamond.perks.map((p, i) => <p key={i} className="text-center">{p}</p>)}</td>
                 </tr>
                 <tr className="bg-slate-100 text-center">
                   <td className="p-6 border-r border-slate-200 text-center"></td>
-                  <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('silver'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
-                  <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => { setSelectedTier('gold'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
-                  <td className="p-6 text-center"><button onClick={() => { setSelectedTier('diamond'); setIsFormOpen(true); }} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
+                  <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => handleJoinClick('silver')} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
+                  <td className="p-6 border-r border-slate-200 text-center"><button onClick={() => handleJoinClick('gold')} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all">Select</button></td>
+                  <td className="p-6 text-center"><button onClick={() => handleJoinClick('diamond')} className="px-8 py-3 bg-indigo-900 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all text-center">Select</button></td>
                 </tr>
               </tbody>
             </table>
           </div>
           
-          <div className="mt-16 text-center px-4 text-center">
+          <div className="mt-16 text-center px-4">
             <p className="text-slate-400 text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] max-w-2xl mx-auto leading-relaxed text-center">
               * Participation involves securing your recurring place in an exclusive circle. Pending regulatory approval. Monthly contributions begin only once your circle reaches its capacity.
             </p>
@@ -552,16 +718,16 @@ const App = () => {
                   <span className="font-black text-indigo-950 text-base md:text-lg uppercase pr-4 text-left">{faq.q}</span>
                   {openFaq === i ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
                 </button>
-                {openFaq === i && <div className="p-6 md:p-8 pt-0 text-slate-600 font-medium leading-relaxed text-left text-left">{faq.a}</div>}
+                {openFaq === i && <div className="p-6 md:p-8 pt-0 text-slate-600 font-medium leading-relaxed text-left">{faq.a}</div>}
               </div>
             ))}
             {showAllFaqs && secondaryFaqs.map((faq, i) => (
               <div key={`sec-${i}`} className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 hover:bg-slate-50 transition-colors animate-in fade-in slide-in-from-top-4 text-left">
                 <button onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} className="w-full p-6 md:p-8 text-left flex justify-between items-center transition-colors text-left">
-                  <span className="font-black text-indigo-950 pr-4 text-base md:text-lg uppercase tracking-tight text-left text-left">{faq.q}</span>
+                  <span className="font-black text-indigo-950 pr-4 text-base md:text-lg uppercase tracking-tight text-left">{faq.q}</span>
                   {openFaq === `sec-${i}` ? <ChevronUp size={24} className="text-indigo-900" /> : <ChevronDown size={24} className="text-slate-300" />}
                 </button>
-                {openFaq === `sec-${i}` && <div className="p-6 md:p-8 pt-0 text-slate-600 leading-relaxed text-base md:text-lg font-medium text-left text-left">{faq.a}</div>}
+                {openFaq === `sec-${i}` && <div className="p-6 md:p-8 pt-0 text-slate-600 leading-relaxed text-base md:text-lg font-medium text-left">{faq.a}</div>}
               </div>
             ))}
           </div>
@@ -573,14 +739,14 @@ const App = () => {
       <section className="py-20 bg-indigo-950 text-white px-4 text-center">
         <div className="max-w-5xl mx-auto text-center">
           <Shield size={48} className="mx-auto mb-8 text-indigo-400 text-center" />
-          <h2 className="text-3xl font-bold mb-6 uppercase text-indigo-100 text-center text-center">Commitment to Integrity</h2>
-          <p className="text-indigo-200 text-lg mb-10 max-w-2xl mx-auto leading-relaxed text-center text-center">
+          <h2 className="text-3xl font-bold mb-6 uppercase text-indigo-100 text-center">Commitment to Integrity</h2>
+          <p className="text-indigo-200 text-lg mb-10 max-w-2xl mx-auto leading-relaxed text-center">
             Amplify is built on a foundation of transparency. We are currently pending regulatory approval and will complete all required registrations and bonding prior to circle activation.
           </p>
-          <div className="inline-flex flex-wrap justify-center gap-4 md:gap-8 items-center px-6 md:px-10 py-6 border border-indigo-800 rounded-3xl bg-indigo-900/50 text-center text-center">
-            <div className="text-center md:text-left text-center"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Status</p><p className="font-bold text-sm text-center text-center">Pending Approval</p></div>
+          <div className="inline-flex flex-wrap justify-center gap-4 md:gap-8 items-center px-6 md:px-10 py-6 border border-indigo-800 rounded-3xl bg-indigo-900/50 text-center">
+            <div className="text-center md:text-left text-center"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center">Status</p><p className="font-bold text-sm text-center">Pending Approval</p></div>
             <div className="hidden md:block w-px h-10 bg-indigo-800 text-center"></div>
-            <div className="text-center md:text-left text-center text-center"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center text-center text-center">Impact Vetting</p><p className="font-bold text-sm text-center text-center text-center text-center">Proven 501(c)(3) Partners</p></div>
+            <div className="text-center md:text-left text-center"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1 text-center text-center">Impact Vetting</p><p className="font-bold text-sm text-center text-center">Proven 501(c)(3) Partners</p></div>
           </div>
         </div>
       </section>
@@ -593,42 +759,6 @@ const App = () => {
         </div>
         <p className="text-[10px] leading-relaxed max-w-4xl opacity-40 uppercase tracking-widest font-bold mx-auto text-center">DISCLOSURE: Amplify is currently in pre-launch. Monthly contributions begin only once your circle reaches capacity. Official rules provided upon activation.</p>
       </footer>
-
-      {/* SIGNUP MODAL */}
-      {isFormOpen && (
-        <div className="fixed inset-0 z-[130] flex items-center justify-center px-4 overflow-y-auto pt-10 pb-10 text-center text-center">
-          <div className="absolute inset-0 bg-indigo-950/80 backdrop-blur-xl text-center text-center" onClick={() => !signupSuccess && setIsFormOpen(false)}></div>
-          <div className="relative bg-white rounded-[3rem] shadow-2xl w-full max-w-4xl overflow-hidden transform transition-all border border-white/20 my-auto text-left text-left">
-            <div className="p-8 md:p-12 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 text-left text-left">
-              <div className="text-left text-left"><h3 className="text-3xl md:text-4xl font-black italic uppercase text-indigo-950 tracking-tighter leading-none text-left text-left text-left">Secure Your Spot</h3><p className="text-slate-400 font-bold text-[11px] uppercase tracking-[0.3em] mt-2 text-left text-left text-left">Welcome to the {selectedTier} Circle</p></div>
-              {!signupSuccess && <button onClick={() => setIsFormOpen(false)} className="text-slate-300 hover:text-slate-600 font-bold text-4xl leading-none text-right text-right">&times;</button>}
-            </div>
-            {signupSuccess ? (
-              <div className="p-12 md:p-24 text-center animate-in zoom-in-95 duration-500 text-center text-center"><div className="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-10 text-center text-center text-center text-center text-center text-center"><CheckCircle size={64} className="text-green-600 text-center text-center text-center" /></div><h4 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 italic uppercase tracking-tighter text-center text-center text-center">You're in.</h4><p className="text-slate-500 text-lg md:text-xl font-medium max-w-md mx-auto leading-relaxed text-center text-center text-center text-center text-center">We've reserved your spot{selectedCommunity !== 'General Circle' ? ` in the ${selectedCommunity} community` : ''}. We will notify you once the circle reaches capacity.</p><div className="mt-12 pt-12 border-t border-slate-100 text-center text-center text-center text-center"><button onClick={() => setIsFormOpen(false)} className="px-12 py-4 bg-indigo-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all text-center text-center text-center">Back to Site</button></div></div>
-            ) : (
-              <div className="flex flex-col md:flex-row h-full text-left text-left text-left text-left">
-                <div className="md:w-3/5 p-8 md:p-12 border-r border-slate-100 text-center md:text-left text-left text-left text-left">
-                  <div className="mb-8 p-6 bg-slate-50 rounded-3xl border border-slate-200 text-center md:text-left text-left text-left text-left text-left"><label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 text-left text-left text-left text-left">Select Your Community</label><select value={selectedCommunity} onChange={(e) => setSelectedCommunity(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 font-bold text-indigo-950 focus:ring-2 focus:ring-indigo-500 outline-none text-left text-left text-left text-left text-left">{Object.keys(communityData).map(name => <option key={name} value={name}>{name}</option>)}</select></div>
-                  {INTEGRATION_CONFIG.useJotform ? (
-                    <div className="h-[300px] md:h-[350px] w-full rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 bg-white shadow-inner overflow-hidden relative text-center text-center text-center text-center text-center"><iframe id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} title="Enrollment" src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} className="w-full h-full border-none text-center text-center text-center text-center"></iframe><div className="absolute bottom-4 left-0 right-0 px-10 text-center text-center text-center text-center text-center text-center"><button onClick={handleRedirectToPayment} className="w-full py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 text-center text-center text-center text-center text-center text-center">{isLoading ? <span className="animate-pulse italic text-center text-center text-center text-center text-center text-center">Securing...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
-                  ) : (
-                    <div className="space-y-6 text-center py-10 text-center text-center text-center text-center text-center text-center text-center text-center"><div className="p-10 bg-indigo-50 rounded-3xl border-2 border-indigo-100 flex flex-col items-center text-center text-center text-center text-center text-center text-center text-center text-center"><CreditCard size={64} className="text-indigo-900 mb-8 text-center text-center text-center text-center text-center" /><h4 className="text-3xl font-black text-indigo-950 mb-4 uppercase tracking-tighter text-center text-center text-center text-center text-center">Reserve Spot</h4><p className="text-sm text-indigo-700/60 mb-8 text-center text-center text-center text-center text-center text-center">Secure your place in the {selectedCommunity} Circle. You will be notified before your first charge.</p><button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-2xl font-black shadow-2xl hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3 transform hover:-translate-y-1 text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">{isLoading ? <span className="animate-pulse italic text-center text-center text-center text-center text-center text-center text-center text-center text-center">Connecting...</span> : <><Shield size={20} /> Join the Circle</>}</button></div></div>
-                  )}
-                </div>
-                <div className="md:w-2/5 p-8 md:p-12 bg-slate-50 flex flex-col justify-center text-center md:text-left text-left text-left text-left text-left">
-                  <div className="space-y-6 text-left text-left text-left text-left">
-                    <div className="text-left text-left text-left text-left text-left"><h5 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 text-center md:text-left text-left text-left text-left text-left text-left">Membership Summary</h5><div className="space-y-4 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><div className="flex justify-between text-sm font-black uppercase tracking-tighter text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span className="text-slate-500 text-left text-left text-left text-left text-left text-left text-left text-left">Circle</span><span className="text-indigo-950 text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right">{selectedTier}</span></div>
-                        {selectedCommunity !== 'General Circle' && <div className="flex justify-between text-sm font-black uppercase tracking-tighter text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span className="text-slate-500 text-left text-left text-left text-left text-left text-left text-left text-left text-left">Community</span><span className="text-indigo-600 text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right">{selectedCommunity}</span></div>}
-                        <div className="flex justify-between text-sm font-black uppercase tracking-tighter text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span className="text-slate-500 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Commitment</span><span className="text-indigo-900 text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right">${tierData[selectedTier].price}/mo</span></div>
-                        <div className="pt-4 border-t border-slate-200 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><div className="flex justify-between text-xs font-bold mb-1 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span className="text-slate-400 uppercase tracking-tighter text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Grand Prize</span><span className="text-indigo-950 text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right">{tierData[selectedTier].prize}</span></div><div className="flex justify-between text-[10px] font-bold text-slate-500 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span>Raffle Odds</span><span>1 / 400</span></div><div className="flex justify-between text-[10px] font-black text-slate-900 mt-1 uppercase text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span className="text-left tracking-widest text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Winning Odds</span><span className="text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right text-right">{tierData[selectedTier].totalOdds}</span></div></div></div></div>
-                    <div className="pt-6 border-t border-slate-200 text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center"><div className="bg-amber-100/50 p-4 rounded-2xl border border-amber-200 text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center"><p className="text-[10px] text-indigo-950 font-black uppercase leading-tight tracking-tight text-center text-center mx-auto text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">First monthly contribution occurs only when circle reaches capacity.</p></div></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
