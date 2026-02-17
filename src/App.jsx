@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Shield, Heart, Trophy, CheckCircle, Info, Star, Building, 
   ChevronDown, ChevronUp, Play, Presentation, ExternalLink, 
   CreditCard, FileText, Award, Users, Gift, Sparkles, Check, 
-  MapPin, BarChart3, ArrowRight, X, Search, Menu, ArrowLeft
+  MapPin, BarChart3, ArrowRight, X, Search, Menu, ArrowLeft,
+  Mail, Phone, Globe
 } from 'lucide-react';
 
 const INTEGRATION_CONFIG = {
-  stripeCheckoutUrl: "https://buy.stripe.com/test_6oE7sC9vW5...",
-  jotformId: "241234567890123",
+  // SECURITY NOTE: In production, do not use a hardcoded link. 
+  // Call your backend to generate a Stripe Checkout Session ID.
+  stripeCheckoutUrl: "#", 
+  jotformId: "241234567890123", // Replace with your actual Form ID
   useJotform: true,
 };
 
@@ -23,10 +26,13 @@ const communityData = {
 };
 
 const App = () => {
-  // 'home' or 'checkout'
+  // Views: 'home', 'checkout', 'privacy', 'terms', 'contact'
   const [currentView, setCurrentView] = useState('home'); 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState('diamond');
+  
+  // UX Improvement: Default to Silver (lowest friction) instead of Diamond
+  const [selectedTier, setSelectedTier] = useState('silver');
+  
   const [openFaq, setOpenFaq] = useState(null);
   const [showAllFaqs, setShowAllFaqs] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
@@ -39,11 +45,23 @@ const App = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [currentView]);
 
+  // Handle JotForm submission success via postMessage
+  useEffect(() => {
+    const handleJotFormMessage = (e) => {
+      // JotForm sends various messages, checking for submission ID is a common validation
+      if (typeof e.data === 'object' && (e.data.action === 'submission-completed' || e.data.submission_id)) {
+        setSignupSuccess(true);
+      }
+    };
+
+    window.addEventListener('message', handleJotFormMessage);
+    return () => window.removeEventListener('message', handleJotFormMessage);
+  }, []);
+
   const scrollToSection = (id) => {
     setIsMenuOpen(false);
     if (currentView !== 'home') {
       setCurrentView('home');
-      // Wait for render to find element
       setTimeout(() => {
         const element = document.getElementById(id);
         if (element) element.scrollIntoView({ behavior: 'smooth' });
@@ -70,22 +88,31 @@ const App = () => {
 
   const handleJoinClick = (tier) => {
     setSelectedTier(tier);
-    // If a community was selected in the dashboard, keep it, otherwise default
     if (activeCommunity) {
       setSelectedCommunity(activeCommunity);
     }
     setCurrentView('checkout');
   };
 
+  // Logic: Only used if NOT using JotForm, or for manual override
   const handleRedirectToPayment = () => {
     setIsLoading(true);
-    setTimeout(() => {
+    
+    // Safety timeout - clear it if component unmounts
+    const timer = setTimeout(() => {
       if (!INTEGRATION_CONFIG.useJotform) {
-        window.open(INTEGRATION_CONFIG.stripeCheckoutUrl, '_blank');
+        // In production, fetch this URL from backend to avoid security risks
+        if(INTEGRATION_CONFIG.stripeCheckoutUrl !== "#") {
+           window.open(INTEGRATION_CONFIG.stripeCheckoutUrl, '_blank');
+        } else {
+           console.log("Stripe URL not configured");
+        }
       }
       setSignupSuccess(true);
       setIsLoading(false);
     }, 1500);
+
+    return () => clearTimeout(timer);
   };
 
   const primaryFaqs = [
@@ -137,7 +164,7 @@ const App = () => {
   };
 
   const LogoIcon = () => (
-    <svg viewBox="0 0 100 100" className="w-12 h-12" fill="none">
+    <svg viewBox="0 0 100 100" className="w-12 h-12" fill="none" aria-label="Amplify Logo">
       <rect x="28" y="55" width="8" height="15" rx="2" fill="white" />
       <rect x="40" y="40" width="8" height="30" rx="2" fill="white" />
       <rect x="52" y="25" width="8" height="45" rx="2" fill="#fbbf24" />
@@ -146,22 +173,25 @@ const App = () => {
     </svg>
   );
 
+  // --- REUSABLE NAVBAR FOR SUB-PAGES ---
+  const SecondaryNavbar = () => (
+    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+        <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity" aria-label="Go to Homepage">
+          <div className="bg-indigo-900 text-white p-1.5 rounded-xl"><LogoIcon /></div>
+          <span className="text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
+        </button>
+        <button onClick={() => setCurrentView('home')} className="text-slate-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:text-indigo-900">
+          <ArrowLeft size={16} /> Back to Home
+        </button>
+      </div>
+    </nav>
+  );
+
   // --- CHECKOUT PAGE COMPONENT ---
   const CheckoutPage = () => (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      {/* Checkout Navbar */}
-      <nav className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="bg-indigo-900 text-white p-1.5 rounded-xl"><LogoIcon /></div>
-            <span className="text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
-          </button>
-          <button onClick={() => setCurrentView('home')} className="text-slate-500 font-bold uppercase tracking-widest text-xs flex items-center gap-2 hover:text-indigo-900">
-            <ArrowLeft size={16} /> Back to Home
-          </button>
-        </div>
-      </nav>
-
+      <SecondaryNavbar />
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-20">
         <div className="max-w-5xl mx-auto">
           {signupSuccess ? (
@@ -197,11 +227,19 @@ const App = () => {
                    {INTEGRATION_CONFIG.useJotform ? (
                       <div className="w-full rounded-[2rem] border border-slate-200 bg-white overflow-hidden relative">
                          <div className="aspect-[4/5] w-full relative">
-                            <iframe id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} title="Enrollment" src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} className="w-full h-full border-none absolute inset-0"></iframe>
+                            {/* NOTE: Ensure iframe content sends a postMessage on success to trigger signupSuccess state */}
+                            <iframe 
+                              id={`jotform-iframe-${INTEGRATION_CONFIG.jotformId}`} 
+                              title="Amplify Enrollment Form" 
+                              src={`https://form.jotform.com/${INTEGRATION_CONFIG.jotformId}`} 
+                              className="w-full h-full border-none absolute inset-0"
+                            ></iframe>
                          </div>
+                         {/* Fallback button for demo purposes if iframe doesn't load or doesn't message back in this preview environment */}
                          <div className="p-6 bg-slate-50 border-t border-slate-100 text-center">
-                            <button onClick={handleRedirectToPayment} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3">
-                              {isLoading ? <span className="animate-pulse italic">Securing...</span> : <><Shield size={18} /> Complete Reservation</>}
+                             <p className="text-[10px] text-slate-400 uppercase font-bold mb-2">Demo Mode Only</p>
+                            <button onClick={handleRedirectToPayment} className="w-full py-4 bg-slate-200 text-slate-500 hover:text-indigo-900 rounded-xl font-black transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-3">
+                              {isLoading ? <span className="animate-pulse italic">Verifying...</span> : "Simulate Success (Dev)"}
                             </button>
                          </div>
                       </div>
@@ -281,10 +319,86 @@ const App = () => {
     </div>
   );
 
-  // --- MAIN RENDER LOGIC ---
-  if (currentView === 'checkout') {
-    return <CheckoutPage />;
-  }
+  // --- CONTENT PAGES (Privacy, Terms, Contact) ---
+  const ContentPage = ({ title, content }) => (
+    <div className="min-h-screen bg-white font-sans text-slate-900">
+      <SecondaryNavbar />
+      <div className="max-w-4xl mx-auto px-4 py-16">
+        <h1 className="text-4xl md:text-5xl font-black text-indigo-950 mb-12 uppercase italic tracking-tighter">{title}</h1>
+        <div className="prose prose-lg prose-indigo max-w-none text-slate-600 font-medium leading-relaxed">
+          {content}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ContactPage = () => (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+      <SecondaryNavbar />
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-black text-indigo-950 mb-6 uppercase italic tracking-tighter">Get in Touch</h1>
+            <p className="text-xl text-slate-500 max-w-2xl mx-auto">Have questions about joining a circle or starting your own? We're here to help.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
+              <h3 className="text-2xl font-black uppercase tracking-tight text-indigo-950 mb-8">Contact Information</h3>
+              <div className="space-y-8">
+                <div className="flex items-start gap-4">
+                  <div className="bg-indigo-50 p-3 rounded-xl text-indigo-900"><Mail size={24} /></div>
+                  <div>
+                    <p className="font-bold text-slate-900 text-lg mb-1">Email Us</p>
+                    <p className="text-slate-500">support@amplify.org</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="bg-indigo-50 p-3 rounded-xl text-indigo-900"><Phone size={24} /></div>
+                  <div>
+                    <p className="font-bold text-slate-900 text-lg mb-1">Call Us</p>
+                    <p className="text-slate-500">+1 (800) 555-0123</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="bg-indigo-50 p-3 rounded-xl text-indigo-900"><Globe size={24} /></div>
+                  <div>
+                    <p className="font-bold text-slate-900 text-lg mb-1">Headquarters</p>
+                    <p className="text-slate-500">New York, NY</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-indigo-900 p-10 rounded-[2.5rem] shadow-xl text-white">
+               <h3 className="text-2xl font-black uppercase tracking-tight mb-6">Send a Message</h3>
+               <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                 <div>
+                   <label className="block text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2">Name</label>
+                   <input type="text" className="w-full bg-indigo-800/50 border border-indigo-700 rounded-xl p-4 text-white placeholder-indigo-400 focus:ring-2 focus:ring-amber-400 outline-none" placeholder="Your Name" />
+                 </div>
+                 <div>
+                   <label className="block text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2">Email</label>
+                   <input type="email" className="w-full bg-indigo-800/50 border border-indigo-700 rounded-xl p-4 text-white placeholder-indigo-400 focus:ring-2 focus:ring-amber-400 outline-none" placeholder="john@example.com" />
+                 </div>
+                 <div>
+                   <label className="block text-xs font-bold uppercase tracking-widest text-indigo-300 mb-2">Message</label>
+                   <textarea className="w-full bg-indigo-800/50 border border-indigo-700 rounded-xl p-4 text-white placeholder-indigo-400 h-32 focus:ring-2 focus:ring-amber-400 outline-none" placeholder="How can we help?"></textarea>
+                 </div>
+                 <button className="w-full py-4 bg-amber-400 text-indigo-950 font-black uppercase tracking-widest rounded-xl hover:bg-white transition-colors">Send Message</button>
+               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // --- ROUTING LOGIC ---
+  if (currentView === 'checkout') return <CheckoutPage />;
+  if (currentView === 'contact') return <ContactPage />;
+  if (currentView === 'privacy') return <ContentPage title="Privacy Policy" content={<><p className="mb-6">At Amplify, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you join our giving circles.</p><h3 className="text-2xl font-black text-indigo-900 mb-4 mt-8 uppercase tracking-tight">Information We Collect</h3><p className="mb-4">We collect information necessary to process your contributions and membership, including name, email address, and payment information. We do not sell your personal data to third parties.</p><h3 className="text-2xl font-black text-indigo-900 mb-4 mt-8 uppercase tracking-tight">Security</h3><p>We implement industry-standard security measures to protect your data. Payment processing is handled by secure third-party providers.</p></>} />;
+  if (currentView === 'terms') return <ContentPage title="Terms of Service" content={<><p className="mb-6">Welcome to Amplify. By accessing or using our platform, you agree to be bound by these Terms of Service.</p><h3 className="text-2xl font-black text-indigo-900 mb-4 mt-8 uppercase tracking-tight">Membership</h3><p className="mb-4">Membership in an Amplify circle involves a recurring monthly contribution. You may cancel your membership at any time prior to the monthly charge.</p><h3 className="text-2xl font-black text-indigo-900 mb-4 mt-8 uppercase tracking-tight">Charitable Contributions</h3><p>All contributions are directed to verified 501(c)(3) organizations. While we vet all beneficiaries, Amplify does not warrant the activities of third-party charities.</p></>} />;
 
   // --- LANDING PAGE ---
   return (
@@ -303,7 +417,7 @@ const App = () => {
       {/* Navigation */}
       <nav className="fixed w-full z-[90] bg-white/95 backdrop-blur-md border-b border-slate-100 top-[32px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <button onClick={() => scrollToSection('top')} className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left">
+          <button onClick={() => scrollToSection('top')} className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left" aria-label="Go to Top">
             <div className="bg-indigo-900 text-white p-1.5 rounded-xl">
               <LogoIcon />
             </div>
@@ -318,7 +432,7 @@ const App = () => {
             <button onClick={() => scrollToSection('tiers')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">The Circles</button>
           </div>
 
-          <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)}>
+          <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)} aria-label="Open Menu">
             <Menu size={28} />
           </button>
 
@@ -333,10 +447,10 @@ const App = () => {
 
       {/* Mobile Menu Sidebar */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[150] md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col">
+        <div className="fixed inset-0 z-[150] md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog" aria-modal="true">
             <div className="p-6 flex justify-between items-center border-b border-slate-100 shrink-0 text-left">
                 <span className="text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
-                <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2"><X size={32}/></button>
+                <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2" aria-label="Close Menu"><X size={32}/></button>
             </div>
             <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 text-xl font-black text-slate-900 uppercase tracking-tighter text-left">
                 <button onClick={() => scrollToSection('how')} className="text-left border-b border-slate-50 pb-4">How it works</button>
@@ -402,7 +516,12 @@ const App = () => {
                   className="w-full h-full object-cover"
                   controls 
                   playsInline
-                  onError={(e) => console.error("Video failed to load:", e)}
+                  aria-label="Promotional video about Amplify"
+                  onError={(e) => {
+                      // Fix: Provide better error logging and UI feedback
+                      console.error("Video failed to load");
+                      e.currentTarget.style.display = 'none';
+                  }}
                 >
                   {/* Using relative path to correct for potential subfolder deployment issues */}
                   <source src="amplify-video.mp4" type="video/mp4" />
@@ -410,11 +529,13 @@ const App = () => {
                 </video>
               </div>
               
-              {/* Updated Collective Goal Box: Larger font, Long & Narrow, No obstruction */}
-              <div className="absolute -bottom-10 right-0 md:-bottom-12 md:right-0 bg-amber-400 px-6 py-4 rounded-[1.5rem] shadow-2xl hidden sm:flex items-center gap-4 border-4 border-white max-w-fit z-20">
-                <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0 leading-none">Collective Goal</p>
-                <div className="w-px h-8 bg-indigo-950/20"></div>
-                <p className="text-2xl md:text-3xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">$4.5M+/yr</p>
+              {/* Updated Collective Goal Box: Sticker Style at Top-Left */}
+              <div className="absolute -top-6 -left-6 md:-top-10 md:-left-10 bg-amber-400 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl hidden sm:flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg]">
+                <p className="text-[9px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-1 leading-none text-center">Collective Goal</p>
+                <div className="w-full h-px bg-indigo-950/10 mb-1"></div>
+                <p className="text-2xl md:text-4xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">
+                  $4.8M+<span className="text-xs md:text-sm font-bold text-indigo-900/60 ml-1">/year</span>
+                </p>
               </div>
             </div>
           </div>
@@ -482,13 +603,13 @@ const App = () => {
                  src="/impact-photo.jpg" 
                  alt="Impact" 
                  className="absolute inset-0 w-full h-full object-cover opacity-80"
-                 onError={(e) => { e.target.style.display='none'; }}
+                 onError={(e) => { e.currentTarget.style.display='none'; }}
                />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
                
                {/* Updated Logo Overlay - Reduced height (py-1) but kept width (w-[70%]) and logo size */}
                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[70%] bg-white/95 backdrop-blur-xl py-1 rounded-xl flex items-center justify-center shadow-3xl border border-white/20">
-                  <img src="/ChaiLifeline.png" alt="Logo" className="max-h-20 md:max-h-28 w-auto object-contain" />
+                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="max-h-20 md:max-h-28 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
                </div>
             </div>
           </div>
@@ -509,6 +630,7 @@ const App = () => {
                 key={i} 
                 onClick={() => toggleCommunity(name)}
                 className={`p-4 md:p-8 rounded-2xl md:rounded-[2rem] border transition-all flex flex-col items-center group ${activeCommunity === name ? 'border-indigo-600 bg-indigo-50 shadow-xl' : 'border-slate-100 bg-white hover:border-indigo-200 hover:shadow-lg'} text-center`}
+                aria-label={`View stats for ${name}`}
               >
                 <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4 ${activeCommunity === name ? 'bg-indigo-600 text-white' : 'bg-slate-50 text-slate-400'} text-center`}>
                   <MapPin size={20} />
@@ -523,7 +645,7 @@ const App = () => {
              <>
                 {/* DESKTOP VIEW: Inline Box */}
                 <div className="hidden md:block bg-indigo-950 p-6 rounded-[2.5rem] text-white animate-in fade-in slide-in-from-top-4 relative overflow-hidden shadow-2xl text-left">
-                    <button onClick={() => setActiveCommunity(null)} className="absolute top-4 right-6 text-white/40 hover:text-white transition-colors z-20 text-left"><X size={20} /></button>
+                    <button onClick={() => setActiveCommunity(null)} className="absolute top-4 right-6 text-white/40 hover:text-white transition-colors z-20 text-left" aria-label="Close Dashboard"><X size={20} /></button>
                     <div className="relative z-10 grid grid-cols-12 gap-8 items-center text-left">
                         <div className="col-span-7 text-left">
                             <div className="flex items-center gap-3 mb-2 text-left">
@@ -553,10 +675,10 @@ const App = () => {
                 </div>
 
                 {/* MOBILE VIEW: Pop-up Modal */}
-                <div className="md:hidden fixed inset-0 z-[120] flex items-center justify-center p-4 overflow-hidden text-center">
+                <div className="md:hidden fixed inset-0 z-[120] flex items-center justify-center p-4 overflow-hidden text-center" role="dialog" aria-modal="true">
                     <div className="absolute inset-0 bg-indigo-950/80 backdrop-blur-md text-center" onClick={() => setActiveCommunity(null)}></div>
                     <div className="relative bg-indigo-950 p-6 rounded-[2.5rem] text-white animate-in fade-in zoom-in-95 slide-in-from-bottom-6 w-full max-w-sm shadow-2xl border border-white/10 text-center">
-                        <button onClick={() => setActiveCommunity(null)} className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors z-20 text-center"><X size={24} /></button>
+                        <button onClick={() => setActiveCommunity(null)} className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors z-20 text-center" aria-label="Close Dashboard"><X size={24} /></button>
                         <div className="text-center mb-6 text-center">
                             <div className="bg-amber-400 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-950 mx-auto mb-4 text-center"><BarChart3 size={28}/></div>
                             <h3 className="text-2xl font-black uppercase italic tracking-tighter leading-none text-center">{activeCommunity} Dashboard</h3>
@@ -714,7 +836,7 @@ const App = () => {
           <div className="space-y-4 text-left">
             {primaryFaqs.map((faq, i) => (
               <div key={i} className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 hover:bg-slate-50 transition-colors text-left">
-                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-6 md:p-8 text-left flex justify-between items-center text-left">
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-6 md:p-8 text-left flex justify-between items-center text-left" aria-expanded={openFaq === i}>
                   <span className="font-black text-indigo-950 text-base md:text-lg uppercase pr-4 text-left">{faq.q}</span>
                   {openFaq === i ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
                 </button>
@@ -723,7 +845,7 @@ const App = () => {
             ))}
             {showAllFaqs && secondaryFaqs.map((faq, i) => (
               <div key={`sec-${i}`} className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 hover:bg-slate-50 transition-colors animate-in fade-in slide-in-from-top-4 text-left">
-                <button onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} className="w-full p-6 md:p-8 text-left flex justify-between items-center transition-colors text-left">
+                <button onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} className="w-full p-6 md:p-8 text-left flex justify-between items-center transition-colors text-left" aria-expanded={openFaq === `sec-${i}`}>
                   <span className="font-black text-indigo-950 pr-4 text-base md:text-lg uppercase tracking-tight text-left">{faq.q}</span>
                   {openFaq === `sec-${i}` ? <ChevronUp size={24} className="text-indigo-900" /> : <ChevronDown size={24} className="text-slate-300" />}
                 </button>
@@ -755,7 +877,11 @@ const App = () => {
       <footer className="bg-slate-950 text-slate-500 py-16 px-4 text-center md:text-left">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 mb-12 text-center md:text-left">
             <div className="flex items-center gap-2 text-center md:text-left"><LogoIcon /><span className="text-2xl font-black text-white tracking-tighter uppercase text-center md:text-left">Amplify</span></div>
-            <div className="flex gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-right"><button>Privacy</button><button>Terms</button><button>Contact</button></div>
+            <div className="flex gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-right">
+              <button onClick={() => setCurrentView('privacy')} className="hover:text-white transition-colors">Privacy</button>
+              <button onClick={() => setCurrentView('terms')} className="hover:text-white transition-colors">Terms</button>
+              <button onClick={() => setCurrentView('contact')} className="hover:text-white transition-colors">Contact</button>
+            </div>
         </div>
         <p className="text-[10px] leading-relaxed max-w-4xl opacity-40 uppercase tracking-widest font-bold mx-auto text-center">DISCLOSURE: Amplify is currently in pre-launch. Monthly contributions begin only once your circle reaches capacity. Official rules provided upon activation.</p>
       </footer>
