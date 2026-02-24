@@ -638,37 +638,12 @@ const App = () => {
         </div>
       </nav>
 
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-[150] md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog" aria-modal="true">
-            <div className="p-4 flex justify-between items-center border-b border-slate-100 shrink-0 text-left">
-                <span className="text-xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
-                <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2" aria-label="Close Menu"><X size={28}/></button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-lg font-black text-slate-900 uppercase tracking-tighter text-left">
-                <button onClick={() => scrollToSection('how')} className="text-left border-b border-slate-50 pb-3">How it works</button>
-                <button onClick={() => scrollToSection('why')} className="text-left border-b border-slate-50 pb-3">Why Amplify</button>
-                <button onClick={() => scrollToSection('beneficiary')} className="text-left border-b border-slate-50 pb-3">Beneficiary</button>
-                <button onClick={() => scrollToSection('communities')} className="text-left border-b border-slate-50 pb-3">Communities</button>
-                <button onClick={() => scrollToSection('tiers')} className="text-left border-b border-slate-50 pb-3">The Circles</button>
-                <button onClick={() => scrollToSection('faq')} className="text-left border-b border-slate-50 pb-3">FAQ</button>
-            </div>
-            <div className="p-6 border-t border-slate-50 shrink-0 text-left">
-                <button 
-                    onClick={() => { setIsMenuOpen(false); scrollToSection('tiers'); }}
-                    className="w-full py-5 bg-indigo-900 text-white rounded-full font-black uppercase tracking-widest shadow-2xl shadow-indigo-200 text-sm"
-                >
-                    Join the Circle
-                </button>
-            </div>
-        </div>
-      )}
-
       {/* Hero Section */}
       <header className="pt-20 pb-12 md:pt-24 md:pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div className="text-left lg:col-span-7">
-              <h1 className="text-5xl md:text-8xl font-black text-slate-900 tracking-tighter mb-4 md:mb-8 leading-[0.9] md:leading-[0.85] uppercase">
+            <div className="text-left lg:col-span-6">
+              <h1 className="text-5xl md:text-7xl xl:text-8xl font-black text-slate-900 tracking-tighter mb-4 md:mb-8 leading-[0.9] md:leading-[0.85] uppercase">
                 Give Together. <br />
                 <div className="relative inline-block mt-1 md:mt-0">
                     <span className="text-indigo-900 italic">Amplify</span>
@@ -703,8 +678,8 @@ const App = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative mt-4 md:mt-0">
-              <div className="aspect-[16/11.25] w-full rounded-3xl md:rounded-[3rem] overflow-hidden shadow-[0_16px_32px_-12px_rgba(0,0,0,0.2)] md:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
+            <div className="lg:col-span-6 relative mt-4 md:mt-0">
+              <div className="aspect-[4/3] w-full rounded-3xl md:rounded-[3rem] overflow-hidden shadow-[0_16px_32px_-12px_rgba(0,0,0,0.2)] md:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
                 <video className="w-full h-full object-cover" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}>
                   <source src="amplify-video.mp4" type="video/mp4" />
                 </video>
