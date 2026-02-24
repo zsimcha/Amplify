@@ -638,11 +638,36 @@ const App = () => {
         </div>
       </nav>
 
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-[150] md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog" aria-modal="true">
+            <div className="p-4 flex justify-between items-center border-b border-slate-100 shrink-0 text-left">
+                <span className="text-xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
+                <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2" aria-label="Close Menu"><X size={28}/></button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-lg font-black text-slate-900 uppercase tracking-tighter text-left">
+                <button onClick={() => scrollToSection('how')} className="text-left border-b border-slate-50 pb-3">How it works</button>
+                <button onClick={() => scrollToSection('why')} className="text-left border-b border-slate-50 pb-3">Why Amplify</button>
+                <button onClick={() => scrollToSection('beneficiary')} className="text-left border-b border-slate-50 pb-3">Beneficiary</button>
+                <button onClick={() => scrollToSection('communities')} className="text-left border-b border-slate-50 pb-3">Communities</button>
+                <button onClick={() => scrollToSection('tiers')} className="text-left border-b border-slate-50 pb-3">The Circles</button>
+                <button onClick={() => scrollToSection('faq')} className="text-left border-b border-slate-50 pb-3">FAQ</button>
+            </div>
+            <div className="p-6 border-t border-slate-50 shrink-0 text-left">
+                <button 
+                    onClick={() => { setIsMenuOpen(false); scrollToSection('tiers'); }}
+                    className="w-full py-5 bg-indigo-900 text-white rounded-full font-black uppercase tracking-widest shadow-2xl shadow-indigo-200 text-sm"
+                >
+                    Join the Circle
+                </button>
+            </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <header className="pt-20 pb-12 md:pt-24 md:pb-24 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16 items-center">
-            <div className="text-left lg:col-span-5">
+            <div className="text-left lg:col-span-6">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter mb-4 md:mb-8 leading-[0.9] md:leading-[0.85] uppercase">
                 Give Together. <br />
                 <div className="relative inline-block mt-1 md:mt-0">
@@ -678,14 +703,14 @@ const App = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-7 relative mt-6 md:mt-0 w-[calc(100%+2rem)] -ml-4 sm:w-full sm:ml-0">
-              <div className="aspect-[4/5] sm:aspect-square md:aspect-[4/3] w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[16px] border-white bg-slate-900 relative">
+            <div className="lg:col-span-6 relative mt-6 md:mt-0">
+              <div className="aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
                 <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}>
                   <source src="amplify-video.mp4" type="video/mp4" />
                 </video>
               </div>
               
-              <div className="absolute top-4 left-0 md:-top-10 md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100">
+              <div className="absolute -top-4 -left-2 md:-top-8 md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100">
                 <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
                 <div className="w-full h-px bg-indigo-950/10 mb-0.5 md:mb-1"></div>
                 <p className="text-xl md:text-4xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">
