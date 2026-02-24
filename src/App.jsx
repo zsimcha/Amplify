@@ -823,7 +823,7 @@ const App = () => {
             <div className="relative group overflow-hidden rounded-3xl md:rounded-[3rem] shadow-2xl bg-slate-900 min-h-[250px] md:min-h-[400px]">
                <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80" onError={(e) => { e.currentTarget.style.display='none'; }} />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
-               <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl py-1.5 px-8 md:py-2 md:px-12 rounded-xl md:rounded-2xl flex items-center justify-center shadow-2xl border border-white/20">
+               <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl py-0.5 px-10 md:py-1 md:px-16 rounded-xl md:rounded-2xl flex items-center justify-center shadow-2xl border border-white/20">
                   <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-20 md:h-28 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
                </div>
             </div>
