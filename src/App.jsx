@@ -704,7 +704,7 @@ const App = () => {
             </div>
 
             <div className="lg:col-span-6 relative mt-6 md:mt-0">
-              <div className="aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
+              <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
                 <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}>
                   <source src="amplify-video.mp4" type="video/mp4" />
                 </video>
