@@ -639,17 +639,17 @@ const App = () => {
       </nav>
 
       {/* Hero Section */}
-      <header className="pt-20 pb-12 md:pt-24 md:pb-20 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
+      <header className="pt-20 pb-12 md:pt-24 md:pb-24 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-8 md:gap-12 items-center">
-            <div className="text-left lg:col-span-6">
-              <h1 className="text-5xl md:text-7xl xl:text-8xl font-black text-slate-900 tracking-tighter mb-4 md:mb-8 leading-[0.9] md:leading-[0.85] uppercase">
+          <div className="grid lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16 items-center">
+            <div className="text-left lg:col-span-5">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter mb-4 md:mb-8 leading-[0.9] md:leading-[0.85] uppercase">
                 Give Together. <br />
                 <div className="relative inline-block mt-1 md:mt-0">
                     <span className="text-indigo-900 italic">Amplify</span>
                     <div className="absolute left-[-1%] bottom-[-2px] md:-bottom-2 w-[102%] h-1.5 md:h-2.5 bg-indigo-200 rounded-full"></div>
                 </div> 
-                <span className="italic text-indigo-900 inline-block md:inline md:ml-4 mt-1 md:mt-0">Your Impact.</span>
+                <span className="italic text-indigo-900 block xl:inline mt-2 xl:mt-0 xl:ml-3">Your Impact.</span>
               </h1>
               <p className="text-lg md:text-2xl text-slate-600 mb-6 md:mb-8 font-medium max-w-2xl leading-snug">
                 Pool your monthly donation with a global community to make a massive impact. <strong>Win Up To $100,000</strong> <em>every month</em> as a reward for your commitment.
@@ -678,18 +678,18 @@ const App = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-6 relative mt-4 md:mt-0">
-              <div className="aspect-[4/3] w-full rounded-3xl md:rounded-[3rem] overflow-hidden shadow-[0_16px_32px_-12px_rgba(0,0,0,0.2)] md:shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
-                <video className="w-full h-full object-cover" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}>
+            <div className="lg:col-span-7 relative mt-6 md:mt-0 w-[calc(100%+2rem)] -ml-4 sm:w-full sm:ml-0">
+              <div className="aspect-[4/5] sm:aspect-square md:aspect-[4/3] w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[16px] border-white bg-slate-900 relative">
+                <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}>
                   <source src="amplify-video.mp4" type="video/mp4" />
                 </video>
               </div>
               
-              <div className="absolute -top-3 -left-2 md:-top-10 md:-left-10 bg-[#eab308] p-2.5 md:p-6 rounded-xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-white z-20 rotate-[-5deg]">
-                <p className="text-[7px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
+              <div className="absolute top-4 left-0 md:-top-10 md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100">
+                <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
                 <div className="w-full h-px bg-indigo-950/10 mb-0.5 md:mb-1"></div>
-                <p className="text-lg md:text-4xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">
-                  $4.8M+<span className="text-[8px] md:text-sm font-bold text-indigo-900/60 ml-0.5 md:ml-1">/year</span>
+                <p className="text-xl md:text-4xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">
+                  $4.8M+<span className="text-[9px] md:text-sm font-bold text-indigo-900/60 ml-0.5 md:ml-1">/year</span>
                 </p>
               </div>
             </div>
