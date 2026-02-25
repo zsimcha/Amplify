@@ -710,7 +710,7 @@ const App = () => {
                 </video>
               </div>
               
-              <div className="absolute -top-4 -left-2 md:-top-8 md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100">
+              <div className="absolute -top-4 -right-2 md:-top-8 md:right-auto md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100">
                 <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
                 <div className="w-full h-px bg-indigo-950/10 mb-0.5 md:mb-1"></div>
                 <p className="text-xl md:text-4xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">
