@@ -447,6 +447,11 @@ const App = () => {
                             </button>
                         </div>
                     )}
+                    <div className="mt-6 text-center">
+                        <p className="text-[10px] md:text-xs text-slate-500 font-medium px-4">
+                          Participation is subject to the <button onClick={() => navigateTo('rules')} className="underline hover:text-indigo-900 transition-colors">Official Rules</button> and <button onClick={() => navigateTo('terms')} className="underline hover:text-indigo-900 transition-colors">Terms of Service</button>. No purchase necessary.
+                        </p>
+                    </div>
                   </div>
                 </div>
 
@@ -507,9 +512,9 @@ const App = () => {
   const ContentPage = ({ title, content }) => (
     <div className="min-h-screen bg-white font-sans text-slate-900">
       <SecondaryNavbar />
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
-        <h1 className="text-3xl md:text-5xl font-black text-indigo-950 mb-8 md:mb-12 uppercase italic tracking-tighter">{title}</h1>
-        <div className="prose prose-sm md:prose-lg prose-indigo max-w-none text-slate-600 font-medium leading-relaxed">
+      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
+        <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-8 md:mb-12 uppercase tracking-tighter border-b border-slate-200 pb-6">{title}</h1>
+        <div className="text-slate-700 font-medium text-sm md:text-base leading-relaxed">
           {content}
         </div>
       </div>
@@ -579,12 +584,243 @@ const App = () => {
   );
 
   const PrivacyPolicyContent = () => (
-    <div className="space-y-4 md:space-y-6">
-      <p>
-        <strong>Introduction and Scope</strong><br />
-        The Privacy Policy for Amplify governs the collection, use, retention, and sharing of personal data across our digital platform...
+    <>
+      <p className="mb-6"><strong>Data Controller:</strong> Amplify Ltd., [address], email: privacy@amplify.org. For questions about your data, contact privacy@amplify.org.</p>
+      <p className="mb-6">The Privacy Policy for Amplify governs the collection, use, retention, and sharing of personal data across our digital platform, recurring charitable pledge systems, and sweepstakes administration services. This policy applies to all visitors, registered donors, Alternate Means of Entry (AMOE) sweepstakes participants, and platform users. Amplify adopts a comprehensive compliance posture designed to satisfy the rigorous requirements of the California Privacy Rights Act (CPRA), the Virginia Consumer Data Protection Act (VCDPA), the Colorado Privacy Act (CPA), and all allied state consumer privacy frameworks taking effect through 2025 and 2026.</p>
+      <p className="mb-6">Residents of California hold specific CCPA rights, and residents of the EEA hold GDPR rights regarding access, deletion, and portability. Data may transfer to the U.S. and other countries; we use standard contractual clauses where required. By utilizing the Amplify platform to initiate a charitable pledge or enter a promotional sweepstakes, you acknowledge the data practices described within this document. We are committed to transparency, and this policy explicitly details the categories of personal information we collect, the specific business purposes for that collection, and the strictly vetted third parties with whom your data may be shared to facilitate charitable regranting and legal sweepstakes compliance.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Categories of Personal Information Collected</h3>
+      <p className="mb-6">In the preceding twelve months, Amplify has collected the following categories of personal information from its users, as defined by applicable state privacy laws. We limit the information we collect to what is strictly necessary for our mission and sweepstakes administration.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Identifiers:</strong> We collect real names, postal addresses, unique personal identifiers, online identifiers, Internet Protocol (IP) addresses, and email addresses. This information is sourced directly from you during account creation, donation checkout, or Alternate Means of Entry (AMOE) sweepstakes participation.</li>
+        <li className="pl-2"><strong>Commercial Information:</strong> We maintain records of your charitable pledges, including donation amounts, transaction histories, selected recipient charities, and any optional notes or memos you provide alongside your pledge.</li>
+        <li className="pl-2"><strong>Internet or Electronic Network Activity Information:</strong> We collect data regarding your interaction with our platform via cookies and web beacons. This includes browsing history, search history, and page interaction data, utilized strictly to maintain platform security, prevent fraudulent sweepstakes entries, and optimize user experience.</li>
+        <li className="pl-2"><strong>Geolocation Data:</strong> We capture geographic data derived from your IP address to detect fraudulent activity and to ensure that you reside in a jurisdiction where participation in our specific sweepstakes promotions is legally permissible.</li>
+        <li className="pl-2"><strong>Financial Information:</strong> While you provide payment card details to initiate recurring pledges, Amplify never directly sees, processes, or stores raw payment card information on our servers. This data is transmitted directly via end-to-end encryption to our PCI Level 1 compliant payment processors.</li>
+        <li className="pl-2"><strong>Referral Data:</strong> If you receive payments as a referrer, we will require tax information for reporting and may issue 1099 forms as required by law.</li>
+        <li className="pl-2"><strong>Processing vs. Donation Distinction:</strong> Payments processed by Change into the DAF may entitle you to a tax receipt issued by Change. Payments processed by Amplify as entry purchases are non-deductible and are recorded as purchases/fees on Amplify receipts. See Official Rules for full financial flow.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Use and Disclosure of Sensitive Personal Information</h3>
+      <p className="mb-6">In the administration of our monthly appreciation raffles, Amplify awards prizes of substantial value. In strict accordance with United States federal tax laws, any participant who wins a prize of eligible value is required to be issued an IRS Form 1099-MISC.</p>
+      <p className="mb-6">Winners will be required to provide tax documentation (W-9) and ID verification. If a winner does not complete verification within the stated period, the prize may be forfeited and an alternate winner selected. Required prize reporting information (name, address, taxpayer ID, prize value) will be shared with tax authorities and our payment processor. Please note that under the One Big Beautiful Bill Act, the federal Form 1099-MISC reporting threshold for prizes awarded after December 31, 2025, has increased to $2,000.</p>
+      <p className="mb-6">Under the California Privacy Rights Act (CPRA) and allied state laws, an SSN constitutes Sensitive Personal Information (SPI). Amplify collects and processes this SPI exclusively for the business purpose of satisfying federal and state tax reporting obligations and verifying the identity of prize winners to prevent financial fraud. We do not use, sell, or share Sensitive Personal Information for any secondary purposes, including marketing or behavioral profiling. You have the right to limit the use of your sensitive data beyond what is necessary for these legally mandated business operations. To exercise this right, please utilize the "Limit the Use of My Sensitive Personal Information" link located in the footer of our website.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">How We Share Your Information with Third Parties</h3>
+      <p className="mb-6">Amplify operates as an intermediary to facilitate your charitable impact and administer appreciation sweepstakes. We do not sell, rent, or lease your personal data to third-party data brokers. We share your information strictly in the following operational contexts:</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Recipient Charities and DAF Administrators:</strong> Donations processed for the purpose of this sweepstakes are remitted to a donor-advised fund administered by Our Change Foundation. By donating, you consent that Amplify may share your name, email, and donation amount with Change for receipting and grant administration. Change may contact you directly regarding your donation and to provide tax documentation where applicable. Unless you explicitly choose to make your donation anonymous or opt-out of information sharing during the checkout process, we will also share your name and email address with the recipient charity.</li>
+        <li className="pl-2"><strong>Payment Processors:</strong> To ensure the highest level of financial security, Amplify does not natively store your credit card or bank account information. Payment card data is processed by Stripe — Amplify does not store full card numbers. We use encryption in transit and at rest and restrict access to a need-to-know basis.</li>
+        <li className="pl-2"><strong>Infrastructure and Communication Providers:</strong> We share necessary data elements with strictly vetted third-party service providers, including Stripe, Google Analytics, SendGrid, AWS (hosting), and Change. Data may transfer to the U.S. and other countries; we use standard contractual clauses where required.</li>
+        <li className="pl-2"><strong>Legal and Safety Obligations:</strong> We may disclose personal information to external entities, including law enforcement or state and federal tax authorities, when such disclosure is legally necessary to comply with subpoenas, investigate potential violations of civil or criminal law, or protect the integrity of our platform against fraud.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Sweepstakes Transparency and Publicity Rights</h3>
+      <p className="mb-6">By participating in the monthly appreciation raffles administered by Amplify, you acknowledge that specific data processing practices are governed by state and federal sweepstakes laws, which may supersede certain general privacy rights regarding data deletion.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>AMOE Scans and Retention:</strong> Alternate Method of Entry (AMOE) submissions (handwritten postcards and envelope postmarks) are scanned and retained for audit purposes for up to 3 years. Scanned images are stored encrypted; physical envelopes are stored in locked facilities accessible only to authorized staff. AMOE data will be used for eligibility verification, fraud detection, and public audit upon request.</li>
+        <li className="pl-2"><strong>Winners List Mandate:</strong> To demonstrate the fairness and legality of our promotions, state laws require Amplify to maintain a ledger of major prize winners. We will share winner name and city publicly and will share required personal data with tax authorities and our payment processor to comply with reporting obligations. While you hold the right to request the deletion of your personal data under the CPRA, Amplify is legally obligated to retain and disclose this specific Winner List information to comply with state regulatory audits and legal obligations.</li>
+        <li className="pl-2"><strong>Publicity Release:</strong> Putting a name and face to our winning entrants helps build trust in our community. If you are selected as a winner, we may request that you execute a separate Declaration of Compliance and Publicity Release. By signing this release, you grant Amplify permission to use your name, likeness, and details of your win for advertising and promotional purposes without further compensation, unless prohibited by law.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Your State Privacy Rights and How to Exercise Them</h3>
+      <p className="mb-6">Depending on your state of residence, including under the California Privacy Rights Act (CPRA), you are granted specific legal rights regarding your personal data. Amplify respects these rights and provides mechanisms for all U.S. and EEA users to exercise them equally:</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>The Right to Know and Access:</strong> You have the right to request that we disclose the specific pieces of personal information we have collected about you, the sources of that information, our business purposes for collecting it, and the categories of third parties with whom it is shared.</li>
+        <li className="pl-2"><strong>Data Retention & Deletion Process:</strong> General account data is retained for 7 years. AMOE scans & audit data are retained for 3 years. Payment receipts are retained for 7 years. To request deletion, email privacy@amplify.org with the subject "Data Deletion Request." Please note that we may deny your deletion request if retaining the information is legally necessary for us to fulfill the terms of a charitable pledge, comply with IRS tax reporting, or comply with state laws mandating the retention of sweepstakes records.</li>
+        <li className="pl-2"><strong>Cookies & Tracking (Opt-Outs):</strong> You have the right to direct us not to sell or share your personal information. Users may manage their cookie settings and disable tracking for ad targeting and remarketing via the "Cookie Preferences" link in our footer.</li>
+        <li className="pl-2"><strong>Opt-in Marketing Consents & Unsubscribe:</strong> Users may opt-out of marketing emails at any time via the unsubscribe link or by emailing privacy@amplify.org.</li>
+        <li className="pl-2"><strong>The Right to Correction & Non-Discrimination:</strong> You have the right to correct inaccurate personal data. Amplify will never deny you services or charge you different prices because you exercised your privacy rights.</li>
+        <li className="pl-2"><strong>Contact & Complaint Route:</strong> For verifiable consumer requests, or to escalate complaints, please email our privacy officer at privacy@amplify.org. If unsolved, you may escalate to legal@amplify.org. We also automatically detect and honor opt-out preference signals, including the Global Privacy Control (GPC), broadcasted by your browser.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Charitable Disclosures and State Reporting</h3>
+      <p className="mb-6">Amplify operates transparently as an intermediary platform facilitating charitable pledges. In compliance with the fundraising laws of various states, we provide specific disclosures to educate prospective donors about the financial mechanics of our platform. When you make a pledge through Amplify, the exact financial breakdown of your contribution—including the percentage routed to the recipient charity, the percentage allocated to the appreciation raffle prize pool, and the platform administrative fee—is explicitly detailed at the point of checkout. We are registered as required under applicable state charitable solicitation acts. For a comprehensive list of state-specific disclosure statements, please review our Charitable Solicitation Disclosure Addendum, accessible via the footer of our website.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Data Security and Breach Notification</h3>
+      <p className="mb-6">Amplify takes the security of your personal, financial, and tax information with the utmost seriousness. Payment card data is processed by Stripe — Amplify does not store full card numbers. We use encryption in transit and at rest and restrict access to a need-to-know basis.</p>
+      <p className="mb-6">While we employ rigorous security measures, no digital platform is entirely invulnerable. In the event of a security incident that compromises your unencrypted personal information, Amplify maintains a comprehensive breach response protocol. We will notify affected users without undue delay and in accordance with applicable law, and we will act rapidly to secure our systems and investigate the scope of the incident.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">Children's Privacy</h3>
+      <p className="mb-6">The services provided by Amplify, including our charitable pledge systems and monthly appreciation raffles, are strictly not intended for under-18s. If you are under 18 do not register. We do not knowingly solicit, collect, or maintain personal information from children under the age of 13, in strict compliance with the Children's Online Privacy Protection Act (COPPA), nor do we permit minors to utilize our platform. If you are a parent or guardian and discover that your child has provided us with personal information without your consent, please contact us immediately at privacy@amplify.org. Upon verification, we will take immediate steps to systematically delete any information that we learn is from a child under 13 from our databases and terminate the associated account.</p>
+    </>
+  );
+
+  const ReferralProgramContent = () => (
+    <>
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Program Overview and Eligibility</h3>
+      <p className="mb-6">The Amplify Referral Program (the "Program") provides eligible registered Users ("Referrers") the opportunity to earn financial compensation by referring new, unique paying participants ("Referred Users") to the Amplify platform. To participate, Referrers must maintain an active, verified account in good standing and be legal residents of the United States, eighteen (18) years of age or older.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Compensation Structure and Payout Mechanics</h3>
+      <p className="mb-6">Referrers are provided with a unique, trackable digital referral link. Compensation is triggered when a Referred User clicks the link, registers a new account, and successfully completes a paid contribution to enter an active Sweepstakes Tier. The compensation is distributed in two structured tranches to ensure retention and mitigate fraud:</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Tranche 1:</strong> $25 paid after the Referred User successfully completes their Month 1 subscription charge, provided the funds have fully cleared the payment processor and no chargeback has been initiated.</li>
+        <li className="pl-2"><strong>Tranche 2:</strong> An additional $25 paid after the Referred User successfully completes their Month 2 recurring subscription charge, subject to the identical fund clearance and anti-fraud conditions. Payouts are processed on a net-30 day schedule following the successful clearance of the qualifying transaction.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Anti-Fraud Policy and Clawback Provisions</h3>
+      <p className="mb-6">Amplify maintains a strict zero-tolerance policy regarding referral fraud.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Prohibitions:</strong> Referrers are expressly prohibited from engaging in self-referrals, which includes the creation of synthetic accounts, the use of aliases, or the manipulation of IP addresses to artificially trigger referral bonuses. Referred Users must be genuine, independent individuals.</li>
+        <li className="pl-2"><strong>Spam and Communication Abuse:</strong> Referrers must not utilize spam, deceptive marketing tactics, or unauthorized mass communication networks. The distribution of referral links via unsolicited SMS text messages or email campaigns that violate the Telephone Consumer Protection Act (TCPA) or the CAN-SPAM Act is strictly prohibited and will result in immediate termination.</li>
+        <li className="pl-2"><strong>Clawback Execution:</strong> If a Referred User requests a refund, initiates a credit card chargeback, or is discovered to have utilized fraudulent or stolen payment methods, any referral compensation previously paid to the Referrer connected to that specific User will be immediately clawed back. Amplify reserves the unequivocal right to deduct clawed-back amounts from the Referrer's future payouts or to charge the Referrer's payment method on file to recover the illicitly gained funds.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">4 &nbsp;&nbsp; FTC Compliance and Required Endorsement Disclosures</h3>
+      <p className="mb-6">Referrers act as independent promoters and are legally mandated to comply with the Federal Trade Commission (FTC) Guides Concerning the Use of Endorsements and Testimonials in Advertising.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Material Connection Disclosure:</strong> When sharing referral links on social media platforms, blogs, or digital channels, Referrers must clearly and conspicuously disclose their material financial connection to Amplify. Acceptable disclosures must be visible without requiring the user to click "read more" and include hashtags such as #AmplifyReferral, #AmplifyPartner, or #ad.</li>
+        <li className="pl-2"><strong>Prohibited Claims:</strong> Referrers are strictly prohibited from making false, misleading, or exaggerated claims regarding the Sweepstakes. Referrers must never state or imply that participants are guaranteed to win, misrepresent the mathematical odds of the sweepstakes, or misrepresent the charitable flow of funds to the Change Foundation.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">5 &nbsp;&nbsp; Tax Compliance and Reporting Obligations</h3>
+      <p className="mb-6">Referrers operate as independent contractors; participation in the Program does not establish an employer-employee relationship, partnership, or joint venture.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>1099-NEC Issuance:</strong> In strict compliance with Internal Revenue Service (IRS) regulations, any Referrer who earns $600 or more in cumulative referral payouts during a single calendar year will be issued an IRS Form 1099-NEC (Nonemployee Compensation).</li>
+        <li className="pl-2"><strong>W-9 Verification:</strong> Prior to the disbursement of cumulative payouts approaching the $600 regulatory threshold, the Referrer will be required to complete, electronically sign, and submit a valid IRS Form W-9. Failure to provide the required tax documentation will result in the immediate suspension of payouts and the potential forfeiture of accumulated funds subject to backup withholding regulations. Referrers bear sole responsibility for reporting and remitting all applicable federal, state, and local income taxes derived from Program earnings.</li>
+      </ul>
+    </>
+  );
+
+  const RulesContent = () => (
+    <>
+      <p className="uppercase font-bold text-xs md:text-sm tracking-wider text-slate-500 mb-10 md:mb-14">
+        NO PURCHASE, PAYMENT, OR DONATION OF ANY KIND IS NECESSARY TO ENTER OR WIN. NEITHER A PURCHASE NOR A DONATION WILL INCREASE YOUR CHANCES OF WINNING. VOID WHERE PROHIBITED BY LAW.
       </p>
-    </div>
+      
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Sponsor, Administrator, and Designated Beneficiary</h3>
+      <p className="mb-6">The Amplify Founders Circle Sweepstakes (the "Sweepstakes") is sponsored and administered by Amplify Ltd., [Insert Address] ("Sponsor"). Voluntary contributions are remitted to a donor-advised fund administered by the Change Foundation, [Insert Address] ("DAF Administrator"), which subsequently grants net proceeds to a designated charitable beneficiary specifically identified on the Platform for each separate Promotional Period.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Promotional Periods</h3>
+      <p className="mb-6">The Sweepstakes operates through a series of distinct, recurring calendar-month promotional periods (each, a "Promotional Period"). Each Promotional Period commences on the first day of the calendar month at 12:00:00 AM Eastern Time ("ET") and concludes on the last day of the calendar month at 11:59:59 PM ET.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Eligibility</h3>
+      <p className="mb-6">The Sweepstakes is strictly open to legal residents of the fifty (50) United States and the District of Columbia who have reached the age of eighteen (18) years or older (or the age of majority in their jurisdiction of residence) at the time of entry. Employees, independent contractors, officers, and directors of the Sponsor, the DAF Administrator, the designated charitable beneficiary, their respective affiliates, advertising agencies, and immediate family members (spouse, parents, siblings, children) or persons living in the same household are ineligible to participate. Entrants must not be listed on any state or federal sanctions lists and must successfully pass all required identity verification protocols.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">4 &nbsp;&nbsp; Circle Mechanics and Draw Triggers</h3>
+      <p className="mb-6">The Sweepstakes utilizes a tiered structure ($250, $500, and $1,000 Tiers). Within each Tier, entries are organized into groups defined as "Circles."</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Capacity:</strong> Each Circle is capped at exactly four hundred (400) paid participants. Multiple Circles may be generated and filled concurrently within a single Tier.</li>
+        <li className="pl-2"><strong>Active Status:</strong> A Circle achieves "Active Circle" status solely when four hundred (400) paid memberships have been successfully verified and funds have cleared. Alternative Method of Entry (AMOE) submissions do not count toward this 400-participant trigger.</li>
+        <li className="pl-2"><strong>Draw Execution:</strong> A drawing is triggered and executed for a Circle only if it achieves Active Circle status prior to the conclusion of the current Promotional Period. All drawings for Active Circles will occur on the first (1st) day of the month immediately following the end of the Promotional Period.</li>
+        <li className="pl-2"><strong>Rollover Provision:</strong> If a Circle fails to reach the 400-paid-participant threshold by the end date of the Promotional Period, the Sponsor reserves the absolute right to either (a) roll the existing participants into the corresponding filling Circle for the subsequent Promotional Period, or (b) execute the drawing for the partially filled Circle. No participant is entitled to a drawing or prize until a Circle achieves Active status.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">5 &nbsp;&nbsp; Methods of Entry</h3>
+      <p className="mb-6">Participants may enter the Sweepstakes via one of the following two methods:</p>
+      
+      <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 uppercase tracking-tight">Method A: Paid Voluntary Contribution</h4>
+      <p className="mb-6">During a Promotional Period, eligible individuals may visit the Platform, select a specific Tier, and authorize a voluntary contribution. Upon successful clearance of funds, the participant is allocated sequentially to the currently filling Circle in the selected Tier. Limit: One (1) paid entry per person, per Tier, per calendar month.</p>
+      
+      <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 uppercase tracking-tight">Method B: Alternative Method of Entry (AMOE) – Free Mail-In</h4>
+      <p className="mb-6">To enter without making a financial contribution, eligible individuals must handwrite their complete first and last name, valid email address, physical mailing address (no P.O. Boxes), telephone number, date of birth, the specific Calendar Month of entry, the unique monthly phrase (posted on the Platform on the 1st of each month), and the Specific Tier ($250, $500, or $1,000) they wish to enter on a standard 3.5" x 5" postcard.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Mailing Address:</strong> Mail the postcard with proper postage affixed to: Amplify Founders Circle AMOE, [Insert Address].</li>
+        <li className="pl-2"><strong>Limits and Processing:</strong> Limit one (1) AMOE entry per person, per month. Postcards must be postmarked by the end date of the applicable Promotional Period and received no later than five (5) business days prior to the Drawing Date. Mechanically reproduced, photocopied, illegible, or incomplete entries are strictly void.</li>
+        <li className="pl-2"><strong>AMOE Allocation Algorithm:</strong> Valid AMOE entries are aggregated by Tier. Immediately prior to the Drawing Date, the Sponsor will utilize a deterministic algorithm to allocate the AMOE entries in a round-robin fashion across all Active Circles within that specific Tier. In the event of a tie during allocation, postmark dates and digital scan timestamps will be utilized to determine placement. This protocol ensures that all AMOE entries are treated with equal dignity and possess the exact same mathematical probability of winning as paid entries within their assigned Circle.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">6 &nbsp;&nbsp; Prize Structure and Odds of Winning</h3>
+      <p className="mb-6">For each Active Circle successfully drawn, the following prizes will be awarded based on the Tier:</p>
+      <div className="overflow-x-auto my-10">
+        <table className="w-full text-left border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+          <thead>
+            <tr className="bg-slate-100 text-slate-900 uppercase text-xs tracking-wider">
+              <th className="p-3 md:p-4 border-b border-slate-200 font-bold">Tier</th>
+              <th className="p-3 md:p-4 border-b border-slate-200 font-bold">Prize Level</th>
+              <th className="p-3 md:p-4 border-b border-slate-200 font-bold text-center">Winners</th>
+              <th className="p-3 md:p-4 border-b border-slate-200 font-bold text-right">Prize Amount</th>
+              <th className="p-3 md:p-4 border-b border-slate-200 font-bold text-right">Base Odds*</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100 bg-white text-sm md:text-base">
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$250 Tier</td><td className="p-3 md:p-4 text-slate-600">Grand Prize</td><td className="p-3 md:p-4 text-center text-slate-600">1</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$25,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 400</td></tr>
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$250 Tier</td><td className="p-3 md:p-4 text-slate-600">Second Prize</td><td className="p-3 md:p-4 text-center text-slate-600">1</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$1,250</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 400</td></tr>
+            <tr className="bg-slate-50"><td className="p-3 md:p-4 font-bold text-slate-800">$250 Tier</td><td className="p-3 md:p-4 text-slate-600">Third Prize</td><td className="p-3 md:p-4 text-center text-slate-600">2</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$750</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 200</td></tr>
+            
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$500 Tier</td><td className="p-3 md:p-4 text-slate-600">Grand Prize</td><td className="p-3 md:p-4 text-center text-slate-600">1</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$50,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 400</td></tr>
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$500 Tier</td><td className="p-3 md:p-4 text-slate-600">Second Prize</td><td className="p-3 md:p-4 text-center text-slate-600">1</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$2,500</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 400</td></tr>
+            <tr className="bg-slate-50"><td className="p-3 md:p-4 font-bold text-slate-800">$500 Tier</td><td className="p-3 md:p-4 text-slate-600">Third Prize</td><td className="p-3 md:p-4 text-center text-slate-600">6</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$1,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 66.6</td></tr>
+
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$1,000 Tier</td><td className="p-3 md:p-4 text-slate-600">Grand Prize</td><td className="p-3 md:p-4 text-center text-slate-600">1</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$100,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 400</td></tr>
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$1,000 Tier</td><td className="p-3 md:p-4 text-slate-600">Second Prize</td><td className="p-3 md:p-4 text-center text-slate-600">1</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$5,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 400</td></tr>
+            <tr><td className="p-3 md:p-4 font-bold text-slate-800">$1,000 Tier</td><td className="p-3 md:p-4 text-slate-600">Third Prize</td><td className="p-3 md:p-4 text-center text-slate-600">2</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$3,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 200</td></tr>
+            <tr className="bg-slate-50"><td className="p-3 md:p-4 font-bold text-slate-800">$1,000 Tier</td><td className="p-3 md:p-4 text-slate-600">Fourth Prize</td><td className="p-3 md:p-4 text-center text-slate-600">12</td><td className="p-3 md:p-4 text-right font-bold text-slate-800">$2,000</td><td className="p-3 md:p-4 text-right text-slate-500">1 in 33.3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="text-sm text-slate-500 italic mb-6"><strong>*Odds Disclosure:</strong> The "Mathematical Base Odds" listed above represent the probability based strictly on the 400-paid-participant cap per Circle. However, the actual odds of winning depend entirely on the total number of eligible entries received for the specific drawing, including all allocated free AMOE entries. The injection of AMOE entries into an Active Circle mathematically dilutes the odds equally for all participants within that Circle.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">7 &nbsp;&nbsp; Winner Selection and Prize Allocation</h3>
+      <p className="mb-6">On the designated Drawing Date, the Sponsor will execute a drawing for each Active Circle utilizing a provably fair, deterministically seeded Random Number Generator (RNG) or a certified third-party auditing service.</p>
+      <p className="mb-6">For a given Active Circle, the Sponsor will randomly select <em>k</em> unique eligible entries (where <em>k</em> represents the total number of prize slots for that specific Tier) from the combined pool of paid and AMOE entries assigned to that Circle, forming the "Winners Pool." No entrant may be selected more than once in the same monthly drawing. Following the population of the Winners Pool, the specific prizes (Grand, Second, Third, etc.) will be randomly assigned to the unique individuals within the pool without replacement until all prizes are exhausted.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">8 &nbsp;&nbsp; Winner Notification, Verification, and Taxation</h3>
+      <p className="mb-6">Potential Winners will be notified via email and/or telephone within forty-eight (48) hours following the drawing.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Response and Verification:</strong> Potential Winners must respond within three (3) business days. Verification requires the execution and return of an Affidavit of Eligibility, a Liability Release, and a Publicity Release (where permitted by law).</li>
+        <li className="pl-2"><strong>Identity and Tax Documentation:</strong> Potential Winners must pass rigorous identity verification protocols, including the provision of a government-issued photo ID. Furthermore, because all prizes exceed the federal reporting threshold, all Winners must submit a completed and valid IRS Form W-9.</li>
+        <li className="pl-2"><strong>Tax Liability:</strong> All federal, state, and local taxes, and any other costs associated with prize acceptance, are the sole responsibility of the Winner. The Sponsor will issue an IRS Form 1099-MISC to all Winners. If a Winner fails to respond, fails identity verification, or refuses to provide a W-9, the prize is forfeited, and an alternate winner will be selected.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">9 &nbsp;&nbsp; State Registration and Bonding</h3>
+      <p className="mb-6">In compliance with state regulations governing high-value promotions, this Sweepstakes has been formally registered, and a surety bond covering the aggregate retail value of all prizes has been posted with the Florida Department of Agriculture and Consumer Services and the New York State Department of State.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">10 &nbsp;&nbsp; General Conditions</h3>
+      <p className="mb-6">The Sponsor reserves the right to suspend, modify, or cancel the Sweepstakes in the event of technical failure, network attacks, fraud, force majeure, or any other circumstance that destroys the integrity or viability of the promotion. Disputes will be governed by the laws of Florida and resolved via binding arbitration as stipulated in the Platform Terms of Service.</p>
+    </>
+  );
+
+  const TermsContent = () => (
+    <>
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Binding Contract and Acceptance of Terms</h3>
+      <p className="mb-6">These Terms of Service (the "Agreement") constitute a legally binding contract between you (the "User", "Participant", or "Ambassador") and Amplify Ltd., a for-profit limited liability company ("Amplify", "Sponsor", "we", or "us"). This Agreement governs your access to and use of the Amplify digital platform, website, and related promotional services (collectively, the "Services"). By registering an account, making a voluntary contribution, or accessing the Services, you unconditionally accept and agree to be bound by the terms herein, including the binding arbitration provision and class action waiver detailed in Section 10. If you do not agree to these terms, you must immediately cease use of the Services.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Platform Operation and Financial Flow</h3>
+      <p className="mb-6">Amplify is a for-profit promotional platform designed to facilitate philanthropic giving through incentivized sweepstakes. When a User makes a voluntary contribution through the Platform, one hundred percent (100%) of the gross contribution is remitted directly to a donor-advised fund ("DAF") administered by the Change Foundation, a nationally recognized 501(c)(3) public charity. The Change Foundation will subsequently deduct expenses and fees related to sweepstakes administration—which includes platform licensing fees, advertising costs, prize fulfillment reserves, and management operations—and grant the net proceeds to a designated charitable beneficiary identified for each monthly promotional period. While contributions are routed to a registered charity, Amplify itself is a for-profit entity, and Users are strongly advised to consult a qualified tax professional regarding the tax deductibility of any contribution.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Account Registration and Eligibility</h3>
+      <p className="mb-6">Access to the Services requires the creation of a registered account. The Services are intended solely for individuals who are at least eighteen (18) years of age, or the age of majority in their jurisdiction of legal residence, and who are legal residents of the fifty (50) United States and the District of Columbia. You represent and warrant that all information provided during registration is accurate, current, and complete. You are solely responsible for maintaining the confidentiality of your account credentials and for all activities executing under your profile. Amplify reserves the absolute right to suspend or terminate any account suspected of utilizing false identities or engaging in fraudulent behavior.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">4 &nbsp;&nbsp; Subscription Billing, Payments, and Chargebacks</h3>
+      <p className="mb-6">By electing to participate in a paid entry tier, you authorize Amplify and its designated third-party payment processors (e.g., Stripe) to immediately charge your provided payment method.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Recurring Billing:</strong> If you select a recurring subscription model, your payment method will be automatically charged on a recurring monthly cadence corresponding to the Promotional Periods. Charges will be initiated a designated number of days prior to the subsequent drawing to ensure the clearance of funds.</li>
+        <li className="pl-2"><strong>Failed Transactions:</strong> A paid membership is strictly contingent upon the successful receipt of funds. If a recurring charge fails, the system will execute retry protocols. If funds are not successfully captured prior to the drawing trigger, your paid membership for that specific drawing is voided, and you will be removed from the active Circle.</li>
+        <li className="pl-2"><strong>Refund Policy:</strong> All voluntary contributions are final and non-refundable. Refunds will only be issued in the event that a Circle fails to fill and the Sponsor elects to cancel the specific drawing rather than rolling the entries over, in which case a refund will be processed to the original payment method.</li>
+        <li className="pl-2"><strong>Chargeback Liability:</strong> Users who initiate unauthorized chargebacks or payment reversals will be subject to immediate account termination, forfeiture of any pending sweepstakes prizes or referral payouts, and potential civil liability for processing fees and damages.</li>
+      </ul>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">5 &nbsp;&nbsp; Sweepstakes Participation</h3>
+      <p className="mb-6">All sweepstakes, drawings, and promotions conducted on the Platform are governed exclusively by the Official Rules applicable to that specific promotion. In the event of any direct conflict between this Agreement and the Official Rules, the Official Rules shall govern regarding sweepstakes mechanics. No purchase or voluntary donation is ever required to enter a sweepstakes.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">6 &nbsp;&nbsp; User Conduct and Anti-Abuse Policies</h3>
+      <p className="mb-6">You agree to use the Services strictly for lawful, personal, and non-commercial purposes. You are expressly prohibited from:</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2">Utilizing automated scripts, bots, or robotic means to create accounts, submit entries, or scrape data from the Platform.</li>
+        <li className="pl-2">Submitting forged, mechanically reproduced, or fraudulent Alternative Method of Entry (AMOE) mail-in requests.</li>
+        <li className="pl-2">Circumventing geographic restrictions, geo-filtering mechanisms, or identity verification protocols.</li>
+        <li className="pl-2">Engaging in activities that violate Anti-Money Laundering (AML) statutes or Office of Foreign Assets Control (OFAC) sanctions.</li>
+      </ul>
+      <p className="mb-6">Amplify employs sophisticated IP monitoring and behavioral analytics to detect abuse and reserves the right to void entries and report illicit activity to federal and state authorities.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">7 &nbsp;&nbsp; Intellectual Property Rights</h3>
+      <p className="mb-6">All content, software code, visual interfaces, graphics, and trademarks associated with the Services are the exclusive intellectual property of Amplify or its licensors. You are granted a limited, revocable, non-exclusive license to utilize the Platform. Any User Content you submit, including testimonials or photographs, grants Amplify a perpetual, worldwide, royalty-free license to use, reproduce, and display such content in marketing and promotional materials without further compensation.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">8 &nbsp;&nbsp; Limitation of Liability and Disclaimers</h3>
+      <p className="mb-6">To the maximum extent permitted by applicable law, the Services are provided on an "as-is" and "as-available" basis without warranties of any kind, whether express or implied. Amplify, the Change Foundation, the designated beneficiaries, and their respective officers, directors, and agents (the "Released Parties") shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of your access to or inability to access the Services. Users residing in California expressly waive California Civil Code Section 1542, which states: "A general release does not extend to claims that the creditor or releasing party does not know or suspect to exist in his or her favor at the time of executing the release and that, if known by him or her, would have materially affected his or her settlement with the debtor or released party."</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">9 &nbsp;&nbsp; Indemnification</h3>
+      <p className="mb-6">You agree to defend, indemnify, and hold harmless the Released Parties from and against any claims, liabilities, damages, judgments, awards, losses, costs, expenses, or fees (including reasonable attorneys' fees) arising out of or relating to your violation of this Agreement, your use of the Services, or your violation of any applicable laws or regulations.</p>
+
+      <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">10 &nbsp;&nbsp; Dispute Resolution and Binding Arbitration</h3>
+      <p className="mb-6">Please read this section carefully as it affects your legal rights. Any and all disputes, claims, or causes of action arising out of or connected with this Agreement, the Services, or any sweepstakes shall be resolved exclusively through final and binding arbitration administered by the American Arbitration Association (AAA) under its Commercial Arbitration Rules, excluding any rules permitting class actions.</p>
+      <ul className="list-disc pl-6 space-y-4 mb-6">
+        <li className="pl-2"><strong>Class Action Waiver:</strong> You agree that any arbitration or litigation shall be conducted solely in your individual capacity, and you expressly waive any right to participate as a plaintiff or class member in any class, representative, or consolidated proceeding.</li>
+        <li className="pl-2"><strong>Jurisdiction:</strong> The arbitration shall take place in the State of Florida, and this Agreement shall be governed by the laws of the State of Florida without regard to conflict of law principles.</li>
+        <li className="pl-2"><strong>Small Claims Exception:</strong> Notwithstanding the foregoing, either party may seek relief in a small claims court for disputes within the scope of that court's jurisdiction.</li>
+      </ul>
+    </>
   );
 
   const renderHomePage = () => {
@@ -964,7 +1200,7 @@ const App = () => {
           
           <div className="mt-12 md:mt-16 text-center px-4">
             <p className="text-slate-400 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] max-w-2xl mx-auto leading-relaxed text-center">
-              * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See official rules for details.
+              * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <button onClick={() => navigateTo('rules')} className="underline hover:text-slate-600 transition-colors">official rules</button> for details.
             </p>
           </div>
         </div>
@@ -1018,8 +1254,10 @@ const App = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 mb-8 md:mb-12">
             <div className="flex items-center gap-2"><LogoIcon /><span className="text-xl md:text-2xl font-black text-white tracking-tighter uppercase">Amplify</span></div>
             <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">
+              <button onClick={() => navigateTo('rules')} className="hover:text-white transition-colors">Official Rules</button>
               <button onClick={() => navigateTo('privacy')} className="hover:text-white transition-colors">Privacy</button>
               <button onClick={() => navigateTo('terms')} className="hover:text-white transition-colors">Terms</button>
+              <button onClick={() => navigateTo('referral')} className="hover:text-white transition-colors">Referral Program</button>
               <button onClick={() => navigateTo('contact')} className="hover:text-white transition-colors">Contact</button>
             </div>
         </div>
@@ -1034,7 +1272,9 @@ const App = () => {
     case 'checkout': return renderCheckoutPage();
     case 'contact': return renderContactPage();
     case 'privacy': return <ContentPage title="Privacy Policy" content={<PrivacyPolicyContent />} />;
-    case 'terms': return <ContentPage title="Terms of Service" content={<><p className="mb-6">Welcome to Amplify. By accessing or using our platform, you agree to be bound by these Terms of Service.</p><h3 className="text-xl md:text-2xl font-black text-indigo-900 mb-3 md:mb-4 mt-8 uppercase tracking-tight">Membership</h3><p className="mb-4">Membership in an Amplify circle involves a recurring monthly contribution. You may cancel your membership at any time prior to the monthly charge.</p><h3 className="text-xl md:text-2xl font-black text-indigo-900 mb-3 md:mb-4 mt-8 uppercase tracking-tight">Charitable Contributions</h3><p>All contributions are directed to verified 501(c)(3) organizations. While we vet all beneficiaries, Amplify does not warrant the activities of third-party charities.</p></>} />;
+    case 'rules': return <ContentPage title="Official Sweepstakes Rules" content={<RulesContent />} />;
+    case 'terms': return <ContentPage title="Terms of Service" content={<TermsContent />} />;
+    case 'referral': return <ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />;
     case 'home':
     default: return renderHomePage();
   }
