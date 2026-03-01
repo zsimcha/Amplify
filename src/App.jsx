@@ -299,8 +299,13 @@ const App = () => {
                {['silver', 'gold', 'diamond'].map((tier) => (
                   <div 
                     key={tier} 
-                    onClick={() => { handleJoinClick(tier); setShowTierModal(false); }}
-                    className={`${modalPricingTab === tier ? 'flex animate-in fade-in slide-in-from-bottom-2' : 'hidden'} md:flex bg-white rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 border flex-col h-full border-slate-200 relative overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(79,70,229,0.2)] hover:border-indigo-200 cursor-pointer group`}
+                    onClick={() => { 
+                      if (window.innerWidth >= 768) {
+                        handleJoinClick(tier); 
+                        setShowTierModal(false);
+                      }
+                    }}
+                    className={`${modalPricingTab === tier ? 'flex animate-in fade-in slide-in-from-bottom-2' : 'hidden'} md:flex bg-white rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 border flex-col h-full border-slate-200 relative overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(79,70,229,0.2)] hover:border-indigo-200 md:cursor-pointer group`}
                   >
                       {renderTierCardContent(tier)}
                   </div>
@@ -1177,8 +1182,7 @@ const App = () => {
             {['silver', 'gold', 'diamond'].map((tier) => (
                 <div 
                   key={tier} 
-                  onClick={() => { handleJoinClick(tier); setShowTierModal(false); }}
-                  className={`${mobilePricingTab === tier ? 'flex animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'} bg-white rounded-3xl p-5 border border-slate-200 relative overflow-hidden flex-col shadow-sm cursor-pointer group hover:border-indigo-200`}
+                  className={`${mobilePricingTab === tier ? 'flex animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'} bg-white rounded-3xl p-5 border border-slate-200 relative overflow-hidden flex-col shadow-sm group hover:border-indigo-200`}
                 >
                     {renderTierCardContent(tier)}
                 </div>
@@ -1191,7 +1195,7 @@ const App = () => {
                 <div 
                   key={tier} 
                   onClick={() => { handleJoinClick(tier); setShowTierModal(false); }}
-                  className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] hover:border-indigo-200 cursor-pointer group"
+                  className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] hover:border-indigo-200 md:cursor-pointer group"
                 >
                     {renderTierCardContent(tier)}
                 </div>
