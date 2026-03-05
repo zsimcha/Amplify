@@ -14,11 +14,12 @@ import RulesContent from './components/RulesContent';
 import TermsContent from './components/TermsContent';
 
 // --- BACKEND CONFIGURATION ---
-const SUPABASE_URL = 'https://gloncuhgefzrpuwbzoke.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdsb25jdWhnZWZ6cnB1d2J6b2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NTEzMDMsImV4cCI6MjA4NzMyNzMwM30.GyAvJWh0F3Uha4-h33UFjZmZeVtSoTH6i-oQXzxttI8';
+// Fixed the duplicate string errors and added environment variable support
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://gloncuhgefzrpuwbzoke.supabase.co';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdsb25jdWhnZWZ6cnB1d2J6b2tlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NTEzMDMsImV4cCI6MjA4NzMyNzMwM30.GyAvJWh0F3Uha4-h33UFjZmZeVtSoTH6i-oQXzxttI8';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwvnzkqp';
+const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xwvnzkqp';
 
 const INTEGRATION_CONFIG = {
   stripeCheckoutUrl: "#", // Replace with your actual Stripe Payment Link later
