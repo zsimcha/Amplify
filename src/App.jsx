@@ -1,4 +1,4 @@
-Updated App.jsxCopy this entire block and use it to replace your current src/App.jsx file.import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Shield, Heart, Trophy, CheckCircle, Info, Star, Building, 
   ChevronDown, ChevronUp, Play, Presentation, ExternalLink, 
