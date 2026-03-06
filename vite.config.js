@@ -5,8 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // This tells Vite to always return index.html for unknown URLs,
-    // allowing react-router to handle the page changes
-    historyApiFallback: true, 
+    historyApiFallback: true,
   }
 })
