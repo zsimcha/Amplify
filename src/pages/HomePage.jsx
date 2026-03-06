@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trophy, Check, Menu, X, Users, Sparkles, Rocket, TrendingUp, Gift, Heart, Building, ChevronUp, ChevronDown } from 'lucide-react';
+import { Trophy, Check, Menu, X, Users, Sparkles, Rocket, TrendingUp, Gift, Heart, Building, ChevronUp, ChevronDown, HelpCircle } from 'lucide-react';
 import { LogoIcon } from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 
@@ -51,6 +51,48 @@ const HomePage = ({ appData }) => {
     { q: "Is my contribution tax-deductible?", a: "Donations benefiting a 501(c)(3) organization are tax-deductible in the US to the extent permitted by law." },
     { q: "Are the drawings required?", a: "No. Participation in any drawings or appreciation rewards is provided solely as a thank-you for consistent giving. You may opt out of the sweepstakes at any time." }
   ];
+
+  const renderTierCardContent = (tier) => (
+    <div className="flex flex-col h-full relative z-10">
+        <div className="flex justify-between items-center mb-5 md:mb-6">
+            <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{tier}</h3>
+            <span className="text-xs md:text-sm font-black text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">${appData.tierData[tier].price.toLocaleString()} / mo</span>
+        </div>
+        <div className="text-center py-6 md:py-8 bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-slate-100 mb-5 md:mb-6 shadow-inner">
+            <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-2">Monthly Grand Prize</p>
+            <p className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{appData.tierData[tier].prize}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0">
+             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center">
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Raffle Odds</p>
+                 <p className="font-black text-slate-800 text-sm md:text-base">1 / 400</p>
+             </div>
+             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center relative group/odds">
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1 cursor-help">
+                   Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
+                 </p>
+                 <p className="font-black text-slate-800 text-sm md:text-base">{appData.tierData[tier].totalOdds}</p>
+                 <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible transition-all duration-200 z-50 text-center pointer-events-none">
+                    The estimated probability of winning <em>any</em> prize in this tier.
+                    <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
+                 </div>
+             </div>
+        </div>
+        <div className="space-y-4 md:space-y-5 mb-6 md:mb-8 flex-grow text-center">
+            <div>
+                <p className="font-bold text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px] mb-2 md:mb-3">Other Monthly Prizes</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                    {appData.tierData[tier].otherPrizes.map((p, idx) => (
+                        <span key={idx} className="bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl text-xs md:text-sm font-black text-slate-700 shadow-sm">{p}</span>
+                    ))}
+                </div>
+            </div>
+        </div>
+        <button className="w-full py-4 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white md:hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap active:bg-indigo-900">
+            <span>Select</span><span className="text-white/40 font-normal opacity-70">•</span><span>${appData.tierData[tier].price.toLocaleString()}/mo</span>
+        </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth relative">
@@ -242,45 +284,7 @@ const HomePage = ({ appData }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left max-w-5xl mx-auto">
             {['silver', 'gold', 'diamond'].map((tier) => (
                 <div key={tier} onClick={() => handleJoinClick(tier)} className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 md:hover:-translate-y-2 md:hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] md:hover:border-indigo-200 cursor-pointer group">
-                    <div className="flex flex-col h-full relative z-10">
-                        <div className="flex justify-between items-center mb-5 md:mb-6">
-                            <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{tier}</h3>
-                            <span className="text-xs md:text-sm font-black text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">${appData.tierData[tier].price.toLocaleString()} / mo</span>
-                        </div>
-                        <div className="text-center py-6 md:py-8 bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-slate-100 mb-5 md:mb-6 shadow-inner">
-                            <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-2">Monthly Grand Prize</p>
-                            <p className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{appData.tierData[tier].prize}</p>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0">
-                             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center">
-                                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Raffle Odds</p>
-                                 <p className="font-black text-slate-800 text-sm md:text-base">1 / 400</p>
-                             </div>
-                             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center relative group/odds">
-                                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1 cursor-help">
-                                   Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
-                                 </p>
-                                 <p className="font-black text-slate-800 text-sm md:text-base">{appData.tierData[tier].totalOdds}</p>
-                                 <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible transition-all duration-200 z-50 text-center pointer-events-none">
-                                    The estimated probability of winning <em>any</em> prize in this tier.
-                                    <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
-                                 </div>
-                             </div>
-                        </div>
-                        <div className="space-y-4 md:space-y-5 mb-6 md:mb-8 flex-grow text-center">
-                            <div>
-                                <p className="font-bold text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px] mb-2 md:mb-3">Other Monthly Prizes</p>
-                                <div className="flex flex-wrap justify-center gap-2">
-                                    {appData.tierData[tier].otherPrizes.map((p, idx) => (
-                                        <span key={idx} className="bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl text-xs md:text-sm font-black text-slate-700 shadow-sm">{p}</span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                        <button className="w-full py-4 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white md:hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap active:bg-indigo-900">
-                            <span>Select</span><span className="text-white/40 font-normal opacity-70">•</span><span>${appData.tierData[tier].price.toLocaleString()}/mo</span>
-                        </button>
-                    </div>
+                    {renderTierCardContent(tier)}
                 </div>
             ))}
           </div>
