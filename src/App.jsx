@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 
 import HomePage from './pages/HomePage';
@@ -65,7 +65,7 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage appData={appData} />} />
         <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
@@ -75,7 +75,7 @@ const App = () => {
         <Route path="/terms" element={<ContentPage title="Terms of Service" content={<TermsContent />} />} />
         <Route path="/referral" element={<ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
