@@ -206,8 +206,19 @@ const App = () => {
 
   const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    
+    // Strict Client-Side Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(checkoutForm.email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+    if (checkoutForm.phone.length < 14) {
+        alert("Please enter a complete phone number.");
+        return;
+    }
 
+    setIsLoading(true);
     const { tier, community } = selectionRef.current;
 
     try {
@@ -454,7 +465,7 @@ const App = () => {
                           </div>
                           <div>
                             <label htmlFor="email" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Email</label>
-                            <input id="email" name="email" autoComplete="email" required type="email" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="john@example.com" />
+                            <input id="email" name="email" autoComplete="email" required type="email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" title="Please enter a valid email address with a domain (e.g., name@example.com)" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="john@example.com" />
                           </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -644,7 +655,8 @@ const App = () => {
             <button onClick={() => scrollToSection('how')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">How it works</button>
             <button onClick={() => scrollToSection('why')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Why Amplify</button>
             <button onClick={() => scrollToSection('beneficiary')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Beneficiary</button>
-            <button onClick={() => scrollToSection('communities')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Communities</button>
+            {/* Nav link hidden for now */}
+            {/* <button onClick={() => scrollToSection('communities')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Communities</button> */}
             <button onClick={() => scrollToSection('tiers')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">The Circles</button>
           </div>
           <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)} aria-label="Open Menu"><Menu size={24} /></button>
@@ -662,7 +674,8 @@ const App = () => {
                 <button onClick={() => scrollToSection('how')} className="text-left border-b border-slate-50 pb-3">How it works</button>
                 <button onClick={() => scrollToSection('why')} className="text-left border-b border-slate-50 pb-3">Why Amplify</button>
                 <button onClick={() => scrollToSection('beneficiary')} className="text-left border-b border-slate-50 pb-3">Beneficiary</button>
-                <button onClick={() => scrollToSection('communities')} className="text-left border-b border-slate-50 pb-3">Communities</button>
+                {/* Nav link hidden for now */}
+                {/* <button onClick={() => scrollToSection('communities')} className="text-left border-b border-slate-50 pb-3">Communities</button> */}
                 <button onClick={() => scrollToSection('tiers')} className="text-left border-b border-slate-50 pb-3">The Circles</button>
                 <button onClick={() => scrollToSection('faq')} className="text-left border-b border-slate-50 pb-3">FAQ</button>
             </div>
@@ -713,19 +726,29 @@ const App = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 tracking-tight uppercase italic text-white">How it Works</h2>
             <p className="text-indigo-200 text-base md:text-lg font-medium max-w-2xl mx-auto">Strategic Tzedakah, simplified and amplified.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <div className="bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-row md:flex-col items-center md:items-center text-left md:text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
-              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mr-5 md:mr-0 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
+          
+          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+            
+            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
+              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
               <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p></div>
             </div>
-            <div className="bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-row md:flex-col items-center md:items-center text-left md:text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
-              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mr-5 md:mr-0 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
+            
+            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
+              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
               <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, empowering our rotating charity partners to achieve critical milestones.</p></div>
             </div>
-            <div className="bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-row md:flex-col items-center md:items-center text-left md:text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
-              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mr-5 md:mr-0 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
+            
+            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
+              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
               <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive entry into a drawing that triggers the moment your circle reaches 400 members, offering total odds up to 1/25.</p></div>
             </div>
+
+          </div>
+          <div className="md:hidden flex justify-center gap-2 mt-2">
+            <div className="w-2 h-2 rounded-full bg-[#eab308]"></div>
+            <div className="w-2 h-2 rounded-full bg-white/20"></div>
+            <div className="w-2 h-2 rounded-full bg-white/20"></div>
           </div>
         </div>
       </section>
@@ -737,24 +760,37 @@ const App = () => {
               <h2 className="text-3xl md:text-5xl font-black text-indigo-950 mb-3 md:mb-4 tracking-tighter uppercase leading-none italic">Why Amplify?</h2>
               <p className="text-base md:text-xl text-slate-500 font-medium max-w-2xl mx-auto">A smarter, more rewarding way to give back to the community.</p>
            </div>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-              <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+           
+           <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+              
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
                  <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Transformational Impact</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Huge grants make a huge difference. By pooling resources, we fund critical, massive milestones rather than just being a drop in the bucket.</p></div>
               </div>
-              <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+              
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
                  <div className="bg-amber-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-amber-600 mb-4 sm:mb-0 sm:mr-6"><TrendingUp size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our reward model drives unprecedented volume and consistency. By combining our giving, we create a multiplier effect that empowers charities to tackle their biggest challenges.</p></div>
               </div>
-              <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+              
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
                  <div className="bg-blue-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-blue-600 mb-4 sm:mb-0 sm:mr-6"><Users size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Jewish Unity</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We are fundamentally stronger together. Amplify unites communities globally, combining our Tzedakah to achieve a massive shared vision.</p></div>
               </div>
-              <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+              
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
                  <div className="bg-rose-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-rose-600 mb-4 sm:mb-0 sm:mr-6"><Gift size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Meaningful Appreciation</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Life-changing prizes are our way of saying thank you. Providing immense value in appreciation encourages our members to give continuously and consistently.</p></div>
               </div>
+              
            </div>
+           
+           <div className="md:hidden flex justify-center gap-2 mt-2">
+            <div className="w-2 h-2 rounded-full bg-indigo-900"></div>
+            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+          </div>
         </div>
       </section>
 
@@ -785,8 +821,8 @@ const App = () => {
         </div>
       </section>
 
-      {/* Communities Section */}
-      <section id="communities" className="py-16 md:py-24 bg-slate-50 border-t border-slate-100 px-4 text-center">
+      {/* Communities Section - HIDDEN FOR NOW */}
+      {/* <section id="communities" className="py-16 md:py-24 bg-slate-50 border-t border-slate-100 px-4 text-center">
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-10 md:mb-16">
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-3 md:mb-4 tracking-tighter uppercase leading-none italic">Amplify Communities</h2>
@@ -840,9 +876,10 @@ const App = () => {
           )}
         </div>
       </section>
+      */}
 
-      {/* Tiers / Pricing */}
-      <section id="tiers" className="py-16 md:py-24 bg-white px-4 text-center overflow-hidden">
+      {/* Tiers / Pricing (Now has border-t since Communities is hidden) */}
+      <section id="tiers" className="py-16 md:py-24 bg-white px-4 text-center overflow-hidden border-t border-slate-100">
         <div className="max-w-6xl mx-auto text-center">
           <div className="text-center mb-10 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 tracking-tight uppercase text-indigo-950 leading-none">Pick Your Impact</h2>
@@ -898,23 +935,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* REWRITTEN INTEGRITY SECTION */}
-      <section className="py-16 md:py-20 bg-indigo-950 text-white px-4 text-center">
-        <div className="max-w-5xl mx-auto">
-          <Shield size={40} className="md:w-12 md:h-12 mx-auto mb-6 md:mb-8 text-indigo-400" />
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 uppercase text-indigo-100">Commitment to Integrity</h2>
-          <p className="text-indigo-200 text-sm md:text-lg mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
-            Amplify is built on a foundation of absolute transparency. We partner exclusively with highly-vetted organizations to ensure your collective Tzedakah creates guaranteed, trackable impact.
-          </p>
-          <div className="inline-flex flex-col md:flex-row justify-center gap-4 md:gap-8 items-center px-6 md:px-10 py-5 md:py-6 border border-indigo-800 rounded-2xl md:rounded-3xl bg-indigo-900/50 w-full sm:w-auto">
-            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1">Impact Vetting</p><p className="font-bold text-sm">Proven 501(c)(3) Partners</p></div>
-            <div className="w-16 h-px md:w-px md:h-10 bg-indigo-800"></div>
-            <div className="text-center md:text-left"><p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 mb-1">Receipts</p><p className="font-bold text-sm">100% Tax Deductible</p></div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-slate-950 text-slate-500 py-12 md:py-16 px-4">
+      <footer className="bg-slate-950 text-slate-500 py-12 md:py-16 px-4 border-t border-slate-900">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12 mb-8 md:mb-12">
             <div className="flex items-center gap-2"><LogoIcon /><span className="text-xl md:text-2xl font-black text-white tracking-tighter uppercase">Amplify</span></div>
             <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">
