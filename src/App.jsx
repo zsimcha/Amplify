@@ -57,8 +57,9 @@ const App = () => {
   const [selectedTier, setSelectedTier] = useState('silver');
   const [showTierModal, setShowTierModal] = useState(false);
   
-  const [mobilePricingTab, setMobilePricingTab] = useState('silver');
-  const [modalPricingTab, setModalPricingTab] = useState('silver');
+  // Mobile Carousel Tracking State
+  const [activeHowCard, setActiveHowCard] = useState(0);
+  const [activeWhyCard, setActiveWhyCard] = useState(0);
   
   const [openFaq, setOpenFaq] = useState(null);
   const [showAllFaqs, setShowAllFaqs] = useState(false);
@@ -87,10 +88,23 @@ const App = () => {
 
   const formatPhoneNumber = (value) => {
     if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, '');
+    let phoneNumber = value.replace(/[^\d]/g, '');
+    
+    // Automatically strip leading US country code '1' if they copy-pasted or autofilled +1
+    if (phoneNumber.length === 11 && phoneNumber.startsWith('1')) {
+      phoneNumber = phoneNumber.substring(1);
+    }
+    
     if (phoneNumber.length < 4) return phoneNumber;
     if (phoneNumber.length < 7) return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
     return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
+
+  const handleCarouselScroll = (e, setCardIndex) => {
+    // Calculates which card is currently closest to the center of the scroll container
+    const { scrollLeft, clientWidth } = e.target;
+    const index = Math.round(scrollLeft / clientWidth);
+    setCardIndex(index);
   };
 
   useEffect(() => {
@@ -149,6 +163,7 @@ const App = () => {
   };
 
   useEffect(() => { selectionRef.current = { tier: selectedTier, community: selectedCommunity }; }, [selectedTier, selectedCommunity]);
+  
   useEffect(() => {
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
@@ -210,11 +225,11 @@ const App = () => {
     // Strict Client-Side Validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(checkoutForm.email)) {
-        alert("Please enter a valid email address.");
+        alert("Please enter a valid email address with a domain (e.g. name@example.com).");
         return;
     }
     if (checkoutForm.phone.length < 14) {
-        alert("Please enter a complete phone number.");
+        alert("Please enter a complete 10-digit phone number.");
         return;
     }
 
@@ -308,10 +323,11 @@ const App = () => {
              </div>
              <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center relative group/odds">
                  <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1 cursor-help">
-                   Total Odds <HelpCircle size={10} className="text-slate-400 group-hover/odds:text-indigo-600 transition-colors" />
+                   Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
                  <p className="font-black text-slate-800 text-sm md:text-base">{appData.tierData[tier].totalOdds}</p>
-                 <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case opacity-0 invisible group-hover/odds:opacity-100 group-hover/odds:visible transition-all duration-200 z-50 text-center">
+                 {/* Tooltip visible on hover (desktop) */}
+                 <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible transition-all duration-200 z-50 text-center">
                     The estimated probability of winning <em>any</em> prize in this tier.
                     <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
                  </div>
@@ -329,7 +345,7 @@ const App = () => {
         </div>
         <button 
           onClick={(e) => { e.stopPropagation(); handleJoinClick(tier); setShowTierModal(false); }} 
-          className="w-full py-3.5 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[11px] md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white group-hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap"
+          className="w-full py-4 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white md:hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap active:bg-indigo-900"
         >
             <span>Select</span><span className="text-white/40 font-normal opacity-70">•</span><span>${appData.tierData[tier].price.toLocaleString()}/mo</span>
         </button>
@@ -337,31 +353,8 @@ const App = () => {
   );
 
   const TierSelectionModal = () => {
-    if (!showTierModal || !appData) return null;
-    return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true">
-         <div className="fixed inset-0 bg-indigo-950/80 backdrop-blur-md" onClick={() => setShowTierModal(false)}></div>
-         <div className="relative bg-slate-50 w-full max-w-6xl rounded-3xl md:rounded-[3rem] p-5 md:p-10 shadow-2xl animate-in fade-in zoom-in-95 my-8">
-            <button onClick={() => setShowTierModal(false)} className="absolute top-4 right-4 md:top-8 md:right-8 text-slate-400 hover:text-indigo-900 transition-colors z-20 bg-white rounded-full p-2 shadow-sm" aria-label="Close"><X size={20} className="md:w-6 md:h-6" /></button>
-            <div className="text-center mb-5 md:mb-10">
-               <h3 className="text-2xl md:text-5xl font-black uppercase italic tracking-tighter text-indigo-950 mb-2 md:mb-3">Select Your Tier</h3>
-               <p className="text-slate-500 font-medium text-sm md:text-lg">Choose your impact level for the <strong className="text-indigo-900">{activeCommunity}</strong> community.</p>
-            </div>
-            <div className="md:hidden flex bg-slate-200 p-1 rounded-2xl mb-5 max-w-sm mx-auto">
-               {['silver', 'gold', 'diamond'].map((tier) => (
-                   <button key={tier} onClick={() => setModalPricingTab(tier)} className={`flex-1 py-2.5 text-[10px] font-black uppercase rounded-xl transition-all ${modalPricingTab === tier ? `bg-white shadow-sm ${getTierColor(tier)} drop-shadow-sm` : 'text-slate-500 hover:text-slate-700'}`}>{tier}</button>
-               ))}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-               {['silver', 'gold', 'diamond'].map((tier) => (
-                  <div key={tier} onClick={() => { if (window.innerWidth >= 768) { handleJoinClick(tier); setShowTierModal(false); } }} className={`${modalPricingTab === tier ? 'flex animate-in fade-in slide-in-from-bottom-2' : 'hidden'} md:flex bg-white rounded-[1.5rem] md:rounded-3xl p-5 md:p-8 border flex-col h-full border-slate-200 relative overflow-hidden shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_-10px_rgba(79,70,229,0.2)] hover:border-indigo-200 md:cursor-pointer group`}>
-                      {renderTierCardContent(tier)}
-                  </div>
-               ))}
-            </div>
-         </div>
-      </div>
-    );
+    // Left empty/hidden since we are stacking them on mobile now!
+    return null; 
   };
 
   const renderCheckoutPage = () => {
@@ -727,78 +720,80 @@ const App = () => {
             <p className="text-indigo-200 text-base md:text-lg font-medium max-w-2xl mx-auto">Strategic Tzedakah, simplified and amplified.</p>
           </div>
           
-          <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-            
-            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
+          <div 
+            onScroll={(e) => handleCarouselScroll(e, setActiveHowCard)}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+          >
+            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
               <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p></div>
             </div>
             
-            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
+            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
               <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, empowering our rotating charity partners to achieve critical milestones.</p></div>
             </div>
             
-            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 hover:bg-indigo-900 hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] hover:-translate-y-1">
+            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
               <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive entry into a drawing that triggers the moment your circle reaches 400 members, offering total odds up to 1/25.</p></div>
             </div>
-
           </div>
-          <div className="md:hidden flex justify-center gap-2 mt-2">
-            <div className="w-2 h-2 rounded-full bg-[#eab308]"></div>
-            <div className="w-2 h-2 rounded-full bg-white/20"></div>
-            <div className="w-2 h-2 rounded-full bg-white/20"></div>
+          
+          <div className="md:hidden flex justify-center gap-2 mt-4">
+            {[0, 1, 2].map(idx => (
+               <div key={idx} className={`w-2 h-2 rounded-full transition-colors duration-300 ${activeHowCard === idx ? 'bg-[#eab308]' : 'bg-white/20'}`}></div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Why Amplify Section */}
-      <section id="why" className="py-16 md:py-24 bg-slate-50 px-4 border-b border-slate-100 overflow-hidden">
+      <section id="why" className="py-16 md:py-24 bg-white px-4 border-b border-slate-100 overflow-hidden">
         <div className="max-w-7xl mx-auto">
            <div className="text-center mb-10 md:mb-16">
               <h2 className="text-3xl md:text-5xl font-black text-indigo-950 mb-3 md:mb-4 tracking-tighter uppercase leading-none italic">Why Amplify?</h2>
               <p className="text-base md:text-xl text-slate-500 font-medium max-w-2xl mx-auto">A smarter, more rewarding way to give back to the community.</p>
            </div>
            
-           <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-              
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+           <div 
+             onScroll={(e) => handleCarouselScroll(e, setActiveWhyCard)}
+             className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+           >
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Transformational Impact</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Huge grants make a huge difference. By pooling resources, we fund critical, massive milestones rather than just being a drop in the bucket.</p></div>
               </div>
               
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-amber-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-amber-600 mb-4 sm:mb-0 sm:mr-6"><TrendingUp size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our reward model drives unprecedented volume and consistency. By combining our giving, we create a multiplier effect that empowers charities to tackle their biggest challenges.</p></div>
               </div>
               
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-blue-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-blue-600 mb-4 sm:mb-0 sm:mr-6"><Users size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Jewish Unity</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We are fundamentally stronger together. Amplify unites communities globally, combining our Tzedakah to achieve a massive shared vision.</p></div>
               </div>
               
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-sm md:shadow-xl border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] hover:border-indigo-200">
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-rose-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-rose-600 mb-4 sm:mb-0 sm:mr-6"><Gift size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
                  <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Meaningful Appreciation</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Life-changing prizes are our way of saying thank you. Providing immense value in appreciation encourages our members to give continuously and consistently.</p></div>
               </div>
-              
            </div>
            
-           <div className="md:hidden flex justify-center gap-2 mt-2">
-            <div className="w-2 h-2 rounded-full bg-indigo-900"></div>
-            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
-            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
-            <div className="w-2 h-2 rounded-full bg-slate-300"></div>
+           <div className="md:hidden flex justify-center gap-2 mt-4">
+              {[0, 1, 2, 3].map(idx => (
+                 <div key={idx} className={`w-2 h-2 rounded-full transition-colors duration-300 ${activeWhyCard === idx ? 'bg-indigo-900' : 'bg-slate-200'}`}></div>
+              ))}
           </div>
         </div>
       </section>
 
-      {/* Beneficiary Section */}
-      <section id="beneficiary" className="py-16 md:py-24 bg-white px-4">
+      {/* Beneficiary Section (Updated to slate-50 background for contrast) */}
+      <section id="beneficiary" className="py-16 md:py-24 bg-slate-50 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-stretch">
-            <div className="bg-slate-50 rounded-3xl md:rounded-[3rem] p-8 md:p-16 border border-slate-100 flex flex-col justify-center text-center md:text-left">
+            <div className="bg-white rounded-3xl md:rounded-[3rem] p-8 md:p-16 border border-slate-100 flex flex-col justify-center text-center md:text-left shadow-sm">
               <p className="text-[10px] md:text-xs font-black text-indigo-600 uppercase tracking-[0.4em] mb-3 md:mb-4">This Month's Mission</p>
               <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 md:mb-8 tracking-tighter uppercase italic">Chai Lifeline</h2>
               <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed mb-8 md:mb-10">
@@ -878,32 +873,22 @@ const App = () => {
       </section>
       */}
 
-      {/* Tiers / Pricing (Now has border-t since Communities is hidden) */}
+      {/* Tiers / Pricing (STACKED ON MOBILE) */}
       <section id="tiers" className="py-16 md:py-24 bg-white px-4 text-center overflow-hidden border-t border-slate-100">
         <div className="max-w-6xl mx-auto text-center">
           <div className="text-center mb-10 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 tracking-tight uppercase text-indigo-950 leading-none">Pick Your Impact</h2>
             <p className="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] italic">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
           </div>
-          <div className="md:hidden flex bg-slate-200 p-1 rounded-2xl mb-5 max-w-sm mx-auto">
-             {['silver', 'gold', 'diamond'].map((tier) => (
-                 <button key={tier} onClick={() => setMobilePricingTab(tier)} className={`flex-1 py-2.5 text-[10px] font-black uppercase rounded-xl transition-all ${mobilePricingTab === tier ? `bg-white shadow-sm ${getTierColor(tier)} drop-shadow-sm` : 'text-slate-500 hover:text-slate-700'}`}>{tier}</button>
-             ))}
-          </div>
-          <div className="md:hidden">
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left max-w-5xl mx-auto">
             {['silver', 'gold', 'diamond'].map((tier) => (
-                <div key={tier} onClick={() => { handleJoinClick(tier); setShowTierModal(false); }} className={`${mobilePricingTab === tier ? 'flex animate-in fade-in slide-in-from-bottom-2 duration-300' : 'hidden'} bg-white rounded-3xl p-5 border border-slate-200 relative overflow-hidden flex-col shadow-sm cursor-pointer group hover:border-indigo-200`}>
+                <div key={tier} onClick={() => { handleJoinClick(tier); setShowTierModal(false); }} className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 md:hover:-translate-y-2 md:hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] md:hover:border-indigo-200 cursor-pointer group">
                     {renderTierCardContent(tier)}
                 </div>
             ))}
           </div>
-          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8 text-left max-w-5xl mx-auto">
-            {['silver', 'gold', 'diamond'].map((tier) => (
-                <div key={tier} onClick={() => { handleJoinClick(tier); setShowTierModal(false); }} className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] hover:border-indigo-200 cursor-pointer group">
-                    {renderTierCardContent(tier)}
-                </div>
-            ))}
-          </div>
+          
           <div className="mt-12 md:mt-16 text-center px-4">
             <p className="text-slate-400 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] max-w-2xl mx-auto leading-relaxed text-center">
               * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <button onClick={() => navigateTo('rules')} className="underline hover:text-slate-600 transition-colors">official rules</button> for details.
