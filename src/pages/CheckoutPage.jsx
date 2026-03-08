@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Shield, CheckCircle, ChevronDown, Search, Plus, AlertCircle } from 'lucide-react';
+import { Shield, CheckCircle, ChevronDown, Search, Plus, AlertCircle, Check } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { supabase } from '../lib/supabase';
@@ -20,13 +20,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const dropdownRef = useRef(null);
 
   const [checkoutForm, setCheckoutForm] = useState({ fullName: '', email: '', phone: '', address: '', city: '', state: '', zipCode: '' });
+  const [agreedToTerms, setAgreedToTerms] = useState(false); // NEW: Checkbox State
+  
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); // Snap to top on load
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -86,6 +88,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
     if (!checkoutForm.city.trim()) errors.city = "City is required.";
     if (checkoutForm.state.length !== 2) errors.state = "Use a 2-letter state code.";
     if (checkoutForm.zipCode.length < 5) errors.zipCode = "Enter a valid zip code.";
+    if (!agreedToTerms) errors.terms = "You must agree to the terms to proceed."; // NEW: Validation
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -243,17 +246,35 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       </div>
                       
                       <div className="pt-6 mt-6 border-t border-slate-200">
+                        {/* NEW: Explicit Terms & Conditions Checkbox */}
+                        <label className="flex items-start gap-3 cursor-pointer group mb-6">
+                          <div className="relative flex items-center justify-center mt-0.5 shrink-0">
+                            <input 
+                              type="checkbox" 
+                              className="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-md checked:bg-indigo-900 checked:border-indigo-900 transition-all cursor-pointer"
+                              checked={agreedToTerms}
+                              onChange={(e) => setAgreedToTerms(e.target.checked)}
+                            />
+                            <Check size={14} strokeWidth={3} className="text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
+                          </div>
+                          <p className="text-[10px] md:text-xs text-slate-500 font-medium leading-relaxed select-none">
+                            I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link> and <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and authorize this recurring monthly contribution.
+                          </p>
+                        </label>
+
+                        {/* NEW: Validation error specifically for terms */}
+                        {validationErrors.terms && (
+                            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
+                                <AlertCircle size={14} className="mt-0.5 shrink-0"/> <p>{validationErrors.terms}</p>
+                            </div>
+                        )}
+
                         <button type="submit" disabled={isLoading} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-2 md:gap-3 disabled:opacity-70 disabled:cursor-not-allowed active:bg-black">
                           {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Shield size={16} /> Complete Checkout</>}
                         </button>
                       </div>
                   </form>
                   
-                  <div className="mt-6 text-center">
-                      <p className="text-[10px] md:text-xs text-slate-500 font-medium px-4">
-                        Participation is subject to the <Link to="/rules" className="underline hover:text-indigo-900 transition-colors">Official Rules</Link> and <Link to="/terms" className="underline hover:text-indigo-900 transition-colors">Terms of Service</Link>. No purchase necessary.
-                      </p>
-                  </div>
                 </div>
               </div>
 

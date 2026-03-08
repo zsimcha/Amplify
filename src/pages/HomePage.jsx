@@ -29,7 +29,10 @@ const HomePage = ({ appData }) => {
     }
   };
 
-  const handleJoinClick = (tier) => { navigate('/checkout', { state: { tier } }); };
+  const handleJoinClick = (tier, e) => {
+    if (e) e.stopPropagation();
+    navigate('/checkout', { state: { tier } }); 
+  };
 
   const getTierColor = (tier) => {
     if (tier === 'silver') return 'text-slate-500';
@@ -54,16 +57,22 @@ const HomePage = ({ appData }) => {
 
   const renderTierCardContent = (tier) => (
     <div className="flex flex-col h-full relative z-10">
-        <div className="flex justify-between items-center mb-5 md:mb-6">
+        <div 
+            className="hidden md:block absolute inset-0 z-0 cursor-pointer" 
+            onClick={(e) => handleJoinClick(tier, e)}
+            aria-hidden="true"
+        ></div>
+
+        <div className="flex justify-between items-center mb-5 md:mb-6 relative z-10 pointer-events-none">
             <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{tier}</h3>
             <span className="text-xs md:text-sm font-black text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">${appData.tierData[tier].price.toLocaleString()} / mo</span>
         </div>
-        <div className="text-center py-6 md:py-8 bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-slate-100 mb-5 md:mb-6 shadow-inner">
+        <div className="text-center py-6 md:py-8 bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-slate-100 mb-5 md:mb-6 shadow-inner relative z-10 pointer-events-none">
             <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-2">Monthly Grand Prize</p>
             <p className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{appData.tierData[tier].prize}</p>
         </div>
-        <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0">
-             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center">
+        <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
+             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center pointer-events-none">
                  <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Raffle Odds</p>
                  <p className="font-black text-slate-800 text-sm md:text-base">1 / 400</p>
              </div>
@@ -71,14 +80,14 @@ const HomePage = ({ appData }) => {
                  <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1 cursor-help">
                    Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
-                 <p className="font-black text-slate-800 text-sm md:text-base">{appData.tierData[tier].totalOdds}</p>
+                 <p className="font-black text-slate-800 text-sm md:text-base pointer-events-none">{appData.tierData[tier].totalOdds}</p>
                  <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible transition-all duration-200 z-50 text-center pointer-events-none">
                     The estimated probability of winning <em>any</em> prize in this tier.
                     <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
                  </div>
              </div>
         </div>
-        <div className="space-y-4 md:space-y-5 mb-6 md:mb-8 flex-grow text-center">
+        <div className="space-y-4 md:space-y-5 mb-6 md:mb-8 flex-grow text-center relative z-10 pointer-events-none">
             <div>
                 <p className="font-bold text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px] mb-2 md:mb-3">Other Monthly Prizes</p>
                 <div className="flex flex-wrap justify-center gap-2">
@@ -88,7 +97,10 @@ const HomePage = ({ appData }) => {
                 </div>
             </div>
         </div>
-        <button className="w-full py-4 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white md:hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap active:bg-indigo-900">
+        <button 
+            onClick={(e) => handleJoinClick(tier, e)} 
+            className="w-full py-4 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white md:hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap active:bg-indigo-900 relative z-20 cursor-pointer"
+        >
             <span>Select</span><span className="text-white/40 font-normal opacity-70">•</span><span>${appData.tierData[tier].price.toLocaleString()}/mo</span>
         </button>
     </div>
@@ -135,7 +147,6 @@ const HomePage = ({ appData }) => {
         </div>
       )}
 
-      {/* Hero Section */}
       <header className="pt-20 pb-12 md:pt-24 md:pb-24 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16 items-center">
@@ -169,7 +180,6 @@ const HomePage = ({ appData }) => {
         </div>
       </header>
 
-      {/* How it Works Section */}
       <section id="how" className="py-16 md:py-24 bg-indigo-950 text-white px-4 text-center md:text-left overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="mb-10 md:mb-16 text-center">
@@ -205,7 +215,6 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Why Amplify Section */}
       <section id="why" className="py-16 md:py-24 bg-white px-4 border-b border-slate-100 overflow-hidden">
         <div className="max-w-7xl mx-auto">
            <div className="text-center mb-10 md:mb-16">
@@ -246,7 +255,6 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Beneficiary Section */}
       <section id="beneficiary" className="py-16 md:py-24 bg-slate-50 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-stretch">
@@ -273,7 +281,6 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Tiers / Pricing (STACKED ON MOBILE) */}
       <section id="tiers" className="py-16 md:py-24 bg-white px-4 text-center overflow-hidden border-t border-slate-100">
         <div className="max-w-6xl mx-auto text-center">
           <div className="text-center mb-10 md:mb-16">
@@ -281,9 +288,9 @@ const HomePage = ({ appData }) => {
             <p className="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] italic">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left max-w-5xl mx-auto relative">
             {['silver', 'gold', 'diamond'].map((tier) => (
-                <div key={tier} onClick={() => handleJoinClick(tier)} className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 md:hover:-translate-y-2 md:hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] md:hover:border-indigo-200 cursor-pointer group">
+                <div key={tier} className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 md:hover:-translate-y-2 md:hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] md:hover:border-indigo-200 group">
                     {renderTierCardContent(tier)}
                 </div>
             ))}
@@ -304,15 +311,31 @@ const HomePage = ({ appData }) => {
           <p className="text-slate-400 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-8 md:mb-12 text-[10px] md:text-xs text-center">Everything you need to know</p>
           <div className="space-y-3 md:space-y-4 text-left">
             {primaryFaqs.map((faq, i) => (
-              <div key={i} className="border border-slate-100 rounded-2xl md:rounded-3xl overflow-hidden bg-white hover:bg-slate-50 transition-colors">
-                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-5 md:p-8 text-left flex justify-between items-center" aria-expanded={openFaq === i}><span className="font-black text-indigo-950 text-sm md:text-lg uppercase pr-4">{faq.q}</span>{openFaq === i ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0" />}</button>
-                {openFaq === i && <div className="p-5 md:p-8 pt-0 text-slate-600 font-medium leading-relaxed text-sm md:text-base">{faq.a}</div>}
+              <div key={i} className="border border-slate-100 rounded-2xl md:rounded-3xl overflow-hidden bg-white">
+                <button 
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)} 
+                  style={{ WebkitTapHighlightColor: 'transparent' }} /* Prevents gray flash on mobile */
+                  className="w-full p-5 md:p-8 text-left flex justify-between items-center outline-none bg-white" 
+                  aria-expanded={openFaq === i}
+                >
+                  <span className="font-black text-indigo-950 text-sm md:text-lg uppercase pr-4">{faq.q}</span>
+                  {openFaq === i ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0" />}
+                </button>
+                {openFaq === i && <div className="p-5 md:p-8 pt-0 text-slate-600 font-medium leading-relaxed text-sm md:text-base bg-white">{faq.a}</div>}
               </div>
             ))}
             {showAllFaqs && secondaryFaqs.map((faq, i) => (
-              <div key={`sec-${i}`} className="border border-slate-100 rounded-2xl md:rounded-3xl overflow-hidden bg-white hover:bg-slate-50 transition-colors animate-in fade-in slide-in-from-top-4">
-                <button onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} className="w-full p-5 md:p-8 text-left flex justify-between items-center transition-colors" aria-expanded={openFaq === `sec-${i}`}><span className="font-black text-indigo-950 pr-4 text-sm md:text-lg uppercase tracking-tight">{faq.q}</span>{openFaq === `sec-${i}` ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0 text-indigo-900" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0 text-slate-300" />}</button>
-                {openFaq === `sec-${i}` && <div className="p-5 md:p-8 pt-0 text-slate-600 leading-relaxed text-sm md:text-base font-medium">{faq.a}</div>}
+              <div key={`sec-${i}`} className="border border-slate-100 rounded-2xl md:rounded-3xl overflow-hidden bg-white animate-in fade-in slide-in-from-top-4">
+                <button 
+                  onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} 
+                  style={{ WebkitTapHighlightColor: 'transparent' }} /* Prevents gray flash on mobile */
+                  className="w-full p-5 md:p-8 text-left flex justify-between items-center transition-colors outline-none bg-white" 
+                  aria-expanded={openFaq === `sec-${i}`}
+                >
+                  <span className="font-black text-indigo-950 pr-4 text-sm md:text-lg uppercase tracking-tight">{faq.q}</span>
+                  {openFaq === `sec-${i}` ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0 text-indigo-900" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0 text-slate-300" />}
+                </button>
+                {openFaq === `sec-${i}` && <div className="p-5 md:p-8 pt-0 text-slate-600 leading-relaxed text-sm md:text-base font-medium bg-white">{faq.a}</div>}
               </div>
             ))}
           </div>

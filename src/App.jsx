@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 
 import HomePage from './pages/HomePage';
@@ -26,8 +26,14 @@ const initialNames = ["General Circle", ...EXTENDED_COMMUNITIES.filter(c => c !=
 const initialCommunityData = {};
 initialNames.forEach(name => { initialCommunityData[name] = { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }; });
 
+// This ensures footer links always open at the very top of the screen
 const ContentPage = ({ title, content }) => {
-  useEffect(() => { window.scrollTo(0, 0); }, []);
+  const location = useLocation();
+  
+  useEffect(() => { 
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 flex flex-col">
       <SecondaryNavbar />
