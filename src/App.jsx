@@ -26,13 +26,12 @@ const initialNames = ["General Circle", ...EXTENDED_COMMUNITIES.filter(c => c !=
 const initialCommunityData = {};
 initialNames.forEach(name => { initialCommunityData[name] = { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }; });
 
-// This ensures footer links always open at the very top of the screen
+// This component now ONLY scrolls to top when it first loads (e.g. clicking a footer link)
+// It will not interfere with the HomePage's scroll memory.
 const ContentPage = ({ title, content }) => {
-  const location = useLocation();
-  
   useEffect(() => { 
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
-  }, [location.pathname]);
+  }, [title]); // Only scroll when the title (page) changes
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 flex flex-col">

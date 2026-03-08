@@ -20,7 +20,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const dropdownRef = useRef(null);
 
   const [checkoutForm, setCheckoutForm] = useState({ fullName: '', email: '', phone: '', address: '', city: '', state: '', zipCode: '' });
-  const [agreedToTerms, setAgreedToTerms] = useState(false); // NEW: Checkbox State
+  const [agreedToTerms, setAgreedToTerms] = useState(false); 
   
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); // Snap to top on load
+    // Only scroll to top when you ENTER the checkout page.
+    // This allows the back button to work naturally when leaving this page.
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
+    
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -88,7 +91,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
     if (!checkoutForm.city.trim()) errors.city = "City is required.";
     if (checkoutForm.state.length !== 2) errors.state = "Use a 2-letter state code.";
     if (checkoutForm.zipCode.length < 5) errors.zipCode = "Enter a valid zip code.";
-    if (!agreedToTerms) errors.terms = "You must agree to the terms to proceed."; // NEW: Validation
+    if (!agreedToTerms) errors.terms = "You must agree to the terms to proceed.";
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -246,7 +249,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       </div>
                       
                       <div className="pt-6 mt-6 border-t border-slate-200">
-                        {/* NEW: Explicit Terms & Conditions Checkbox */}
                         <label className="flex items-start gap-3 cursor-pointer group mb-6">
                           <div className="relative flex items-center justify-center mt-0.5 shrink-0">
                             <input 
@@ -262,7 +264,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </p>
                         </label>
 
-                        {/* NEW: Validation error specifically for terms */}
                         {validationErrors.terms && (
                             <div className="mb-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
                                 <AlertCircle size={14} className="mt-0.5 shrink-0"/> <p>{validationErrors.terms}</p>
