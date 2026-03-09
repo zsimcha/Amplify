@@ -43,17 +43,17 @@ const HomePage = ({ appData }) => {
 
   const primaryFaqs = [
     { q: "What is Amplify?", a: "Amplify is a community-powered giving platform that pools monthly Tzedakah to create greater collective impact. Members give consistently, support new charitable organizations each month, and receive access to optional appreciation perks as a thank-you for their giving." },
-    { q: "How much of my contribution actually goes to the charity?", a: "The majority of your gift goes directly to our charity partners, while a portion funds our prize pool and operations. Offering these prizes allows us to attract thousands of consistent monthly donors and ultimately issue much larger grants than traditional models would." },
-    { q: "Where do the raffle prizes come from?", a: "The prizes are funded from each circle’s pooled donations. Amplify intentionally allocates a portion of each pool toward appreciation draws because they meaningfully increase participation and retention." },
-    { q: "How does the 400-member cap work?", a: "Each circle is strictly capped at 400 paid members. The moment a circle reaches this cap, the massive monthly prize drawing is unlocked and activated for those members." }
+    { q: "How does the 400-member cap work?", a: "Each circle is strictly capped at 400 paid members. The moment a circle reaches this cap, the massive monthly prize drawing is unlocked and activated for those members." },
+    { q: "How much of my donation goes to charity?", a: "The majority of your gift goes directly to our charity partners, while a portion funds our prize pool and operations. Offering these prizes allows us to attract thousands of consistent monthly donors and ultimately issue much larger grants than traditional models would." },
+    { q: "Where do the raffle prizes come from?", a: "The prizes are funded from each circle’s pooled donations. Amplify intentionally allocates a portion of each pool toward appreciation draws because they meaningfully increase participation and retention." }
   ];
+  
   const secondaryFaqs = [
     { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify exists for those who want their consistent monthly giving to become part of a coordinated collective effort capable of issuing larger, strategic grants." },
     { q: "Who selects the charities?", a: "Charities are vetted in advance based on impact and financial transparency. We focus on organizations where a single large grant can reach a critical milestone." },
-    { q: "When am I charged?", a: "Your first contribution is processed immediately upon joining. Subsequent recurring donations will be charged on the same day each month." },
-    { q: "Can I cancel at any time?", a: "Yes. Memberships can be paused or canceled at any time before your next scheduled monthly charge." },
     { q: "Is my contribution tax-deductible?", a: "Donations benefiting a 501(c)(3) organization are tax-deductible in the US to the extent permitted by law." },
-    { q: "Are the drawings required?", a: "No. Participation in any drawings or appreciation rewards is provided solely as a thank-you for consistent giving. You may opt out of the sweepstakes at any time." }
+    { q: "When am I charged?", a: "Your first contribution is processed immediately upon joining. Subsequent recurring donations will be charged on the same day each month." },
+    { q: "Can I cancel at any time?", a: "Yes. Memberships can be paused or canceled at any time before your next scheduled monthly charge." }
   ];
 
   const renderTierCardContent = (tier) => (
@@ -123,7 +123,6 @@ const HomePage = ({ appData }) => {
             <button onClick={() => scrollToSection('why')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Why Amplify</button>
             <button onClick={() => scrollToSection('beneficiary')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Beneficiary</button>
             <button onClick={() => scrollToSection('tiers')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">The Circles</button>
-            {/* Added FAQ to desktop nav below */}
             <button onClick={() => scrollToSection('faq')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">FAQ</button>
           </div>
           <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)} aria-label="Open Menu"><Menu size={24} /></button>
