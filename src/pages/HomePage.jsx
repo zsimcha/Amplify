@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trophy, Check, Menu, X, Users, Sparkles, Rocket, TrendingUp, Gift, Heart, Building, ChevronUp, ChevronDown, HelpCircle } from 'lucide-react';
 import { LogoIcon } from '../components/layout/SecondaryNavbar';
@@ -11,6 +11,31 @@ const HomePage = ({ appData }) => {
   const [activeWhyCard, setActiveWhyCard] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
   const [showAllFaqs, setShowAllFaqs] = useState(false);
+  const [activeTooltip, setActiveTooltip] = useState(null);
+
+  // Scroll Restoration Memory
+  useEffect(() => {
+    const savedScroll = sessionStorage.getItem('homeScrollPosition');
+    if (savedScroll) {
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+      }, 0);
+    }
+
+    let scrollTimeout;
+    const handleScroll = () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        sessionStorage.setItem('homeScrollPosition', window.scrollY);
+      }, 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+    };
+  }, []);
 
   const handleCarouselScroll = (e, setCardIndex) => {
     const { scrollLeft, clientWidth } = e.target;
@@ -75,14 +100,22 @@ const HomePage = ({ appData }) => {
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
              <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center pointer-events-none">
                  <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Raffle Odds</p>
-                 <p className="font-black text-slate-800 text-sm md:text-base">1 / 400</p>
+                 <p className="font-black text-slate-800 text-xs md:text-sm">Up to 1/400</p>
              </div>
-             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center relative group/odds">
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1 cursor-help">
+             
+             {/* Modified Tooltip Box for Touch Functionality */}
+             <div 
+                className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center relative group/odds cursor-pointer pointer-events-auto"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveTooltip(activeTooltip === tier ? null : tier);
+                }}
+             >
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 flex items-center justify-center gap-1">
                    Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
-                 <p className="font-black text-slate-800 text-sm md:text-base pointer-events-none">{appData.tierData[tier].totalOdds}</p>
-                 <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible transition-all duration-200 z-50 text-center pointer-events-none">
+                 <p className="font-black text-slate-800 text-xs md:text-sm pointer-events-none">Up to {appData.tierData[tier].totalOdds.replace(/\s+/g, '')}</p>
+                 <div className={`absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case transition-all duration-200 z-50 text-center pointer-events-none ${activeTooltip === tier ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible'}`}>
                     The estimated probability of winning <em>any</em> prize in this tier.
                     <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
                  </div>
@@ -108,7 +141,7 @@ const HomePage = ({ appData }) => {
   );
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth relative">
+    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth relative" onClick={() => setActiveTooltip(null)}>
       <style>{`img { background-color: #f1f5f9; min-height: 20px; }`}</style>
       <div id="top" className="absolute top-0"></div>
 
