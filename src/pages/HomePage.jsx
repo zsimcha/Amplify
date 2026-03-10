@@ -97,37 +97,45 @@ const HomePage = ({ appData }) => {
             <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-2">Monthly Grand Prize</p>
             <p className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{appData.tierData[tier].prize}</p>
         </div>
+        
+        {/* SHRUNK ODDS BOXES */}
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
-             <div className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Raffle Odds</p>
-                 <p className="text-[8px] md:text-[9px] font-semibold text-slate-400 uppercase tracking-wider mb-1 opacity-70">(Up to)</p>
-                 <p className="font-black text-slate-800 text-sm md:text-base">1 / 400</p>
+             <div className="bg-slate-50 p-2.5 md:p-3 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5">Raffle Odds</p>
+                 <div className="flex flex-col items-center">
+                     <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
+                     <span className="font-black text-slate-800 text-sm md:text-base leading-none">1 / 400</span>
+                 </div>
              </div>
              
              <div 
-                className="bg-slate-50 p-3 md:p-4 rounded-xl border border-slate-100 text-center relative group/odds cursor-pointer pointer-events-auto flex flex-col items-center justify-center"
+                className="bg-slate-50 p-2.5 md:p-3 rounded-xl border border-slate-100 text-center relative group/odds cursor-pointer pointer-events-auto flex flex-col items-center justify-center"
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveTooltip(activeTooltip === tier ? null : tier);
                 }}
              >
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1 flex items-center justify-center gap-1">
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center justify-center gap-1">
                    Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
-                 <p className="text-[8px] md:text-[9px] font-semibold text-slate-400 uppercase tracking-wider mb-1 opacity-70">(Up to)</p>
-                 <p className="font-black text-slate-800 text-sm md:text-base pointer-events-none">{appData.tierData[tier].totalOdds}</p>
+                 <div className="flex flex-col items-center pointer-events-none">
+                     <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
+                     <span className="font-black text-slate-800 text-sm md:text-base leading-none">{appData.tierData[tier].totalOdds}</span>
+                 </div>
                  <div className={`absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case transition-all duration-200 z-50 text-center pointer-events-none ${activeTooltip === tier ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible'}`}>
                     The estimated probability of winning <em>any</em> prize in this tier.
                     <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
                  </div>
              </div>
         </div>
+
         <div className="space-y-4 md:space-y-5 mb-6 md:mb-8 flex-grow text-center relative z-10 pointer-events-none">
             <div>
                 <p className="font-bold text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px] mb-2 md:mb-3">Other Monthly Prizes</p>
                 <div className="flex flex-wrap justify-center gap-2">
+                    {/* ENLARGED PRIZE BUBBLES */}
                     {appData.tierData[tier].otherPrizes.map((p, idx) => (
-                        <span key={idx} className="bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl text-sm md:text-base font-black text-slate-700 shadow-sm">{p}</span>
+                        <span key={idx} className="bg-slate-50 border border-slate-200 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-sm md:text-base font-black text-slate-700 shadow-sm">{p}</span>
                     ))}
                 </div>
             </div>
