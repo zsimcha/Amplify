@@ -100,8 +100,8 @@ const HomePage = ({ appData }) => {
         
         {/* SHRUNK ODDS BOXES */}
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
-             <div className="bg-slate-50 p-2.5 md:p-3 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5">Raffle Odds</p>
+             <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">Raffle Odds</p>
                  <div className="flex flex-col items-center">
                      <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
                      <span className="font-black text-slate-800 text-sm md:text-base leading-none">1 / 400</span>
@@ -109,13 +109,13 @@ const HomePage = ({ appData }) => {
              </div>
              
              <div 
-                className="bg-slate-50 p-2.5 md:p-3 rounded-xl border border-slate-100 text-center relative group/odds cursor-pointer pointer-events-auto flex flex-col items-center justify-center"
+                className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center relative group/odds cursor-pointer pointer-events-auto flex flex-col items-center justify-center"
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveTooltip(activeTooltip === tier ? null : tier);
                 }}
              >
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center justify-center gap-1">
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5 flex items-center justify-center gap-1">
                    Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
                  <div className="flex flex-col items-center pointer-events-none">
