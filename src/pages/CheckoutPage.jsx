@@ -28,8 +28,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   useEffect(() => {
-    // Only scroll to top when you ENTER the checkout page.
-    // This allows the back button to work naturally when leaving this page.
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
     
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
@@ -105,28 +103,27 @@ const CheckoutPage = ({ appData, setAppData }) => {
     setIsLoading(true);
 
     try {
-      let communityId;
-      const { data: existingCommunity, error: fetchError } = await supabase.from('communities').select('id').eq('name', selectedCommunity).maybeSingle();
-      if (fetchError) throw new Error("Failed to verify community.");
-
-      if (existingCommunity) {
-        communityId = existingCommunity.id;
-      } else {
-        const { data: newCommunity, error: insertCommError } = await supabase.from('communities').insert([{ name: selectedCommunity, members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }]).select().single();
-        if (insertCommError) throw new Error("Failed to create new community.");
-        if (newCommunity) communityId = newCommunity.id;
-      }
-
-      if (communityId) {
-        const { error: subError } = await supabase.from('Subscriptions').insert([{
-            "full name": checkoutForm.fullName, "email": checkoutForm.email, "phone": checkoutForm.phone,
-            "address": checkoutForm.address, "city": checkoutForm.city, "state": checkoutForm.state,
-            "zip_code": checkoutForm.zipCode, "tier": selectedTier, "community_id": communityId, "status": "pending"
-        }]);
-        if (subError) throw new Error("Failed to record your subscription. Please try again.");
-      }
-
       const tierPrice = appData.tierData[selectedTier].price;
+
+      // Secure Backend Call: Handles community creation, subscription insertion, and updating totals
+      const { data, error } = await supabase.rpc('process_checkout', {
+        p_full_name: checkoutForm.fullName,
+        p_email: checkoutForm.email,
+        p_phone: checkoutForm.phone,
+        p_address: checkoutForm.address,
+        p_city: checkoutForm.city,
+        p_state: checkoutForm.state,
+        p_zip_code: checkoutForm.zipCode,
+        p_tier: selectedTier,
+        p_community_name: selectedCommunity,
+        p_tier_price: tierPrice
+      });
+
+      if (error) {
+        throw new Error(error.message || "Failed to record your subscription. Please try again.");
+      }
+
+      // Update local UI state to reflect the new addition immediately
       setAppData(prev => ({
         ...prev,
         communities: {
