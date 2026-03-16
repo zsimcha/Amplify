@@ -1,14 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const url = import.meta.env.VITE_SUPABASE_URL;
+const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Debug logs: Check your browser console for these!
-console.log("Config Check - URL:", SUPABASE_URL);
-console.log("Config Check - KEY:", SUPABASE_ANON_KEY);
+// Check your browser console: if these are undefined, the issue is your environment setup
+console.log("Supabase Connection - URL exists:", !!url);
+console.log("Supabase Connection - Key exists:", !!key);
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error("CRITICAL: Supabase environment variables are missing!");
+if (!url || !key) {
+  console.error("CRITICAL ERROR: Supabase environment variables are missing from the build.");
+  // Export a "dummy" client to prevent the header crash, but the app will still fail gracefully
+  export const supabase = { rpc: () => Promise.reject(new Error("Supabase not configured")) };
+} else {
+  export const supabase = createClient(url, key);
 }
-
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
