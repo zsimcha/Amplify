@@ -3,14 +3,22 @@ import { createClient } from '@supabase/supabase-js';
 const url = import.meta.env.VITE_SUPABASE_URL;
 const key = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check your browser console: if these are undefined, the issue is your environment setup
+// These logs will help you see if the keys are missing in the Vercel logs
 console.log("Supabase Connection - URL exists:", !!url);
 console.log("Supabase Connection - Key exists:", !!key);
 
+let supabaseInstance;
+
 if (!url || !key) {
-  console.error("CRITICAL ERROR: Supabase environment variables are missing from the build.");
-  // Export a "dummy" client to prevent the header crash, but the app will still fail gracefully
-  export const supabase = { rpc: () => Promise.reject(new Error("Supabase not configured")) };
+  // If keys are missing, we create a "mock" object so the app doesn't 
+  // crash on load, but will show an error when a user tries to checkout.
+  console.error("CRITICAL ERROR: Supabase environment variables are missing.");
+  supabaseInstance = {
+    rpc: () => Promise.reject(new Error("Database connection not configured. Please check environment variables."))
+  };
 } else {
-  export const supabase = createClient(url, key);
+  supabaseInstance = createClient(url, key);
 }
+
+// Always export from the top level
+export const supabase = supabaseInstance;
