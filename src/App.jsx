@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Switched to BrowserRouter
 import { supabase } from './lib/supabase';
 import { Analytics } from "@vercel/analytics/react";
 
 import HomePage from './pages/HomePage';
 import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
-import NotFoundPage from './pages/NotFoundPage';
+import NotFoundPage from './pages/NotFoundPage'; // Ensure this file exists in src/pages/
 
 import PrivacyPolicyContent from './components/PrivacyPolicyContent';
 import ReferralProgramContent from './components/ReferralProgramContent';
@@ -28,12 +28,10 @@ const initialNames = ["General Circle", ...EXTENDED_COMMUNITIES.filter(c => c !=
 const initialCommunityData = {};
 initialNames.forEach(name => { initialCommunityData[name] = { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }; });
 
-// This component now ONLY scrolls to top when it first loads (e.g. clicking a footer link)
-// It will not interfere with the HomePage's scroll memory.
 const ContentPage = ({ title, content }) => {
   useEffect(() => { 
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
-  }, [title]); // Only scroll when the title (page) changes
+  }, [title]);
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 flex flex-col">
@@ -73,7 +71,7 @@ const App = () => {
 
   return (
     <>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage appData={appData} />} />
           <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
@@ -82,9 +80,9 @@ const App = () => {
           <Route path="/rules" element={<ContentPage title="Official Sweepstakes Rules" content={<RulesContent />} />} />
           <Route path="/terms" element={<ContentPage title="Terms of Service" content={<TermsContent />} />} />
           <Route path="/referral" element={<ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />} />
-<Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
       <Analytics />
     </>
   );
