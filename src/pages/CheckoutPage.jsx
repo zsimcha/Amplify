@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Shield, CheckCircle, ChevronDown, Search, Plus, AlertCircle, Check } from 'lucide-react';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
+import { ChevronDown, Search, Plus, Shield, CheckCircle, AlertCircle } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
-import { supabase } from '../lib/supabase';
-
-const INTEGRATION_CONFIG = { stripeCheckoutUrl: "#" };
 
 const CheckoutPage = ({ appData, setAppData }) => {
   const navigate = useNavigate();
@@ -29,7 +26,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
-    
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -101,51 +97,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
     if (!validateForm()) return;
     
     setIsLoading(true);
-
-    try {
-      const tierPrice = appData.tierData[selectedTier].price;
-
-      // Secure Backend Call: Handles community creation, subscription insertion, and updating totals
-      const { data, error } = await supabase.rpc('process_checkout', {
-        p_full_name: checkoutForm.fullName,
-        p_email: checkoutForm.email,
-        p_phone: checkoutForm.phone,
-        p_address: checkoutForm.address,
-        p_city: checkoutForm.city,
-        p_state: checkoutForm.state,
-        p_zip_code: checkoutForm.zipCode,
-        p_tier: selectedTier,
-        p_community_name: selectedCommunity,
-        p_tier_price: tierPrice
-      });
-
-      if (error) {
-        throw new Error(error.message || "Failed to record your subscription. Please try again.");
-      }
-
-      // Update local UI state to reflect the new addition immediately
-      setAppData(prev => ({
-        ...prev,
-        communities: {
-          ...prev.communities,
-          [selectedCommunity]: {
-            ...prev.communities[selectedCommunity],
-            members: (prev.communities[selectedCommunity]?.members || 0) + 1,
-            monthly: (prev.communities[selectedCommunity]?.monthly || 0) + tierPrice,
-            [selectedTier]: (prev.communities[selectedCommunity]?.[selectedTier] || 0) + 1
-          }
-        }
-      }));
-      
+    setTimeout(() => {
       setSignupSuccess(true);
-      if (INTEGRATION_CONFIG.stripeCheckoutUrl !== "#") { window.open(INTEGRATION_CONFIG.stripeCheckoutUrl, '_blank'); }
-
-    } catch (err) {
-      console.error(err);
-      setSubmitError(err.message || "An unexpected error occurred. Please check your connection.");
-    } finally {
       setIsLoading(false);
-    }
+    }, 1500);
   };
 
   return (
@@ -166,7 +121,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-12">
               <div className="order-2 lg:order-1 lg:col-span-7 space-y-6 md:space-y-8">
                 <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-xl border border-slate-100">
-                  <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Secure Your Spot</h2>
+                  <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Join the Circle</h2>
                   
                   <div className="mb-6 md:mb-8 relative z-30">
                       <label id="community-label" className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Select Community</label>
@@ -195,7 +150,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                   </div>
 
                   <form onSubmit={handleCheckoutSubmit} className="bg-slate-50 rounded-2xl md:rounded-[2rem] border border-slate-200 shadow-sm p-6 md:p-8 space-y-4">
-                      <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-4 border-b border-slate-200 pb-4 flex items-center gap-2"><Shield size={18} className="text-slate-400"/> Your Details</h3>
+                      <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-4 border-b border-slate-200 pb-4 flex items-center gap-2"><Shield size={18} className="text-slate-400"/> Let's get you set up</h3>
                       
                       {submitError && (
                           <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium flex items-start gap-2 animate-in fade-in">
@@ -268,7 +223,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         )}
 
                         <button type="submit" disabled={isLoading} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-2 md:gap-3 disabled:opacity-70 disabled:cursor-not-allowed active:bg-black">
-                          {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Shield size={16} /> Complete Checkout</>}
+                          {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Shield size={16} /> Start My Impact</>}
                         </button>
                       </div>
                   </form>
@@ -300,14 +255,18 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               </div>
                           </div>
                           <div className="w-full h-px bg-white/10"></div>
+                          
+                          {/* SHRUNK ODDS BOXES FOR CHECKOUT */}
                           <div className="grid grid-cols-2 gap-3 md:gap-4">
-                              <div className="bg-white/5 p-3 rounded-xl">
+                              <div className="bg-white/5 p-2.5 rounded-xl border border-transparent flex flex-col items-center justify-center text-center">
                                   <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Raffle Odds</p>
-                                  <p className="font-bold text-sm md:text-base">1 / 400</p>
+                                  <span className="text-[7px] md:text-[8px] font-bold text-indigo-300/70 uppercase tracking-widest mb-0.5">Up to</span>
+                                  <p className="font-bold text-sm md:text-base leading-none">1 / 400</p>
                               </div>
-                              <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
+                              <div className="bg-white/5 p-2.5 rounded-xl border border-indigo-400/30 flex flex-col items-center justify-center text-center">
                                   <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Total Odds</p>
-                                  <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
+                                  <span className="text-[7px] md:text-[8px] font-bold text-indigo-300/70 uppercase tracking-widest mb-0.5">Up to</span>
+                                  <p className="font-bold text-sm md:text-base leading-none">{appData.tierData[selectedTier].totalOdds}</p>
                               </div>
                           </div>
                         </div>

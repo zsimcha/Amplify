@@ -168,7 +168,7 @@ const HomePage = ({ appData }) => {
             <button onClick={() => scrollToSection('faq')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">FAQ</button>
           </div>
           <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)} aria-label="Open Menu"><Menu size={24} /></button>
-          <button onClick={() => scrollToSection('tiers')} className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest">Reserve My Spot</button>
+          <button onClick={() => scrollToSection('tiers')} className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest">Join the Circle</button>
         </div>
       </nav>
 
@@ -200,7 +200,7 @@ const HomePage = ({ appData }) => {
                 Give Together. <br /><div className="relative inline-block mt-1 md:mt-0"><span className="text-indigo-900 italic">Amplify</span><div className="absolute left-[-1%] bottom-[-2px] md:-bottom-2 w-[102%] h-1.5 md:h-2.5 bg-indigo-200 rounded-full"></div></div> <span className="italic text-indigo-900 block xl:inline mt-2 xl:mt-0 xl:ml-3">Your Impact.</span>
               </h1>
               <p className="text-lg md:text-2xl text-slate-600 mb-6 md:mb-8 font-medium max-w-2xl leading-snug">
-                Pool your monthly donation with a global community to make a massive impact. <strong>Win Up To $100,000</strong> <em>every month</em> as a reward for your commitment.
+                Join a global community of givers. Together, we turn our monthly Tzedakah into massive, life-changing donations, and to say thank you, we give away <strong>over $200,000</strong> <em>every single month</em>.
               </p>
               <div className="space-y-3 md:space-y-4 mb-8 md:mb-10 text-left">
                 {["Pooled Tzedakah for transformational monthly grants", "Each drawing pool is capped at 400 members", "Combined winning odds up to 1/25"].map((text, i) => (
@@ -239,17 +239,17 @@ const HomePage = ({ appData }) => {
           >
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Choose the giving circle that feels right for you. Every month, your Tzedakah joins forces with the rest of the community to create one massive, transformational donation.</p></div>
             </div>
             
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, empowering our rotating charity partners to achieve critical milestones.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">We combine our resources to issue a single, massive grant to a vetted charity. Instead of just being a drop in the bucket, our combined giving is enough to fund life-changing projects.</p></div>
             </div>
             
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive entry into a drawing that triggers the moment your circle reaches 400 members, offering total odds up to 1/25.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, members receive entry into massive monthly giveaways. Once your circle reaches 400 members, the drawing unlocks with total winning odds as strong as 1 in 25!</p></div>
             </div>
           </div>
           
@@ -266,7 +266,7 @@ const HomePage = ({ appData }) => {
         <div className="max-w-7xl mx-auto">
            <div className="text-center mb-10 md:mb-16">
               <h2 className="text-3xl md:text-5xl font-black text-indigo-950 mb-3 md:mb-4 tracking-tighter uppercase leading-none italic">Why Amplify?</h2>
-              <p className="text-base md:text-xl text-slate-500 font-medium max-w-2xl mx-auto">A smarter, more rewarding way to give back to the community.</p>
+              <p className="text-base md:text-xl text-slate-500 font-medium max-w-2xl mx-auto">Giving is great. Giving together is incredible. Here’s why pooling our impact changes everything.</p>
            </div>
            
            <div 
@@ -275,12 +275,12 @@ const HomePage = ({ appData }) => {
            >
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Transformational Impact</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Huge grants make a huge difference. By pooling resources, we fund critical, massive milestones rather than just being a drop in the bucket.</p></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Real, Massive Impact</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe in going big. By teaming up, our monthly giving actually moves the needle for charities, funding huge projects that wouldn't happen otherwise.</p></div>
               </div>
               
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-amber-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-amber-600 mb-4 sm:mb-0 sm:mr-6"><TrendingUp size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our reward model drives unprecedented volume and consistency. By combining our giving, we create a multiplier effect that empowers charities to tackle their biggest challenges.</p></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Offering great prizes attracts a massive community of consistent, monthly donors. By uniting so many people, we create a multiplier effect that empowers charities to tackle their biggest challenges.</p></div>
               </div>
               
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
@@ -290,7 +290,7 @@ const HomePage = ({ appData }) => {
               
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-rose-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-rose-600 mb-4 sm:mb-0 sm:mr-6"><Gift size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Meaningful Appreciation</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Life-changing prizes are our way of saying thank you. Providing immense value in appreciation encourages our members to give continuously and consistently.</p></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">A Genuine Thank You</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe in rewarding your continuous support. These life-changing prizes are simply our way of saying thank you and making the monthly giving experience incredibly fun.</p></div>
               </div>
            </div>
            
