@@ -1,22 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
-import { Mail, MessageSquare, Send } from 'lucide-react';
+import { Mail, MessageSquare, Send, AlertCircle, Loader2 } from 'lucide-react';
+
+// Put your Formspree endpoint back!
+const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xwvnzkqp';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Scroll to top on load
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In the future, you can wire this up to Resend or a backend endpoint. 
-    // For now, it shows a friendly success message!
-    setSubmitted(true);
+    
+    // Strict email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    
+    if (!emailRegex.test(formData.email)) {
+      setEmailError('Please enter a complete email address (e.g., name@domain.com)');
+      return;
+    }
+
+    // Clear any previous errors and start loading
+    setEmailError('');
+    setIsSubmitting(true);
+
+    try {
+      // Send the data to Formspree
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        console.error("Formspree submission failed");
+        // You could add an error state here, but for now we'll just log it
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -60,7 +97,10 @@ const ContactPage = () => {
               <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-2">Message Sent!</h3>
               <p className="text-slate-600 font-medium">Thanks for reaching out. We've received your note and will get back to you soon.</p>
               <button 
-                onClick={() => setSubmitted(false)}
+                onClick={() => {
+                  setSubmitted(false);
+                  setFormData({ name: '', email: '', message: '' }); // Reset form
+                }}
                 className="mt-8 text-sm font-bold text-indigo-600 hover:text-indigo-900 transition-colors uppercase tracking-widest"
               >
                 Send another message
@@ -75,6 +115,7 @@ const ContactPage = () => {
                     type="text" 
                     id="name" 
                     required 
+                    value={formData.name}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent bg-slate-50 transition-all font-medium" 
                     placeholder="David Cohen" 
                     onChange={(e) => setFormData({...formData, name: e.target.value})} 
@@ -83,13 +124,22 @@ const ContactPage = () => {
                 <div>
                   <label htmlFor="email" className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Email Address</label>
                   <input 
-                    type="email" 
+                    type="text" 
                     id="email" 
                     required 
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent bg-slate-50 transition-all font-medium" 
+                    value={formData.email}
+                    className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:border-transparent transition-all font-medium bg-slate-50 ${emailError ? 'border-red-400 focus:ring-red-500' : 'border-slate-200 focus:ring-indigo-600'}`} 
                     placeholder="david@example.com" 
-                    onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                    onChange={(e) => {
+                      setFormData({...formData, email: e.target.value});
+                      if (emailError) setEmailError('');
+                    }} 
                   />
+                  {emailError && (
+                    <p className="text-red-500 text-[10px] mt-1.5 font-bold flex items-center gap-1">
+                      <AlertCircle size={12} /> {emailError}
+                    </p>
+                  )}
                 </div>
               </div>
               
@@ -99,6 +149,7 @@ const ContactPage = () => {
                   id="message" 
                   rows="5" 
                   required 
+                  value={formData.message}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent bg-slate-50 transition-all font-medium resize-none" 
                   placeholder="Write your message here..." 
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
@@ -107,10 +158,20 @@ const ContactPage = () => {
               
               <button 
                 type="submit" 
-                className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg text-sm flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-lg text-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <span>Send Message</span>
-                <Send size={16} />
+                {isSubmitting ? (
+                  <>
+                    <span>Sending...</span>
+                    <Loader2 size={16} className="animate-spin" />
+                  </>
+                ) : (
+                  <>
+                    <span>Send Message</span>
+                    <Send size={16} />
+                  </>
+                )}
               </button>
             </form>
           )}
