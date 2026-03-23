@@ -36,9 +36,8 @@ serve(async (req) => {
           
           <div style="background-color: #ffffff; padding: 40px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #f1f5f9;">
             
-            <!-- Logo Header -->
             <div style="text-align: center; margin-bottom: 32px;">
-              <img src="https://gloncuhgefzrpuwbzoke.supabase.co/storage/v1/object/public/public-assets/Amplify%20logo.jpg" alt="Amplify Logo" style="max-height: 60px; height: auto; width: auto; display: inline-block;" />
+              <img src="https://amplifygive.com/Amplify%20logo.jpg" alt="Amplify Logo" style="max-height: 60px; height: auto; width: auto; display: inline-block;" />
             </div>
 
             <h1 style="color: #1e1b4b; font-size: 28px; font-weight: 900; margin-bottom: 24px; text-transform: uppercase; font-style: italic; text-align: center;">
@@ -54,14 +53,14 @@ serve(async (req) => {
             </p>
 
             <div style="background-color: #f8fafc; padding: 24px; border-radius: 16px; text-align: center; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-  <p style="color: #64748b; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 8px 0;">What happens next?</p>
-  <p style="color: #1e293b; font-size: 16px; font-weight: 600; margin: 0; line-height: 1.5;">
-    The drawing activates the moment your circle reaches 400 members. 
-    <span style="display: block; margin-top: 8px; font-weight: 400; color: #475569; font-size: 14px;">
-      Each circle is filled in chronological order, which typically takes a few weeks. We’ll email you the moment yours unlocks!
-    </span>
-  </p>
-</div>
+              <p style="color: #64748b; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 8px 0;">What happens next?</p>
+              <p style="color: #1e293b; font-size: 16px; font-weight: 600; margin: 0; line-height: 1.5;">
+                The drawing activates the moment your circle reaches 400 members. 
+                <span style="display: block; margin-top: 8px; font-weight: 400; color: #475569; font-size: 14px;">
+                  Each circle is filled in chronological order, which typically takes a few weeks. We’ll email you the moment yours unlocks!
+                </span>
+              </p>
+            </div>
 
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin-bottom: 24px;" />
             

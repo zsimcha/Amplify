@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { supabase } from './lib/supabase';
+import { Analytics } from "@vercel/analytics/react";
 
 import HomePage from './pages/HomePage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -70,17 +71,20 @@ const App = () => {
   }, []);
 
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<HomePage appData={appData} />} />
-        <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/privacy" element={<ContentPage title="Privacy Policy" content={<PrivacyPolicyContent />} />} />
-        <Route path="/rules" element={<ContentPage title="Official Sweepstakes Rules" content={<RulesContent />} />} />
-        <Route path="/terms" element={<ContentPage title="Terms of Service" content={<TermsContent />} />} />
-        <Route path="/referral" element={<ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />} />
-      </Routes>
-    </HashRouter>
+    <>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<HomePage appData={appData} />} />
+          <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<ContentPage title="Privacy Policy" content={<PrivacyPolicyContent />} />} />
+          <Route path="/rules" element={<ContentPage title="Official Sweepstakes Rules" content={<RulesContent />} />} />
+          <Route path="/terms" element={<ContentPage title="Terms of Service" content={<TermsContent />} />} />
+          <Route path="/referral" element={<ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />} />
+        </Routes>
+      </HashRouter>
+      <Analytics />
+    </>
   );
 };
 
