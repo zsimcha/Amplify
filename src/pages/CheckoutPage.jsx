@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { ChevronDown, Search, Plus, Shield, CheckCircle, AlertCircle } from 'lucide-react';
+import { ChevronDown, Search, Plus, Shield, CheckCircle, AlertCircle, Check } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 
