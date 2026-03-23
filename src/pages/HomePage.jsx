@@ -213,7 +213,7 @@ const HomePage = ({ appData }) => {
             </div>
             <div className="lg:col-span-6 relative mt-6 md:mt-0">
               <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
-                <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}><source src="amplify-video.mp4" type="video/mp4" /></video>
+                <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}><source src="https://gloncuhgefzrpuwbzoke.supabase.co/storage/v1/object/public/public-assets/amplify-video.mp4" type="video/mp4" /></video>
               </div>
               <div className="absolute -top-4 -right-2 md:-top-8 md:right-auto md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100 pointer-events-none">
                 <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
