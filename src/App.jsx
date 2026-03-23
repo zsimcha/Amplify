@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/react";
 import HomePage from './pages/HomePage';
 import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 import PrivacyPolicyContent from './components/PrivacyPolicyContent';
 import ReferralProgramContent from './components/ReferralProgramContent';
