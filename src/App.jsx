@@ -81,6 +81,7 @@ const App = () => {
           <Route path="/rules" element={<ContentPage title="Official Sweepstakes Rules" content={<RulesContent />} />} />
           <Route path="/terms" element={<ContentPage title="Terms of Service" content={<TermsContent />} />} />
           <Route path="/referral" element={<ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />} />
+<Route path="*" element={<NotFoundPage />} />
         </Routes>
       </HashRouter>
       <Analytics />
