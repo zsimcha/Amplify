@@ -168,7 +168,7 @@ const HomePage = ({ appData }) => {
             <button onClick={() => scrollToSection('faq')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">FAQ</button>
           </div>
           <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)} aria-label="Open Menu"><Menu size={24} /></button>
-          <button onClick={() => scrollToSection('tiers')} className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest">Join the Circle</button>
+          <button onClick={() => scrollToSection('tiers')} className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest">Reserve My Spot</button>
         </div>
       </nav>
 
@@ -200,7 +200,7 @@ const HomePage = ({ appData }) => {
                 Give Together. <br /><div className="relative inline-block mt-1 md:mt-0"><span className="text-indigo-900 italic">Amplify</span><div className="absolute left-[-1%] bottom-[-2px] md:-bottom-2 w-[102%] h-1.5 md:h-2.5 bg-indigo-200 rounded-full"></div></div> <span className="italic text-indigo-900 block xl:inline mt-2 xl:mt-0 xl:ml-3">Your Impact.</span>
               </h1>
               <p className="text-lg md:text-2xl text-slate-600 mb-6 md:mb-8 font-medium max-w-2xl leading-snug">
-                Join a global community of givers. Together, we turn our monthly Tzedakah into massive, life-changing donations, and to say thank you, we give away <strong>over $200,000</strong> <em>every single month</em>.
+                Pool your monthly donation with a global community to make a massive impact. <strong>Win Up To $100,000</strong> <em>every month</em> as a reward for your commitment.
               </p>
               <div className="space-y-3 md:space-y-4 mb-8 md:mb-10 text-left">
                 {["Pooled Tzedakah for transformational monthly grants", "Each drawing pool is capped at 400 members", "Combined winning odds up to 1/25"].map((text, i) => (
@@ -213,7 +213,7 @@ const HomePage = ({ appData }) => {
             </div>
             <div className="lg:col-span-6 relative mt-6 md:mt-0">
               <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
-                <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}><source src="https://gloncuhgefzrpuwbzoke.supabase.co/storage/v1/object/public/public-assets/amplify-video.mp4" type="video/mp4" /></video>
+                <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}><source src="amplify-video.mp4" type="video/mp4" /></video>
               </div>
               <div className="absolute -top-4 -right-2 md:-top-8 md:right-auto md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100 pointer-events-none">
                 <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
@@ -235,21 +235,21 @@ const HomePage = ({ appData }) => {
           
           <div 
             onScroll={(e) => handleCarouselScroll(e, setActiveHowCard)}
-            className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
           >
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Pick your giving circle. Each month, you donate a set amount of Tzedakah alongside hundreds of others to multiply your impact.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p></div>
             </div>
             
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Instead of just being a drop in the bucket, our combined giving funds a single, transformational grant for a vetted charity.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, empowering our rotating charity partners to achieve critical milestones.</p></div>
             </div>
             
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, members share in massive monthly rewards. Once your circle of 400 fills, the drawings unlock with odds as strong as 1 in 25!</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive entry into a drawing that triggers the moment your circle reaches 400 members, offering total odds up to 1/25.</p></div>
             </div>
           </div>
           
@@ -261,7 +261,7 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Why Amplify Section */}
+     {/* Why Amplify Section */}
       <section id="why" className="py-16 md:py-24 bg-white px-4 border-b border-slate-100 overflow-hidden">
         <div className="max-w-7xl mx-auto">
            <div className="text-center mb-10 md:mb-16">
@@ -273,24 +273,28 @@ const HomePage = ({ appData }) => {
              onScroll={(e) => handleCarouselScroll(e, setActiveWhyCard)}
              className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
            >
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
-                 <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Real, Massive Impact</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe in going big. By teaming up, our monthly giving actually moves the needle for charities, funding huge projects that wouldn't happen otherwise.</p></div>
-              </div>
-              
+              {/* Card 1: The Multiplier Effect */}
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-amber-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-amber-600 mb-4 sm:mb-0 sm:mr-6"><TrendingUp size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Offering great prizes attracts a massive community of consistent, monthly donors. By uniting so many people, we create a multiplier effect that empowers charities to tackle their biggest challenges.</p></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe in going big. Uniting a massive community of donors creates a multiplier effect, funding huge, transformational projects that simply wouldn't happen otherwise.</p></div>
               </div>
               
+              {/* Card 2: Strictly Vetted Partners */}
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
-                 <div className="bg-blue-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-blue-600 mb-4 sm:mb-0 sm:mr-6"><Users size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Jewish Unity</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We are fundamentally stronger together. Amplify unites communities globally, combining our Tzedakah to achieve a massive shared vision.</p></div>
+                 <div className="bg-blue-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-blue-600 mb-4 sm:mb-0 sm:mr-6"><Building size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Strictly Vetted Partners</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Never wonder where your money goes. We do the heavy lifting to strictly vet every charity partner, ensuring our collective grant lands where it’s needed most.</p></div>
               </div>
               
+              {/* Card 3: Effortless Giving */}
+              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
+                 <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Effortless Giving</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Consistency is the hardest part of philanthropy. Your membership puts your giving on autopilot, ensuring you make a powerful impact every month without a second thought.</p></div>
+              </div>
+              
+              {/* Card 4: The Ultimate Win-Win */}
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-rose-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-rose-600 mb-4 sm:mb-0 sm:mr-6"><Gift size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">A Genuine Thank You</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe in rewarding your continuous support. These life-changing prizes are simply our way of saying thank you and making the monthly giving experience incredibly fun.</p></div>
+                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Ultimate Win-Win</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe doing good should be incredibly fun. By combining transformational Tzedakah with massive monthly rewards, we ensure the charities win big, and you do too.</p></div>
               </div>
            </div>
            
