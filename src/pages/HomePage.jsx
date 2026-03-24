@@ -235,21 +235,21 @@ const HomePage = ({ appData }) => {
           
           <div 
             onScroll={(e) => handleCarouselScroll(e, setActiveHowCard)}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
           >
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Choose the giving circle that feels right for you. Every month, your Tzedakah joins forces with the rest of the community to create one massive, transformational donation.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Pick your giving circle. Each month, you donate a set amount of Tzedakah alongside hundreds of others to multiply your impact.</p></div>
             </div>
             
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">We combine our resources to issue a single, massive grant to a vetted charity. Instead of just being a drop in the bucket, our combined giving is enough to fund life-changing projects.</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Instead of just being a drop in the bucket, our combined giving funds a single, transformational grant for a vetted charity.</p></div>
             </div>
             
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, members receive entry into massive monthly giveaways. Once your circle reaches 400 members, the drawing unlocks with total winning odds as strong as 1 in 25!</p></div>
+              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, members share in massive monthly rewards. Once your circle of 400 fills, the drawings unlock with odds as strong as 1 in 25!</p></div>
             </div>
           </div>
           
@@ -271,7 +271,7 @@ const HomePage = ({ appData }) => {
            
            <div 
              onScroll={(e) => handleCarouselScroll(e, setActiveWhyCard)}
-             className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+             className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
            >
               <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
                  <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
