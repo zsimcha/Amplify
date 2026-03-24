@@ -1,11 +1,10 @@
+// src/pages/CheckoutPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Shield, CheckCircle, ChevronDown, Search, Plus, AlertCircle, Check } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { supabase } from '../lib/supabase';
-
-const INTEGRATION_CONFIG = { stripeCheckoutUrl: "#" };
 
 const CheckoutPage = ({ appData, setAppData }) => {
   const navigate = useNavigate();
@@ -28,22 +27,23 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); 
     
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const toTitleCase = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  // Removed toTitleCase for standard inputs to prevent annoying UX
+  const toTitleCaseForCommunity = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   
-  const formatPhoneNumber = (value) => {
-    if (!value) return value;
-    let phoneNumber = value.replace(/[^\d]/g, '');
-    if (phoneNumber.length === 11 && phoneNumber.startsWith('1')) phoneNumber = phoneNumber.substring(1);
-    if (phoneNumber.length < 4) return phoneNumber;
-    if (phoneNumber.length < 7) return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  // Cleaner phone handler that doesn't force the cursor to the end
+  const handlePhoneChange = (e) => {
+    const input = e.target.value;
+    // Only allow digits, spaces, parens, dashes, and plus sign
+    if (/^[\d\s()+-]*$/.test(input) || input === '') {
+       setCheckoutForm({...checkoutForm, phone: input});
+    }
   };
 
   const filteredCommunities = appData.allCommunityNames.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -52,7 +52,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const handleCreateCommunity = () => {
      const rawName = searchQuery.trim();
      if (!rawName) return;
-     const newName = toTitleCase(rawName);
+     const newName = toTitleCaseForCommunity(rawName);
 
      if (!appData.allCommunityNames.includes(newName)) {
          setAppData(prev => {
@@ -81,10 +81,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const validateForm = () => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    // Basic phone validation checking for at least 10 numbers hidden within formatting
+    const digitCount = checkoutForm.phone.replace(/\D/g, '').length;
     
     if (!checkoutForm.fullName.trim()) errors.fullName = "Full name is required.";
     if (!emailRegex.test(checkoutForm.email)) errors.email = "Enter a valid email (e.g. name@domain.com).";
-    if (checkoutForm.phone.length < 14) errors.phone = "Enter a complete 10-digit phone number.";
+    if (digitCount < 10) errors.phone = "Enter a complete 10-digit phone number.";
     if (!checkoutForm.address.trim()) errors.address = "Address is required.";
     if (!checkoutForm.city.trim()) errors.city = "City is required.";
     if (checkoutForm.state.length !== 2) errors.state = "Use a 2-letter state code.";
@@ -105,7 +107,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
     try {
       const tierPrice = appData.tierData[selectedTier].price;
 
-      // Secure Backend Call: Handles community creation, subscription insertion, and updating totals
       const { data, error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
         p_email: checkoutForm.email,
@@ -123,7 +124,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
         throw new Error(error.message || "Failed to record your subscription. Please try again.");
       }
 
-      // Update local UI state to reflect the new addition immediately
       setAppData(prev => ({
         ...prev,
         communities: {
@@ -137,8 +137,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
         }
       }));
       
+      // Removed window.open() redirect.
+      // Once Stripe Elements is implemented, you will process the payment 
+      // above this line, and then trigger the success screen.
       setSignupSuccess(true);
-      if (INTEGRATION_CONFIG.stripeCheckoutUrl !== "#") { window.open(INTEGRATION_CONFIG.stripeCheckoutUrl, '_blank'); }
 
     } catch (err) {
       console.error(err);
@@ -186,7 +188,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                                   <li key={name} role="option" aria-selected={selectedCommunity === name} onClick={() => { setSelectedCommunity(name); setDropdownOpen(false); setSearchQuery(''); setFocusedIndex(-1); }} className={`cursor-pointer w-full text-left px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl text-xs md:text-sm font-bold transition-colors ${selectedCommunity === name ? 'bg-indigo-50 text-indigo-900' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'} ${focusedIndex === index ? 'ring-2 ring-indigo-500 bg-slate-50' : ''}`}>{name}</li>
                               ))}
                               {!exactMatch && searchQuery.trim() !== '' && (
-                                  <li role="option" aria-selected="false" onClick={handleCreateCommunity} className={`cursor-pointer w-full text-left px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl text-xs md:text-sm font-black text-indigo-600 hover:bg-indigo-50 transition-colors flex items-center gap-2 md:gap-3 mt-1 border border-indigo-100 bg-indigo-50/50 ${focusedIndex === filteredCommunities.length ? 'ring-2 ring-indigo-500' : ''}`}><div className="bg-indigo-200 text-indigo-700 rounded-md p-1"><Plus size={14} strokeWidth={3}/></div>Create "{toTitleCase(searchQuery.trim())}"</li>
+                                  <li role="option" aria-selected="false" onClick={handleCreateCommunity} className={`cursor-pointer w-full text-left px-3 md:px-4 py-2.5 md:py-3 rounded-lg md:rounded-xl text-xs md:text-sm font-black text-indigo-600 hover:bg-indigo-50 transition-colors flex items-center gap-2 md:gap-3 mt-1 border border-indigo-100 bg-indigo-50/50 ${focusedIndex === filteredCommunities.length ? 'ring-2 ring-indigo-500' : ''}`}><div className="bg-indigo-200 text-indigo-700 rounded-md p-1"><Plus size={14} strokeWidth={3}/></div>Create "{toTitleCaseForCommunity(searchQuery.trim())}"</li>
                               )}
                             </ul>
                           </div>
@@ -206,7 +208,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label htmlFor="fullName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Full Name</label>
-                          <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={e => setCheckoutForm({...checkoutForm, fullName: toTitleCase(e.target.value)})} className={`w-full bg-white border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
+                          <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={e => setCheckoutForm({...checkoutForm, fullName: e.target.value})} className={`w-full bg-white border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
                           {validationErrors.fullName && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.fullName}</p>}
                         </div>
                         <div>
@@ -218,7 +220,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label htmlFor="phone" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
-                          <input id="phone" name="phone" autoComplete="tel" type="tel" maxLength="14" value={checkoutForm.phone} onChange={e => setCheckoutForm({...checkoutForm, phone: formatPhoneNumber(e.target.value)})} className={`w-full bg-white border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="(555) 123-4567" />
+                          <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={`w-full bg-white border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="555-123-4567" />
                           {validationErrors.phone && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.phone}</p>}
                         </div>
                         <div>
@@ -230,7 +232,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       <div className="grid grid-cols-6 gap-4">
                         <div className="col-span-6 md:col-span-3">
                           <label htmlFor="city" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
-                          <input id="city" name="address-level2" autoComplete="address-level2" type="text" value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: toTitleCase(e.target.value)})} className={`w-full bg-white border ${validationErrors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="New York" />
+                          <input id="city" name="address-level2" autoComplete="address-level2" type="text" value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={`w-full bg-white border ${validationErrors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="New York" />
                           {validationErrors.city && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.city}</p>}
                         </div>
                         <div className="col-span-3 md:col-span-1">
@@ -250,15 +252,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           <div className="relative flex items-center justify-center mt-0.5 shrink-0">
                             <input 
                               type="checkbox" 
-                              className="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-md checked:bg-indigo-900 checked:border-indigo-900 transition-all cursor-pointer"
+                              className="peer appearance-none w-5 h-5 border-2 border-slate-300 rounded-md checked:bg-indigo-900 checked:border-indigo-900 transition-all cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1"
                               checked={agreedToTerms}
                               onChange={(e) => setAgreedToTerms(e.target.checked)}
                             />
                             <Check size={14} strokeWidth={3} className="text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
                           </div>
                           <p className="text-[10px] md:text-xs text-slate-500 font-medium leading-relaxed select-none">
-  			I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring monthly contribution.
-			</p>
+                            I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring monthly contribution.
+                          </p>
                         </label>
 
                         {validationErrors.terms && (
