@@ -38,7 +38,7 @@ serve(async (req) => {
           <div style="background-color: #ffffff; padding: 40px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #f1f5f9;">
             
             <div style="text-align: center; margin-bottom: 32px;">
-              <img src="https://amplifygive.com/Amplify%20logo.jpg" alt="Amplify Logo" style="max-height: 60px; height: auto; width: auto; display: inline-block;" />
+              <img src="https://amplifygive.com/amplify-logo.png" alt="Amplify Logo" style="max-height: 60px; height: auto; width: auto; display: inline-block;" />
             </div>
 
             <h1 style="color: #1e1b4b; font-size: 28px; font-weight: 900; margin-bottom: 24px; text-transform: uppercase; font-style: italic; text-align: center;">
