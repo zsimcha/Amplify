@@ -238,7 +238,7 @@ const HomePage = ({ appData }) => {
           
           <div 
             onScroll={(e) => handleCarouselScroll(e, setActiveHowCard)}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
           >
             <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
               <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
