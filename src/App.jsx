@@ -1,44 +1,30 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Switched to BrowserRouter
-import { supabase } from './lib/supabase';
-import { Analytics } from "@vercel/analytics/react";
-
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CheckoutPage from './pages/CheckoutPage';
-import ContactPage from './pages/ContactPage';
-import NotFoundPage from './pages/NotFoundPage'; // Ensure this file exists in src/pages/
-
-import PrivacyPolicyContent from './components/PrivacyPolicyContent';
-import ReferralProgramContent from './components/ReferralProgramContent';
+import NotFoundPage from './pages/NotFoundPage';
 import RulesContent from './components/RulesContent';
 import TermsContent from './components/TermsContent';
+import PrivacyPolicyContent from './components/PrivacyPolicyContent';
+import ReferralProgramContent from './components/ReferralProgramContent';
+import ContactPage from './pages/ContactPage';
+import { supabase } from './lib/supabase';
+
+// Simple Legal Page Wrapper
 import SecondaryNavbar from './components/layout/SecondaryNavbar';
 import Footer from './components/layout/Footer';
 
-const FEATURED_COMMUNITIES = ["General Circle", "Teaneck", "5 Towns", "Los Angeles", "Miami", "Lakewood", "Jerusalem"];
-const EXTENDED_COMMUNITIES = [...FEATURED_COMMUNITIES, "Baltimore", "Silver Spring", "Chicago", "Boston", "Monsey", "Passaic", "Brooklyn", "Queens", "Boca Raton", "Dallas", "Atlanta", "Cleveland", "Detroit", "Philadelphia", "Toronto", "Montreal", "London", "Houston", "Seattle", "Denver"];
-
-const initialTierData = {
-  silver: { price: 250, prize: "$25,000", totalOdds: "1 / 100", otherPrizes: ["1 × $1,250", "2 × $750"] },
-  gold: { price: 500, prize: "$50,000", totalOdds: "1 / 50", otherPrizes: ["1 × $2,500", "6 × $1,000"] },
-  diamond: { price: 1000, prize: "$100,000", totalOdds: "1 / 25", otherPrizes: ["1 × $5,000", "2 × $3,000", "12 × $2,000"] }
-};
-
-const initialNames = ["General Circle", ...EXTENDED_COMMUNITIES.filter(c => c !== "General Circle").sort()];
-const initialCommunityData = {};
-initialNames.forEach(name => { initialCommunityData[name] = { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }; });
-
-const ContentPage = ({ title, content }) => {
-  useEffect(() => { 
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); 
-  }, [title]);
-
+const LegalPageLayout = ({ title, children }) => {
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); }, []);
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
       <SecondaryNavbar />
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20 flex-grow">
-        <h1 className="text-3xl md:text-5xl font-black text-slate-900 mb-8 md:mb-12 uppercase tracking-tighter border-b border-slate-200 pb-6">{title}</h1>
-        <div className="text-slate-700 font-medium text-sm md:text-base leading-relaxed">{content}</div>
+      <div className="max-w-4xl mx-auto px-4 py-12 md:py-24 flex-grow w-full">
+        <h1 className="text-3xl md:text-5xl font-black text-indigo-950 mb-8 md:mb-12 uppercase italic tracking-tighter border-b border-slate-200 pb-6">{title}</h1>
+        <div className="bg-white p-6 md:p-12 rounded-3xl md:rounded-[3rem] shadow-sm border border-slate-100 text-slate-600 text-sm md:text-base leading-relaxed">
+          {children}
+        </div>
       </div>
       <Footer />
     </div>
@@ -46,45 +32,67 @@ const ContentPage = ({ title, content }) => {
 };
 
 const App = () => {
-  const [appData, setAppData] = useState({ tierData: initialTierData, allCommunityNames: initialNames, communities: initialCommunityData });
+  const [isLoading, setIsLoading] = useState(true);
+  const [appData, setAppData] = useState({
+    tierData: {
+      silver: { price: 250, prize: "$25,000", otherPrizes: ["$1,250", "$750", "$750"], totalOdds: "1 / 100" },
+      gold: { price: 500, prize: "$50,000", otherPrizes: ["$2,500", "$1,000 (x6)"], totalOdds: "1 / 50" },
+      diamond: { price: 1000, prize: "$100,000", otherPrizes: ["$5,000", "$3,000 (x2)", "$2,000 (x12)"], totalOdds: "1 / 25" }
+    },
+    communities: {
+      "General Circle": { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }
+    },
+    allCommunityNames: ["General Circle"]
+  });
 
   useEffect(() => {
     const fetchCommunities = async () => {
       try {
         const { data, error } = await supabase.from('communities').select('*');
         if (error) throw error;
+        
         if (data && data.length > 0) {
-          setAppData(prev => {
-            const fetchedData = { ...prev.communities };
-            const fetchedNames = new Set(prev.allCommunityNames);
-            data.forEach(comm => {
-              fetchedNames.add(comm.name);
-              fetchedData[comm.name] = { members: comm.members || 0, monthly: comm.monthly || 0, silver: comm.silver || 0, gold: comm.gold || 0, diamond: comm.diamond || 0 };
-            });
-            return { ...prev, allCommunityNames: ["General Circle", ...Array.from(fetchedNames).filter(c => c !== "General Circle").sort()], communities: { ...prev.communities, ...fetchedData } };
+          const newCommunities = {};
+          data.forEach(c => {
+            newCommunities[c.name] = {
+              members: c.total_members || 0,
+              monthly: c.total_monthly_value || 0,
+              silver: c.lifetime_silver || 0,
+              gold: c.lifetime_gold || 0,
+              diamond: c.lifetime_diamond || 0
+            };
           });
+          const allNames = Object.keys(newCommunities);
+          const others = allNames.filter(name => name !== "General Circle");
+          const sortedNames = ["General Circle", ...others.sort((a, b) => a.localeCompare(b))];
+          
+          if (!newCommunities["General Circle"]) {
+             newCommunities["General Circle"] = { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 };
+          }
+          setAppData(prev => ({ ...prev, communities: newCommunities, allCommunityNames: sortedNames }));
         }
-      } catch (err) { console.error("Error fetching communities:", err); }
+      } catch (err) {
+        console.error("Error fetching communities:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchCommunities();
   }, []);
 
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage appData={appData} />} />
-          <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/privacy" element={<ContentPage title="Privacy Policy" content={<PrivacyPolicyContent />} />} />
-          <Route path="/rules" element={<ContentPage title="Official Sweepstakes Rules" content={<RulesContent />} />} />
-          <Route path="/terms" element={<ContentPage title="Terms of Service" content={<TermsContent />} />} />
-          <Route path="/referral" element={<ContentPage title="Referral Program Terms" content={<ReferralProgramContent />} />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </BrowserRouter>
-      <Analytics />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage appData={appData} isLoading={isLoading} />} />
+        <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /></LegalPageLayout>} />
+        <Route path="/terms" element={<LegalPageLayout title="Terms of Service"><TermsContent /></LegalPageLayout>} />
+        <Route path="/privacy" element={<LegalPageLayout title="Privacy Policy"><PrivacyPolicyContent /></LegalPageLayout>} />
+        <Route path="/referral" element={<LegalPageLayout title="Referral Program"><ReferralProgramContent /></LegalPageLayout>} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
   );
 };
 

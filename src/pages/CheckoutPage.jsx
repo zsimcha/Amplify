@@ -6,6 +6,14 @@ import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { supabase } from '../lib/supabase';
 
+const US_STATES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", 
+  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", 
+  "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", 
+  "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", 
+  "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+];
+
 const CheckoutPage = ({ appData, setAppData }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,13 +42,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Removed toTitleCase for standard inputs to prevent annoying UX
   const toTitleCaseForCommunity = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   
-  // Cleaner phone handler that doesn't force the cursor to the end
   const handlePhoneChange = (e) => {
     const input = e.target.value;
-    // Only allow digits, spaces, parens, dashes, and plus sign
     if (/^[\d\s()+-]*$/.test(input) || input === '') {
        setCheckoutForm({...checkoutForm, phone: input});
     }
@@ -81,16 +86,18 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const validateForm = () => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-    // Basic phone validation checking for at least 10 numbers hidden within formatting
-    const digitCount = checkoutForm.phone.replace(/\D/g, '').length;
+    // Stricter zip and phone validation
+    const zipRegex = /^\d{5}(-\d{4})?$/;
+    const cleanPhone = checkoutForm.phone.replace(/\D/g, '');
+    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone); // Catches 0000000000
     
     if (!checkoutForm.fullName.trim()) errors.fullName = "Full name is required.";
-    if (!emailRegex.test(checkoutForm.email)) errors.email = "Enter a valid email (e.g. name@domain.com).";
-    if (digitCount < 10) errors.phone = "Enter a complete 10-digit phone number.";
+    if (!emailRegex.test(checkoutForm.email)) errors.email = "Enter a valid email.";
+    if (isInvalidPhone) errors.phone = "Enter a valid 10-digit phone number.";
     if (!checkoutForm.address.trim()) errors.address = "Address is required.";
     if (!checkoutForm.city.trim()) errors.city = "City is required.";
-    if (checkoutForm.state.length !== 2) errors.state = "Use a 2-letter state code.";
-    if (checkoutForm.zipCode.length < 5) errors.zipCode = "Enter a valid zip code.";
+    if (!checkoutForm.state) errors.state = "Select a state.";
+    if (!zipRegex.test(checkoutForm.zipCode)) errors.zipCode = "Enter a valid zip code.";
     if (!agreedToTerms) errors.terms = "You must agree to the terms to proceed.";
 
     setValidationErrors(errors);
@@ -105,9 +112,9 @@ const CheckoutPage = ({ appData, setAppData }) => {
     setIsLoading(true);
 
     try {
-      const tierPrice = appData.tierData[selectedTier].price;
-
-      const { data, error } = await supabase.rpc('process_checkout', {
+      // SECURITY FIX: Removed p_tier_price. The database will handle pricing based on p_tier.
+      // NOTE: Removed p_billing_frequency. We default to 'monthly' in the DB to fix issue #10.
+      const { error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
         p_email: checkoutForm.email,
         p_phone: checkoutForm.phone,
@@ -116,14 +123,17 @@ const CheckoutPage = ({ appData, setAppData }) => {
         p_state: checkoutForm.state,
         p_zip_code: checkoutForm.zipCode,
         p_tier: selectedTier,
-        p_community_name: selectedCommunity,
-        p_tier_price: tierPrice
+        p_community_name: selectedCommunity
       });
 
       if (error) {
-        throw new Error(error.message || "Failed to record your subscription. Please try again.");
+        // Log the raw error for debugging, but don't show it to the user.
+        console.error("Checkout RPC Error:", error);
+        throw new Error("Something went wrong processing your request. Please try again.");
       }
 
+      // Optimistic UI Update
+      const tierPrice = appData.tierData[selectedTier].price;
       setAppData(prev => ({
         ...prev,
         communities: {
@@ -137,13 +147,9 @@ const CheckoutPage = ({ appData, setAppData }) => {
         }
       }));
       
-      // Removed window.open() redirect.
-      // Once Stripe Elements is implemented, you will process the payment 
-      // above this line, and then trigger the success screen.
       setSignupSuccess(true);
 
     } catch (err) {
-      console.error(err);
       setSubmitError(err.message || "An unexpected error occurred. Please check your connection.");
     } finally {
       setIsLoading(false);
@@ -237,12 +243,21 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         </div>
                         <div className="col-span-3 md:col-span-1">
                           <label htmlFor="state" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
-                          <input id="state" name="address-level1" autoComplete="address-level1" type="text" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value.toUpperCase()})} maxLength="2" className={`w-full bg-white border ${validationErrors.state ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="NY" />
+                          {/* UPDATED: State is now a dropdown menu */}
+                          <div className="relative">
+                            <select id="state" name="address-level1" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value})} className={`w-full bg-white border appearance-none ${validationErrors.state ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
+                              <option value="" disabled>--</option>
+                              {US_STATES.map(state => (
+                                <option key={state} value={state}>{state}</option>
+                              ))}
+                            </select>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                          </div>
                           {validationErrors.state && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.state}</p>}
                         </div>
                         <div className="col-span-3 md:col-span-2">
                           <label htmlFor="zip" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
-                          <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d]/g, '')})} maxLength="5" className={`w-full bg-white border ${validationErrors.zipCode ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="10001" />
+                          <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={`w-full bg-white border ${validationErrors.zipCode ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="10001" />
                           {validationErrors.zipCode && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.zipCode}</p>}
                         </div>
                       </div>

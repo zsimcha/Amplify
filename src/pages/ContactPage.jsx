@@ -3,8 +3,8 @@ import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { Mail, MessageSquare, Send, AlertCircle, Loader2 } from 'lucide-react';
 
-// Put your Formspree endpoint back!
-const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xwvnzkqp';
+// SECURITY FIX: Pulls securely from environment variables. No fallback exposed to the public.
+const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT;
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -28,6 +28,12 @@ const ContactPage = () => {
       return;
     }
 
+    // Safety check in case the environment variable isn't set up yet
+    if (!FORMSPREE_ENDPOINT) {
+      setEmailError('Contact form is temporarily unavailable. Please email us directly.');
+      return;
+    }
+
     // Clear any previous errors and start loading
     setEmailError('');
     setIsSubmitting(true);
@@ -47,10 +53,11 @@ const ContactPage = () => {
         setSubmitted(true);
       } else {
         console.error("Formspree submission failed");
-        // You could add an error state here, but for now we'll just log it
+        setEmailError('Something went wrong. Please email us directly.');
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setEmailError('Failed to connect. Please check your internet and try again.');
     } finally {
       setIsSubmitting(false);
     }
