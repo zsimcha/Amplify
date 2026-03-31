@@ -1,33 +1,64 @@
 // supabase/functions/send-welcome-email/index.ts
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "https://esm.sh/resend@3.2.0"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3" // Added Supabase client
 
 serve(async (req) => {
   console.log("Function invoked!");
 
   try {
-    // Force Deno to explicitly read the environment variable process
+    // 1. Load Environment Variables
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     
-    console.log("Checking API Key status...");
-    if (!resendApiKey) {
-        throw new Error("RESEND_API_KEY environment variable is missing.");
-    }
+    if (!resendApiKey) throw new Error("RESEND_API_KEY is missing.");
+    if (!supabaseUrl || !supabaseKey) throw new Error("Supabase environment variables missing.");
     
-    // Initialize Resend with the key
+    // 2. Initialize Clients
     const resend = new Resend(resendApiKey);
-    console.log("Resend initialized successfully.");
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    console.log("Clients initialized successfully.");
 
+    // 3. Parse Webhook Payload
     const payload = await req.json();
     const email = payload?.record?.email;
     const fullName = payload?.record?.['full name']; 
+    const tier = payload?.record?.tier?.toLowerCase() || 'silver'; // Default to silver if missing
+    const communityId = payload?.record?.community_id;
 
     if (!email) {
       throw new Error("No email found in payload.");
     }
 
-    console.log(`Sending to: ${email}`);
+    // 4. Fetch Community Name
+    let communityName = "Amplify Global"; // Fallback name
+    if (communityId) {
+        const { data, error } = await supabase
+            .from('communities')
+            .select('name')
+            .eq('id', communityId)
+            .single();
+        
+        if (data?.name) {
+            communityName = data.name;
+        } else if (error) {
+            console.error("Error fetching community name:", error);
+        }
+    }
 
+    // 5. Define Tier Rewards
+    const tierData = {
+      silver: { prize: '$25,000', odds: '1/100' },
+      gold: { prize: '$50,000', odds: '1/50' },
+      diamond: { prize: '$100,000', odds: '1/25' }
+    };
+    // Ensure we have valid data even if a weird tier string comes through
+    const currentTierDetails = tierData[tier as keyof typeof tierData] || tierData.silver;
+
+    console.log(`Sending to: ${email} for tier: ${tier} in community: ${communityName}`);
+
+    // 6. Send Email
     const data = await resend.emails.send({
       from: 'Simcha from Amplify <simcha@amplifygive.com>',
       to: [email],
@@ -53,6 +84,29 @@ serve(async (req) => {
               Thank you for joining Amplify. Your monthly contribution has been secured, and your impact starts today. By combining our giving, we are capable of issuing transformational grants to organizations that need it most.
             </p>
 
+            <div style="background-color: #f8fafc; padding: 24px; border-radius: 16px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+              <p style="color: #64748b; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 16px 0;">Your Circle Details</p>
+              
+              <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">Community</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right;">${communityName}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">Impact Tier</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right; text-transform: capitalize;">${tier}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">Monthly Grand Prize</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right;">${currentTierDetails.prize}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; color: #475569; font-weight: 500;">Total Odds</td>
+                  <td style="padding: 10px 0; color: #1e293b; font-weight: 700; text-align: right;">Up to ${currentTierDetails.odds}*</td>
+                </tr>
+              </table>
+            </div>
+
             <div style="background-color: #f8fafc; padding: 24px; border-radius: 16px; text-align: center; margin-bottom: 30px; border: 1px solid #e2e8f0;">
               <p style="color: #64748b; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 8px 0;">What happens next?</p>
               <p style="color: #1e293b; font-size: 16px; font-weight: 600; margin: 0; line-height: 1.5;">
@@ -65,7 +119,11 @@ serve(async (req) => {
 
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin-bottom: 24px;" />
             
-            <p style="color: #94a3b8; font-size: 12px; text-align: center; line-height: 1.5; margin: 0;">
+            <p style="color: #94a3b8; font-size: 11px; text-align: center; line-height: 1.5; margin: 0 0 12px 0;">
+              * Actual odds of winning depend on the total number of eligible entries received in your active circle. See <a href="https://amplifygive.com/rules" style="color: #94a3b8; text-decoration: underline;">official rules</a> for details.
+            </p>
+
+            <p style="color: #94a3b8; font-size: 11px; text-align: center; line-height: 1.5; margin: 0;">
               You are receiving this email because you signed up for an Amplify membership.<br/>
               © ${new Date().getFullYear()} Amplify. All rights reserved.
             </p>

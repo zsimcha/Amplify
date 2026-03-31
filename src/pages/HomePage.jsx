@@ -73,7 +73,7 @@ const HomePage = ({ appData }) => {
     { q: "What is Amplify?", a: "Amplify is a community-powered giving platform that pools monthly Tzedakah to create greater collective impact. Members give consistently, support new charitable organizations each month, and receive access to optional appreciation perks as a thank-you for their giving." },
     { q: "How does the 400-member cap work?", a: "Each circle is strictly capped at 400 paid members. The moment a circle reaches this cap, the massive monthly prize drawing is unlocked and activated for those members." },
     { q: "How much of my donation goes to charity?", a: "The majority of your gift goes directly to our charity partners, while a portion funds our prize pool and operations. Offering these prizes allows us to attract thousands of consistent monthly donors and ultimately issue much larger grants than traditional models would." },
-    { q: "Where do the raffle prizes come from?", a: "The prizes are funded from each circle’s pooled donations. Amplify intentionally allocates a portion of each pool toward appreciation draws because they meaningfully increase participation and retention." }
+    { q: "Where do the prizes come from?", a: "The prizes are funded from each circle’s pooled donations. Amplify intentionally allocates a portion of each pool toward appreciation draws because they meaningfully increase participation and retention." }
   ];
   
   const secondaryFaqs = [
@@ -104,7 +104,7 @@ const HomePage = ({ appData }) => {
         {/* SHRUNK ODDS BOXES */}
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">Raffle Odds</p>
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">Grand Prize Odds</p>
                  <div className="flex flex-col items-center">
                      <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
                      <span className="font-black text-slate-800 text-sm md:text-base leading-none">1 / 400</span>
@@ -119,7 +119,7 @@ const HomePage = ({ appData }) => {
                 }}
              >
                  <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5 flex items-center justify-center gap-1">
-                   Total Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
+                   Winning Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
                  <div className="flex flex-col items-center pointer-events-none">
                      <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
