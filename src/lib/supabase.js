@@ -1,11 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
-// .trim() removes any accidental invisible spaces or newlines
-const url = import.meta.env.VITE_SUPABASE_URL?.trim();
-const key = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-console.log("Supabase Connection - URL exists:", !!url);
-console.log("Supabase Connection - Key exists:", !!key);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 let supabaseInstance;
 

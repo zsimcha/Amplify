@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CheckoutPage from './pages/CheckoutPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -11,7 +11,6 @@ import ReferralProgramContent from './components/ReferralProgramContent';
 import ContactPage from './pages/ContactPage';
 import { supabase } from './lib/supabase';
 
-// Simple Legal Page Wrapper
 import SecondaryNavbar from './components/layout/SecondaryNavbar';
 import Footer from './components/layout/Footer';
 
@@ -32,7 +31,6 @@ const LegalPageLayout = ({ title, children }) => {
 };
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const [appData, setAppData] = useState({
     tierData: {
       silver: { price: 250, prize: "$25,000", otherPrizes: ["$1,250", "$750", "$750"], totalOdds: "1 / 100" },
@@ -55,11 +53,11 @@ const App = () => {
           const newCommunities = {};
           data.forEach(c => {
             newCommunities[c.name] = {
-              members: c.total_members || 0,
-              monthly: c.total_monthly_value || 0,
-              silver: c.lifetime_silver || 0,
-              gold: c.lifetime_gold || 0,
-              diamond: c.lifetime_diamond || 0
+              members: c.members || 0,
+              monthly: c.monthly || 0,
+              silver: c.silver || 0,
+              gold: c.gold || 0,
+              diamond: c.diamond || 0
             };
           });
           const allNames = Object.keys(newCommunities);
@@ -73,8 +71,6 @@ const App = () => {
         }
       } catch (err) {
         console.error("Error fetching communities:", err);
-      } finally {
-        setIsLoading(false);
       }
     };
     fetchCommunities();
@@ -83,7 +79,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage appData={appData} isLoading={isLoading} />} />
+        {/* Removed isLoading prop */}
+        <Route path="/" element={<HomePage appData={appData} />} />
         <Route path="/checkout" element={<CheckoutPage appData={appData} setAppData={setAppData} />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /></LegalPageLayout>} />

@@ -1,6 +1,6 @@
 // src/pages/CheckoutPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // Removed useNavigate
 import { Shield, CheckCircle, ChevronDown, Search, Plus, AlertCircle, Check } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
@@ -15,7 +15,6 @@ const US_STATES = [
 ];
 
 const CheckoutPage = ({ appData, setAppData }) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const initialTier = location.state?.tier || 'silver';
 
@@ -26,7 +25,18 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const dropdownRef = useRef(null);
 
-  const [checkoutForm, setCheckoutForm] = useState({ fullName: '', email: '', phone: '', address: '', city: '', state: '', zipCode: '' });
+  const [checkoutForm, setCheckoutForm] = useState({ 
+    fullName: '', 
+    displayName: '', 
+    isAnonymous: false,
+    email: '', 
+    phone: '', 
+    address: '', 
+    city: '', 
+    state: '', 
+    zipCode: '' 
+  });
+  const [hasEditedDisplayName, setHasEditedDisplayName] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false); 
   
   const [validationErrors, setValidationErrors] = useState({});
@@ -36,7 +46,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); 
-    
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -51,12 +60,35 @@ const CheckoutPage = ({ appData, setAppData }) => {
     }
   };
 
+  const handleNameChange = (e) => {
+    const newName = e.target.value;
+    setCheckoutForm(prev => ({
+      ...prev,
+      fullName: newName,
+      displayName: (!hasEditedDisplayName && !prev.isAnonymous) ? newName : prev.displayName
+    }));
+  };
+
+  const handleAnonymousChange = (e) => {
+    const isAnon = e.target.checked;
+    setCheckoutForm(prev => ({
+      ...prev,
+      isAnonymous: isAnon,
+      displayName: isAnon ? 'Anonymous' : (hasEditedDisplayName ? prev.displayName : prev.fullName)
+    }));
+  };
+
+  const handleDisplayNameChange = (e) => {
+    setHasEditedDisplayName(true);
+    setCheckoutForm(prev => ({ ...prev, displayName: e.target.value }));
+  };
+
   const filteredCommunities = appData.allCommunityNames.filter(c => c.toLowerCase().includes(searchQuery.toLowerCase()));
   const exactMatch = appData.allCommunityNames.some(c => c.toLowerCase() === searchQuery.trim().toLowerCase());
 
   const handleCreateCommunity = () => {
      const rawName = searchQuery.trim();
-     if (!rawName) return;
+     if (!rawName || rawName.length > 50) return; // Added 50 char cap
      const newName = toTitleCaseForCommunity(rawName);
 
      if (!appData.allCommunityNames.includes(newName)) {
@@ -86,12 +118,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const validateForm = () => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-    // Stricter zip and phone validation
     const zipRegex = /^\d{5}(-\d{4})?$/;
     const cleanPhone = checkoutForm.phone.replace(/\D/g, '');
-    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone); // Catches 0000000000
+    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone); 
     
     if (!checkoutForm.fullName.trim()) errors.fullName = "Full name is required.";
+    if (!checkoutForm.displayName.trim() && !checkoutForm.isAnonymous) errors.displayName = "Display name is required.";
     if (!emailRegex.test(checkoutForm.email)) errors.email = "Enter a valid email.";
     if (isInvalidPhone) errors.phone = "Enter a valid 10-digit phone number.";
     if (!checkoutForm.address.trim()) errors.address = "Address is required.";
@@ -112,10 +144,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
     setIsLoading(true);
 
     try {
-      // SECURITY FIX: Removed p_tier_price. The database will handle pricing based on p_tier.
-      // NOTE: Removed p_billing_frequency. We default to 'monthly' in the DB to fix issue #10.
       const { error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
+        p_display_name: checkoutForm.displayName || checkoutForm.fullName, // New
+        p_is_anonymous: checkoutForm.isAnonymous, // New
         p_email: checkoutForm.email,
         p_phone: checkoutForm.phone,
         p_address: checkoutForm.address,
@@ -127,12 +159,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
       });
 
       if (error) {
-        // Log the raw error for debugging, but don't show it to the user.
-        console.error("Checkout RPC Error:", error);
+        console.error("Checkout Error:", error);
         throw new Error("Something went wrong processing your request. Please try again.");
       }
 
-      // Optimistic UI Update
       const tierPrice = appData.tierData[selectedTier].price;
       setAppData(prev => ({
         ...prev,
@@ -214,7 +244,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label htmlFor="fullName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Full Name</label>
-                          <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={e => setCheckoutForm({...checkoutForm, fullName: e.target.value})} className={`w-full bg-white border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
+                          <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={handleNameChange} className={`w-full bg-white border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
                           {validationErrors.fullName && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.fullName}</p>}
                         </div>
                         <div>
@@ -222,8 +252,32 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           <input id="email" name="email" autoComplete="email" type="email" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className={`w-full bg-white border ${validationErrors.email ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="john@example.com" />
                           {validationErrors.email && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.email}</p>}
                         </div>
+
+                        {/* NEW DISPLAY NAME ROW */}
+                        <div className="md:col-span-2 bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm relative overflow-hidden transition-all">
+                          {checkoutForm.isAnonymous && <div className="absolute inset-0 bg-slate-50/50 backdrop-blur-[1px] z-10 pointer-events-none"></div>}
+                          <div className="flex justify-between items-end mb-2 relative z-20">
+                            <label htmlFor="displayName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Display Name</label>
+                            <label className="flex items-center gap-2 cursor-pointer group">
+                              <input type="checkbox" checked={checkoutForm.isAnonymous} onChange={handleAnonymousChange} className="accent-indigo-900 w-3.5 h-3.5 cursor-pointer" />
+                              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-slate-700 transition-colors">Make Anonymous</span>
+                            </label>
+                          </div>
+                          <input 
+                            id="displayName" 
+                            type="text" 
+                            value={checkoutForm.displayName} 
+                            disabled={checkoutForm.isAnonymous}
+                            onChange={handleDisplayNameChange}
+                            className={`w-full bg-transparent text-sm outline-none font-medium transition-colors relative z-20 ${checkoutForm.isAnonymous ? 'text-slate-400 italic' : 'text-slate-900'}`} 
+                            placeholder="How you'll appear to others" 
+                          />
+                          <p className="text-[9px] text-slate-400 mt-1.5 font-medium relative z-20">This is how your name will appear on the public community roster.</p>
+                          {validationErrors.displayName && <p className="text-red-500 text-[10px] mt-1 font-bold relative z-20">{validationErrors.displayName}</p>}
+                        </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                         <div>
                           <label htmlFor="phone" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
                           <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={`w-full bg-white border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="555-123-4567" />
@@ -235,6 +289,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           {validationErrors.address && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.address}</p>}
                         </div>
                       </div>
+
                       <div className="grid grid-cols-6 gap-4">
                         <div className="col-span-6 md:col-span-3">
                           <label htmlFor="city" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
@@ -243,7 +298,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         </div>
                         <div className="col-span-3 md:col-span-1">
                           <label htmlFor="state" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
-                          {/* UPDATED: State is now a dropdown menu */}
                           <div className="relative">
                             <select id="state" name="address-level1" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value})} className={`w-full bg-white border appearance-none ${validationErrors.state ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
                               <option value="" disabled>--</option>
