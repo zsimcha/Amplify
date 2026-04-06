@@ -104,7 +104,7 @@ const HomePage = ({ appData }) => {
         {/* SHRUNK ODDS BOXES */}
         <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
              <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">Grand Prize Odds</p>
+                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">Grand Prize Odds*</p>
                  <div className="flex flex-col items-center">
                      <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
                      <span className="font-black text-slate-800 text-sm md:text-base leading-none">1 / 400</span>
@@ -119,7 +119,7 @@ const HomePage = ({ appData }) => {
                 }}
              >
                  <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5 flex items-center justify-center gap-1">
-                   Winning Odds <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
+                   Winning Odds* <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
                  </p>
                  <div className="flex flex-col items-center pointer-events-none">
                      <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
@@ -138,7 +138,7 @@ const HomePage = ({ appData }) => {
                 <div className="flex flex-wrap justify-center gap-2">
                     {/* ENLARGED PRIZE BUBBLES */}
                     {appData.tierData[tier].otherPrizes.map((p, idx) => (
-                        <span key={idx} className="bg-slate-50 border border-slate-200 px-3.5 py-2.5 md:px-4 md:py-3 rounded-xl text-sm md:text-base font-black text-slate-700 shadow-sm">{p}</span>
+                        <span key={idx} className="bg-slate-50 border border-slate-200 px-4 py-3 md:px-5 md:py-3.5 rounded-xl text-base md:text-lg font-black text-slate-700 shadow-sm">{p}</span>
                     ))}
                 </div>
             </div>

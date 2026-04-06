@@ -372,10 +372,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </div>
                           <div className="w-full h-px bg-white/10"></div>
                           <div className="grid grid-cols-2 gap-3 md:gap-4">
-                              <div className="bg-white/5 p-3 rounded-xl">
-                                  <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds</p>
-                                  <p className="font-bold text-sm md:text-base">1 / 400</p>
-                              </div>
+    <div className="bg-white/5 p-3 rounded-xl">
+        <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds*</p>
+        <p className="font-bold text-sm md:text-base">1 / 400</p>
+    </div>
+    <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
+        <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds*</p>
+        <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
+    </div>
+</div>
                               <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
                                   <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds</p>
                                   <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>

@@ -33,9 +33,9 @@ const LegalPageLayout = ({ title, children }) => {
 const App = () => {
   const [appData, setAppData] = useState({
     tierData: {
-      silver: { price: 250, prize: "$25,000", otherPrizes: ["$1,250", "$750", "$750"], totalOdds: "1 / 100" },
-      gold: { price: 500, prize: "$50,000", otherPrizes: ["$2,500", "$1,000 (x6)"], totalOdds: "1 / 50" },
-      diamond: { price: 1000, prize: "$100,000", otherPrizes: ["$5,000", "$3,000 (x2)", "$2,000 (x12)"], totalOdds: "1 / 25" }
+      silver: { price: 250, prize: "$25,000", otherPrizes: ["$1,250", "2x $750"], totalOdds: "1 / 100" },
+      gold: { price: 500, prize: "$50,000", otherPrizes: ["$2,500", "6x $1,000"], totalOdds: "1 / 50" },
+      diamond: { price: 1000, prize: "$100,000", otherPrizes: ["$5,000", "2x $3,000", "12x $2,000"], totalOdds: "1 / 25" }
     },
     communities: {
       "General Circle": { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 }
