@@ -1,6 +1,6 @@
 // src/pages/CheckoutPage.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Removed useNavigate
+import { Link, useLocation } from 'react-router-dom';
 import { Shield, CheckCircle, ChevronDown, Search, Plus, AlertCircle, Check } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
@@ -88,7 +88,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
   const handleCreateCommunity = () => {
      const rawName = searchQuery.trim();
-     if (!rawName || rawName.length > 50) return; // Added 50 char cap
+     if (!rawName || rawName.length > 50) return;
      const newName = toTitleCaseForCommunity(rawName);
 
      if (!appData.allCommunityNames.includes(newName)) {
@@ -146,8 +146,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
     try {
       const { error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
-        p_display_name: checkoutForm.displayName || checkoutForm.fullName, // New
-        p_is_anonymous: checkoutForm.isAnonymous, // New
+        p_display_name: checkoutForm.displayName || checkoutForm.fullName,
+        p_is_anonymous: checkoutForm.isAnonymous,
         p_email: checkoutForm.email,
         p_phone: checkoutForm.phone,
         p_address: checkoutForm.address,
@@ -253,10 +253,9 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           {validationErrors.email && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.email}</p>}
                         </div>
 
-                        {/* NEW DISPLAY NAME ROW */}
-                        <div className="md:col-span-2 bg-white border border-slate-200 rounded-xl p-3 md:p-4 shadow-sm relative overflow-hidden transition-all">
-                          {checkoutForm.isAnonymous && <div className="absolute inset-0 bg-slate-50/50 backdrop-blur-[1px] z-10 pointer-events-none"></div>}
-                          <div className="flex justify-between items-end mb-2 relative z-20">
+                        {/* REDESIGNED DISPLAY NAME ROW */}
+                        <div className="md:col-span-2 mt-2">
+                          <div className="flex justify-between items-end mb-2">
                             <label htmlFor="displayName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Display Name</label>
                             <label className="flex items-center gap-2 cursor-pointer group">
                               <input type="checkbox" checked={checkoutForm.isAnonymous} onChange={handleAnonymousChange} className="accent-indigo-900 w-3.5 h-3.5 cursor-pointer" />
@@ -269,15 +268,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             value={checkoutForm.displayName} 
                             disabled={checkoutForm.isAnonymous}
                             onChange={handleDisplayNameChange}
-                            className={`w-full bg-transparent text-sm outline-none font-medium transition-colors relative z-20 ${checkoutForm.isAnonymous ? 'text-slate-400 italic' : 'text-slate-900'}`} 
+                            className={`w-full border ${validationErrors.displayName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all ${checkoutForm.isAnonymous ? 'bg-slate-50 text-slate-400 italic cursor-not-allowed' : 'bg-white text-slate-900'}`} 
                             placeholder="How you'll appear to others" 
                           />
-                          <p className="text-[9px] text-slate-400 mt-1.5 font-medium relative z-20">This is how your name will appear on the public community roster.</p>
-                          {validationErrors.displayName && <p className="text-red-500 text-[10px] mt-1 font-bold relative z-20">{validationErrors.displayName}</p>}
+                          <p className="text-[9px] md:text-[10px] text-slate-400 mt-1.5 font-medium">This is how your name will appear on the public community roster.</p>
+                          {validationErrors.displayName && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.displayName}</p>}
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                         <div>
                           <label htmlFor="phone" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
                           <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={`w-full bg-white border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="555-123-4567" />
@@ -371,21 +370,19 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               </div>
                           </div>
                           <div className="w-full h-px bg-white/10"></div>
+                          
+                          {/* FIXED SUMMARY ODDS BOXES */}
                           <div className="grid grid-cols-2 gap-3 md:gap-4">
-    <div className="bg-white/5 p-3 rounded-xl">
-        <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds*</p>
-        <p className="font-bold text-sm md:text-base">1 / 400</p>
-    </div>
-    <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
-        <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds*</p>
-        <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
-    </div>
-</div>
+                              <div className="bg-white/5 p-3 rounded-xl">
+                                  <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds*</p>
+                                  <p className="font-bold text-sm md:text-base">1 / 400</p>
+                              </div>
                               <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
-                                  <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds</p>
+                                  <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds*</p>
                                   <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
                               </div>
                           </div>
+
                         </div>
 
                         <div className="mt-6 md:mt-8 p-3 md:p-4 bg-indigo-900/50 rounded-xl md:rounded-2xl border border-indigo-800/50 text-center">
