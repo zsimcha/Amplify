@@ -13,9 +13,6 @@ const HomePage = ({ appData }) => {
   const [showAllFaqs, setShowAllFaqs] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState(null);
 
-  // Dynamic Supabase URL for the video
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-
   // Scroll Restoration Memory
   useEffect(() => {
     const savedScroll = sessionStorage.getItem('homeScrollPosition');
@@ -216,7 +213,14 @@ const HomePage = ({ appData }) => {
             </div>
             <div className="lg:col-span-6 relative mt-6 md:mt-0">
               <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
-                <video className="w-full h-full object-contain bg-slate-900" controls playsInline aria-label="Promotional video about Amplify" onError={(e) => e.currentTarget.style.display = 'none'}><source src={`${supabaseUrl}/storage/v1/object/public/public-assets/amplify-video.mp4`} type="video/mp4" /></video>
+                <iframe 
+                  className="absolute top-0 left-0 w-full h-full"
+                  src="https://www.youtube-nocookie.com/embed/T6RxmZmNZME?rel=0&modestbranding=1" 
+                  title="Amplify Promotional Video" 
+                  frameBorder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                  allowFullScreen
+                ></iframe>
               </div>
               <div className="absolute -top-4 -right-2 md:-top-8 md:right-auto md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100 pointer-events-none">
                 <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
