@@ -91,15 +91,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
      if (!rawName || rawName.length > 50) return; 
      const newName = toTitleCaseForCommunity(rawName);
 
-     if (!appData.allCommunityNames.includes(newName)) {
-         setAppData(prev => {
-             const others = prev.allCommunityNames.filter(c => c !== "General Circle");
-             const sortedNames = [...others, newName].sort((a, b) => a.localeCompare(b));
-             return { ...prev, allCommunityNames: ["General Circle", ...sortedNames], communities: { ...prev.communities, [newName]: { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } } };
-         });
-     }
      setSelectedCommunity(newName);
-     setDropdownOpen(false); setSearchQuery(''); setFocusedIndex(-1);
+     setDropdownOpen(false); 
+     setSearchQuery(''); 
+     setFocusedIndex(-1);
   };
 
   const handleDropdownKeyDown = (e) => {
@@ -163,19 +158,28 @@ const CheckoutPage = ({ appData, setAppData }) => {
         throw new Error("Something went wrong processing your request. Please try again.");
       }
 
+      // Optimistic UI Update with Community Race Condition Fix
       const tierPrice = appData.tierData[selectedTier].price;
-      setAppData(prev => ({
-        ...prev,
-        communities: {
-          ...prev.communities,
-          [selectedCommunity]: {
-            ...prev.communities[selectedCommunity],
-            members: (prev.communities[selectedCommunity]?.members || 0) + 1,
-            monthly: (prev.communities[selectedCommunity]?.monthly || 0) + tierPrice,
-            [selectedTier]: (prev.communities[selectedCommunity]?.[selectedTier] || 0) + 1
+      setAppData(prev => {
+        const isNewCommunity = !prev.allCommunityNames.includes(selectedCommunity);
+        const updatedNames = isNewCommunity 
+            ? ["General Circle", ...prev.allCommunityNames.filter(c => c !== "General Circle"), selectedCommunity].sort((a, b) => a === "General Circle" ? -1 : b === "General Circle" ? 1 : a.localeCompare(b))
+            : prev.allCommunityNames;
+
+        return {
+          ...prev,
+          allCommunityNames: updatedNames,
+          communities: {
+            ...prev.communities,
+            [selectedCommunity]: {
+              ...prev.communities[selectedCommunity],
+              members: (prev.communities[selectedCommunity]?.members || 0) + 1,
+              monthly: (prev.communities[selectedCommunity]?.monthly || 0) + tierPrice,
+              [selectedTier]: (prev.communities[selectedCommunity]?.[selectedTier] || 0) + 1
+            }
           }
-        }
-      }));
+        };
+      });
       
       setSignupSuccess(true);
 

@@ -101,7 +101,7 @@ serve(async (req) => {
                   <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right;">${currentTierDetails.prize}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 10px 0; color: #475569; font-weight: 500;">Total Odds</td>
+                  <td style="padding: 10px 0; color: #475569; font-weight: 500;">Winning Odds</td>
                   <td style="padding: 10px 0; color: #1e293b; font-weight: 700; text-align: right;">Up to ${currentTierDetails.odds}*</td>
                 </tr>
               </table>
