@@ -130,8 +130,9 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Email Address</label>
+                  {/* FIX: Changed type="text" to type="email" */}
                   <input 
-                    type="text" 
+                    type="email" 
                     id="email" 
                     required 
                     value={formData.email}

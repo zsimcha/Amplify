@@ -151,7 +151,7 @@ const HomePage = ({ appData }) => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth relative" onClick={() => setActiveTooltip(null)}>
-      <style>{`img { background-color: #f1f5f9; min-height: 20px; }`}</style>
+      {/* FIX: Removed global <style> tag */}
       <div id="top" className="absolute top-0"></div>
 
       <nav className="fixed w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 top-0">
@@ -330,10 +330,12 @@ const HomePage = ({ appData }) => {
               </div>
             </div>
             <div className="relative group overflow-hidden rounded-3xl md:rounded-[3rem] shadow-2xl bg-slate-900 min-h-[250px] md:min-h-[400px]">
-               <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80" onError={(e) => { e.currentTarget.style.display='none'; }} />
+               {/* FIX: Added bg-slate-50 min-h-[20px] directly to className */}
+               <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80 bg-slate-50 min-h-[20px]" onError={(e) => { e.currentTarget.style.display='none'; }} />
                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
                <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl py-2 px-6 md:py-3 md:px-8 rounded-xl md:rounded-2xl flex items-center justify-center shadow-2xl border border-white/20">
-                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-10 md:h-14 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
+                  {/* FIX: Added bg-slate-50 min-h-[20px] directly to className */}
+                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-10 md:h-14 w-auto object-contain bg-slate-50 min-h-[20px]" onError={(e) => { e.currentTarget.style.display='none'; }} />
                </div>
             </div>
           </div>
