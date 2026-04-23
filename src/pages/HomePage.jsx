@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, Menu, X, Heart, Building, ChevronUp, ChevronDown, HelpCircle, TrendingUp, Gift } from 'lucide-react';
 import { LogoIcon } from '../components/layout/SecondaryNavbar';
@@ -15,6 +15,21 @@ const HomePage = ({ appData }) => {
   // Scrollytelling State for "How it Works"
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
+  const scrollTimeout = useRef(null);
+
+  // Seamless Scroll Restoration (Fires BEFORE the browser paints)
+  useLayoutEffect(() => {
+    const savedScroll = sessionStorage.getItem('homeScrollPosition');
+    if (savedScroll && savedScroll !== '0') {
+      const targetScroll = parseInt(savedScroll, 10);
+      window.scrollTo(0, targetScroll);
+      
+      // Fallback lock-in to prevent any minor layout shifts from bouncing it back up
+      requestAnimationFrame(() => {
+        window.scrollTo(0, targetScroll);
+      });
+    }
+  }, []);
 
   // Scroll Handling for Navbar & Animations
   useEffect(() => {
@@ -38,7 +53,11 @@ const HomePage = ({ appData }) => {
         }
       }
 
-      sessionStorage.setItem('homeScrollPosition', window.scrollY);
+      // Debounce saving scroll position to avoid capturing '0' when navigating away
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = setTimeout(() => {
+        sessionStorage.setItem('homeScrollPosition', window.scrollY);
+      }, 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -57,15 +76,9 @@ const HomePage = ({ appData }) => {
     // Apply to all elements
     document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
 
-    const savedScroll = sessionStorage.getItem('homeScrollPosition');
-    if (savedScroll) {
-      setTimeout(() => {
-        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
-      }, 0);
-    }
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
       observerOnce.disconnect();
     };
   }, []);
@@ -83,6 +96,8 @@ const HomePage = ({ appData }) => {
 
   const handleJoinClick = (tier, e) => {
     if (e) e.stopPropagation();
+    // Explicitly lock in the scroll position before routing kicks in
+    sessionStorage.setItem('homeScrollPosition', window.scrollY);
     navigate('/checkout', { state: { tier } }); 
   };
 
@@ -168,8 +183,8 @@ const HomePage = ({ appData }) => {
       )}
 
       {/* DARK HERO */}
-      <header className="bg-indigo-950 pt-28 md:pt-36 pb-0 flex flex-col overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 pb-8 md:pb-12 relative z-10 flex-grow">
+      <header className="bg-indigo-950 pt-24 md:pt-28 pb-0 flex flex-col overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 pb-4 md:pb-6 relative z-10 flex-grow">
           <div className="grid lg:grid-cols-12 gap-10 md:gap-16 items-center">
             
             <div className="text-left lg:col-span-6 animate-hero">
@@ -226,19 +241,17 @@ const HomePage = ({ appData }) => {
           <div className="w-full h-12 md:h-16 bg-gradient-to-b from-indigo-950 to-slate-700"></div>
           
           <div className="w-full bg-slate-700 border-b border-slate-600 pb-8 md:pb-10 pt-2">
-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-3 md:grid-cols-6 gap-y-10 gap-x-2 md:gap-x-4 items-center justify-items-center">
+            <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
               {[
-                { top: "", num: "400", label: "Members/Circle", isGold: false },
                 { top: "Up to", num: "$100K", label: "Monthly Prize", isGold: true },
                 { top: "", num: "$200K+", label: "Monthly Prizes", isGold: false },
                 { top: "Up to", num: "1/25", label: "Winning Odds", isGold: true },
-                { top: "Goal", num: "$5M+", label: "Yearly to Charity", isGold: false },
-                { top: "", num: "$400K+", label: "Monthly Grants", isGold: true }
+                { top: "Goal", num: "$5M+", label: "Yearly to Charity", isGold: false }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
-                  <p className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-1 min-h-[14px] md:min-h-[15px] leading-none ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.top}</p>
-                  <p className={`text-2xl sm:text-3xl md:text-4xl font-black tabular-nums leading-none tracking-tighter ${stat.isGold ? 'text-amber-400' : 'text-white'}`}>{stat.num}</p>
-                  <p className={`text-[8px] md:text-[9px] lg:text-[10px] font-bold uppercase tracking-widest mt-2 ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.label}</p>
+                  <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1.5 min-h-[14px] md:min-h-[16px] leading-none ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.top}</p>
+                  <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.isGold ? 'text-amber-400' : 'text-white'}`}>{stat.num}</p>
+                  <p className={`text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -340,7 +353,7 @@ const HomePage = ({ appData }) => {
                 {
                   icon: <TrendingUp size={24} className="text-indigo-600" />,
                   title: "The Multiplier Effect",
-                  body: "Every gift is pooled to create a single, transformational grant. Your $250 becomes part of a $100,000 impact, or your $1,000 becomes part of $400,000. By uniting as a community of donors we fund projects that couldn't happen otherwise."
+                  body: "We believe in going big. Uniting a massive community of donors creates a multiplier effect, funding huge, transformational projects that wouldn't have been possible otherwise."
                 },
                 {
                   icon: <Building size={24} className="text-amber-500" />,
@@ -379,7 +392,7 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* Beneficiary Section */}
-      <section id="beneficiary" className="py-20 md:py-28 bg-slate-900 px-4 text-white">
+      <section id="beneficiary" className="py-12 md:py-16 bg-slate-900 px-4 text-white">
         <div className="max-w-7xl mx-auto reveal">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div className="flex flex-col justify-center text-center md:text-left">
@@ -546,7 +559,7 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* Upgraded CTA Section */}
-      <section className="py-16 md:py-20 bg-slate-900 px-4 text-center overflow-hidden">
+      <section className="py-10 md:py-14 bg-slate-900 px-4 text-center overflow-hidden">
         <div className="max-w-3xl mx-auto relative z-10 reveal">
           <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-6">
             Your circle is waiting.
