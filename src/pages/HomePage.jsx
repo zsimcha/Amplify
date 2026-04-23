@@ -1,20 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trophy, Check, Menu, X, Users, Sparkles, Rocket, TrendingUp, Gift, Heart, Building, ChevronUp, ChevronDown, HelpCircle } from 'lucide-react';
+import { Check, Menu, X, Heart, Building, ChevronUp, ChevronDown, HelpCircle, TrendingUp, Gift } from 'lucide-react';
 import { LogoIcon } from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 
 const HomePage = ({ appData }) => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeHowCard, setActiveHowCard] = useState(0);
-  const [activeWhyCard, setActiveWhyCard] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
   const [showAllFaqs, setShowAllFaqs] = useState(false);
   const [activeTooltip, setActiveTooltip] = useState(null);
+  
+  // Scrollytelling State for "How it Works"
+  const howSectionRef = useRef(null);
+  const [howScroll, setHowScroll] = useState(0);
 
-  // Scroll Restoration Memory
+  // Scroll Handling for Navbar & Animations
   useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+
+      // "How It Works" Scrollytelling Logic
+      if (howSectionRef.current) {
+        const rect = howSectionRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const scrollDistance = -rect.top;
+        const maxScroll = rect.height - windowHeight;
+        
+        if (maxScroll > 0) {
+          let progress = scrollDistance / maxScroll;
+          setHowScroll(Math.max(0, Math.min(1, progress)));
+        }
+      }
+
+      sessionStorage.setItem('homeScrollPosition', window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); 
+
+    // Intersection Observer for scroll reveal animations (Fades in once, stays permanently)
+    const observerOnce = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observerOnce.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
+
+    // Apply to all elements
+    document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
+
     const savedScroll = sessionStorage.getItem('homeScrollPosition');
     if (savedScroll) {
       setTimeout(() => {
@@ -22,26 +64,11 @@ const HomePage = ({ appData }) => {
       }, 0);
     }
 
-    let scrollTimeout;
-    const handleScroll = () => {
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        sessionStorage.setItem('homeScrollPosition', window.scrollY);
-      }, 100);
-    };
-
-    window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
+      observerOnce.disconnect();
     };
   }, []);
-
-  const handleCarouselScroll = (e, setCardIndex) => {
-    const { scrollLeft, clientWidth } = e.target;
-    const index = Math.round(scrollLeft / clientWidth);
-    setCardIndex(index);
-  };
 
   const scrollToSection = (id) => {
     setIsMenuOpen(false);
@@ -59,160 +86,127 @@ const HomePage = ({ appData }) => {
     navigate('/checkout', { state: { tier } }); 
   };
 
-  const getTierColor = (tier) => {
-    if (tier === 'silver') return 'text-slate-500';
-    if (tier === 'gold') return 'text-[#eab308]'; 
-    if (tier === 'diamond') return 'text-[#818cf8]'; 
-    return 'text-slate-900';
+  const handleCardClick = (tier, e) => {
+    if (window.innerWidth >= 768) {
+      handleJoinClick(tier, e);
+    }
   };
+
+  // Flawless Math for How It Works line sync 
+  const lineProgress = Math.max(0, Math.min(100, (howScroll - 0.02) * 130));
+  const showStep1 = howScroll > 0.01;   
+  const showStep2 = lineProgress >= 44; 
+  const showStep3 = lineProgress >= 80; 
 
   const primaryFaqs = [
     { q: "What is Amplify?", a: "Amplify is a community-powered giving platform that pools monthly Tzedakah to create greater collective impact. Members give consistently, support new charitable organizations each month, and receive access to optional appreciation perks as a thank-you for their giving." },
-    { q: "How does the 400-member cap work?", a: "Each circle is strictly capped at 400 paid members. The moment a circle reaches this cap, the massive monthly prize drawing is unlocked and activated for those members." },
-    { q: "How much of my donation goes to charity?", a: "The majority of your gift goes directly to our charity partners, while a portion funds our prize pool and operations. Offering these prizes allows us to attract thousands of consistent monthly donors and ultimately issue much larger grants than traditional models would." },
-    { q: "Where do the prizes come from?", a: "The prizes are funded from each circle’s pooled donations. Amplify intentionally allocates a portion of each pool toward appreciation draws because they meaningfully increase participation and retention." }
+    { q: "What's the 400-member thing about?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible." },
+    { q: "Why prizes? Doesn't that take from the charity?", a: "It's actually the opposite. The prizes are the engine. By allocating a portion of the pool to massive rewards, we attract and keep thousands of donors who might otherwise give sporadically. This allows us to deliver transformational, six-figure grants every month." },
+    { q: "Where does my money actually go?", a: "The majority of your gift goes directly to our charity partners, while a portion funds our prize pool and operations. Offering these prizes allows us to attract thousands of consistent monthly donors." }
   ];
   
   const secondaryFaqs = [
-    { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify exists for those who want their consistent monthly giving to become part of a coordinated collective effort capable of issuing larger, strategic grants." },
-    { q: "Who selects the charities?", a: "Charities are vetted in advance based on impact and financial transparency. We focus on organizations where a single large grant can reach a critical milestone." },
-    { q: "Is my contribution tax-deductible?", a: "Donations benefiting a 501(c)(3) organization are tax-deductible in the US to the extent permitted by law." },
+    { q: "Who selects the charities?", a: "Charities are properly vetted in advance — financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone." },
+    { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify exists for those who want their consistent monthly giving to combine into a massive, coordinated grant that changes the game." },
+    { q: "Is my contribution tax-deductible?", a: "Donations benefiting a 501(c)(3) organization are tax-deductible in the US to the extent permitted by law. Prize winnings may be subject to standard tax regulations." },
     { q: "When am I charged?", a: "Your first contribution is processed immediately upon joining. Subsequent recurring donations will be charged on the same day each month." },
     { q: "Can I cancel at any time?", a: "Yes. Memberships can be paused or canceled at any time before your next scheduled monthly charge." }
   ];
 
-  const renderTierCardContent = (tier) => (
-    <div className="flex flex-col h-full relative z-10">
-        <div 
-            className="hidden md:block absolute inset-0 z-0 cursor-pointer" 
-            onClick={(e) => handleJoinClick(tier, e)}
-            aria-hidden="true"
-        ></div>
-
-        <div className="flex justify-between items-center mb-5 md:mb-6 relative z-10 pointer-events-none">
-            <h3 className={`text-xl md:text-2xl font-black uppercase tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{tier}</h3>
-            <span className="text-xs md:text-sm font-black text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">${appData.tierData[tier].price.toLocaleString()} / mo</span>
-        </div>
-        <div className="text-center py-6 md:py-8 bg-gradient-to-b from-slate-50 to-white rounded-2xl border border-slate-100 mb-5 md:mb-6 shadow-inner relative z-10 pointer-events-none">
-            <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-2">Monthly Grand Prize</p>
-            <p className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter drop-shadow-sm ${getTierColor(tier)}`}>{appData.tierData[tier].prize}</p>
-        </div>
-        
-        {/* SHRUNK ODDS BOXES */}
-        <div className="grid grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6 shrink-0 relative z-20">
-             <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center pointer-events-none flex flex-col items-center justify-center">
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">Grand Prize Odds*</p>
-                 <div className="flex flex-col items-center">
-                     <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
-                     <span className="font-black text-slate-800 text-sm md:text-base leading-none">1 / 400</span>
-                 </div>
-             </div>
-             
-             <div 
-                className="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center relative group/odds cursor-pointer pointer-events-auto flex flex-col items-center justify-center"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveTooltip(activeTooltip === tier ? null : tier);
-                }}
-             >
-                 <p className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5 flex items-center justify-center gap-1">
-                   Winning Odds* <HelpCircle size={10} className="text-slate-400 md:group-hover/odds:text-indigo-600 transition-colors" />
-                 </p>
-                 <div className="flex flex-col items-center pointer-events-none">
-                     <span className="text-[8px] md:text-[9px] font-bold text-slate-400 uppercase tracking-widest opacity-80 mb-0.5">Up to</span>
-                     <span className="font-black text-slate-800 text-sm md:text-base leading-none">{appData.tierData[tier].totalOdds}</span>
-                 </div>
-                 <div className={`absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-48 bg-white border border-slate-200 p-3 rounded-2xl shadow-xl text-[10px] leading-relaxed font-medium text-slate-500 normal-case transition-all duration-200 z-50 text-center pointer-events-none ${activeTooltip === tier ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover/odds:opacity-100 md:group-hover/odds:visible'}`}>
-                    The estimated probability of winning <em>any</em> prize in this tier.
-                    <div className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-white border-b border-r border-slate-200 transform rotate-45"></div>
-                 </div>
-             </div>
-        </div>
-
-        <div className="space-y-4 md:space-y-5 mb-6 md:mb-8 flex-grow text-center relative z-10 pointer-events-none">
-            <div>
-                <p className="font-bold text-slate-400 uppercase tracking-widest text-[9px] md:text-[10px] mb-2 md:mb-3">Other Monthly Prizes</p>
-                <div className="flex flex-wrap justify-center gap-2">
-                    {/* ENLARGED PRIZE BUBBLES */}
-                    {appData.tierData[tier].otherPrizes.map((p, idx) => (
-                        <span key={idx} className="bg-slate-50 border border-slate-200 px-4 py-3 md:px-5 md:py-3.5 rounded-xl text-base md:text-lg font-black text-slate-700 shadow-sm">{p}</span>
-                    ))}
-                </div>
-            </div>
-        </div>
-        <button 
-            onClick={(e) => handleJoinClick(tier, e)} 
-            className="w-full py-4 md:py-4 px-2 md:px-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-xs md:text-sm shadow-lg transition-all mt-auto bg-slate-900 text-white md:hover:bg-indigo-900 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap active:bg-indigo-900 relative z-20 cursor-pointer"
-        >
-            <span>Select</span><span className="text-white/40 font-normal opacity-70">•</span><span>${appData.tierData[tier].price.toLocaleString()}/mo</span>
-        </button>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth relative" onClick={() => setActiveTooltip(null)}>
-      {/* FIX: Removed global <style> tag */}
       <div id="top" className="absolute top-0"></div>
 
-      <nav className="fixed w-full z-40 bg-white/95 backdrop-blur-md border-b border-slate-100 top-0">
+      {/* Dynamic Navbar */}
+      <nav className={`fixed w-full z-40 top-0 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm py-0' : 'bg-transparent py-2'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <button onClick={() => scrollToSection('top')} className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left" aria-label="Go to Top">
-            <div className="bg-indigo-900 text-white p-1 md:p-1.5 rounded-lg md:rounded-xl"><LogoIcon /></div>
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
+            <div className={`p-1.5 rounded-lg transition-all duration-300 ${isScrolled ? 'bg-indigo-950 text-white' : 'bg-white/15 backdrop-blur-sm text-white'}`}>
+              <LogoIcon />
+            </div>
+            <span className={`text-xl md:text-2xl font-black tracking-tighter uppercase transition-colors ${isScrolled ? 'text-indigo-950' : 'text-white'}`}>
+              Amplify
+            </span>
           </button>
-          <div className="hidden md:flex items-center gap-8 text-[11px] font-black text-slate-500 uppercase tracking-widest text-left">
-            <button onClick={() => scrollToSection('how')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">How it works</button>
-            <button onClick={() => scrollToSection('why')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Why Amplify</button>
-            <button onClick={() => scrollToSection('beneficiary')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">Beneficiary</button>
-            <button onClick={() => scrollToSection('tiers')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">The Circles</button>
-            <button onClick={() => scrollToSection('faq')} className="hover:text-indigo-900 transition-colors uppercase tracking-[0.2em]">FAQ</button>
+          
+          <div className={`hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
+            <button onClick={() => scrollToSection('how')} className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>How it works</button>
+            <button onClick={() => scrollToSection('why')} className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>Why Amplify</button>
+            <button onClick={() => scrollToSection('beneficiary')} className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>Beneficiary</button>
+            <button onClick={() => scrollToSection('tiers')} className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>The Circles</button>
+            <button onClick={() => scrollToSection('faq')} className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>FAQ</button>
           </div>
-          <button className="md:hidden p-2 text-indigo-900" onClick={() => setIsMenuOpen(true)} aria-label="Open Menu"><Menu size={24} /></button>
-          <button onClick={() => scrollToSection('tiers')} className="hidden md:block bg-indigo-900 text-white px-6 py-2.5 rounded-full text-xs font-black hover:bg-black transition-all shadow-lg shadow-indigo-100 uppercase tracking-widest">Reserve My Spot</button>
+          
+          <button className={`md:hidden p-2 transition-colors ${isScrolled ? 'text-indigo-900' : 'text-white'}`} onClick={() => setIsMenuOpen(true)} aria-label="Open Menu">
+            <Menu size={24} />
+          </button>
+          
+          <button onClick={() => scrollToSection('tiers')} className="hidden md:block bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
+            Join the Circle
+          </button>
         </div>
       </nav>
 
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog" aria-modal="true">
+        <div className="fixed inset-0 z-50 md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog">
             <div className="p-4 flex justify-between items-center border-b border-slate-100 shrink-0 text-left">
                 <span className="text-xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
-                <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2" aria-label="Close Menu"><X size={28}/></button>
+                <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2"><X size={28}/></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-lg font-black text-slate-900 uppercase tracking-tighter text-left">
-                <button onClick={() => scrollToSection('how')} className="text-left border-b border-slate-50 pb-3">How it works</button>
-                <button onClick={() => scrollToSection('why')} className="text-left border-b border-slate-50 pb-3">Why Amplify</button>
-                <button onClick={() => scrollToSection('beneficiary')} className="text-left border-b border-slate-50 pb-3">Beneficiary</button>
-                <button onClick={() => scrollToSection('tiers')} className="text-left border-b border-slate-50 pb-3">The Circles</button>
-                <button onClick={() => scrollToSection('faq')} className="text-left border-b border-slate-50 pb-3">FAQ</button>
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-base font-bold text-slate-900 uppercase tracking-widest text-left">
+                <button onClick={() => { setIsMenuOpen(false); scrollToSection('how'); }} className="text-left border-b border-slate-50 pb-3">How it works</button>
+                <button onClick={() => { setIsMenuOpen(false); scrollToSection('why'); }} className="text-left border-b border-slate-50 pb-3">Why Amplify</button>
+                <button onClick={() => { setIsMenuOpen(false); scrollToSection('beneficiary'); }} className="text-left border-b border-slate-50 pb-3">Beneficiary</button>
+                <button onClick={() => { setIsMenuOpen(false); scrollToSection('tiers'); }} className="text-left border-b border-slate-50 pb-3">The Circles</button>
+                <button onClick={() => { setIsMenuOpen(false); scrollToSection('faq'); }} className="text-left border-b border-slate-50 pb-3">FAQ</button>
             </div>
             <div className="p-6 border-t border-slate-50 shrink-0 text-left">
-                <button onClick={() => { setIsMenuOpen(false); scrollToSection('tiers'); }} className="w-full py-5 bg-indigo-900 text-white rounded-full font-black uppercase tracking-widest shadow-2xl shadow-indigo-200 text-sm">Join the Circle</button>
+                <button onClick={() => { setIsMenuOpen(false); scrollToSection('tiers'); }} className="w-full py-5 bg-amber-400 text-slate-900 rounded-lg font-bold uppercase tracking-widest text-sm shadow-xl shadow-amber-400/20">Join the Circle</button>
             </div>
         </div>
       )}
 
-      {/* Hero Section */}
-      <header className="pt-20 pb-12 md:pt-24 md:pb-24 px-4 bg-gradient-to-b from-slate-50 to-white overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-12 gap-10 md:gap-12 lg:gap-16 items-center">
-            <div className="text-left lg:col-span-6">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter mb-4 md:mb-8 leading-[0.9] md:leading-[0.85] uppercase">
-                Give Together. <br /><div className="relative inline-block mt-1 md:mt-0"><span className="text-indigo-900 italic">Amplify</span><div className="absolute left-[-1%] bottom-[-2px] md:-bottom-2 w-[102%] h-1.5 md:h-2.5 bg-indigo-200 rounded-full"></div></div> <span className="italic text-indigo-900 block xl:inline mt-2 xl:mt-0 xl:ml-3">Your Impact.</span>
+      {/* DARK HERO */}
+      <header className="bg-indigo-950 pt-28 md:pt-36 pb-0 flex flex-col overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 pb-8 md:pb-12 relative z-10 flex-grow">
+          <div className="grid lg:grid-cols-12 gap-10 md:gap-16 items-center">
+            
+            <div className="text-left lg:col-span-6 animate-hero">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9] uppercase">
+                Give Together.<br/>
+                <span className="text-amber-400 italic">Amplify</span>
+                <span className="text-amber-400 italic"> Your Impact.</span>
               </h1>
-              <p className="text-lg md:text-2xl text-slate-600 mb-6 md:mb-8 font-medium max-w-2xl leading-snug">
-                Pool your monthly donation with a global community to make a massive impact. <strong>Win Up To $100,000</strong> <em>every month</em> as a reward for your commitment.
+              
+              <p className="text-indigo-200 text-lg md:text-xl mb-8 font-medium leading-relaxed max-w-2xl">
+                Amplify pools your monthly giving with an exclusive circle of donors to make a massive impact. <strong className="text-white">Win Up To $100,000</strong> <em className="text-white">every month</em> as a reward for your commitment.
               </p>
-              <div className="space-y-3 md:space-y-4 mb-8 md:mb-10 text-left">
-                {["Pooled Tzedakah for transformational monthly grants", "Each drawing pool is capped at 400 members", "Combined winning odds up to 1/25"].map((text, i) => (
-                  <div key={i} className="flex items-start md:items-center gap-3"><div className="bg-indigo-100 p-1 rounded-full text-indigo-600 mt-0.5 md:mt-0 shrink-0"><Check size={14} className="md:w-4 md:h-4" strokeWidth={3}/></div><span className="text-[11px] md:text-sm font-bold text-slate-700 uppercase tracking-tight leading-snug">{text}</span></div>
-                ))}
+              
+              <div className="space-y-4 mb-10 text-left">
+                <div className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></div>
+                  <span className="text-sm md:text-base font-medium text-indigo-100 leading-snug">Your monthly Tzedakah becomes part of a six-figure grant</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></div>
+                  <span className="text-sm md:text-base font-medium text-indigo-100 leading-snug">Drawings are capped at only 400 members for incredible odds</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></div>
+                  <span className="text-sm md:text-base font-medium text-indigo-100 leading-snug">Up to a 1 in 25 chance to win</span>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-4 text-left">
-                <button onClick={() => scrollToSection('tiers')} className="w-full md:w-auto px-8 md:px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black text-lg md:text-xl md:hover:shadow-2xl md:hover:bg-black transition-all transform md:hover:-translate-y-1 uppercase tracking-tighter active:bg-black">Join the Circle</button>
+
+              <div className="flex flex-col sm:flex-row gap-4 text-left">
+                <button onClick={() => scrollToSection('tiers')} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
+                  Join the Circle
+                </button>
               </div>
             </div>
-            <div className="lg:col-span-6 relative mt-6 md:mt-0">
-              <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl md:rounded-[3rem] overflow-hidden shadow-2xl md:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] border-[6px] md:border-[12px] border-white bg-slate-900 relative">
+
+            <div className="lg:col-span-6 relative mt-8 md:mt-0 animate-hero flex justify-center">
+              <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl overflow-hidden bg-indigo-900 relative shadow-2xl ring-1 ring-white/10">
                 <iframe 
                   className="absolute top-0 left-0 w-full h-full"
                   src="https://www.youtube-nocookie.com/embed/T6RxmZmNZME?rel=0&modestbranding=1" 
@@ -222,120 +216,195 @@ const HomePage = ({ appData }) => {
                   allowFullScreen
                 ></iframe>
               </div>
-              <div className="absolute -top-4 -right-2 md:-top-8 md:right-auto md:-left-8 bg-[#eab308] p-3 md:p-6 rounded-2xl md:rounded-[2rem] shadow-xl md:shadow-2xl flex flex-col items-center justify-center border-4 border-white z-20 rotate-[-5deg] scale-90 md:scale-100 pointer-events-none">
-                <p className="text-[8px] md:text-xs font-black uppercase tracking-widest text-indigo-950 mb-0.5 md:mb-1 leading-none text-center">Collective Goal</p>
-                <div className="w-full h-px bg-indigo-950/10 mb-0.5 md:mb-1"></div>
-                <p className="text-xl md:text-4xl font-black text-indigo-950 tracking-tighter leading-none whitespace-nowrap">$4.8M+<span className="text-[9px] md:text-sm font-bold text-indigo-900/60 ml-0.5 md:ml-1">/year</span></p>
-              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Pewter Gray Stats Ribbon */}
+        <div className="w-full flex flex-col mt-auto relative z-10 reveal">
+          <div className="w-full h-12 md:h-16 bg-gradient-to-b from-indigo-950 to-slate-700"></div>
+          
+          <div className="w-full bg-slate-700 border-b border-slate-600 pb-8 md:pb-10 pt-2">
+            <div className="max-w-7xl mx-auto px-4 grid grid-cols-3 md:grid-cols-6 gap-y-10 gap-x-2 md:gap-x-4 items-center justify-items-center">
+              {[
+                { top: "", num: "400", label: "Members/Circle", isGold: false },
+                { top: "Up to", num: "$100K", label: "Monthly Prize", isGold: true },
+                { top: "", num: "$200K+", label: "Monthly Prizes", isGold: false },
+                { top: "Up to", num: "1/25", label: "Winning Odds", isGold: true },
+                { top: "Goal", num: "$5M+", label: "Yearly to Charity", isGold: false },
+                { top: "", num: "$400K+", label: "Monthly Grants", isGold: true }
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col items-center text-center w-full">
+                  <p className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-1 min-h-[14px] md:min-h-[15px] leading-none ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.top}</p>
+                  <p className={`text-2xl sm:text-3xl md:text-4xl font-black tabular-nums leading-none tracking-tighter ${stat.isGold ? 'text-amber-400' : 'text-white'}`}>{stat.num}</p>
+                  <p className={`text-[8px] md:text-[9px] lg:text-[10px] font-bold uppercase tracking-widest mt-2 ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </header>
 
-      {/* How it Works Section */}
-      <section id="how" className="py-16 md:py-24 bg-indigo-950 text-white px-4 text-center md:text-left overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-10 md:mb-16 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 tracking-tight uppercase italic text-white">How it Works</h2>
-            <p className="text-indigo-200 text-base md:text-lg font-medium max-w-2xl mx-auto">Strategic Tzedakah, simplified and amplified.</p>
-          </div>
-          
-          <div 
-            onScroll={(e) => handleCarouselScroll(e, setActiveHowCard)}
-            className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
-          >
-            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
-              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Users className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">We Join Forces</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Donors join specialized circles, pooling recurring contributions to create a transformational monthly gift.</p></div>
+      {/* How it Works Section (SMOOTH SCROLLYTELLING ANIMATION) */}
+      <section id="how" className="relative bg-white border-t border-slate-100">
+        <div ref={howSectionRef} className="h-[200vh]">
+          <div className="sticky top-16 md:top-[80px] max-w-7xl mx-auto px-4 overflow-hidden pt-8 pb-12 md:pt-16 md:pb-16">
+            
+            <div className="mb-10 md:mb-20 text-center md:text-left transition-opacity duration-500">
+              <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Mechanics</p>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
+                Strategic giving, simplified.<br className="hidden md:block"/>
+                <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
+              </h2>
             </div>
             
-            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
-              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Sparkles className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Huge Impact</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">Combined donations are issued as a single massive grant, empowering our rotating charity partners to achieve critical milestones.</p></div>
+            <div className="relative">
+              {/* Desktop Horizontal Line (Starts explicitly from the right of 01) */}
+              <div className="hidden md:block absolute top-[52px] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
+                <div 
+                  className="h-full bg-indigo-500 rounded-full transition-[width] duration-100 ease-linear" 
+                  style={{ width: `${lineProgress}%` }}
+                ></div>
+              </div>
+
+              {/* Mobile Vertical Line */}
+              <div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
+                <div 
+                  className="w-full bg-indigo-500 rounded-full transition-[height] duration-100 ease-linear" 
+                  style={{ height: `${lineProgress}%` }}
+                ></div>
+              </div>
+              
+              <div className="flex flex-col md:grid md:grid-cols-3 gap-16 md:gap-12 relative z-10">
+                  {/* Step 1 */}
+                  <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+                    <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">01</div>
+                    <div className="bg-white px-2 py-1 relative z-10">
+                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Donors join a circle and combine their monthly giving to create one massive fund.</p>
+                    </div>
+                  </div>
+                  
+                  {/* Step 2 */}
+                  <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+                    <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
+                    <div className="bg-white px-2 py-1 relative z-10">
+                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant, One charity</h3>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The whole thing goes directly to one vetted nonprofit as a single, massive gift.</p>
+                    </div>
+                  </div>
+                  
+                  {/* Step 3 */}
+                  <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+                    <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
+                    <div className="bg-white px-2 py-1 relative z-10">
+                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Monthly Rewards</h3>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The moment 400 members join a circle, the monthly drawings go live with odds up to 1 in 25.</p>
+                    </div>
+                  </div>
+              </div>
             </div>
-            
-            <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-indigo-900/40 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-white/10 flex flex-col items-center md:items-center text-center transition-all duration-300 md:hover:bg-indigo-900 md:hover:shadow-[0_15px_40px_-10px_rgba(0,0,0,0.3)] md:hover:-translate-y-1">
-              <div className="bg-white/10 w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center shrink-0 mb-4 md:mb-8 text-center"><Trophy className="text-[#eab308] w-6 h-6 md:w-8 md:h-8" /></div>
-              <div><h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-tighter text-white">Monthly Appreciation</h3><p className="text-indigo-100/70 leading-relaxed text-sm md:text-base font-medium">As a thank you for your commitment, you receive entry into a drawing that triggers the moment your circle reaches 400 members, offering total odds up to 1/25.</p></div>
-            </div>
-          </div>
-          
-          <div className="md:hidden flex justify-center gap-2 mt-4">
-            {[0, 1, 2].map(idx => (
-               <div key={idx} className={`w-2 h-2 rounded-full transition-colors duration-300 ${activeHowCard === idx ? 'bg-[#eab308]' : 'bg-white/20'}`}></div>
-            ))}
+
           </div>
         </div>
       </section>
 
-     {/* Why Amplify Section */}
-      <section id="why" className="py-16 md:py-24 bg-white px-4 border-b border-slate-100 overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-           <div className="text-center mb-10 md:mb-16">
-              <h2 className="text-3xl md:text-5xl font-black text-indigo-950 mb-3 md:mb-4 tracking-tighter uppercase leading-none italic">Why Amplify?</h2>
-              <p className="text-base md:text-xl text-slate-500 font-medium max-w-2xl mx-auto">Giving is great. Giving together is incredible. Here’s why pooling our impact changes everything.</p>
-           </div>
-           
-           <div 
-             onScroll={(e) => handleCarouselScroll(e, setActiveWhyCard)}
-             className="flex overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-4 md:pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-2 md:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
-           >
-              {/* Card 1: The Multiplier Effect */}
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
-                 <div className="bg-amber-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-amber-600 mb-4 sm:mb-0 sm:mr-6"><TrendingUp size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Multiplier Effect</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe in going big. Uniting a massive community of donors creates a multiplier effect, funding huge, transformational projects that simply wouldn't happen otherwise.</p></div>
+      {/* Why Amplify Section */}
+      <section id="why" className="bg-slate-50 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 py-20 md:py-28">
+          <div className="grid md:grid-cols-12 gap-12 md:gap-16">
+            
+            {/* Sticky Left Column */}
+            <div className="md:col-span-4 reveal">
+              <div className="md:sticky md:top-32">
+                <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">
+                  The Amplify Advantage
+                </p>
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 italic tracking-tight leading-tight">
+                  Why pooling changes everything.
+                </h2>
+                <button
+                  onClick={() => scrollToSection('tiers')}
+                  className="hidden md:block mt-10 px-10 py-4 bg-slate-900 text-white rounded-lg font-bold text-sm uppercase tracking-widest hover:bg-indigo-900 transition-colors shadow-lg"
+                >
+                  Join the Circle
+                </button>
               </div>
+            </div>
+
+            {/* Right Column: Staggered Reveal Items */}
+            <div className="md:col-span-8 flex flex-col divide-y divide-slate-200">
               
-              {/* Card 2: Strictly Vetted Partners */}
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
-                 <div className="bg-blue-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-blue-600 mb-4 sm:mb-0 sm:mr-6"><Building size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Strictly Vetted Partners</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Never wonder where your money goes. We do the heavy lifting to strictly vet every charity partner, ensuring our collective grant lands where it’s needed most.</p></div>
-              </div>
-              
-              {/* Card 3: Effortless Giving */}
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
-                 <div className="bg-indigo-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-indigo-600 mb-4 sm:mb-0 sm:mr-6"><Rocket size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">Effortless Giving</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Consistency is the hardest part of philanthropy. Your membership puts your giving on autopilot, ensuring you make a powerful impact every month without a second thought.</p></div>
-              </div>
-              
-              {/* Card 4: The Ultimate Win-Win */}
-              <div className="min-w-[85vw] sm:min-w-[60vw] md:min-w-0 snap-center bg-slate-50 p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-slate-100 flex flex-col sm:flex-row items-start transition-all duration-300 md:hover:-translate-y-1 md:hover:shadow-[0_15px_40px_-10px_rgba(79,70,229,0.15)] md:hover:bg-white md:hover:border-indigo-200">
-                 <div className="bg-rose-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-rose-600 mb-4 sm:mb-0 sm:mr-6"><Gift size={24} className="md:w-8 md:h-8" strokeWidth={2.5}/></div>
-                 <div><h3 className="text-lg md:text-2xl font-black uppercase text-indigo-950 mb-2 md:mb-4 tracking-tight">The Ultimate Win-Win</h3><p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">We believe doing good should be incredibly fun. By combining transformational Tzedakah with massive monthly rewards, we ensure the charities win big, and you do too.</p></div>
-              </div>
-           </div>
-           
-           <div className="md:hidden flex justify-center gap-2 mt-4">
-              {[0, 1, 2, 3].map(idx => (
-                 <div key={idx} className={`w-2 h-2 rounded-full transition-colors duration-300 ${activeWhyCard === idx ? 'bg-indigo-900' : 'bg-slate-200'}`}></div>
+              {[
+                {
+                  icon: <TrendingUp size={24} className="text-indigo-600" />,
+                  title: "The Multiplier Effect",
+                  body: "Every gift is pooled to create a single, transformational grant. Your $250 becomes part of a $100,000 impact, or your $1,000 becomes part of $400,000. By uniting as a community of donors we fund projects that couldn't happen otherwise."
+                },
+                {
+                  icon: <Building size={24} className="text-amber-500" />,
+                  title: "A Real, Verified Nonprofit",
+                  body: "Never wonder where your money goes. Every charity is vetted, financials, impact reports, the works. We look for organizations where one large grant can make a big difference, not just cover admin costs."
+                },
+                {
+                  icon: <Check size={24} className="text-indigo-600" />,
+                  title: "Effortless Giving",
+                  body: "Consistency is the hardest part of philanthropy. Your membership puts your giving on autopilot, ensuring you make a powerful impact every month without a second thought."
+                },
+                {
+                  icon: <Gift size={24} className="text-amber-500" />,
+                  title: "The Ultimate Win-Win",
+                  body: "Giving consistently is hard. So we made it fun! When your circle fills, a massive drawing goes live and everyone in it has a real shot at winning big."
+                }
+              ].map((item, i) => (
+                <div key={i} className="py-8 md:py-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 120}ms` }}>
+                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 group-hover:border-indigo-200 group-hover:shadow-md">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 tracking-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-slate-600 font-medium leading-relaxed text-sm md:text-base">
+                      {item.body}
+                    </p>
+                  </div>
+                </div>
               ))}
+
+            </div>
           </div>
         </div>
       </section>
 
       {/* Beneficiary Section */}
-      <section id="beneficiary" className="py-16 md:py-24 bg-slate-50 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-stretch">
-            <div className="bg-white rounded-3xl md:rounded-[3rem] p-8 md:p-16 border border-slate-100 flex flex-col justify-center text-center md:text-left shadow-sm">
-              <p className="text-[10px] md:text-xs font-black text-indigo-600 uppercase tracking-[0.4em] mb-3 md:mb-4">This Month's Mission</p>
-              <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 md:mb-8 tracking-tighter uppercase italic">Chai Lifeline</h2>
-              <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed mb-8 md:mb-10">
-                Chai Lifeline provides comprehensive, unparalleled support to children battling cancer and other life-threatening illnesses. Our collective grant funds vital services—from medical transportation and crisis counseling to joyful camp experiences—ensuring no family fights alone. Every dollar goes toward restoring hope, stability, and childhood magic in their darkest hours.
+      <section id="beneficiary" className="py-20 md:py-28 bg-slate-900 px-4 text-white">
+        <div className="max-w-7xl mx-auto reveal">
+          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div className="flex flex-col justify-center text-center md:text-left">
+              <p className="text-[10px] md:text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Who We're Helping This Month</p>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 md:mb-8 tracking-tight uppercase italic">Chai Lifeline</h2>
+              <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8 md:mb-10">
+                Chai Lifeline is there for families the moment a child is diagnosed with cancer or a life-threatening illness — transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
               </p>
-              <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 justify-center md:justify-start">
-                <div className="flex items-center gap-2 md:gap-3 text-slate-400"><Building size={24} className="md:w-7 md:h-7" /><p className="text-[10px] md:text-xs font-black uppercase tracking-widest leading-none text-left">Vetted 501(c)(3) Partner</p></div>
-                <div className="hidden sm:block w-px h-8 bg-slate-200"></div>
-                <div className="flex items-center gap-2 md:gap-3 text-red-500 text-left"><Heart size={24} className="md:w-7 md:h-7 fill-current text-left" /><p className="text-[10px] md:text-xs font-black uppercase tracking-widest leading-none text-slate-700 text-left">Impact Goal: $400,000</p></div>
+              <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 justify-center md:justify-start">
+                <div className="flex items-center gap-3">
+                  <Building size={20} className="text-slate-400" />
+                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-300">Verified 501(c)(3) Nonprofit</p>
+                </div>
+                <div className="hidden sm:block w-px h-6 bg-slate-700"></div>
+                <div className="flex items-center gap-3">
+                  <Heart size={20} className="text-red-400 fill-current" />
+                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-300">We're raising $400,000 for them</p>
+                </div>
               </div>
             </div>
-            <div className="relative group overflow-hidden rounded-3xl md:rounded-[3rem] shadow-2xl bg-slate-900 min-h-[250px] md:min-h-[400px]">
-               {/* FIX: Added bg-slate-50 min-h-[20px] directly to className */}
-               <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80 bg-slate-50 min-h-[20px]" onError={(e) => { e.currentTarget.style.display='none'; }} />
-               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
-               <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-xl py-2 px-6 md:py-3 md:px-8 rounded-xl md:rounded-2xl flex items-center justify-center shadow-2xl border border-white/20">
-                  {/* FIX: Added bg-slate-50 min-h-[20px] directly to className */}
-                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-10 md:h-14 w-auto object-contain bg-slate-50 min-h-[20px]" onError={(e) => { e.currentTarget.style.display='none'; }} />
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl min-h-[300px] md:min-h-[450px] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
+               <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
+               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
+               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white py-3 px-8 rounded-lg flex items-center justify-center shadow-xl">
+                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
                </div>
             </div>
           </div>
@@ -343,65 +412,199 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* Tiers Section */}
-      <section id="tiers" className="py-16 md:py-24 bg-white px-4 text-center overflow-hidden border-t border-slate-100">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-black mb-3 md:mb-4 tracking-tight uppercase text-indigo-950 leading-none">Pick Your Impact</h2>
-            <p className="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] italic">Join a dedicated circle to maximize the reach of your monthly Tzedakah.</p>
+      <section id="tiers" className="py-20 md:py-28 bg-white px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 md:mb-16 reveal">
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick Your Impact</h2>
+            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Pick a circle. Set up your monthly gift. Give every month, automatically.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 text-left max-w-5xl mx-auto relative">
-            {['silver', 'gold', 'diamond'].map((tier) => (
-                <div key={tier} className="bg-white rounded-[2rem] p-6 lg:p-8 border border-slate-200 relative overflow-hidden flex flex-col shadow-sm transition-all duration-300 md:hover:-translate-y-2 md:hover:shadow-[0_20px_40px_-15px_rgba(79,70,229,0.15)] md:hover:border-indigo-200 group">
-                    {renderTierCardContent(tier)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+            {['silver', 'gold', 'diamond'].map((tier, index) => {
+              
+              const totalPool = (appData.tierData[tier].price * 400).toLocaleString();
+              const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
+              const dotColor = tier === 'silver' ? 'bg-slate-400' : tier === 'gold' ? 'bg-[#eab308]' : 'bg-[#818cf8]';
+
+              return (
+                <div 
+                  key={tier} 
+                  onClick={(e) => handleCardClick(tier, e)}
+                  className="bg-white border border-slate-200 rounded-2xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 reveal md:cursor-pointer group/card" 
+                  style={{ transitionDelay: `${index * 150}ms` }}
+                >
+
+                  <div className="bg-white px-6 py-5 flex items-center justify-between border-b border-slate-100 rounded-t-2xl">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${dotColor}`}></div>
+                      <span className={`text-xs font-black uppercase tracking-widest ${headerColor}`}>
+                        {tier} Circle
+                      </span>
+                    </div>
+                    {/* Restored Header Price */}
+                    <span className="text-base font-black text-slate-900">
+                      ${appData.tierData[tier].price.toLocaleString()}
+                      <span className="text-xs font-semibold text-slate-400">/mo</span>
+                    </span>
+                  </div>
+
+                  <div className="px-6 pt-8 pb-6 text-center flex flex-col items-center justify-center bg-white">
+                    <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
+                      Monthly Grand Prize
+                    </p>
+                    <div className="w-full text-center">
+                        <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none mx-auto ${headerColor}`}>
+                          {appData.tierData[tier].prize}
+                        </p>
+                    </div>
+                  </div>
+
+                  {/* Restored Odds & Impact Summary Fonts */}
+                  <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
+                    <div className="flex justify-between items-center relative">
+                      <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
+                        Grand Prize Odds*
+                      </span>
+                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                        <span className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center relative">
+                      <div className="inline-flex items-center gap-1.5">
+                        <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                          Total Odds*
+                        </span>
+                        <div className="relative inline-flex items-center" onMouseEnter={() => setActiveTooltip(`${tier}-tot`)} onMouseLeave={() => setActiveTooltip(null)} onClick={(e) => { e.stopPropagation(); setActiveTooltip(activeTooltip === `${tier}-tot` ? null : `${tier}-tot`); }}>
+                          <HelpCircle size={14} className="text-slate-400 cursor-pointer" />
+                          <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 max-w-[80vw] bg-slate-900 text-white p-3 rounded-xl shadow-xl text-[10px] leading-relaxed font-medium normal-case transition-all duration-200 z-[100] text-center pointer-events-none ${activeTooltip === `${tier}-tot` ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover:opacity-100 md:group-hover:visible'}`}>
+                              The estimated probability of winning any prize when the circle fills.
+                              <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-slate-900 transform rotate-45"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                        <span className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center mt-1 pt-3 border-t border-slate-200">
+                      <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
+                        Combined Tzedakah Pool
+                      </span>
+                      <span className="text-base md:text-lg font-black text-slate-700">
+                        ${totalPool}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Restored Parsed Prizes Fonts */}
+                  <div className="px-6 py-5 flex-grow bg-white">
+                    <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
+                      Other Monthly Prizes
+                    </p>
+                    <div className="space-y-0 relative z-10">
+                      {appData.tierData[tier].otherPrizes.map((p, i) => {
+                        const isMultiple = p.includes('x ');
+                        let qty = '1 winner';
+                        let amount = p;
+                        if (isMultiple) {
+                           const parts = p.split('x ');
+                           qty = `${parts[0]} winners`; 
+                           amount = parts[1];
+                        }
+
+                        return (
+                          <div key={i} className="flex justify-between items-center text-sm py-2.5 border-b border-slate-50 last:border-0">
+                            <span className="text-slate-500 font-bold text-sm md:text-base">{qty}</span>
+                            <span className="font-black text-slate-800 tabular-nums text-base md:text-lg">{amount}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="p-5 pt-3 bg-white rounded-b-2xl relative z-10 overflow-hidden">
+                    <button
+                      onClick={(e) => handleJoinClick(tier, e)}
+                      className="w-full py-3.5 rounded-lg font-bold text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900"
+                    >
+                      Join {tier.charAt(0).toUpperCase() + tier.slice(1)} Circle • ${appData.tierData[tier].price.toLocaleString()}/mo
+                    </button>
+                  </div>
                 </div>
-            ))}
+              );
+            })}
           </div>
           
-          <div className="mt-12 md:mt-16 text-center px-4">
-            <p className="text-slate-400 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] max-w-2xl mx-auto leading-relaxed text-center">
+          <div className="mt-10 text-center px-4 reveal">
+            <p className="text-slate-400 text-[10px] font-medium leading-relaxed text-center max-w-2xl mx-auto">
               * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-600 transition-colors">official rules</Link> for details.
             </p>
           </div>
         </div>
       </section>
 
+      {/* Upgraded CTA Section */}
+      <section className="py-16 md:py-20 bg-slate-900 px-4 text-center overflow-hidden">
+        <div className="max-w-3xl mx-auto relative z-10 reveal">
+          <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-6">
+            Your circle is waiting.
+          </h2>
+          <p className="text-slate-300 font-medium text-lg md:text-xl mb-10 leading-relaxed">
+            Pick a circle. Give every month.<br />
+            And maybe win up to $100,000 while you're at it.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onClick={() => scrollToSection('tiers')} className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-lg shadow-amber-400/10">
+              Join the Circle
+            </button>
+            <button onClick={() => scrollToSection('faq')} className="px-10 py-4 bg-transparent border border-slate-700 text-slate-300 rounded-lg font-bold text-sm md:text-base hover:border-slate-500 hover:text-white transition-colors uppercase tracking-widest">
+              Have Questions?
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ */}
-      <section id="faq" className="py-16 md:py-24 bg-slate-50 border-t border-slate-100 px-4 text-center">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-black mb-3 md:mb-4 uppercase text-indigo-950 italic text-center">Questions?</h2>
-          <p className="text-slate-400 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-8 md:mb-12 text-[10px] md:text-xs text-center">Everything you need to know</p>
-          <div className="space-y-3 md:space-y-4 text-left">
+      <section id="faq" className="py-20 md:py-32 bg-slate-50 border-t border-slate-100 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <div className="reveal">
+            <h2 className="text-4xl md:text-5xl font-black mb-3 md:mb-4 text-slate-900 tracking-tight">Questions?</h2>
+            <p className="text-slate-400 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-10 md:mb-12 text-[10px] md:text-xs">Everything you need to know</p>
+          </div>
+          
+          <div className="space-y-4 text-left">
             {primaryFaqs.map((faq, i) => (
-              <div key={i} className="border border-slate-100 rounded-2xl md:rounded-3xl overflow-hidden bg-white">
+              <div key={i} className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm transition-all hover:shadow-md hover:border-indigo-200 reveal" style={{ transitionDelay: `${i * 100}ms` }}>
                 <button 
                   onClick={() => setOpenFaq(openFaq === i ? null : i)} 
-                  style={{ WebkitTapHighlightColor: 'transparent' }} 
-                  className="w-full p-5 md:p-8 text-left flex justify-between items-center outline-none bg-white" 
+                  className="w-full p-6 md:p-8 text-left flex justify-between items-center outline-none bg-white" 
                   aria-expanded={openFaq === i}
                 >
-                  <span className="font-black text-indigo-950 text-sm md:text-lg uppercase pr-4">{faq.q}</span>
-                  {openFaq === i ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0" />}
+                  <span className="font-bold text-slate-900 text-sm md:text-base pr-4">{faq.q}</span>
+                  {openFaq === i ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0 text-indigo-600" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0 text-slate-400" />}
                 </button>
-                {openFaq === i && <div className="p-5 md:p-8 pt-0 text-slate-600 font-medium leading-relaxed text-sm md:text-base bg-white">{faq.a}</div>}
+                {openFaq === i && <div className="px-6 md:px-8 pb-6 md:pb-8 pt-0 text-slate-600 font-medium leading-relaxed text-sm md:text-base bg-white">{faq.a}</div>}
               </div>
             ))}
             {showAllFaqs && secondaryFaqs.map((faq, i) => (
-              <div key={`sec-${i}`} className="border border-slate-100 rounded-2xl md:rounded-3xl overflow-hidden bg-white animate-in fade-in slide-in-from-top-4">
+              <div key={`sec-${i}`} className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm animate-in fade-in slide-in-from-top-4 transition-all hover:shadow-md hover:border-indigo-200">
                 <button 
                   onClick={() => setOpenFaq(openFaq === `sec-${i}` ? null : `sec-${i}`)} 
-                  style={{ WebkitTapHighlightColor: 'transparent' }} 
-                  className="w-full p-5 md:p-8 text-left flex justify-between items-center transition-colors outline-none bg-white" 
+                  className="w-full p-6 md:p-8 text-left flex justify-between items-center outline-none bg-white" 
                   aria-expanded={openFaq === `sec-${i}`}
                 >
-                  <span className="font-black text-indigo-950 pr-4 text-sm md:text-lg uppercase tracking-tight">{faq.q}</span>
-                  {openFaq === `sec-${i}` ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0 text-indigo-900" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0 text-slate-300" />}
+                  <span className="font-bold text-slate-900 text-sm md:text-base pr-4">{faq.q}</span>
+                  {openFaq === `sec-${i}` ? <ChevronUp size={20} className="md:w-6 md:h-6 shrink-0 text-indigo-600" /> : <ChevronDown size={20} className="md:w-6 md:h-6 shrink-0 text-slate-400" />}
                 </button>
-                {openFaq === `sec-${i}` && <div className="p-5 md:p-8 pt-0 text-slate-600 leading-relaxed text-sm md:text-base font-medium bg-white">{faq.a}</div>}
+                {openFaq === `sec-${i}` && <div className="px-6 md:px-8 pb-6 md:pb-8 pt-0 text-slate-600 font-medium leading-relaxed text-sm md:text-base bg-white">{faq.a}</div>}
               </div>
             ))}
           </div>
-          <button onClick={() => setShowAllFaqs(!showAllFaqs)} className="mt-8 md:mt-12 px-6 md:px-8 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl md:rounded-2xl font-black uppercase text-[10px] md:text-xs hover:bg-slate-100 transition-all text-center">{showAllFaqs ? "See Fewer Questions" : "See All Questions"}</button>
+          <button onClick={() => setShowAllFaqs(!showAllFaqs)} className="mt-10 px-8 py-4 bg-white border border-slate-200 text-slate-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs hover:bg-slate-50 transition-all shadow-sm reveal">
+            {showAllFaqs ? "See Fewer Questions" : "See All Questions"}
+          </button>
         </div>
       </section>
 
