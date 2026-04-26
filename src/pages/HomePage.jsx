@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Check, Menu, X, Heart, Building, ChevronUp, ChevronDown, HelpCircle, TrendingUp, Gift } from 'lucide-react';
 import { LogoIcon } from '../components/layout/SecondaryNavbar';
@@ -15,21 +15,6 @@ const HomePage = ({ appData }) => {
   // Scrollytelling State for "How it Works"
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
-  const scrollTimeout = useRef(null);
-
-  // Seamless Scroll Restoration (Fires BEFORE the browser paints)
-  useLayoutEffect(() => {
-    const savedScroll = sessionStorage.getItem('homeScrollPosition');
-    if (savedScroll && savedScroll !== '0') {
-      const targetScroll = parseInt(savedScroll, 10);
-      window.scrollTo(0, targetScroll);
-      
-      // Fallback lock-in to prevent any minor layout shifts from bouncing it back up
-      requestAnimationFrame(() => {
-        window.scrollTo(0, targetScroll);
-      });
-    }
-  }, []);
 
   // Scroll Handling for Navbar & Animations
   useEffect(() => {
@@ -52,18 +37,12 @@ const HomePage = ({ appData }) => {
           setHowScroll(Math.max(0, Math.min(1, progress)));
         }
       }
-
-      // Debounce saving scroll position to avoid capturing '0' when navigating away
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-      scrollTimeout.current = setTimeout(() => {
-        sessionStorage.setItem('homeScrollPosition', window.scrollY);
-      }, 100);
     };
 
     window.addEventListener('scroll', handleScroll);
     handleScroll(); 
 
-    // Intersection Observer for scroll reveal animations (Fades in once, stays permanently)
+    // Intersection Observer for scroll reveal animations
     const observerOnce = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -73,12 +52,19 @@ const HomePage = ({ appData }) => {
       });
     }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
 
-    // Apply to all elements
+    // Apply to all elements FIRST
     document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
+
+    // Restore scroll position AFTER observer is set up to prevent layout shift flash
+    const savedScroll = sessionStorage.getItem('homeScrollPosition');
+    if (savedScroll && savedScroll !== '0') {
+      setTimeout(() => {
+        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+      }, 50);
+    }
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
       observerOnce.disconnect();
     };
   }, []);
@@ -114,7 +100,7 @@ const HomePage = ({ appData }) => {
   const showStep3 = lineProgress >= 80; 
 
   const primaryFaqs = [
-    { q: "What is Amplify?", a: "Amplify is a community-powered giving platform that pools monthly Tzedakah to create greater collective impact. Members give consistently, support new charitable organizations each month, and receive access to optional appreciation perks as a thank-you for their giving." },
+    { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant — and as a thank-you, members get a shot at winning up to $100,000 every month." },
     { q: "What's the 400-member thing about?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible." },
     { q: "Why prizes? Doesn't that take from the charity?", a: "It's actually the opposite. The prizes are the engine. By allocating a portion of the pool to massive rewards, we attract and keep thousands of donors who might otherwise give sporadically. This allows us to deliver transformational, six-figure grants every month." },
     { q: "Where does my money actually go?", a: "The majority of your gift goes directly to our charity partners, while a portion funds our prize pool and operations. Offering these prizes allows us to attract thousands of consistent monthly donors." }
@@ -183,7 +169,7 @@ const HomePage = ({ appData }) => {
       )}
 
       {/* DARK HERO */}
-      <header className="bg-indigo-950 pt-24 md:pt-28 pb-0 flex flex-col overflow-hidden">
+      <header className="bg-indigo-950 pt-20 md:pt-24 pb-0 flex flex-col overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 pb-4 md:pb-6 relative z-10 flex-grow">
           <div className="grid lg:grid-cols-12 gap-10 md:gap-16 items-center">
             
@@ -244,9 +230,9 @@ const HomePage = ({ appData }) => {
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
               {[
                 { top: "Up to", num: "$100K", label: "Monthly Prize", isGold: true },
-                { top: "", num: "$200K+", label: "Monthly Prizes", isGold: false },
+                { top: "Goal", num: "$5M+", label: "Yearly to Charity", isGold: false },
                 { top: "Up to", num: "1/25", label: "Winning Odds", isGold: true },
-                { top: "Goal", num: "$5M+", label: "Yearly to Charity", isGold: false }
+                { top: "Over", num: "$200K+", label: "Total Monthly Prizes", isGold: false }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
                   <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1.5 min-h-[14px] md:min-h-[16px] leading-none ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.top}</p>
@@ -262,9 +248,9 @@ const HomePage = ({ appData }) => {
       {/* How it Works Section (SMOOTH SCROLLYTELLING ANIMATION) */}
       <section id="how" className="relative bg-white border-t border-slate-100">
         <div ref={howSectionRef} className="h-[200vh]">
-          <div className="sticky top-16 md:top-[80px] max-w-7xl mx-auto px-4 overflow-hidden pt-8 pb-12 md:pt-16 md:pb-16">
+          <div className="sticky top-16 md:top-[80px] max-w-7xl mx-auto px-4 overflow-hidden pt-4 md:pt-8 pb-12 md:pb-16">
             
-            <div className="mb-10 md:mb-20 text-center md:text-left transition-opacity duration-500">
+            <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Mechanics</p>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
                 Strategic giving, simplified.<br className="hidden md:block"/>
@@ -325,7 +311,7 @@ const HomePage = ({ appData }) => {
 
       {/* Why Amplify Section */}
       <section id="why" className="bg-slate-50 border-t border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 py-20 md:py-28">
+        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <div className="grid md:grid-cols-12 gap-12 md:gap-16">
             
             {/* Sticky Left Column */}
@@ -363,7 +349,7 @@ const HomePage = ({ appData }) => {
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
                   title: "Effortless Giving",
-                  body: "Consistency is the hardest part of philanthropy. Your membership puts your giving on autopilot, ensuring you make a powerful impact every month without a second thought."
+                  body: "Most people want to give regularly. Life gets in the way. Your Amplify membership handles it automatically — same amount, same day, every month. No reminders, no forgetting."
                 },
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
@@ -392,7 +378,7 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* Beneficiary Section */}
-      <section id="beneficiary" className="py-12 md:py-16 bg-slate-900 px-4 text-white">
+      <section id="beneficiary" className="py-20 md:py-28 bg-slate-900 px-4 text-white">
         <div className="max-w-7xl mx-auto reveal">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div className="flex flex-col justify-center text-center md:text-left">
@@ -425,7 +411,7 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* Tiers Section */}
-      <section id="tiers" className="py-20 md:py-28 bg-white px-4">
+      <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick Your Impact</h2>
@@ -465,18 +451,16 @@ const HomePage = ({ appData }) => {
                     <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
                       Monthly Grand Prize
                     </p>
-                    <div className="w-full text-center">
-                        <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none mx-auto ${headerColor}`}>
-                          {appData.tierData[tier].prize}
-                        </p>
-                    </div>
+                    <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>
+                      {appData.tierData[tier].prize}
+                    </p>
                   </div>
 
                   {/* Restored Odds & Impact Summary Fonts */}
                   <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
                     <div className="flex justify-between items-center relative">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-                        Grand Prize Odds*
+                        Grand Prize Odds
                       </span>
                       <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
@@ -486,7 +470,7 @@ const HomePage = ({ appData }) => {
                     <div className="flex justify-between items-center relative">
                       <div className="inline-flex items-center gap-1.5">
                         <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
-                          Total Odds*
+                          Winning Odds
                         </span>
                         <div className="relative inline-flex items-center" onMouseEnter={() => setActiveTooltip(`${tier}-tot`)} onMouseLeave={() => setActiveTooltip(null)} onClick={(e) => { e.stopPropagation(); setActiveTooltip(activeTooltip === `${tier}-tot` ? null : `${tier}-tot`); }}>
                           <HelpCircle size={14} className="text-slate-400 cursor-pointer" />
@@ -542,7 +526,7 @@ const HomePage = ({ appData }) => {
                       onClick={(e) => handleJoinClick(tier, e)}
                       className="w-full py-3.5 rounded-lg font-bold text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900"
                     >
-                      Join {tier.charAt(0).toUpperCase() + tier.slice(1)} Circle • ${appData.tierData[tier].price.toLocaleString()}/mo
+                      Join Now • ${appData.tierData[tier].price.toLocaleString()}/mo
                     </button>
                   </div>
                 </div>
@@ -551,15 +535,15 @@ const HomePage = ({ appData }) => {
           </div>
           
           <div className="mt-10 text-center px-4 reveal">
-            <p className="text-slate-400 text-[10px] font-medium leading-relaxed text-center max-w-2xl mx-auto">
-              * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-600 transition-colors">official rules</Link> for details.
+            <p className="text-slate-500 text-[11px] md:text-xs font-medium leading-relaxed text-center max-w-2xl mx-auto">
+              Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-700 transition-colors">official rules</Link> for details.
             </p>
           </div>
         </div>
       </section>
 
       {/* Upgraded CTA Section */}
-      <section className="py-10 md:py-14 bg-slate-900 px-4 text-center overflow-hidden">
+      <section className="py-12 md:py-16 bg-slate-900 px-4 text-center overflow-hidden">
         <div className="max-w-3xl mx-auto relative z-10 reveal">
           <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-6">
             Your circle is waiting.
@@ -580,7 +564,7 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-20 md:py-32 bg-slate-50 border-t border-slate-100 px-4 text-center">
+      <section id="faq" className="py-16 md:py-24 bg-slate-50 border-t border-slate-100 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <div className="reveal">
             <h2 className="text-4xl md:text-5xl font-black mb-3 md:mb-4 text-slate-900 tracking-tight">Questions?</h2>
