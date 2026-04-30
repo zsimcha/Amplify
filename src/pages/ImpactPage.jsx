@@ -6,7 +6,7 @@ const ImpactPage = () => {
   return (
     <PageLayout title="Our Impact" intro="We don't spread the money thin. We identify one organization at a time. We vet them for impact, financial transparency, and readiness to deploy funding. Then we issue the full grant directly to them.">
       
-      <section className="py-12 px-4 bg-white text-center">
+      <section className="py-8 md:py-12 px-4 bg-white text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-xl text-slate-600 font-medium italic">
             "The best grant we can give isn't just money. It's the right amount, to the right organization, at the right moment."
@@ -66,31 +66,30 @@ const ImpactPage = () => {
           <div className="text-center mb-16">
             <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Vetting</p>
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Our vetting process.</h2>
-            <p className="text-lg text-slate-600 font-medium mt-4">Every Amplify charity partner goes through the same review before being featured:</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
-            <div className="bg-white p-10 rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 transition-transform duration-300">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
               <Search size={32} className="text-indigo-600 mb-6" />
-              <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-wide">Financials</h3>
+              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Financials</h3>
               <p className="text-slate-600 font-medium leading-relaxed">We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.</p>
             </div>
             
-            <div className="bg-white p-10 rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 transition-transform duration-300">
+            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
               <Target size={32} className="text-amber-500 mb-6" />
-              <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-wide">Clear Impact</h3>
+              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Clear Impact</h3>
               <p className="text-slate-600 font-medium leading-relaxed">Not "it helps our general fund." We look for organizations that can tell us exactly what program this grant funds, and how many families it will reach.</p>
             </div>
             
-            <div className="bg-white p-10 rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 transition-transform duration-300">
+            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
               <Zap size={32} className="text-blue-500 mb-6" />
-              <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-wide">Ready to Scale</h3>
+              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Ready to Scale</h3>
               <p className="text-slate-600 font-medium leading-relaxed">Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where this grant acts as a true catalyst.</p>
             </div>
             
-            <div className="bg-white p-10 rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 hover:-translate-y-1 transition-transform duration-300">
+            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
               <Shield size={32} className="text-emerald-500 mb-6" />
-              <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-wide">Proven Trust</h3>
+              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Proven Trust</h3>
               <p className="text-slate-600 font-medium leading-relaxed">We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.</p>
             </div>
           </div>
