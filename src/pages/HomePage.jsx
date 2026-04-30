@@ -93,8 +93,8 @@ const HomePage = ({ appData }) => {
     }
   };
 
-  // Flawless Math for How It Works line sync 
-  const lineProgress = Math.max(0, Math.min(100, (howScroll - 0.02) * 130));
+  // Flawless Math for How It Works line sync (Adjusted multiplier to match new h-[150vh] container)
+  const lineProgress = Math.max(0, Math.min(100, (howScroll - 0.02) * 105));
   const showStep1 = howScroll > 0.01;   
   const showStep2 = lineProgress >= 44; 
   const showStep3 = lineProgress >= 80; 
@@ -222,22 +222,22 @@ const HomePage = ({ appData }) => {
           </div>
         </div>
 
-        {/* Pewter Gray Stats Ribbon */}
+        {/* Pewter Gray Stats Ribbon - Responsive Color Alternation */}
         <div className="w-full flex flex-col mt-auto relative z-10 reveal">
           <div className="w-full h-12 md:h-16 bg-gradient-to-b from-indigo-950 to-slate-700"></div>
           
           <div className="w-full bg-slate-700 border-b border-slate-600 pb-8 md:pb-10 pt-2">
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
               {[
-                { top: "Up to", num: "$100K", label: "Monthly Prize", isGold: true },
-                { top: "Goal", num: "$5M+", label: "Yearly to Charity", isGold: false },
-                { top: "Up to", num: "1/25", label: "Winning Odds", isGold: true },
-                { top: "Over", num: "$200K+", label: "Total Monthly Prizes", isGold: false }
+                { top: "Up to", num: "$100K", label: "Monthly Prize", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
+                { top: "Goal", num: "$5M+", label: "Yearly to Charity", colorClass: "text-white", labelClass: "text-slate-300" },
+                { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
+                { top: "Over", num: "$200K+", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
-                  <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1.5 min-h-[14px] md:min-h-[16px] leading-none ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.top}</p>
-                  <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.isGold ? 'text-amber-400' : 'text-white'}`}>{stat.num}</p>
-                  <p className={`text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.isGold ? 'text-amber-400/90' : 'text-slate-300'}`}>{stat.label}</p>
+                  <p className={`text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1.5 min-h-[14px] md:min-h-[16px] leading-none ${stat.labelClass}`}>{stat.top}</p>
+                  <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.colorClass}`}>{stat.num}</p>
+                  <p className={`text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.labelClass}`}>{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -247,8 +247,9 @@ const HomePage = ({ appData }) => {
 
       {/* How it Works Section (SMOOTH SCROLLYTELLING ANIMATION) */}
       <section id="how" className="relative bg-white border-t border-slate-100">
-        <div ref={howSectionRef} className="h-[200vh]">
-          <div className="sticky top-16 md:top-[80px] max-w-7xl mx-auto px-4 overflow-hidden pt-4 md:pt-8 pb-12 md:pb-16">
+        <div ref={howSectionRef} className="h-[150vh]">
+          {/* min-h ensures the sticky container touches the bottom of the screen, instantly resuming vertical scroll when the animation ends */}
+          <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-start max-w-7xl mx-auto px-4 overflow-hidden pt-10 md:pt-16 pb-12">
             
             <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Mechanics</p>
@@ -306,6 +307,29 @@ const HomePage = ({ appData }) => {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* Core Philosophy / Manifesto Section */}
+      <section className="py-16 md:py-24 bg-indigo-950 text-center px-4 relative overflow-hidden flex flex-col items-center justify-center">
+        <div className="max-w-4xl mx-auto relative z-10 w-full">
+          {/* Rule animates first */}
+          <div className="w-24 h-0.5 bg-indigo-500 mx-auto mb-10 md:mb-14 reveal" style={{ transitionDelay: '0ms', transitionDuration: '500ms' }}></div>
+
+          {/* Lines cascade snappier */}
+          <p className="text-xl md:text-3xl text-indigo-300 font-medium leading-relaxed italic mb-8 md:mb-12 reveal" style={{ transitionDelay: '150ms', transitionDuration: '700ms' }}>
+            People give. That's not the problem.
+          </p>
+          
+          <p className="text-xl md:text-3xl text-indigo-100 font-medium leading-relaxed mb-8 md:mb-12 reveal" style={{ transitionDelay: '400ms', transitionDuration: '700ms' }}>
+            What changes things is showing up the same way, every month — together.
+          </p>
+          
+          <p className="text-xl md:text-3xl text-white font-medium leading-relaxed reveal" style={{ transitionDelay: '650ms', transitionDuration: '700ms' }}>
+            One massive grant. One charity. And{' '}
+            <span className="text-amber-400 font-bold">maybe win up to $100,000</span>{' '}
+            as a thank-you.
+          </p>
         </div>
       </section>
 
@@ -451,7 +475,7 @@ const HomePage = ({ appData }) => {
                     <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
                       Monthly Grand Prize
                     </p>
-                    <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>
+                    <p className={`text-6xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>
                       {appData.tierData[tier].prize}
                     </p>
                   </div>
@@ -462,7 +486,7 @@ const HomePage = ({ appData }) => {
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
                         Grand Prize Odds
                       </span>
-                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
@@ -480,7 +504,7 @@ const HomePage = ({ appData }) => {
                           </div>
                         </div>
                       </div>
-                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
@@ -489,7 +513,7 @@ const HomePage = ({ appData }) => {
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">
                         Combined Tzedakah Pool
                       </span>
-                      <span className="text-base md:text-lg font-black text-slate-700">
+                      <span className="text-lg md:text-xl font-black text-slate-700">
                         ${totalPool}
                       </span>
                     </div>
@@ -513,8 +537,8 @@ const HomePage = ({ appData }) => {
 
                         return (
                           <div key={i} className="flex justify-between items-center text-sm py-2.5 border-b border-slate-50 last:border-0">
-                            <span className="text-slate-500 font-bold text-sm md:text-base">{qty}</span>
-                            <span className="font-black text-slate-800 tabular-nums text-base md:text-lg">{amount}</span>
+                            <span className="text-slate-500 font-bold text-base md:text-lg">{qty}</span>
+                            <span className="font-black text-slate-800 tabular-nums text-lg md:text-xl">{amount}</span>
                           </div>
                         );
                       })}
