@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import MainNavbar from './MainNavbar';
 import Footer from './Footer';
 
 const PageLayout = ({ children, title, intro }) => {
-  // Reset scroll on navigation to a new page
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 flex flex-col">
       <MainNavbar />

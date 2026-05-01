@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Check, Heart, Building, HelpCircle, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
+import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown } from 'lucide-react';
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 
 const HomePage = ({ appData }) => {
   const navigate = useNavigate();
   const [activeTooltip, setActiveTooltip] = useState(null);
-  const [openFaq, setOpenFaq] = useState(null);
   
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
@@ -41,15 +40,6 @@ const HomePage = ({ appData }) => {
 
     document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
 
-    // SCROLL BUG FIX: Only restore if a specific flag is set, then immediately delete it.
-    const savedScroll = sessionStorage.getItem('returnToHomeScroll');
-    if (savedScroll && savedScroll !== '0') {
-      setTimeout(() => {
-        window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
-      }, 50);
-      sessionStorage.removeItem('returnToHomeScroll');
-    }
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
       observerOnce.disconnect();
@@ -58,8 +48,6 @@ const HomePage = ({ appData }) => {
 
   const handleJoinClick = (tier, e) => {
     if (e) e.stopPropagation();
-    // Only save scroll position when leaving via a Join button
-    sessionStorage.setItem('returnToHomeScroll', window.scrollY);
     navigate('/checkout', { state: { tier } }); 
   };
 
@@ -69,11 +57,10 @@ const HomePage = ({ appData }) => {
     }
   };
 
-  // ANIMATION FIX: Restored 130 multiplier and 0.01 / 44 / 80 thresholds
   const lineProgress = Math.max(0, Math.min(100, (howScroll - 0.02) * 130));
   const showStep1 = howScroll > 0.01;   
-  const showStep2 = lineProgress >= 44; 
-  const showStep3 = lineProgress >= 80; 
+  const showStep2 = lineProgress >= 50; 
+  const showStep3 = lineProgress >= 88; 
 
   const primaryFaqs = [
     { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank-you, members get a shot at winning up to $100,000 every month." },
@@ -81,6 +68,8 @@ const HomePage = ({ appData }) => {
     { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible. The pooled contributions form both the monthly grant and the prize pool." },
     { q: "Who selects the charities?", a: "Charities are properly vetted in advance — financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone." }
   ];
+
+  const [openFaq, setOpenFaq] = useState(null);
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-indigo-100 scroll-smooth relative" onClick={() => setActiveTooltip(null)}>
@@ -140,7 +129,7 @@ const HomePage = ({ appData }) => {
           </div>
         </div>
 
-        {/* Stats Ribbon - "Up to" shrunk */}
+        {/* Stats Ribbon */}
         <div className="w-full flex flex-col mt-auto relative z-10 reveal">
           <div className="w-full h-12 md:h-16 bg-gradient-to-b from-indigo-950 to-slate-700"></div>
           <div className="w-full bg-slate-700 border-b border-slate-600 pb-8 md:pb-10 pt-2">
@@ -152,7 +141,7 @@ const HomePage = ({ appData }) => {
                 { top: "Over", num: "$200K+", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
-                  <p className={`text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
+                  <p className={`text-[8px] md:text-[9px] font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
                   <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.colorClass}`}>{stat.num}</p>
                   <p className={`text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.labelClass}`}>{stat.label}</p>
                 </div>
@@ -219,36 +208,34 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Manifesto Section - Redesigned to be asymmetric and anti-AI */}
-      <section className="py-20 md:py-32 bg-indigo-950 px-4 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="max-w-2xl text-left reveal" style={{ transitionDelay: '0ms', transitionDuration: '700ms' }}>
-            <div className="w-16 h-1.5 bg-amber-400 mb-8"></div>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] mb-6">
-              Giving $50 a month feels good. <br/>
-              <span className="text-indigo-400">But it doesn't change the world.</span>
-            </h2>
-            <p className="text-xl md:text-2xl text-indigo-100 font-medium leading-relaxed mb-8">
-              What changes things is showing up the same way, every month — together.
-            </p>
-            <p className="text-xl md:text-2xl text-white font-medium leading-relaxed">
-              One massive grant. One charity. <br/>And real odds to win up to <span className="text-amber-400 font-black">$100,000</span>.
-            </p>
-          </div>
+      {/* Manifesto Section - Left aligned, un-animated, shrunk vertically, increased text size */}
+      <section className="py-12 md:py-20 bg-indigo-950 px-4 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="w-16 h-1.5 bg-amber-400 mb-8"></div>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-6">
+            <span className="text-white">People give.</span> <span className="text-indigo-300">That's not the problem.</span>
+          </h2>
+          <p className="text-xl md:text-3xl text-indigo-100 font-medium leading-relaxed mb-6">
+            What changes things is showing up the same way, every month — together.
+          </p>
+          <p className="text-xl md:text-3xl text-white font-medium leading-relaxed">
+            One massive grant. One charity. <br className="md:hidden"/>Win up to <span className="text-amber-400 font-black">$100,000</span> as a thank-you.
+          </p>
         </div>
       </section>
 
-      {/* Rabbinic Panel Section (Changed to Poskim) */}
-      <section className="py-16 md:py-24 bg-slate-50 border-y border-slate-100 px-4">
+
+      {/* Rabbinic Panel Section (No Stagger) */}
+      <section className="py-20 md:py-28 bg-white border-t border-slate-100 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 reveal">
             <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Rabbinic Endorsement</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Endorsed by Gedolim who take Tzedakah seriously.</h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 md:gap-10">
-            {[1,2,3].map((item, index) => (
-              <div key={index} className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center text-center reveal" style={{ transitionDelay: `${index * 100}ms` }}>
+          <div className="grid md:grid-cols-3 gap-8 md:gap-10 pb-4">
+            {[1, 2, 3].map((item, index) => (
+              <div key={index} className="bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center reveal" style={{ transitionDelay: `${index * 100}ms` }}>
                 <div className="w-24 h-24 bg-slate-200 rounded-full mb-6 shrink-0"></div>
                 <h3 className="text-xl font-bold text-slate-900 mb-1">Rabbi Name</h3>
                 <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Title / Community</p>
@@ -257,7 +244,7 @@ const HomePage = ({ appData }) => {
             ))}
           </div>
 
-          <div className="mt-16 text-center reveal">
+          <div className="mt-12 text-center reveal">
             <p className="text-slate-600 font-medium mb-6 max-w-3xl mx-auto leading-relaxed">Amplify's model has been formally reviewed and endorsed by leading Poskim, including using Ma'aser, prize allocation, and charitable disbursement.</p>
             <Link to="/about" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm">
               Read more <ChevronRight size={18} />
@@ -267,7 +254,7 @@ const HomePage = ({ appData }) => {
       </section>
 
       {/* Beneficiary Section */}
-      <section id="beneficiary" className="py-16 md:py-24 bg-slate-900 px-4 text-white">
+      <section id="beneficiary" className="py-20 md:py-28 bg-slate-900 px-4 text-white">
         <div className="max-w-7xl mx-auto reveal">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div className="flex flex-col justify-center text-center md:text-left">
@@ -306,7 +293,7 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Tiers Section */}
+      {/* Tiers Section (No Stagger) */}
       <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
@@ -314,14 +301,14 @@ const HomePage = ({ appData }) => {
             <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds one massive grant. You have real odds of winning big.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto pb-8">
             {['silver', 'gold', 'diamond'].map((tier, index) => {
               const totalPool = (appData.tierData[tier].price * 400).toLocaleString();
               const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
               const dotColor = tier === 'silver' ? 'bg-slate-400' : tier === 'gold' ? 'bg-[#eab308]' : 'bg-[#818cf8]';
 
               return (
-                <div key={tier} onClick={(e) => handleCardClick(tier, e)} className="bg-white border border-slate-200 rounded-2xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 reveal md:cursor-pointer group/card" style={{ transitionDelay: `${index * 150}ms` }}>
+                <div key={tier} onClick={(e) => handleCardClick(tier, e)} className="bg-white border border-slate-200 rounded-2xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 reveal md:cursor-pointer group/card" style={{ transitionDelay: `${index * 100}ms` }}>
                   <div className="bg-white px-6 py-5 flex items-center justify-between border-b border-slate-100 rounded-t-2xl">
                     <div className="flex items-center gap-2">
                       <div className={`w-2 h-2 rounded-full ${dotColor}`}></div>
@@ -335,13 +322,13 @@ const HomePage = ({ appData }) => {
 
                   <div className="px-6 pt-8 pb-6 text-center flex flex-col items-center justify-center bg-white">
                     <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Monthly Grand Prize</p>
-                    <p className={`text-6xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>{appData.tierData[tier].prize}</p>
+                    <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>{appData.tierData[tier].prize}</p>
                   </div>
 
                   <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
                     <div className="flex justify-between items-center relative">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
-                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
@@ -356,13 +343,13 @@ const HomePage = ({ appData }) => {
                           </div>
                         </div>
                       </div>
-                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-1 pt-3 border-t border-slate-200">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Combined Tzedakah Pool</span>
-                      <span className="text-lg md:text-xl font-black text-slate-700">${totalPool}</span>
+                      <span className="text-base md:text-lg font-black text-slate-700">${totalPool}</span>
                     </div>
                   </div>
 
@@ -390,7 +377,7 @@ const HomePage = ({ appData }) => {
                     </div>
                   </div>
 
-                  <div className="p-5 pt-3 bg-white rounded-b-2xl relative z-10 overflow-hidden">
+                  <div className="p-5 pt-3 bg-white rounded-b-2xl relative z-10 overflow-hidden mt-auto">
                     <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-3.5 rounded-lg font-bold text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900">
                       Join Now • ${appData.tierData[tier].price.toLocaleString()}/mo
                     </button>

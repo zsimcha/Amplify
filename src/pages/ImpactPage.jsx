@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
-import { Building, Heart, Check, Search, Target, Zap, Shield } from 'lucide-react';
+import { Building, Heart, Check, ChevronRight } from 'lucide-react';
 
 const ImpactPage = () => {
+  useEffect(() => {
+    const observerOnce = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observerOnce.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
+
+    document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
+    return () => observerOnce.disconnect();
+  }, []);
+
   return (
     <PageLayout title="Our Impact" intro="We don't spread the money thin. We identify one organization at a time. We vet them for impact, financial transparency, and readiness to deploy funding. Then we issue the full grant directly to them.">
       
-      <section className="py-8 md:py-12 px-4 bg-white text-center">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-xl text-slate-600 font-medium italic">
+      <section className="py-12 px-4 bg-white text-center">
+        <div className="max-w-4xl mx-auto reveal">
+          <p className="text-2xl md:text-3xl text-slate-400 font-bold italic leading-relaxed">
             "The best grant we can give isn't just money. It's the right amount, to the right organization, at the right moment."
           </p>
         </div>
@@ -19,7 +34,7 @@ const ImpactPage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
             
-            <div>
+            <div className="reveal">
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">This Month's Partner</p>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Chai Lifeline</h2>
               <div className="prose prose-lg text-slate-600 font-medium mb-8">
@@ -45,7 +60,7 @@ const ImpactPage = () => {
               </div>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-8 reveal" style={{ transitionDelay: '150ms' }}>
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-xl relative bg-slate-900">
                 <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80" onError={(e) => { e.currentTarget.style.display='none'; }} />
               </div>
@@ -61,37 +76,58 @@ const ImpactPage = () => {
       </section>
 
       {/* Vetting Process */}
-      <section className="py-16 md:py-24 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Vetting</p>
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">Our vetting process.</h2>
+      <section className="py-20 md:py-32 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-20 reveal">
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">Our vetting process.</h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-              <Search size={32} className="text-indigo-600 mb-6" />
-              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Financials</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.</p>
+          <div className="space-y-16">
+            <div className="grid md:grid-cols-12 gap-8 items-start reveal">
+              <div className="md:col-span-3">
+                <span className="text-6xl font-black text-slate-200 block">01</span>
+              </div>
+              <div className="md:col-span-9 pt-2 border-t-4 border-indigo-600">
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-wide">Financials</h3>
+                <p className="text-xl text-slate-600 font-medium leading-relaxed">We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.</p>
+              </div>
             </div>
-            
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-              <Target size={32} className="text-amber-500 mb-6" />
-              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Clear Impact</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">Not "it helps our general fund." We look for organizations that can tell us exactly what program this grant funds, and how many families it will reach.</p>
+
+            <div className="grid md:grid-cols-12 gap-8 items-start reveal" style={{ transitionDelay: '100ms' }}>
+              <div className="md:col-span-3">
+                <span className="text-6xl font-black text-slate-200 block">02</span>
+              </div>
+              <div className="md:col-span-9 pt-2 border-t-4 border-amber-400">
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-wide">Clear Impact</h3>
+                <p className="text-xl text-slate-600 font-medium leading-relaxed">Not "it helps our general fund." We look for organizations that can tell us exactly what program this grant funds, and how many families it will reach.</p>
+              </div>
             </div>
-            
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-              <Zap size={32} className="text-blue-500 mb-6" />
-              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Ready to Scale</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where this grant acts as a true catalyst.</p>
+
+            <div className="grid md:grid-cols-12 gap-8 items-start reveal" style={{ transitionDelay: '150ms' }}>
+              <div className="md:col-span-3">
+                <span className="text-6xl font-black text-slate-200 block">03</span>
+              </div>
+              <div className="md:col-span-9 pt-2 border-t-4 border-blue-400">
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-wide">Ready to Scale</h3>
+                <p className="text-xl text-slate-600 font-medium leading-relaxed">Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where this grant acts as a true catalyst.</p>
+              </div>
             </div>
-            
-            <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100">
-              <Shield size={32} className="text-emerald-500 mb-6" />
-              <h3 className="text-xl font-black text-slate-900 mb-3 tracking-wide">Proven Trust</h3>
-              <p className="text-slate-600 font-medium leading-relaxed">We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.</p>
+
+            <div className="grid md:grid-cols-12 gap-8 items-start reveal" style={{ transitionDelay: '200ms' }}>
+              <div className="md:col-span-3">
+                <span className="text-6xl font-black text-slate-200 block">04</span>
+              </div>
+              <div className="md:col-span-9 pt-2 border-t-4 border-emerald-400">
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-wide">Proven Trust</h3>
+                <p className="text-xl text-slate-600 font-medium leading-relaxed">We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.</p>
+              </div>
             </div>
+          </div>
+
+          <div className="mt-20 pt-16 border-t border-slate-100 text-center reveal">
+            <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-indigo-50 px-8 py-4 rounded-xl">
+              See the Circles & Prizes <ChevronRight size={18} />
+            </Link>
           </div>
         </div>
       </section>

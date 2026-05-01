@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { LogoIcon } from './SecondaryNavbar';
 
 const MainNavbar = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.scrollY > 20;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -16,31 +20,10 @@ const MainNavbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleJoinClick = () => {
-    setIsMenuOpen(false);
-    if (location.pathname === '/') {
-      const el = document.getElementById('tiers');
-      if (el) {
-        const offset = 70;
-        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
-      }
-    } else {
-      navigate('/');
-      setTimeout(() => {
-        const el = document.getElementById('tiers');
-        if (el) {
-          const offset = 70;
-          window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
-
   return (
     <>
       <nav className={`fixed w-full z-40 top-0 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm py-0' : 'bg-transparent py-2'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Smooth scroll to top added here */}
           <Link to="/" onClick={(e) => { if (location.pathname === '/') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}} className="flex items-center gap-2 hover:opacity-80 transition-opacity text-left" aria-label="Go to Home">
             <div className={`p-1.5 rounded-lg transition-all duration-300 ${isScrolled ? 'bg-indigo-950 text-white' : 'bg-white/15 backdrop-blur-sm text-white'}`}>
               <LogoIcon />
@@ -61,9 +44,10 @@ const MainNavbar = () => {
             <Menu size={24} />
           </button>
           
-          <button onClick={handleJoinClick} className="hidden md:block bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
+          {/* Now links cleanly to the new Circles page from anywhere */}
+          <Link to="/circles" className="hidden md:flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
             Join the Circle
-          </button>
+          </Link>
         </div>
       </nav>
 
@@ -81,7 +65,9 @@ const MainNavbar = () => {
                 <Link to="/faq" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">FAQ</Link>
             </div>
             <div className="p-6 border-t border-slate-50 shrink-0 text-left">
-                <button onClick={handleJoinClick} className="w-full py-5 bg-amber-400 text-slate-900 rounded-lg font-bold uppercase tracking-widest text-sm shadow-xl shadow-amber-400/20">Join the Circle</button>
+                <Link to="/circles" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center w-full py-5 bg-amber-400 text-slate-900 rounded-lg font-bold uppercase tracking-widest text-sm shadow-xl shadow-amber-400/20">
+                  Join the Circle
+                </Link>
             </div>
         </div>
       )}
