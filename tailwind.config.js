@@ -8,7 +8,9 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+        serif: ['Fraunces', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
       },
     },
-  }
+  },
+  plugins: [],
 }

@@ -9,7 +9,7 @@ const CirclesPage = ({ appData }) => {
 
   const handleJoinClick = (tier, e) => {
     if (e) e.stopPropagation();
-    navigate('/checkout', { state: { tier } }); 
+    navigate('/checkout', { state: { tier, from: '/circles' } });
   };
 
   const handleCardClick = (tier, e) => {
@@ -21,7 +21,7 @@ const CirclesPage = ({ appData }) => {
   return (
     <PageLayout 
       title="Pick Your Circle" 
-      intro="Each circle funds one massive grant. You have real odds of winning big."
+      intro="Each circle funds one massive grant. With real odds of winning big."
     >
       <section className="py-16 md:py-24 bg-white px-4" onClick={() => setActiveTooltip(null)}>
         <div className="max-w-6xl mx-auto">
@@ -53,7 +53,7 @@ const CirclesPage = ({ appData }) => {
                   <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
                     <div className="flex justify-between items-center relative">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
-                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
@@ -68,13 +68,13 @@ const CirclesPage = ({ appData }) => {
                           </div>
                         </div>
                       </div>
-                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-1 pt-3 border-t border-slate-200">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Combined Tzedakah Pool</span>
-                      <span className="text-base md:text-lg font-black text-slate-700">${totalPool}</span>
+                      <span className="text-lg md:text-xl font-black text-slate-700">${totalPool}</span>
                     </div>
                   </div>
 
@@ -103,7 +103,7 @@ const CirclesPage = ({ appData }) => {
                   </div>
 
                   <div className="p-5 pt-3 bg-white rounded-b-2xl relative z-10 overflow-hidden mt-auto">
-                    <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-3.5 rounded-lg font-bold text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900">
+                    <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-4 rounded-lg font-bold text-base lg:text-sm uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900">
                       Join Now • ${appData.tierData[tier].price.toLocaleString()}/mo
                     </button>
                   </div>

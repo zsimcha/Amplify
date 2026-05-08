@@ -33,10 +33,11 @@ const MainNavbar = () => {
             </span>
           </Link>
           
-          <div className={`hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
+          <div className={`hidden md:flex items-center gap-7 lg:gap-8 text-[11px] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
             <Link to="/how-it-works" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>How it works</Link>
             <Link to="/about" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>About</Link>
             <Link to="/impact" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>Our Impact</Link>
+            <Link to="/circles" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>Circles</Link>
             <Link to="/faq" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>FAQ</Link>
           </div>
           
@@ -44,7 +45,6 @@ const MainNavbar = () => {
             <Menu size={24} />
           </button>
           
-          {/* Now links cleanly to the new Circles page from anywhere */}
           <Link to="/circles" className="hidden md:flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
             Join the Circle
           </Link>
@@ -62,6 +62,7 @@ const MainNavbar = () => {
                 <Link to="/how-it-works" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">How it works</Link>
                 <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">About</Link>
                 <Link to="/impact" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">Our Impact</Link>
+                <Link to="/circles" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">Circles</Link>
                 <Link to="/faq" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">FAQ</Link>
             </div>
             <div className="p-6 border-t border-slate-50 shrink-0 text-left">

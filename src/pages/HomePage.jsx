@@ -1,15 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 
 const HomePage = ({ appData }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTooltip, setActiveTooltip] = useState(null);
   
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
+
+  // Handle hash navigation (e.g. /#tiers from "Back to Home" on checkout)
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      // Slight delay to let the layout settle before scrolling
+      const t = setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - 70, behavior: 'auto' });
+        }
+      }, 60);
+      return () => clearTimeout(t);
+    }
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +64,8 @@ const HomePage = ({ appData }) => {
 
   const handleJoinClick = (tier, e) => {
     if (e) e.stopPropagation();
-    navigate('/checkout', { state: { tier } }); 
+    // Pass `from` so the back-to-home link on checkout returns to the tier cards
+    navigate('/checkout', { state: { tier, from: '/#tiers' } }); 
   };
 
   const handleCardClick = (tier, e) => {
@@ -59,14 +76,15 @@ const HomePage = ({ appData }) => {
 
   const lineProgress = Math.max(0, Math.min(100, (howScroll - 0.02) * 130));
   const showStep1 = howScroll > 0.01;   
-  const showStep2 = lineProgress >= 50; 
+  // Tightened: "2" now appears as soon as the line reaches its position rather than past it.
+  const showStep2 = lineProgress >= 33; 
   const showStep3 = lineProgress >= 88; 
 
   const primaryFaqs = [
     { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank-you, members get a shot at winning up to $100,000 every month." },
-    { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes the grant transformational in the first place. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000 — delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. That's not a compromise. That's the model." },
+    { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes the grant transformational in the first place. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000, delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. That's not a compromise. That's the model." },
     { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible. The pooled contributions form both the monthly grant and the prize pool." },
-    { q: "Who selects the charities?", a: "Charities are properly vetted in advance — financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone." }
+    { q: "Who selects the charities?", a: "Charities are properly vetted in advance. Financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone." }
   ];
 
   const [openFaq, setOpenFaq] = useState(null);
@@ -138,7 +156,7 @@ const HomePage = ({ appData }) => {
                 { top: "Up to", num: "$100K", label: "Monthly Prize", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
                 { top: "Goal", num: "$5M+", label: "Yearly to Charity", colorClass: "text-white", labelClass: "text-slate-300" },
                 { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
-                { top: "Over", num: "$200K+", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
+                { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
                   <p className={`text-[8px] md:text-[9px] font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
@@ -185,7 +203,7 @@ const HomePage = ({ appData }) => {
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
                     <div className="bg-white px-2 py-1 relative z-10">
                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The whole thing goes to one vetted nonprofit as a single, transformational gift. Every month.</p>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The pool funds a single, transformational grant to one vetted nonprofit. Every month.</p>
                     </div>
                   </div>
                   
@@ -193,13 +211,13 @@ const HomePage = ({ appData }) => {
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
                     <div className="bg-white px-2 py-1 relative z-10">
                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Win Big</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Drawings activate at 400 members. No huge pools, just exclusive monthly drawings with odds up to 1 in 25.</p>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing unlocks. Winning odds up to 1 in 25. Prizes up to $100,000.</p>
                     </div>
                   </div>
               </div>
             </div>
 
-            <div className="mt-12 md:mt-20 text-center relative z-20">
+            <div className={`mt-12 md:mt-20 text-center relative z-20 transition-opacity duration-500 ${showStep3 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
               <Link to="/how-it-works" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm">
                 Want the full breakdown? See exactly how it works <ChevronRight size={18} />
               </Link>
@@ -208,46 +226,45 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Manifesto Section - Left aligned, un-animated, shrunk vertically, increased text size */}
-      <section className="py-12 md:py-20 bg-indigo-950 px-4 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="w-16 h-1.5 bg-amber-400 mb-8"></div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] mb-6">
-            <span className="text-white">People give.</span> <span className="text-indigo-300">That's not the problem.</span>
+      {/* Manifesto Section - tighter sizing per user feedback (was too big on desktop) */}
+      <section className="py-20 md:py-24 lg:py-28 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="w-16 h-1.5 bg-amber-400 mb-10 md:mb-12"></div>
+          <h2 className="text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter leading-[1.02] mb-10 md:mb-12">
+            <span className="text-white">People give.</span><br/>
+            <span className="text-indigo-300 italic">That's not the problem.</span>
           </h2>
-          <p className="text-xl md:text-3xl text-indigo-100 font-medium leading-relaxed mb-6">
-            What changes things is showing up the same way, every month — together.
+          <p className="text-2xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.3] mb-10 md:mb-12 max-w-3xl">
+            What changes things is showing up the same way, every month. Together.
           </p>
-          <p className="text-xl md:text-3xl text-white font-medium leading-relaxed">
-            One massive grant. One charity. <br className="md:hidden"/>Win up to <span className="text-amber-400 font-black">$100,000</span> as a thank-you.
+          <p className="text-2xl md:text-2xl lg:text-3xl text-white font-medium leading-[1.3] max-w-3xl">
+            One massive grant. One charity.<br className="hidden md:block"/> Win up to <span className="text-amber-400 font-black">$100,000</span> as a thank-you.
           </p>
         </div>
       </section>
 
 
-      {/* Rabbinic Panel Section (No Stagger) */}
-      <section className="py-20 md:py-28 bg-white border-t border-slate-100 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 reveal">
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Rabbinic Endorsement</p>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Endorsed by Gedolim who take Tzedakah seriously.</h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 md:gap-10 pb-4">
-            {[1, 2, 3].map((item, index) => (
-              <div key={index} className="bg-slate-50 p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center text-center reveal" style={{ transitionDelay: `${index * 100}ms` }}>
-                <div className="w-24 h-24 bg-slate-200 rounded-full mb-6 shrink-0"></div>
-                <h3 className="text-xl font-bold text-slate-900 mb-1">Rabbi Name</h3>
-                <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Title / Community</p>
-                <p className="text-slate-600 font-medium leading-relaxed italic">"A powerful pull quote from their Haskama about the validity and importance of the Amplify model."</p>
+      {/* Rabbinic Endorsement — compact bar (full panel lives on /about) */}
+      <section className="py-12 md:py-20 bg-white border-t border-slate-100 px-4">
+        <div className="max-w-5xl mx-auto reveal">
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+            {/* Visual mark — ShieldCheck implies verified/endorsed (consistent w/ trust iconography elsewhere) */}
+            <div className="shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-3">
+              <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md">
+                <ShieldCheck size={28} className="text-amber-400" strokeWidth={2.25} />
               </div>
-            ))}
-          </div>
+              <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 md:mt-1">Rabbinic Endorsement</p>
+            </div>
 
-          <div className="mt-12 text-center reveal">
-            <p className="text-slate-600 font-medium mb-6 max-w-3xl mx-auto leading-relaxed">Amplify's model has been formally reviewed and endorsed by leading Poskim, including using Ma'aser, prize allocation, and charitable disbursement.</p>
-            <Link to="/about" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm">
-              Read more <ChevronRight size={18} />
+            <div className="flex-1">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1] mb-2 md:mb-3">
+                Reviewed and endorsed by leading <span className="italic">Poskim</span>.
+              </h2>
+              <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our Rabbinic Panel has formally approved the model, including the use of Ma'aser, prize allocation, and charitable disbursement.</p>
+            </div>
+
+            <Link to="/about#rabbinic-panel" className="shrink-0 inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-xs md:text-sm self-start md:self-center whitespace-nowrap">
+              See the panel <ChevronRight size={16} />
             </Link>
           </div>
         </div>
@@ -261,10 +278,10 @@ const HomePage = ({ appData }) => {
               <p className="text-[10px] md:text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Who We're Helping This Month</p>
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6 md:mb-8 tracking-tight uppercase italic">Chai Lifeline</h2>
               <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8 md:mb-10">
-                Chai Lifeline is there for families the moment a child is diagnosed with cancer or a life-threatening illness — transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
+                Chai Lifeline is there for families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
               </p>
               
-              <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 justify-center md:justify-start mb-10">
+              <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 justify-center md:justify-start mb-6">
                 <div className="flex items-center gap-3">
                   <Building size={20} className="text-slate-400" />
                   <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofit</p>
@@ -276,6 +293,10 @@ const HomePage = ({ appData }) => {
                 </div>
               </div>
 
+              <p className="text-[11px] md:text-xs text-slate-400 font-medium mb-10 leading-relaxed">
+                Grants administered through <span className="text-slate-200 font-bold">Givinga</span>, a registered 501(c)(3) donor-advised fund.
+              </p>
+
               <div className="text-center md:text-left">
                 <Link to="/impact" className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm">
                   Learn about how we select our charity partners <ChevronRight size={16} />
@@ -285,8 +306,9 @@ const HomePage = ({ appData }) => {
             <div className="relative overflow-hidden rounded-2xl shadow-2xl min-h-[300px] md:min-h-[450px] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
                <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
-               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white py-3 px-8 rounded-lg flex items-center justify-center shadow-xl">
-                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
+               {/* Mobile: more compact box */}
+               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white py-2 md:py-3 px-8 md:px-8 rounded-lg flex items-center justify-center shadow-xl">
+                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-10 md:h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
                </div>
             </div>
           </div>
@@ -297,8 +319,8 @@ const HomePage = ({ appData }) => {
       <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick Your Impact</h2>
-            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds one massive grant. You have real odds of winning big.</p>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your <span className="italic">impact.</span></h2>
+            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds one massive grant. With real odds of winning big.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto pb-8">
@@ -328,7 +350,7 @@ const HomePage = ({ appData }) => {
                   <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
                     <div className="flex justify-between items-center relative">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
-                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
@@ -343,13 +365,13 @@ const HomePage = ({ appData }) => {
                           </div>
                         </div>
                       </div>
-                      <span className="text-sm md:text-base font-black text-slate-700 flex items-center gap-1.5">
+                      <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-1 pt-3 border-t border-slate-200">
                       <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Combined Tzedakah Pool</span>
-                      <span className="text-base md:text-lg font-black text-slate-700">${totalPool}</span>
+                      <span className="text-lg md:text-xl font-black text-slate-700">${totalPool}</span>
                     </div>
                   </div>
 
@@ -378,7 +400,7 @@ const HomePage = ({ appData }) => {
                   </div>
 
                   <div className="p-5 pt-3 bg-white rounded-b-2xl relative z-10 overflow-hidden mt-auto">
-                    <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-3.5 rounded-lg font-bold text-[10px] sm:text-[11px] lg:text-xs uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900">
+                    <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-4 rounded-lg font-bold text-base lg:text-sm uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900">
                       Join Now • ${appData.tierData[tier].price.toLocaleString()}/mo
                     </button>
                   </div>
@@ -420,7 +442,7 @@ const HomePage = ({ appData }) => {
       <section className="py-16 md:py-24 bg-slate-50 border-t border-slate-100 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <div className="reveal">
-            <h2 className="text-4xl md:text-5xl font-black mb-3 md:mb-4 text-slate-900 tracking-tight">Questions?</h2>
+            <h2 className="text-4xl md:text-5xl font-black mb-3 md:mb-4 text-slate-900 tracking-tight italic">Questions?</h2>
             <p className="text-slate-400 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-10 md:mb-12 text-[10px] md:text-xs">A few quick answers</p>
           </div>
           
