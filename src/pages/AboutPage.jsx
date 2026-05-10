@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
-import { ChevronRight, ShieldCheck, Lock, CreditCard, Landmark, FileText, TrendingUp, Building, Check, Gift, ArrowRight, DollarSign, Heart } from 'lucide-react';
+import { ChevronRight, ShieldCheck, Lock, CreditCard, FileText, TrendingUp, Building, Check, Gift, ArrowRight } from 'lucide-react';
 
 const AboutPage = () => {
   const location = useLocation();
@@ -35,47 +35,73 @@ const AboutPage = () => {
   return (
     <PageLayout title="About Amplify" intro="How we're building the future of collective giving.">
       
-      {/* The Mission - cleaner, punchier headline + visual proof */}
+      {/* MISSION + CONSTELLATION ($400K + bigger glow) */}
       <section className="py-20 md:py-28 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="reveal">
             <div className="w-16 h-1.5 bg-amber-400 mb-8"></div>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tighter mb-10 leading-[0.95]">
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tight mb-10 leading-[0.95]">
               Bigger together.
             </h2>
           </div>
 
           <div className="grid md:grid-cols-12 gap-10 lg:gap-16 items-center mt-12">
             
-            {/* Visual: the multiplication - shown not described */}
             <div className="md:col-span-7 reveal" style={{transitionDelay: '100ms'}}>
-              <div className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 rounded-3xl p-8 md:p-12">
-                <div className="flex items-stretch gap-4 md:gap-8">
+              <div className="relative bg-gradient-to-br from-indigo-950 via-indigo-900 to-indigo-950 rounded-3xl overflow-hidden aspect-[4/3] md:aspect-[5/4] shadow-soft-xl bg-hatch">
+                <svg viewBox="0 0 400 400" className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                  <defs>
+                    {/* Wider, more luminous glow so $400K reads clearly */}
+                    <radialGradient id="centerGlow" cx="50%" cy="50%" r="55%">
+                      <stop offset="0%" stopColor="#fbbf24" stopOpacity="0.55" />
+                      <stop offset="25%" stopColor="#fbbf24" stopOpacity="0.28" />
+                      <stop offset="55%" stopColor="#fbbf24" stopOpacity="0.08" />
+                      <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
+                    </radialGradient>
+                    {/* Inner core: deeper amber for text legibility */}
+                    <radialGradient id="centerCore" cx="50%" cy="50%" r="22%">
+                      <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.55" />
+                      <stop offset="100%" stopColor="#1e1b4b" stopOpacity="0" />
+                    </radialGradient>
+                  </defs>
                   
-                  {/* You alone */}
-                  <div className="flex-1 text-center">
-                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">One Person</p>
-                    <p className="text-4xl md:text-6xl font-black text-slate-300 tracking-tighter leading-none mb-2 tabular-nums">$250</p>
-                    <p className="text-[11px] md:text-xs font-medium text-slate-400">monthly gift</p>
-                  </div>
-
-                  {/* Multiplier */}
-                  <div className="flex flex-col items-center justify-center px-2">
-                    <span className="text-2xl md:text-4xl font-black text-amber-400 tracking-tighter">×</span>
-                    <span className="text-base md:text-2xl font-black text-slate-700 tracking-tighter mt-1">400</span>
-                  </div>
-
-                  {/* Pooled */}
-                  <div className="flex-1 text-center">
-                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-amber-600 mb-3">A Circle</p>
-                    <p className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-none mb-2 tabular-nums">$100K</p>
-                    <p className="text-[11px] md:text-xs font-medium text-slate-500">monthly grant</p>
-                  </div>
+                  <circle cx="200" cy="200" r="220" fill="url(#centerGlow)" />
+                  <circle cx="200" cy="200" r="100" fill="url(#centerCore)" />
+                  
+                  {Array.from({length: 400}, (_, i) => {
+                    let ringIndex, ringTotal, radius, opacity, r;
+                    if (i < 200) {
+                      ringIndex = i; ringTotal = 200;
+                      radius = 175; opacity = 0.45; r = 1.6;
+                    } else if (i < 330) {
+                      ringIndex = i - 200; ringTotal = 130;
+                      radius = 145; opacity = 0.65; r = 1.9;
+                    } else {
+                      ringIndex = i - 330; ringTotal = 70;
+                      radius = 115; opacity = 0.85; r = 2.2;
+                    }
+                    
+                    const ringOffset = ringIndex < 200 ? 0 : ringIndex < 130 ? 0.05 : 0.1;
+                    const angle = (ringIndex / ringTotal) * Math.PI * 2 - Math.PI / 2 + ringOffset;
+                    const x = 200 + Math.cos(angle) * radius;
+                    const y = 200 + Math.sin(angle) * radius;
+                    
+                    return <circle key={i} cx={x} cy={y} r={r} fill="#fbbf24" opacity={opacity} />;
+                  })}
+                </svg>
+                
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+                  <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-300 mb-3 drop-shadow-md">400 Diamond donors</p>
+                  <p className="text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-none mb-3" style={{textShadow: '0 4px 20px rgba(0,0,0,0.4)'}}>
+                    $400K
+                  </p>
+                  <p className="text-sm md:text-base text-indigo-100 font-medium max-w-xs">
+                    A single transformational grant.<br/>Every month.
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Tighter prose */}
             <div className="md:col-span-5 reveal" style={{transitionDelay: '200ms'}}>
               <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed mb-5">
                 Most of us give sporadically. We mean to give more consistently. Life gets in the way.
@@ -88,7 +114,7 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Why Amplify Section */}
+      {/* WHY POOLING CHANGES EVERYTHING */}
       <section id="why" className="bg-slate-50 border-t border-slate-100">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
           <div className="grid md:grid-cols-12 gap-6 md:gap-16">
@@ -97,7 +123,7 @@ const AboutPage = () => {
                 <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">
                   The Amplify Advantage
                 </p>
-                <h2 className="text-4xl md:text-5xl font-black text-slate-900 italic tracking-tight leading-tight">
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
                   Why pooling changes everything.
                 </h2>
               </div>
@@ -108,12 +134,12 @@ const AboutPage = () => {
                 {
                   icon: <TrendingUp size={24} className="text-indigo-600" />,
                   title: "The Multiplier Effect",
-                  body: "Hundreds of donors uniting creates a multiplier that funds transformational projects no individual gift could."
+                  body: "We believe in going big. Hundreds of donors uniting creates a multiplier that funds transformational projects no individual gift could."
                 },
                 {
                   icon: <Building size={24} className="text-amber-500" />,
                   title: "A Real, Verified Nonprofit",
-                  body: "Every charity is vetted: financials, impact reports, the works. We pick organizations where one large grant moves the needle."
+                  body: "Never wonder where your money goes. Every charity is vetted: financials, impact reports, the works. We pick organizations where one large grant actually makes a difference."
                 },
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
@@ -123,11 +149,11 @@ const AboutPage = () => {
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
                   title: "The Ultimate Win-Win",
-                  body: "When your circle fills, the drawing goes live. Everyone in it has a real shot at winning big."
+                  body: "Giving consistently is hard. So we made it fun! When your circle fills, a massive drawing goes live and everyone in it has a real shot at winning big."
                 }
               ].map((item, i) => (
                 <div key={i} className="py-8 md:py-10 first:pt-2 md:first:pt-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 100}ms` }}>
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 group-hover:border-indigo-200 group-hover:shadow-md">
+                  <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-soft flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 group-hover:border-indigo-200 group-hover:shadow-soft-lg">
                     {item.icon}
                   </div>
                   <div>
@@ -145,103 +171,89 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Compliance & Trust — Bento grid (mobile: stacked auto-height; desktop: bento) */}
+      {/* TRUST & TRANSPARENCY — Lock icon bumped + stroke for visual weight */}
       <section className="py-16 md:py-24 px-4 bg-black text-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-4">Compliance</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-4">Compliance</p>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-white">Trust & Transparency.</h2>
             <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Enterprise-grade infrastructure ensures your data, payments, and impact are fully secure.</p>
           </div>
 
-          {/* Mobile: vertical stack with natural heights. Desktop: bento grid. */}
           <div className="flex flex-col gap-4 md:grid md:grid-cols-4 md:gap-5 md:auto-rows-[220px]">
 
-            {/* HERO CARD — money flow visualization. No more decorative circles. */}
-            <div className="md:col-span-2 md:row-span-2 bg-gradient-to-br from-indigo-600 to-indigo-900 rounded-3xl p-6 md:p-10 reveal flex flex-col justify-between relative overflow-hidden">
+            <div className="md:col-span-2 md:row-span-2 bg-gradient-to-br from-indigo-700 to-indigo-950 rounded-3xl p-6 md:p-10 reveal flex flex-col relative overflow-hidden">
+              <div className="absolute -top-24 -left-24 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
+              
               <div className="relative">
-                <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-200 mb-3">Where your money goes</p>
-                <h3 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] text-white mb-2">A clear path. <span className="italic">Every step audited.</span></h3>
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-200 mb-3">Where your money goes</p>
+                <h3 className="text-3xl md:text-4xl font-black tracking-tight leading-[1.05] text-white mb-2">
+                  A clear path.<br/><span className="italic text-amber-300">Audited at every step.</span>
+                </h3>
               </div>
 
-              {/* Money flow: You → 501(c)(3) → Charity */}
-              <div className="relative my-8 md:my-6">
-                <div className="flex items-stretch gap-2 md:gap-3">
-                  <div className="flex-1 flex flex-col items-center">
-                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mb-2">
-                      <DollarSign size={22} className="text-amber-300" strokeWidth={2.5} />
+              <div className="relative my-6 md:my-auto md:py-4 space-y-1">
+                {[
+                  { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: '100% transferred' },
+                  { num: '02', label: 'Givinga · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
+                  { num: '03', label: 'Vetted Charity', detail: 'Single grant. Full amount.', meta: 'Documented impact' },
+                ].map((item, i, arr) => (
+                  <React.Fragment key={i}>
+                    <div className={`flex items-start gap-3 md:gap-4 py-2.5 md:py-3 px-3 md:px-4 rounded-xl border ${item.highlight ? 'bg-amber-400/10 border-amber-300/30' : 'bg-white/5 border-white/10'}`}>
+                      <span className={`text-xl md:text-2xl font-black tabular-nums shrink-0 ${item.highlight ? 'text-amber-300' : 'text-white/30'}`}>{item.num}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm font-bold ${item.highlight ? 'text-amber-200' : 'text-white'}`}>{item.label}</p>
+                        <p className="text-xs text-indigo-200/80 font-medium mt-0.5 leading-snug">{item.detail}</p>
+                      </div>
+                      <span className={`text-[10px] font-bold uppercase tracking-widest shrink-0 self-center hidden sm:inline ${item.highlight ? 'text-amber-300/80' : 'text-indigo-300/60'}`}>{item.meta}</span>
                     </div>
-                    <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white text-center">You</p>
-                    <p className="text-[9px] md:text-[10px] font-medium text-indigo-200 text-center mt-0.5">Monthly gift</p>
-                  </div>
-
-                  <div className="flex-shrink-0 flex items-center pb-6">
-                    <ArrowRight size={18} className="text-amber-300/70" />
-                  </div>
-
-                  <div className="flex-1 flex flex-col items-center">
-                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-amber-400/15 border-2 border-amber-300 flex items-center justify-center mb-2 shadow-lg shadow-amber-500/20">
-                      <ShieldCheck size={22} className="text-amber-300" strokeWidth={2.5} />
-                    </div>
-                    <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white text-center">501(c)(3) DAF</p>
-                    <p className="text-[9px] md:text-[10px] font-medium text-indigo-200 text-center mt-0.5">Givinga</p>
-                  </div>
-
-                  <div className="flex-shrink-0 flex items-center pb-6">
-                    <ArrowRight size={18} className="text-amber-300/70" />
-                  </div>
-
-                  <div className="flex-1 flex flex-col items-center">
-                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center mb-2">
-                      <Heart size={22} className="text-pink-300" strokeWidth={2.5} fill="currentColor" />
-                    </div>
-                    <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white text-center">Charity</p>
-                    <p className="text-[9px] md:text-[10px] font-medium text-indigo-200 text-center mt-0.5">Vetted partner</p>
-                  </div>
-                </div>
+                    {i < arr.length - 1 && (
+                      <div className="flex justify-start pl-7 md:pl-8 -my-0.5">
+                        <div className="w-px h-3 bg-amber-300/40"></div>
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
 
               <div className="relative">
-                <p className="text-sm md:text-base text-indigo-100 font-medium leading-relaxed mb-3 max-w-md">Every dollar flows through a registered donor-advised fund directly to our vetted charity partner.</p>
                 <Link to="/impact" className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs uppercase tracking-widest hover:gap-2.5 transition-all">
                   How partners are vetted <ArrowRight size={14} />
                 </Link>
               </div>
             </div>
 
-            {/* Stat: 100% Compliant — pattern: ICON + BIG NUMBER + small descriptor */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 reveal flex flex-col justify-between min-h-[180px]" style={{ transitionDelay: '50ms' }}>
-              <ShieldCheck size={28} className="text-emerald-400" />
+              <ShieldCheck size={32} strokeWidth={2.25} className="text-emerald-400" />
               <div>
                 <p className="text-3xl md:text-4xl font-black tracking-tight text-white mb-1.5 leading-none">100%</p>
-                <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-slate-400">US Federal & State Compliant</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">US Federal & State Compliant</p>
               </div>
             </div>
 
-            {/* Stat: Stripe — same big-headline pattern */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 reveal flex flex-col justify-between min-h-[180px]" style={{ transitionDelay: '100ms' }}>
-              <CreditCard size={28} className="text-amber-400" />
+              <CreditCard size={32} strokeWidth={2.25} className="text-amber-400" />
               <div>
-                <p className="text-3xl md:text-4xl font-black tracking-tight text-white mb-1.5 leading-none">Stripe</p>
-                <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Payment Processing</p>
+                <p className="text-2xl md:text-3xl font-black tracking-tight text-white mb-1.5 leading-tight">Stripe-Secured</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Card details never touch our servers</p>
               </div>
             </div>
 
-            {/* Stat: Locked — same pattern */}
+            {/* Lock card — bumped to size 36 + heavier stroke for proper visual weight */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 reveal flex flex-col justify-between min-h-[180px]" style={{ transitionDelay: '150ms' }}>
-              <Lock size={28} className="text-indigo-300" />
+              <Lock size={32} strokeWidth={2.25} className="text-indigo-300" />
               <div>
-                <p className="text-3xl md:text-4xl font-black tracking-tight text-white mb-1.5 leading-none">Held Apart</p>
-                <p className="text-[11px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Prize Pool · Audited Account</p>
+                <p className="text-2xl md:text-3xl font-black tracking-tight text-white mb-1.5 leading-tight">Separate<br/>Prize Pools</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-400">In a dedicated, audited account</p>
               </div>
             </div>
 
-            {/* Stat: Documented — same pattern + link */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 reveal flex flex-col justify-between hover:bg-white/10 transition-colors min-h-[180px]" style={{ transitionDelay: '200ms' }}>
-              <FileText size={28} className="text-slate-300" />
+              <FileText size={32} strokeWidth={2.25} className="text-slate-300" />
               <div>
                 <p className="text-3xl md:text-4xl font-black tracking-tight text-white mb-1.5 leading-none">Documented</p>
-                <Link to="/rules" className="inline-flex items-center gap-1 text-amber-400 font-bold text-[11px] md:text-xs uppercase tracking-widest hover:gap-1.5 transition-all">
+                <Link to="/rules" className="inline-flex items-center gap-1 text-amber-400 font-bold text-xs uppercase tracking-widest hover:gap-1.5 transition-all">
                   Official rules <ArrowRight size={12} />
                 </Link>
               </div>
@@ -250,37 +262,69 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Rabbinic Panel */}
-      <section id="rabbinic-panel" className="py-20 md:py-32 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="max-w-3xl mx-auto text-center mb-20 reveal">
+      {/* RABBINIC PANEL — redesigned editorial layout */}
+      <section id="rabbinic-panel" className="py-20 md:py-32 px-4 bg-white relative overflow-hidden">
+        {/* Subtle decorative dot pattern in background — gives the section presence */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle, #1e1b4b 1px, transparent 1px)',
+          backgroundSize: '32px 32px'
+        }}></div>
+
+        <div className="max-w-6xl mx-auto relative">
+          <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20 reveal">
             <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Rabbinic Endorsement</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Our Rabbinic Panel</h2>
-            <p className="text-lg text-slate-600 font-medium">Amplify's model, including using Ma'aser, prize allocation, and charitable disbursement, has been formally reviewed and endorsed by leading Poskim.</p>
+            <p className="text-lg text-slate-600 font-medium leading-relaxed">
+              Amplify's model — including the use of Ma'aser, prize allocation, and charitable disbursement — has been formally reviewed and endorsed by leading Poskim.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 md:gap-10 pb-12">
-            {[0, 1, 2].map((item, index) => {
-              return (
-                <div key={index} className="bg-slate-50 p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center text-center reveal" style={{ transitionDelay: `${index * 100}ms` }}>
-                  <div className="w-28 h-28 bg-slate-200 rounded-full mb-6 shrink-0 shadow-inner"></div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">Rabbi Name</h3>
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 pb-6 border-b border-slate-200 w-full">Title / Community</p>
-                  <div className="prose text-slate-600 font-medium italic text-sm leading-relaxed">
-                    <p>"Excerpt from their Haskama goes here. A paragraph detailing their review of the model, sweepstakes mechanics, and validity of using Ma'aser funds for this platform."</p>
+          {/* Cards: quote-led editorial design with monogram avatars */}
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            {[
+              { initial: 'A', accent: 'from-indigo-100 to-indigo-50', textColor: 'text-indigo-700' },
+              { initial: 'B', accent: 'from-amber-100 to-amber-50', textColor: 'text-amber-700' },
+              { initial: 'C', accent: 'from-slate-100 to-slate-50', textColor: 'text-slate-700' }
+            ].map((card, index) => (
+              <div key={index} className="relative bg-white border border-slate-200 rounded-3xl p-8 md:p-10 shadow-soft hover:shadow-soft-lg transition-all flex flex-col reveal" style={{ transitionDelay: `${index * 100}ms` }}>
+                {/* Decorative quote mark */}
+                <svg className="text-amber-400 w-9 h-9 mb-6 shrink-0" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                  <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.896 3.456-8.352 9.12-8.352 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                </svg>
+                
+                {/* The Haskama text leads — this is the hero of the card */}
+                <p className="text-slate-700 font-medium italic leading-relaxed text-base mb-8 flex-grow">
+                  "Excerpt from their Haskama goes here. A paragraph detailing their review of the model, sweepstakes mechanics, and validity of using Ma'aser funds for this platform."
+                </p>
+                
+                {/* Signature footer with monogram avatar */}
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-100">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${card.accent} border border-slate-200 flex items-center justify-center shrink-0`}>
+                    <span className={`${card.textColor} font-black text-xl`}>{card.initial}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-slate-900 font-bold text-base">Rabbi Name</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Title / Community</p>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
 
-          <div className="max-w-3xl mx-auto text-center mt-8 bg-indigo-50 rounded-2xl p-8 border border-indigo-100 reveal">
-            <p className="text-indigo-900 font-medium">We take the halachic integrity of your giving seriously. If you have specific questions about how your Amplify membership interacts with your Ma'aser obligations, we encourage you to speak with your own posek.</p>
+          {/* Replaced the boring blue box with a "personal note" divider — much more editorial */}
+          <div className="max-w-2xl mx-auto text-center mt-16 md:mt-24 reveal">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-12 h-px bg-slate-300"></div>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400">A Personal Note</span>
+              <div className="w-12 h-px bg-slate-300"></div>
+            </div>
+            <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed italic">
+              We take the halachic integrity of your giving seriously. If you have specific questions about how your Amplify membership interacts with your Ma'aser obligations, we encourage you to speak with your own posek.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
       <section className="py-16 md:py-20 bg-indigo-950 px-4 text-center">
         <div className="max-w-3xl mx-auto reveal">
           <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
@@ -290,7 +334,7 @@ const AboutPage = () => {
             Join a circle. Pool your Tzedakah.<br />Win up to $100,000 every month.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/circles" className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-lg shadow-amber-400/20 inline-flex items-center justify-center">
+            <Link to="/circles" className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow inline-flex items-center justify-center">
               Join the Circle
             </Link>
             <Link to="/how-it-works" className="px-10 py-4 bg-transparent border border-indigo-700 text-indigo-200 rounded-lg font-bold text-sm md:text-base hover:border-indigo-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">

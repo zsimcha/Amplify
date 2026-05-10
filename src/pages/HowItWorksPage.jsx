@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
 import { ChevronRight } from 'lucide-react';
 
-// ============================================================================
-// useCountUp — animates a number from 0 to target when `trigger` becomes true
-// ============================================================================
 const useCountUp = (target, duration = 1500, trigger = false) => {
   const [val, setVal] = useState(0);
   useEffect(() => {
@@ -16,7 +13,7 @@ const useCountUp = (target, duration = 1500, trigger = false) => {
       if (!startTime) startTime = ts;
       const elapsed = ts - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setVal(Math.floor(eased * target));
       if (progress < 1) raf = requestAnimationFrame(animate);
     };
@@ -43,10 +40,6 @@ const useInView = (threshold = 0.3) => {
   return [ref, inView];
 };
 
-// ============================================================================
-// useCarouselActive — robust card-center detection for snap-scroll carousels.
-// Finds which card's center is closest to the viewport center.
-// ============================================================================
 const useCarouselActive = (count) => {
   const ref = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -73,53 +66,60 @@ const useCarouselActive = (count) => {
 
 
 // ============================================================================
-// 400-DOT ODDS VISUALIZER (SVG)
-// Smaller cap on desktop, no-adjacent winner enforcement, properly spaced
+// ODDS VISUALIZER
+// - Silver winners now slate-600 (#475569) for proper contrast vs. slate-200 base
+// - Stronger drop-shadow on silver so it reads as metallic
 // ============================================================================
 const OddsVisualizer = ({ tierData }) => {
   const [activeTier, setActiveTier] = useState('diamond');
 
   const tierConfig = {
-    silver:  { winners: 4,  color: '#94a3b8' },
-    gold:    { winners: 8,  color: '#eab308' },
-    diamond: { winners: 16, color: '#818cf8' },
+    silver:  { winners: 4,  color: '#475569', glow: '#64748b' },  // darker silver + glow color separate
+    gold:    { winners: 8,  color: '#eab308', glow: '#eab308' },
+    diamond: { winners: 16, color: '#818cf8', glow: '#818cf8' },
   };
 
-  // Distribute winners ensuring no two are 8-neighbors (orthogonal or diagonal)
   const winnerSet = useMemo(() => {
-    const w = tierConfig[activeTier].winners;
     const GRID = 20;
     const TOTAL = 400;
     const set = new Set();
 
-    const hasAdjacent = (idx) => {
-      const col = idx % GRID;
-      const row = Math.floor(idx / GRID);
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-          if (dr === 0 && dc === 0) continue;
-          const nr = row + dr;
-          const nc = col + dc;
-          if (nr >= 0 && nr < GRID && nc >= 0 && nc < GRID) {
-            if (set.has(nr * GRID + nc)) return true;
+    if (activeTier === 'silver') {
+      const positions = [[2, 2], [7, 7], [12, 12], [17, 17]];
+      positions.forEach(([r, c]) => set.add(r * GRID + c));
+    } else if (activeTier === 'gold') {
+      const positions = [
+        [2, 5], [3, 14], [6, 9], [9, 17],
+        [11, 3], [14, 11], [17, 6], [18, 16]
+      ];
+      positions.forEach(([r, c]) => set.add(r * GRID + c));
+    } else {
+      const w = tierConfig.diamond.winners;
+      const hasAdjacent = (idx) => {
+        const col = idx % GRID;
+        const row = Math.floor(idx / GRID);
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const nr = row + dr;
+            const nc = col + dc;
+            if (nr >= 0 && nr < GRID && nc >= 0 && nc < GRID) {
+              if (set.has(nr * GRID + nc)) return true;
+            }
           }
         }
-      }
-      return false;
-    };
-
-    // Step-distributed seed positions, with deterministic search around each
-    // until we find a non-adjacent slot.
-    const step = TOTAL / w;
-    for (let i = 0; i < w; i++) {
-      const seed = Math.floor(i * step + step / 2);
-      // Try the seed, then expand outward in alternating directions
-      const offsets = [0, 3, -3, 6, -6, 9, -9, 12, -12, 15, -15, 18, -18, 21, -21];
-      for (const off of offsets) {
-        const idx = ((seed + off) % TOTAL + TOTAL) % TOTAL;
-        if (!set.has(idx) && !hasAdjacent(idx)) {
-          set.add(idx);
-          break;
+        return false;
+      };
+      const step = TOTAL / w;
+      for (let i = 0; i < w; i++) {
+        const seed = Math.floor(i * step + step / 2);
+        const offsets = [0, 3, -3, 6, -6, 9, -9, 12, -12, 15, -15, 18, -18, 21, -21];
+        for (const off of offsets) {
+          const idx = ((seed + off) % TOTAL + TOTAL) % TOTAL;
+          if (!set.has(idx) && !hasAdjacent(idx)) {
+            set.add(idx);
+            break;
+          }
         }
       }
     }
@@ -127,73 +127,95 @@ const OddsVisualizer = ({ tierData }) => {
   }, [activeTier]);
 
   const cfg = tierConfig[activeTier];
+  const oddsValue = tierData[activeTier].totalOdds.replace(/\s/g, '');
 
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-sm">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8 md:mb-10">
-        <div>
-          <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-3">Visualized</p>
-          <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 leading-tight">
-            What <span style={{ color: cfg.color }}>{cfg.winners} in 400</span> looks like.
-          </h3>
+    <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-soft">
+      <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-center">
+
+        <div className="md:col-span-6 lg:col-span-7">
+          <div className="max-w-md mx-auto md:max-w-none">
+            <svg viewBox="0 0 240 240" className="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+              {Array.from({ length: 400 }, (_, i) => {
+                const col = i % 20;
+                const row = Math.floor(i / 20);
+                const cx = col * 12 + 6;
+                const cy = row * 12 + 6;
+                const isWinner = winnerSet.has(i);
+                return (
+                  <circle
+                    key={i}
+                    cx={cx}
+                    cy={cy}
+                    r={isWinner ? 4 : 3}
+                    fill={isWinner ? cfg.color : '#e2e8f0'}
+                    style={{
+                      transition: 'r 0.4s ease, fill 0.4s ease, filter 0.4s ease',
+                      transitionDelay: isWinner ? `${(i % 20) * 12}ms` : '0ms',
+                      filter: isWinner ? `drop-shadow(0 0 4px ${cfg.glow}cc)` : 'none',
+                    }}
+                  />
+                );
+              })}
+            </svg>
+            <div className="flex items-center justify-center gap-6 mt-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                <span>Member</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full" style={{background: cfg.color}}></div>
+                <span>Winner</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-1.5 md:gap-2 bg-slate-100 p-1.5 rounded-xl self-start md:self-auto">
-          {Object.keys(tierConfig).map((tier) => (
-            <button
-              key={tier}
-              onClick={() => setActiveTier(tier)}
-              className={`px-3 md:px-5 py-2 md:py-2.5 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-widest transition-all ${
-                activeTier === tier
-                  ? 'bg-white text-slate-900 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-700'
-              }`}
-            >
-              {tier}
-            </button>
-          ))}
-        </div>
-      </div>
+        <div className="md:col-span-6 lg:col-span-5 space-y-5 md:space-y-6">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-3">Visualize Your Odds</p>
+            <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 leading-[1.05] mb-3">
+              Here's your shot at winning.
+            </h3>
+            <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+              Each dot is a member. The colored ones win. Your odds aren't theoretical — they're real.
+            </p>
+          </div>
 
-      {/* Grid — capped smaller on desktop so it fits comfortably above the fold */}
-      <div className="max-w-md mx-auto mb-8 md:mb-10">
-        <svg viewBox="0 0 240 240" className="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
-          {Array.from({ length: 400 }, (_, i) => {
-            const col = i % 20;
-            const row = Math.floor(i / 20);
-            const cx = col * 12 + 6;
-            const cy = row * 12 + 6;
-            const isWinner = winnerSet.has(i);
-            return (
-              <circle
-                key={i}
-                cx={cx}
-                cy={cy}
-                r={isWinner ? 3.8 : 3}
-                fill={isWinner ? cfg.color : '#e2e8f0'}
-                style={{
-                  transition: 'r 0.4s ease, fill 0.4s ease, filter 0.4s ease',
-                  transitionDelay: isWinner ? `${(i % 20) * 12}ms` : '0ms',
-                  filter: isWinner ? `drop-shadow(0 0 3px ${cfg.color}aa)` : 'none',
-                }}
-              />
-            );
-          })}
-        </svg>
-      </div>
+          <div className="flex gap-1.5 md:gap-2 bg-slate-100 p-1.5 rounded-xl">
+            {Object.keys(tierConfig).map((tier) => (
+              <button
+                key={tier}
+                onClick={() => setActiveTier(tier)}
+                className={`flex-1 px-3 md:px-4 py-2 md:py-2.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+                  activeTier === tier
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                {tier}
+              </button>
+            ))}
+          </div>
 
-      <div className="grid grid-cols-3 gap-4 md:gap-8 pt-6 md:pt-8 border-t border-slate-100">
-        <div>
-          <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">Members</p>
-          <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">400</p>
-        </div>
-        <div>
-          <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">Winners</p>
-          <p className="text-2xl md:text-3xl font-black tracking-tighter" style={{ color: cfg.color }}>{cfg.winners}</p>
-        </div>
-        <div>
-          <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">Your Odds</p>
-          <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter italic">{tierData[activeTier].totalOdds.replace(/\s/g, '')}</p>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
+            <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: activeTier === 'silver' ? '#cbd5e1' : cfg.color}}>
+              {oddsValue}
+            </p>
+            <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 md:gap-4 pt-2">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Members</p>
+              <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter tabular-nums">400</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Winners</p>
+              <p className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums" style={{color: activeTier === 'silver' ? '#cbd5e1' : cfg.color}}>{cfg.winners}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -202,15 +224,12 @@ const OddsVisualizer = ({ tierData }) => {
 
 
 // ============================================================================
-// VISUAL POOL COMPARISON
-// Fixed: hover state now works for all tiers (Tailwind needs explicit classes)
+// POOL COMPARISON — clearer labeling so amounts read as monthly grants
 // ============================================================================
 const PoolComparison = ({ appData }) => {
   const tiers = ['silver', 'gold', 'diamond'];
   const max = 400000;
 
-  // Tailwind only generates classes it can statically detect — explicit rather
-  // than dynamic interpolation, otherwise hover:bg-amber-50 etc. won't compile
   const styles = {
     silver:  { bar: 'bg-slate-300',  accent: 'text-slate-500',  hover: 'hover:bg-slate-50' },
     gold:    { bar: 'bg-amber-400',  accent: 'text-amber-500',  hover: 'hover:bg-amber-50' },
@@ -218,7 +237,12 @@ const PoolComparison = ({ appData }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-soft">
+      {/* Column header so users understand the bar amounts are "monthly grant" */}
+      <div className="px-5 md:px-8 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Circle</span>
+        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Monthly Grant Raised</span>
+      </div>
       {tiers.map((tier, i) => {
         const s = styles[tier];
         const pool = appData.tierData[tier].price * 400;
@@ -231,7 +255,10 @@ const PoolComparison = ({ appData }) => {
                 <span className={`text-xs md:text-sm font-black uppercase tracking-[0.25em] ${s.accent}`}>{tier}</span>
                 <span className="text-xs md:text-sm font-medium text-slate-400 tabular-nums">${appData.tierData[tier].price}/mo · 400 members</span>
               </div>
-              <span className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter tabular-nums">${(pool / 1000).toFixed(0)}k</span>
+              <div className="text-right">
+                <span className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter tabular-nums">${(pool / 1000).toFixed(0)}k</span>
+                <span className="block text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Raised / month</span>
+              </div>
             </div>
             <div className="h-2 md:h-3 bg-slate-100 rounded-full overflow-hidden">
               <div
@@ -248,18 +275,16 @@ const PoolComparison = ({ appData }) => {
 
 
 // ============================================================================
-// WHY PRIZES — sleeker treatment
-// Right card now uses a dark slate-900 with gold accents (much more sleek/premium
-// than the muted amber-50 background that looked Etsy-ish). Smaller cards,
-// bigger 10× badge, fixed overflow.
+// WHY PRIZES — counter ref now on the cards row with higher threshold,
+// so the count starts only when the cards are properly in frame.
 // ============================================================================
 const WhyPrizes = () => {
-  const [ref, inView] = useInView(0.3);
-  const count40 = useCountUp(40, 1400, inView);
-  const count400 = useCountUp(400, 2000, inView);
+  const [cardsRef, cardsInView] = useInView(0.4);
+  const count40 = useCountUp(40, 1400, cardsInView);
+  const count400 = useCountUp(400, 2000, cardsInView);
 
   return (
-    <section className="py-20 md:py-28 px-4 bg-white border-b border-slate-200" ref={ref}>
+    <section className="py-20 md:py-28 px-4 bg-white border-b border-slate-200">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10 md:mb-14 reveal">
           <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Math</p>
@@ -267,51 +292,47 @@ const WhyPrizes = () => {
           <p className="text-lg md:text-xl text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">Consistent giving at scale is hard to sustain. Prizes solve that. And the math works out in the charity's favor.</p>
         </div>
 
-        {/* Cards + 10× badge */}
-        <div className="flex flex-col md:flex-row items-stretch gap-3 md:gap-4 mb-12 md:mb-16 max-w-4xl mx-auto pt-8 md:pt-6">
+        {/* Counter ref attaches HERE — counter only triggers when cards are 40% visible */}
+        <div ref={cardsRef} className="flex flex-col md:flex-row items-stretch gap-3 md:gap-4 mb-12 md:mb-16 max-w-4xl mx-auto pt-8 md:pt-6">
 
-          {/* WITHOUT PRIZES — small, muted */}
           <div className="flex-1 bg-slate-50 border border-slate-200 rounded-3xl p-6 md:p-8 flex flex-col">
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-4">Without Prizes</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-4">Without Prizes</p>
             <p className="text-6xl md:text-7xl font-black text-slate-300 tracking-tighter mb-1 leading-none tabular-nums">
               ${count40}K
             </p>
             <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 mt-2">Typical Monthly Pool</p>
             <p className="text-sm text-slate-500 font-medium leading-relaxed mb-auto">Members drop off. Donations dry up. The pool stays small.</p>
             <div className="mt-6 pt-5 border-t border-slate-200">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Donor Retention</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Donor Retention</p>
               <p className="text-2xl font-black text-slate-400 tracking-tight tabular-nums">~25%</p>
             </div>
           </div>
 
-          {/* 10× BADGE — bigger, more confident */}
           <div className="flex justify-center items-center md:flex-shrink-0 -my-6 md:my-0 md:-mx-6 z-20 relative pointer-events-none">
             <div
-              className="bg-amber-400 text-slate-900 rounded-full w-24 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center shadow-2xl shadow-amber-500/40 ring-8 ring-white transition-all duration-700 ease-out"
+              className="bg-amber-400 text-slate-900 rounded-full w-24 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center shadow-amber-glow ring-8 ring-white transition-all duration-700 ease-out"
               style={{
-                opacity: inView ? 1 : 0,
-                transform: inView ? 'scale(1)' : 'scale(0.4)',
+                opacity: cardsInView ? 1 : 0,
+                transform: cardsInView ? 'scale(1)' : 'scale(0.4)',
                 transitionDelay: '600ms',
               }}
             >
               <span className="text-4xl md:text-5xl font-black tracking-tighter leading-none">10×</span>
-              <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest mt-1">Bigger</span>
+              <span className="text-xs font-bold uppercase tracking-widest mt-1">Bigger</span>
             </div>
           </div>
 
-          {/* WITH PRIZES — dark sleek card with amber accents (much more premium) */}
-          <div className="flex-1 bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl shadow-slate-900/20 relative flex flex-col">
-            {/* Amplify badge — repositioned to clear the 10× ring */}
-            <div className="absolute -top-3 left-6 md:left-10 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md z-10">Amplify</div>
+          <div className="flex-1 bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-soft-xl relative flex flex-col">
+            <div className="absolute -top-3 left-6 md:left-10 bg-amber-400 text-slate-900 text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md z-10">Amplify</div>
 
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">With Prizes</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">With Prizes</p>
             <p className="text-6xl md:text-7xl font-black text-amber-400 tracking-tighter mb-1 leading-none tabular-nums">
               ${count400}K
             </p>
             <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70 mb-3 mt-2">Transformational Pool</p>
             <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Members stay engaged. The charity receives one massive grant with zero acquisition cost.</p>
             <div className="mt-6 pt-5 border-t border-slate-800">
-              <p className="text-[10px] font-bold text-amber-400/70 uppercase tracking-widest mb-1">Donor Retention</p>
+              <p className="text-xs font-bold text-amber-400/70 uppercase tracking-widest mb-1">Donor Retention</p>
               <p className="text-2xl font-black text-amber-400 tracking-tight tabular-nums">100%</p>
             </div>
           </div>
@@ -331,9 +352,6 @@ const WhyPrizes = () => {
 };
 
 
-// ============================================================================
-// MAIN PAGE
-// ============================================================================
 const HowItWorksPage = ({ appData }) => {
   useEffect(() => {
     const observerOnce = new IntersectionObserver((entries) => {
@@ -363,13 +381,12 @@ const HowItWorksPage = ({ appData }) => {
       intro="Consistent, collective giving creates impact that individual giving simply can't."
     >
       
-      {/* The Circle */}
       <section className="py-16 md:py-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center">
           <div className="md:col-span-5 reveal">
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
-            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. That's the specific number required to create a massive charity grant while keeping prize odds high.</p>
+            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The 400-member cap is what creates a massive monthly grant while keeping prize odds high.</p>
           </div>
 
           <div className="md:col-span-7 reveal" style={{transitionDelay: '150ms'}}>
@@ -378,11 +395,10 @@ const HowItWorksPage = ({ appData }) => {
         </div>
       </section>
 
-      {/* The Grant */}
       <section className="py-20 md:py-28 px-4 bg-slate-900 text-white">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16 text-center md:text-left reveal">
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">The Grant</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">The Grant</p>
             <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 leading-[1.05]">One massive check. <br className="hidden md:block"/>Every month.</h2>
             <p className="text-xl text-slate-300 font-medium max-w-2xl">The pooled funds are issued as a single grant to one vetted nonprofit partner. Not split across dozens of organizations. Not dripped out over time.</p>
           </div>
@@ -404,7 +420,6 @@ const HowItWorksPage = ({ appData }) => {
 
       <WhyPrizes />
 
-      {/* The Drawings + Odds Visualizer */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 md:mb-14 reveal">
@@ -413,7 +428,7 @@ const HowItWorksPage = ({ appData }) => {
             <p className="text-lg md:text-xl text-slate-600 font-medium max-w-2xl mx-auto">Compared to most sweepstakes, your odds aren't theoretical. They're real.</p>
           </div>
 
-          <div className="mb-12 reveal max-w-4xl mx-auto">
+          <div className="mb-12 reveal max-w-5xl mx-auto">
             <OddsVisualizer tierData={appData.tierData} />
           </div>
 
@@ -421,10 +436,10 @@ const HowItWorksPage = ({ appData }) => {
             {['silver', 'gold', 'diamond'].map((tier, index) => {
               const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
               return (
-                <div key={tier} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm reveal" style={{transitionDelay: `${index * 100}ms`}}>
+                <div key={tier} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-soft reveal" style={{transitionDelay: `${index * 100}ms`}}>
                   <h3 className={`font-black uppercase tracking-widest text-sm mb-6 pb-4 border-b border-slate-200 ${headerColor}`}>{tier} Circle Prizes</h3>
                   <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
-                    <span className="font-bold text-slate-400 uppercase text-[10px] tracking-widest">Grand Prize</span>
+                    <span className="font-bold text-slate-400 uppercase text-xs tracking-widest">Grand Prize</span>
                     <span className="font-black text-slate-900 text-3xl">{appData.tierData[tier].prize}</span>
                   </div>
                   <div className="space-y-4">
@@ -453,15 +468,13 @@ const HowItWorksPage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Your Membership */}
       <section className="py-20 md:py-28 px-4 md:px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12 md:mb-16 text-center md:text-left reveal">
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Your Membership</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
           </div>
           
-          {/* Desktop — vertical timeline */}
           <div className="hidden md:block space-y-12 pl-4 border-l-4 border-indigo-100">
             {timeline.map((item, i) => (
               <div key={item.num} className="relative pl-8 reveal" style={{transitionDelay: `${(i + 1) * 100}ms`}}>
@@ -472,12 +485,11 @@ const HowItWorksPage = ({ appData }) => {
             ))}
           </div>
 
-          {/* Mobile — snap-center carousel with proper detection */}
           <div className="md:hidden -mx-4">
             <div
               ref={tlRef}
               onScroll={tlOnScroll}
-              className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 scrollbar-none"
             >
               {timeline.map((item) => (
                 <div key={item.num} data-card className="snap-center shrink-0 w-[80%] bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col">

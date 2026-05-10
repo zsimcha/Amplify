@@ -377,7 +377,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                   FORM COLUMN
                   ============================================================ */}
               <div className="lg:col-span-7 space-y-6 md:space-y-8">
-                <div className="bg-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-xl border border-slate-100">
+                <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-8 space-y-6">
                   <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Secure Your Spot</h2>
                   
                   {/* ---- Community selector (existing) ---- */}
@@ -407,7 +407,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       </div>
                   </div>
 
-                  <form onSubmit={handleCheckoutSubmit} className="bg-slate-50 rounded-2xl md:rounded-[2rem] border border-slate-200 shadow-sm p-6 md:p-8 space-y-6">
+                  <form onSubmit={handleCheckoutSubmit} className="space-y-6">
                       
                       {/* ============ SECTION 1: YOUR DETAILS ============ */}
                       <section className="space-y-4">
@@ -422,12 +422,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label htmlFor="fullName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Full Name</label>
-                            <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={handleNameChange} className={`w-full bg-white border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
+                            <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={handleNameChange} className={`w-full bg-slate-50 border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
                             {validationErrors.fullName && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.fullName}</p>}
                           </div>
                           <div>
                             <label htmlFor="email" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Email</label>
-                            <input id="email" name="email" autoComplete="email" type="email" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className={`w-full bg-white border ${validationErrors.email ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="john@example.com" />
+                            <input id="email" name="email" autoComplete="email" type="email" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className={`w-full bg-slate-50 border ${validationErrors.email ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="john@example.com" />
                             {validationErrors.email && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.email}</p>}
                           </div>
 
@@ -446,7 +446,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               value={checkoutForm.displayName} 
                               disabled={checkoutForm.isAnonymous}
                               onChange={handleDisplayNameChange}
-                              className={`w-full bg-white border ${validationErrors.displayName ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all ${checkoutForm.isAnonymous ? 'bg-slate-100 text-slate-400 italic' : 'text-slate-900'}`} 
+                              className={`w-full bg-slate-50 border ${validationErrors.displayName ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all ${checkoutForm.isAnonymous ? 'bg-slate-100 text-slate-400 italic' : 'text-slate-900'}`} 
                               placeholder="How you'll appear to others" 
                             />
                             {validationErrors.displayName ? (
@@ -460,12 +460,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                           <div>
                             <label htmlFor="phone" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
-                            <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={`w-full bg-white border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="555-123-4567" />
+                            <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={`w-full bg-slate-50 border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="555-123-4567" />
                             {validationErrors.phone && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.phone}</p>}
                           </div>
                           <div>
                             <label htmlFor="address" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
-                            <input id="address" name="street-address" autoComplete="street-address" type="text" value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={`w-full bg-white border ${validationErrors.address ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="123 Main St" />
+                            <input id="address" name="street-address" autoComplete="street-address" type="text" value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={`w-full bg-slate-50 border ${validationErrors.address ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="123 Main St" />
                             {validationErrors.address && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.address}</p>}
                           </div>
                         </div>
@@ -473,13 +473,13 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="grid grid-cols-6 gap-4">
                           <div className="col-span-6 md:col-span-3">
                             <label htmlFor="city" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
-                            <input id="city" name="address-level2" autoComplete="address-level2" type="text" value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={`w-full bg-white border ${validationErrors.city ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="New York" />
+                            <input id="city" name="address-level2" autoComplete="address-level2" type="text" value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={`w-full bg-slate-50 border ${validationErrors.city ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="New York" />
                             {validationErrors.city && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.city}</p>}
                           </div>
                           <div className="col-span-3 md:col-span-1">
                             <label htmlFor="state" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
                             <div className="relative">
-                              <select id="state" name="address-level1" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value})} className={`w-full bg-white border appearance-none ${validationErrors.state ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
+                              <select id="state" name="address-level1" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value})} className={`w-full bg-slate-50 border appearance-none ${validationErrors.state ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
                                 <option value="" disabled>--</option>
                                 {US_STATES.map(state => (
                                   <option key={state} value={state}>{state}</option>
@@ -491,7 +491,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </div>
                           <div className="col-span-3 md:col-span-2">
                             <label htmlFor="zip" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
-                            <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={`w-full bg-white border ${validationErrors.zipCode ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="10001" />
+                            <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={`w-full bg-slate-50 border ${validationErrors.zipCode ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="10001" />
                             {validationErrors.zipCode && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.zipCode}</p>}
                           </div>
                         </div>
@@ -529,7 +529,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
                         {/* Cover-fee toggle (only when fee applies) */}
                         {paymentMethod !== 'bank' ? (
-                          <label className="flex items-start gap-3 p-4 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                          <label className="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-transparent cursor-pointer hover:bg-slate-100 transition-colors">
                             <input
                               type="checkbox"
                               checked={coverFee}
@@ -558,7 +558,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         )}
 
                         {/* Billing address toggle */}
-                        <label className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                        <label className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-transparent cursor-pointer hover:bg-slate-100 transition-colors">
                           <input
                             type="checkbox"
                             checked={billingSameAsAccount}
@@ -569,21 +569,21 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         </label>
 
                         {!billingSameAsAccount && (
-                          <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 p-4 rounded-xl bg-white border border-slate-200">
+                          <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 p-4 rounded-xl bg-slate-50 border border-transparent">
                             <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Billing Address</p>
                             <div>
-                              <input type="text" value={billingAddress.line1} onChange={e => setBillingAddress({...billingAddress, line1: e.target.value})} autoComplete="billing street-address" className={`w-full bg-white border ${validationErrors.billingLine1 ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Street address" />
+                              <input type="text" value={billingAddress.line1} onChange={e => setBillingAddress({...billingAddress, line1: e.target.value})} autoComplete="billing street-address" className={`w-full bg-slate-50 border ${validationErrors.billingLine1 ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Street address" />
                               {validationErrors.billingLine1 && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingLine1}</p>}
                             </div>
-                            <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className="w-full bg-white border border-slate-200 focus:ring-2 focus:ring-indigo-500 rounded-xl p-3 text-sm outline-none transition-all" placeholder="Apt, suite, etc. (optional)" />
+                            <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className="w-full bg-slate-50 border border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100 rounded-xl p-3 text-sm outline-none transition-all" placeholder="Apt, suite, etc. (optional)" />
                             <div className="grid grid-cols-6 gap-3">
                               <div className="col-span-6 md:col-span-3">
-                                <input type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={`w-full bg-white border ${validationErrors.billingCity ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="City" />
+                                <input type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={`w-full bg-slate-50 border ${validationErrors.billingCity ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="City" />
                                 {validationErrors.billingCity && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingCity}</p>}
                               </div>
                               <div className="col-span-3 md:col-span-1">
                                 <div className="relative">
-                                  <select value={billingAddress.state} onChange={e => setBillingAddress({...billingAddress, state: e.target.value})} className={`w-full bg-white border appearance-none ${validationErrors.billingState ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
+                                  <select value={billingAddress.state} onChange={e => setBillingAddress({...billingAddress, state: e.target.value})} className={`w-full bg-slate-50 border appearance-none ${validationErrors.billingState ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
                                     <option value="" disabled>--</option>
                                     {US_STATES.map(state => (<option key={state} value={state}>{state}</option>))}
                                   </select>
@@ -592,7 +592,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                                 {validationErrors.billingState && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingState}</p>}
                               </div>
                               <div className="col-span-3 md:col-span-2">
-                                <input type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={`w-full bg-white border ${validationErrors.billingZip ? 'border-red-400 ring-1 ring-red-400' : 'border-slate-200 focus:ring-2 focus:ring-indigo-500'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="ZIP" />
+                                <input type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={`w-full bg-slate-50 border ${validationErrors.billingZip ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="ZIP" />
                                 {validationErrors.billingZip && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingZip}</p>}
                               </div>
                             </div>

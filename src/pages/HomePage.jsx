@@ -12,11 +12,9 @@ const HomePage = ({ appData }) => {
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
 
-  // Handle hash navigation (e.g. /#tiers from "Back to Home" on checkout)
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.replace('#', '');
-      // Slight delay to let the layout settle before scrolling
       const t = setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
@@ -27,23 +25,29 @@ const HomePage = ({ appData }) => {
     }
   }, [location]);
 
+  // Throttled with requestAnimationFrame for buttery scroll perf
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (howSectionRef.current) {
-        const rect = howSectionRef.current.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        const scrollDistance = -rect.top;
-        const maxScroll = rect.height - windowHeight;
-        
-        if (maxScroll > 0) {
-          let progress = scrollDistance / maxScroll;
-          setHowScroll(Math.max(0, Math.min(1, progress)));
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (howSectionRef.current) {
+          const rect = howSectionRef.current.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          const scrollDistance = -rect.top;
+          const maxScroll = rect.height - windowHeight;
+          if (maxScroll > 0) {
+            const progress = scrollDistance / maxScroll;
+            setHowScroll(Math.max(0, Math.min(1, progress)));
+          }
         }
-      }
+        ticking = false;
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); 
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
     const observerOnce = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -64,8 +68,7 @@ const HomePage = ({ appData }) => {
 
   const handleJoinClick = (tier, e) => {
     if (e) e.stopPropagation();
-    // Pass `from` so the back-to-home link on checkout returns to the tier cards
-    navigate('/checkout', { state: { tier, from: '/#tiers' } }); 
+    navigate('/checkout', { state: { tier, from: '/#tiers' } });
   };
 
   const handleCardClick = (tier, e) => {
@@ -75,10 +78,9 @@ const HomePage = ({ appData }) => {
   };
 
   const lineProgress = Math.max(0, Math.min(100, (howScroll - 0.02) * 130));
-  const showStep1 = howScroll > 0.01;   
-  // Tightened: "2" now appears as soon as the line reaches its position rather than past it.
-  const showStep2 = lineProgress >= 33; 
-  const showStep3 = lineProgress >= 88; 
+  const showStep1 = howScroll > 0.01;
+  const showStep2 = lineProgress >= 33;
+  const showStep3 = lineProgress >= 88;
 
   const primaryFaqs = [
     { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank-you, members get a shot at winning up to $100,000 every month." },
@@ -106,34 +108,36 @@ const HomePage = ({ appData }) => {
                 <span className="text-amber-400 italic"> Your Impact.</span>
               </h1>
               
-              <p className="text-indigo-200 text-lg md:text-xl mb-8 font-medium leading-relaxed max-w-2xl">
+              {/* Bumped from text-lg/xl → text-xl/2xl per feedback */}
+              <p className="text-indigo-200 text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-2xl">
                 Amplify pools your monthly giving with an exclusive circle of donors to make a massive impact. <strong className="text-white">Win Up To $100,000</strong> <em className="text-white font-bold not-italic">every month</em> as a thank you for your commitment.
               </p>
               
+              {/* Bumped bullets from text-sm/base → text-base/lg */}
               <div className="space-y-4 mb-10 text-left">
                 <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></div>
-                  <span className="text-sm md:text-base font-medium text-indigo-100 leading-snug">Join a community of donors pooling their Tzedakah into a six-figure grant every month</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Join a community of donors pooling their Tzedakah into a six-figure grant every month</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></div>
-                  <span className="text-sm md:text-base font-medium text-indigo-100 leading-snug">Exclusive drawings with odds as strong as 1 in 25</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Exclusive drawings with odds as strong as 1 in 25</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 shrink-0"></div>
-                  <span className="text-sm md:text-base font-medium text-indigo-100 leading-snug">You were going to give Ma'aser anyway. Now it could win you $100,000.</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">You were going to give Ma'aser anyway. Now it could win you $100,000.</span>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 text-left">
-                <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
+                <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
                   Join the Circle
                 </button>
               </div>
             </div>
 
             <div className="lg:col-span-6 relative mt-8 md:mt-0 animate-hero flex justify-center">
-              <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl overflow-hidden bg-indigo-900 relative shadow-2xl ring-1 ring-white/10">
+              <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl overflow-hidden bg-indigo-900 relative shadow-soft-xl ring-1 ring-white/10">
                 <iframe 
                   className="absolute top-0 left-0 w-full h-full"
                   src="https://www.youtube-nocookie.com/embed/T6RxmZmNZME?rel=0&modestbranding=1" 
@@ -159,9 +163,9 @@ const HomePage = ({ appData }) => {
                 { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
-                  <p className={`text-[8px] md:text-[9px] font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
                   <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.colorClass}`}>{stat.num}</p>
-                  <p className={`text-[9px] md:text-[11px] font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.labelClass}`}>{stat.label}</p>
+                  <p className={`text-xs font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.labelClass}`}>{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -226,15 +230,15 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Manifesto Section - tighter sizing per user feedback (was too big on desktop) */}
-      <section className="py-20 md:py-24 lg:py-28 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
+      {/* MANIFESTO — tighter padding + removed serif on the headline */}
+      <section className="py-14 md:py-20 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
         <div className="max-w-4xl mx-auto relative z-10">
-          <div className="w-16 h-1.5 bg-amber-400 mb-10 md:mb-12"></div>
-          <h2 className="text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter leading-[1.02] mb-10 md:mb-12">
+          <div className="w-16 h-1.5 bg-amber-400 mb-8 md:mb-10"></div>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.02] mb-8 md:mb-10">
             <span className="text-white">People give.</span><br/>
             <span className="text-indigo-300 italic">That's not the problem.</span>
           </h2>
-          <p className="text-2xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.3] mb-10 md:mb-12 max-w-3xl">
+          <p className="text-2xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.3] mb-8 md:mb-10 max-w-3xl">
             What changes things is showing up the same way, every month. Together.
           </p>
           <p className="text-2xl md:text-2xl lg:text-3xl text-white font-medium leading-[1.3] max-w-3xl">
@@ -244,16 +248,15 @@ const HomePage = ({ appData }) => {
       </section>
 
 
-      {/* Rabbinic Endorsement — compact bar (full panel lives on /about) */}
+      {/* Rabbinic Endorsement — compact bar */}
       <section className="py-12 md:py-20 bg-white border-t border-slate-100 px-4">
         <div className="max-w-5xl mx-auto reveal">
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
-            {/* Visual mark — ShieldCheck implies verified/endorsed (consistent w/ trust iconography elsewhere) */}
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 shadow-soft">
             <div className="shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-3">
               <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md">
                 <ShieldCheck size={28} className="text-amber-400" strokeWidth={2.25} />
               </div>
-              <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 md:mt-1">Rabbinic Endorsement</p>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 md:mt-1">Rabbinic Endorsement</p>
             </div>
 
             <div className="flex-1">
@@ -275,7 +278,7 @@ const HomePage = ({ appData }) => {
         <div className="max-w-7xl mx-auto reveal">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div className="flex flex-col justify-center text-center md:text-left">
-              <p className="text-[10px] md:text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Who We're Helping This Month</p>
+              <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Who We're Helping This Month</p>
               <h2 className="text-4xl md:text-5xl font-black text-white mb-6 md:mb-8 tracking-tight uppercase italic">Chai Lifeline</h2>
               <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8 md:mb-10">
                 Chai Lifeline is there for families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
@@ -284,16 +287,16 @@ const HomePage = ({ appData }) => {
               <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 justify-center md:justify-start mb-6">
                 <div className="flex items-center gap-3">
                   <Building size={20} className="text-slate-400" />
-                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofit</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofit</p>
                 </div>
                 <div className="hidden sm:block w-px h-6 bg-slate-700"></div>
                 <div className="flex items-center gap-3">
                   <Heart size={20} className="text-red-400 fill-current" />
-                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-300">Impact Goal: $400,000</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Impact Goal: $400,000</p>
                 </div>
               </div>
 
-              <p className="text-[11px] md:text-xs text-slate-400 font-medium mb-10 leading-relaxed">
+              <p className="text-xs text-slate-400 font-medium mb-10 leading-relaxed">
                 Grants administered through <span className="text-slate-200 font-bold">Givinga</span>, a registered 501(c)(3) donor-advised fund.
               </p>
 
@@ -303,10 +306,9 @@ const HomePage = ({ appData }) => {
                 </Link>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl min-h-[300px] md:min-h-[450px] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
+            <div className="relative overflow-hidden rounded-2xl shadow-soft-xl min-h-[300px] md:min-h-[450px] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
                <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
-               {/* Mobile: more compact box */}
                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white py-2 md:py-3 px-8 md:px-8 rounded-lg flex items-center justify-center shadow-xl">
                   <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-10 md:h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
                </div>
@@ -315,7 +317,7 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Tiers Section (No Stagger) */}
+      {/* Tiers Section */}
       <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
@@ -330,7 +332,7 @@ const HomePage = ({ appData }) => {
               const dotColor = tier === 'silver' ? 'bg-slate-400' : tier === 'gold' ? 'bg-[#eab308]' : 'bg-[#818cf8]';
 
               return (
-                <div key={tier} onClick={(e) => handleCardClick(tier, e)} className="bg-white border border-slate-200 rounded-2xl flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 reveal md:cursor-pointer group/card" style={{ transitionDelay: `${index * 100}ms` }}>
+                <div key={tier} onClick={(e) => handleCardClick(tier, e)} className="bg-white border border-slate-200 rounded-2xl flex flex-col transition-all duration-300 hover:shadow-soft-xl hover:-translate-y-2 reveal md:cursor-pointer group/card" style={{ transitionDelay: `${index * 100}ms` }}>
                   <div className="bg-white px-6 py-5 flex items-center justify-between border-b border-slate-100 rounded-t-2xl">
                     <div className="flex items-center gap-2">
                       <div className={`w-2 h-2 rounded-full ${dotColor}`}></div>
@@ -343,40 +345,40 @@ const HomePage = ({ appData }) => {
                   </div>
 
                   <div className="px-6 pt-8 pb-6 text-center flex flex-col items-center justify-center bg-white">
-                    <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Monthly Grand Prize</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Monthly Grand Prize</p>
                     <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>{appData.tierData[tier].prize}</p>
                   </div>
 
                   <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
                     <div className="flex justify-between items-center relative">
-                      <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
-                        <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
                     <div className="flex justify-between items-center relative">
                       <div className="inline-flex items-center gap-1.5">
-                        <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Winning Odds</span>
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Winning Odds</span>
                         <div className="relative inline-flex items-center" onMouseEnter={() => setActiveTooltip(`${tier}-tot`)} onMouseLeave={() => setActiveTooltip(null)} onClick={(e) => { e.stopPropagation(); setActiveTooltip(activeTooltip === `${tier}-tot` ? null : `${tier}-tot`); }}>
                           <HelpCircle size={14} className="text-slate-400 cursor-pointer" />
-                          <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 max-w-[80vw] bg-slate-900 text-white p-3 rounded-xl shadow-xl text-[10px] leading-relaxed font-medium normal-case transition-all duration-200 z-[100] text-center pointer-events-none ${activeTooltip === `${tier}-tot` ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover:opacity-100 md:group-hover:visible'}`}>
+                          <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 max-w-[80vw] bg-slate-900 text-white p-3 rounded-xl shadow-xl text-xs leading-relaxed font-medium normal-case transition-all duration-200 z-[100] text-center pointer-events-none ${activeTooltip === `${tier}-tot` ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover:opacity-100 md:group-hover:visible'}`}>
                               The estimated probability of winning any prize when the circle fills.
                               <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-slate-900 transform rotate-45"></div>
                           </div>
                         </div>
                       </div>
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
-                        <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center mt-1 pt-3 border-t border-slate-200">
-                      <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Combined Tzedakah Pool</span>
-                      <span className="text-lg md:text-xl font-black text-slate-700">${totalPool}</span>
-                    </div>
+                    <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
+  			<span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Tzedakah Raised</span>
+  			<span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
+		    </div>
                   </div>
 
                   <div className="px-6 py-5 flex-grow bg-white">
-                    <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Monthly Prizes</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Monthly Prizes</p>
                     <div className="space-y-0 relative z-10">
                       {appData.tierData[tier].otherPrizes.map((p, i) => {
                         let qty = '1 winner';
@@ -400,7 +402,7 @@ const HomePage = ({ appData }) => {
                   </div>
 
                   <div className="p-5 pt-3 bg-white rounded-b-2xl relative z-10 overflow-hidden mt-auto">
-                    <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-4 rounded-lg font-bold text-base lg:text-sm uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-lg group-hover/card:bg-indigo-900">
+                    <button onClick={(e) => handleJoinClick(tier, e)} className="w-full py-4 rounded-lg font-bold text-base lg:text-sm uppercase tracking-wider lg:tracking-widest transition-all whitespace-nowrap bg-slate-900 text-white hover:bg-indigo-900 shadow-soft-lg group-hover/card:bg-indigo-900">
                       Join Now • ${appData.tierData[tier].price.toLocaleString()}/mo
                     </button>
                   </div>
@@ -410,7 +412,7 @@ const HomePage = ({ appData }) => {
           </div>
           
           <div className="mt-10 text-center px-4 reveal">
-            <p className="text-slate-500 text-[11px] md:text-xs font-medium leading-relaxed text-center max-w-2xl mx-auto">
+            <p className="text-slate-500 text-xs font-medium leading-relaxed text-center max-w-2xl mx-auto">
               Actual odds of winning depend on total eligible entries. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-700 transition-colors">official rules</Link>.
             </p>
           </div>
@@ -428,7 +430,7 @@ const HomePage = ({ appData }) => {
             And win up to $100,000 while you're at it.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-lg shadow-amber-400/10">
+            <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow">
               Join the Circle
             </button>
             <Link to="/faq" className="px-10 py-4 bg-transparent border border-slate-700 text-slate-300 rounded-lg font-bold text-sm md:text-base hover:border-slate-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">
@@ -443,12 +445,12 @@ const HomePage = ({ appData }) => {
         <div className="max-w-3xl mx-auto">
           <div className="reveal">
             <h2 className="text-4xl md:text-5xl font-black mb-3 md:mb-4 text-slate-900 tracking-tight italic">Questions?</h2>
-            <p className="text-slate-400 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-10 md:mb-12 text-[10px] md:text-xs">A few quick answers</p>
+            <p className="text-slate-400 font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] mb-10 md:mb-12 text-xs">A few quick answers</p>
           </div>
           
           <div className="space-y-4 text-left">
             {primaryFaqs.map((faq, i) => (
-              <div key={i} className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm transition-all hover:shadow-md hover:border-indigo-200 reveal" style={{ transitionDelay: `${i * 100}ms` }}>
+              <div key={i} className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-soft transition-all hover:shadow-soft-lg hover:border-indigo-200 reveal" style={{ transitionDelay: `${i * 100}ms` }}>
                 <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full p-6 md:p-8 text-left flex justify-between items-center outline-none bg-white">
                   <span className="font-bold text-slate-900 text-sm md:text-base pr-4">{faq.q}</span>
                   {openFaq === i ? <ChevronUp size={20} className="shrink-0 text-indigo-600" /> : <ChevronDown size={20} className="shrink-0 text-slate-400" />}
@@ -457,7 +459,7 @@ const HomePage = ({ appData }) => {
               </div>
             ))}
           </div>
-          <Link to="/faq" className="inline-flex mt-10 px-8 py-4 bg-white border border-slate-200 text-slate-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs hover:bg-slate-50 transition-all shadow-sm reveal">
+          <Link to="/faq" className="inline-flex mt-10 px-8 py-4 bg-white border border-slate-200 text-slate-600 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-slate-50 transition-all shadow-soft reveal">
             See All Questions
           </Link>
         </div>

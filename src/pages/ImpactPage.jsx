@@ -18,7 +18,6 @@ const ImpactPage = () => {
     return () => observerOnce.disconnect();
   }, []);
 
-  // Vetting carousel state — proper card-center detection
   const vetScrollerRef = useRef(null);
   const [vetActiveIdx, setVetActiveIdx] = useState(0);
   const handleVetScroll = () => {
@@ -52,66 +51,82 @@ const ImpactPage = () => {
         </div>
       </section>
 
-      {/* This Month's Partner — restructured for mobile compactness */}
+      {/* This Month's Partner — quote moved to full-width band below for balanced layout */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-y border-slate-200">
         <div className="max-w-6xl mx-auto">
           
-          {/* Mobile: image at top + tight stats row + condensed copy. Desktop: side-by-side. */}
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
+          {/* Two balanced columns — image and copy */}
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             
-            {/* Image + quote — appears second on desktop, but moves up to be inline on mobile */}
+            {/* Image column */}
             <div className="order-1 md:order-2 reveal" style={{ transitionDelay: '150ms' }}>
-              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-xl relative bg-slate-900">
+              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-soft-xl relative bg-slate-900">
                 <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80" onError={(e) => { e.currentTarget.style.display='none'; }} />
-              </div>
-              {/* Desktop-only quote block. Mobile gets a leaner version inline below. */}
-              <div className="hidden md:block bg-indigo-950 text-white p-8 md:p-10 rounded-3xl shadow-xl relative mt-8">
-                <svg className="absolute top-8 left-8 text-indigo-800 w-12 h-12 opacity-50" fill="currentColor" viewBox="0 0 32 32"><path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.896 3.456-8.352 9.12-8.352 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" /></svg>
-                <p className="relative z-10 text-lg md:text-xl font-medium italic leading-relaxed pt-10 mb-6 text-indigo-100">"[Quote from Chai Lifeline leadership.]"</p>
-                <p className="relative z-10 font-bold text-white">Director Name, Chai Lifeline</p>
+                {/* Logo overlay so the visual feels intentional */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-white py-2 md:py-3 px-7 md:px-8 rounded-lg flex items-center justify-center shadow-xl">
+                  <img src="/ChaiLifeline.png" alt="Chai Lifeline" className="h-9 md:h-11 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
+                </div>
               </div>
             </div>
             
-            {/* Copy block */}
+            {/* Copy column */}
             <div className="order-2 md:order-1 reveal">
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">This Month's Partner</p>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-5">Chai Lifeline</h2>
               
-              {/* Compact stats grid — 3 cards on desktop, condensed list on mobile */}
               <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6 md:mb-8">
                 <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Grant</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Grant</p>
                   <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">$400K</p>
                 </div>
                 <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Status</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Status</p>
                   <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">501(c)(3)</p>
                 </div>
                 <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Rated</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Rated</p>
                   <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">4 ★</p>
                 </div>
               </div>
 
-              {/* Tighter copy — was a wall of text */}
               <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed mb-4">
                 Chai Lifeline supports families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support.
               </p>
-              <p className="text-base md:text-lg text-slate-900 font-bold leading-relaxed mb-6 md:mb-8">
+              <p className="text-base md:text-lg text-slate-900 font-bold leading-relaxed mb-6">
                 Our grant goes directly to making sure no family faces this alone.
               </p>
 
-              {/* Mobile-only quote — much more compact than desktop block */}
-              <div className="md:hidden bg-indigo-950 text-white p-5 rounded-2xl shadow-xl mb-6">
-                <p className="text-sm font-medium italic leading-relaxed text-indigo-100 mb-3">"[Quote from Chai Lifeline leadership.]"</p>
-                <p className="text-xs font-bold text-white uppercase tracking-widest">Director · Chai Lifeline</p>
-              </div>
-
-              <p className="text-[11px] md:text-xs text-slate-500 font-medium leading-relaxed">
+              <p className="text-xs text-slate-500 font-medium leading-relaxed">
                 Grants administered through <span className="text-slate-700 font-bold">Givinga</span>, a registered 501(c)(3) donor-advised fund.
               </p>
             </div>
 
+          </div>
+
+          {/* Quote — full-width band below the two columns */}
+          <div className="mt-12 md:mt-16 reveal" style={{ transitionDelay: '300ms' }}>
+            <div className="bg-indigo-950 text-white p-8 md:p-12 lg:p-16 rounded-3xl shadow-soft-xl relative overflow-hidden">
+              {/* Decorative quote mark */}
+              <svg className="absolute top-6 left-6 md:top-8 md:left-10 text-indigo-800 w-12 h-12 md:w-16 md:h-16 opacity-50" fill="currentColor" viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.896 3.456-8.352 9.12-8.352 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+              </svg>
+              {/* Subtle right-side accent */}
+              <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+              
+              <div className="relative z-10 md:pl-16 lg:pl-20 max-w-4xl">
+                <p className="text-xl md:text-2xl lg:text-3xl font-medium italic leading-[1.4] text-indigo-50 mb-6 md:mb-8">
+                  "[Quote from Chai Lifeline leadership about what this grant enables.]"
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-px bg-amber-400"></div>
+                  <div>
+                    <p className="text-sm md:text-base font-bold text-white">Director Name</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-indigo-300 mt-0.5">Chai Lifeline</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -120,7 +135,7 @@ const ImpactPage = () => {
       <section className="py-20 md:py-28 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12 md:mb-16 reveal">
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Process</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Process</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Our vetting process.</h2>
           </div>
 
@@ -134,7 +149,6 @@ const ImpactPage = () => {
 
             return (
               <>
-                {/* Desktop — full vertical layout */}
                 <div className="hidden md:block space-y-16">
                   {steps.map((step, i) => (
                     <div key={step.num} className="grid md:grid-cols-12 gap-8 items-start reveal" style={{ transitionDelay: `${i * 80}ms` }}>
@@ -149,15 +163,14 @@ const ImpactPage = () => {
                   ))}
                 </div>
 
-                {/* Mobile — snap-center carousel with proper card-center detection */}
                 <div className="md:hidden -mx-4">
                   <div
                     ref={vetScrollerRef}
                     onScroll={handleVetScroll}
-                    className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                    className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 scrollbar-none"
                   >
                     {steps.map((step) => (
-                      <div key={step.num} data-card className="snap-center shrink-0 w-[80%] bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                      <div key={step.num} data-card className="snap-center shrink-0 w-[80%] bg-white border border-slate-200 rounded-2xl shadow-soft overflow-hidden flex flex-col">
                         <div className={`border-t-4 ${step.border} p-6 flex-1 flex flex-col`}>
                           <span className="text-5xl font-black text-slate-200 block tracking-tighter mb-3">{step.num}</span>
                           <h3 className="text-xl font-black text-slate-900 mb-3 tracking-tight">{step.title}</h3>

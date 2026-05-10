@@ -72,10 +72,10 @@ const CirclesPage = ({ appData }) => {
                         <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center mt-1 pt-3 border-t border-slate-200">
-                      <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Combined Tzedakah Pool</span>
-                      <span className="text-lg md:text-xl font-black text-slate-700">${totalPool}</span>
-                    </div>
+                    <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
+  			<span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Tzedakah Raised</span>
+  			<span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
+		     </div>
                   </div>
 
                   <div className="px-6 py-5 flex-grow bg-white">
