@@ -67,14 +67,12 @@ const useCarouselActive = (count) => {
 
 // ============================================================================
 // ODDS VISUALIZER
-// - Silver winners now slate-600 (#475569) for proper contrast vs. slate-200 base
-// - Stronger drop-shadow on silver so it reads as metallic
 // ============================================================================
 const OddsVisualizer = ({ tierData }) => {
   const [activeTier, setActiveTier] = useState('diamond');
 
   const tierConfig = {
-    silver:  { winners: 4,  color: '#475569', glow: '#64748b' },  // darker silver + glow color separate
+    silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
     gold:    { winners: 8,  color: '#eab308', glow: '#eab308' },
     diamond: { winners: 16, color: '#818cf8', glow: '#818cf8' },
   };
@@ -128,6 +126,9 @@ const OddsVisualizer = ({ tierData }) => {
 
   const cfg = tierConfig[activeTier];
   const oddsValue = tierData[activeTier].totalOdds.replace(/\s/g, '');
+  const isSilver = activeTier === 'silver';
+  const oddsCalloutColor = isSilver ? '#94a3b8' : cfg.color;
+  const winnersStatColor = isSilver ? '#64748b' : cfg.color;
 
   return (
     <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-soft">
@@ -178,7 +179,7 @@ const OddsVisualizer = ({ tierData }) => {
               Here's your shot at winning.
             </h3>
             <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
-              Each dot is a member. The colored ones win. Your odds aren't theoretical — they're real.
+              Each dot is a member. The colored ones win. Your odds aren't theoretical. They're real.
             </p>
           </div>
 
@@ -200,7 +201,7 @@ const OddsVisualizer = ({ tierData }) => {
 
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
-            <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: activeTier === 'silver' ? '#cbd5e1' : cfg.color}}>
+            <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: oddsCalloutColor}}>
               {oddsValue}
             </p>
             <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
@@ -213,7 +214,7 @@ const OddsVisualizer = ({ tierData }) => {
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Winners</p>
-              <p className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums" style={{color: activeTier === 'silver' ? '#cbd5e1' : cfg.color}}>{cfg.winners}</p>
+              <p className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{cfg.winners}</p>
             </div>
           </div>
         </div>
@@ -224,59 +225,86 @@ const OddsVisualizer = ({ tierData }) => {
 
 
 // ============================================================================
-// POOL COMPARISON — clearer labeling so amounts read as monthly grants
+// POOL COMPARISON
 // ============================================================================
 const PoolComparison = ({ appData }) => {
   const tiers = ['silver', 'gold', 'diamond'];
-  const max = 400000;
 
   const styles = {
-    silver:  { bar: 'bg-slate-300',  accent: 'text-slate-500',  hover: 'hover:bg-slate-50' },
-    gold:    { bar: 'bg-amber-400',  accent: 'text-amber-500',  hover: 'hover:bg-amber-50' },
-    diamond: { bar: 'bg-indigo-500', accent: 'text-indigo-500', hover: 'hover:bg-indigo-50' },
+    silver:  { label: 'Silver',  from: '#cbd5e1', to: '#94a3b8', labelText: 'text-slate-500' },
+    gold:    { label: 'Gold',    from: '#fde68a', to: '#eab308', labelText: 'text-amber-600' },
+    diamond: { label: 'Diamond', from: '#a5b4fc', to: '#6366f1', labelText: 'text-indigo-600' },
   };
 
-  return (
-    <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-soft">
-      {/* Column header so users understand the bar amounts are "monthly grant" */}
-      <div className="px-5 md:px-8 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Circle</span>
-        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Monthly Grant Raised</span>
-      </div>
-      {tiers.map((tier, i) => {
-        const s = styles[tier];
-        const pool = appData.tierData[tier].price * 400;
-        const widthPct = (pool / max) * 100;
+  const max = appData.tierData.diamond.price * 400;
 
-        return (
-          <div key={tier} className={`p-5 md:p-8 ${i < tiers.length - 1 ? 'border-b border-slate-100' : ''} transition-colors group ${s.hover}`}>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3 md:gap-5">
-                <span className={`text-xs md:text-sm font-black uppercase tracking-[0.25em] ${s.accent}`}>{tier}</span>
-                <span className="text-xs md:text-sm font-medium text-slate-400 tabular-nums">${appData.tierData[tier].price}/mo · 400 members</span>
-              </div>
-              <div className="text-right">
-                <span className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter tabular-nums">${(pool / 1000).toFixed(0)}k</span>
-                <span className="block text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Raised / month</span>
-              </div>
-            </div>
-            <div className="h-2 md:h-3 bg-slate-100 rounded-full overflow-hidden">
+  return (
+    <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-soft">
+      <div className="mb-8 md:mb-10">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Monthly Grant Raised</p>
+        <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+          Each tier, when full.
+        </h3>
+      </div>
+
+      <div className="flex items-end justify-center md:justify-around gap-3 md:gap-8 h-[280px] md:h-[340px] border-b-2 border-slate-200 relative">
+        <div className="absolute inset-x-0 top-0 bottom-0 flex flex-col justify-between pointer-events-none" aria-hidden>
+          {[0, 1, 2, 3].map(i => (
+            <div key={i} className="border-t border-slate-100 border-dashed h-0"></div>
+          ))}
+        </div>
+
+        {tiers.map((tier) => {
+          const pool = appData.tierData[tier].price * 400;
+          const heightPct = (pool / max) * 100;
+          const s = styles[tier];
+
+          return (
+            <div key={tier} className="flex-1 max-w-[140px] flex flex-col items-center justify-end relative h-full">
+              <p className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter mb-3 tabular-nums">
+                ${(pool / 1000).toFixed(0)}k
+              </p>
               <div
-                className={`h-full ${s.bar} rounded-full transition-all duration-1000 ease-out group-hover:brightness-110`}
-                style={{ width: `${widthPct}%` }}
-              />
+                className="w-full rounded-t-xl relative overflow-hidden shadow-soft transition-[height] duration-1000 ease-out"
+                style={{
+                  height: `${heightPct}%`,
+                  background: `linear-gradient(180deg, ${s.from} 0%, ${s.to} 100%)`,
+                }}
+              >
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    backgroundImage:
+                      'repeating-linear-gradient(0deg, transparent 0, transparent 11px, rgba(255,255,255,0.18) 11px, rgba(255,255,255,0.18) 12px)',
+                  }}
+                />
+                <div className="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-white/25 to-transparent pointer-events-none"></div>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+
+      <div className="flex items-start justify-center md:justify-around gap-3 md:gap-8 mt-4">
+        {tiers.map((tier) => {
+          const s = styles[tier];
+          return (
+            <div key={tier} className="flex-1 max-w-[140px] text-center">
+              <p className={`text-xs font-black uppercase tracking-[0.25em] ${s.labelText} mb-1`}>{s.label}</p>
+              <p className="text-xs font-medium text-slate-400 tabular-nums">
+                ${appData.tierData[tier].price.toLocaleString()}/mo × 400
+              </p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
 
 
 // ============================================================================
-// WHY PRIZES — counter ref now on the cards row with higher threshold,
-// so the count starts only when the cards are properly in frame.
+// WHY PRIZES
 // ============================================================================
 const WhyPrizes = () => {
   const [cardsRef, cardsInView] = useInView(0.4);
@@ -292,7 +320,6 @@ const WhyPrizes = () => {
           <p className="text-lg md:text-xl text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">Consistent giving at scale is hard to sustain. Prizes solve that. And the math works out in the charity's favor.</p>
         </div>
 
-        {/* Counter ref attaches HERE — counter only triggers when cards are 40% visible */}
         <div ref={cardsRef} className="flex flex-col md:flex-row items-stretch gap-3 md:gap-4 mb-12 md:mb-16 max-w-4xl mx-auto pt-8 md:pt-6">
 
           <div className="flex-1 bg-slate-50 border border-slate-200 rounded-3xl p-6 md:p-8 flex flex-col">
@@ -352,7 +379,59 @@ const WhyPrizes = () => {
 };
 
 
+// ============================================================================
+// MAIN PAGE
+// ============================================================================
 const HowItWorksPage = ({ appData }) => {
+  const membershipSectionRef = useRef(null);
+  const [membershipProgress, setMembershipProgress] = useState(0);
+  const [circleRevealed, setCircleRevealed] = useState(false);
+
+  // Scroll listener for the top "The Circle" section so it waits for a scroll drop
+  useEffect(() => {
+    const handleInitialScroll = () => {
+      if (window.scrollY > 50) {
+        setCircleRevealed(true);
+      }
+    };
+    handleInitialScroll(); // check immediately on mount
+    window.addEventListener('scroll', handleInitialScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleInitialScroll);
+  }, []);
+
+  // Throttled scroll listener specifically for the sticky "Your Membership" section
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (membershipSectionRef.current) {
+          const rect = membershipSectionRef.current.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+          // Calculate how far we've scrolled into the container
+          const scrollDistance = -rect.top;
+          // Calculate total scrollable distance inside the wrapper
+          const maxScroll = rect.height - windowHeight;
+          
+          if (maxScroll > 0) {
+            const progress = (scrollDistance / maxScroll) * 100;
+            setMembershipProgress(Math.max(0, Math.min(100, progress)));
+          } else if (rect.top > 0) {
+            setMembershipProgress(0);
+          } else {
+            setMembershipProgress(100);
+          }
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initialize on mount
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Standard observer for .reveal elements elsewhere on the page
   useEffect(() => {
     const observerOnce = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -367,13 +446,11 @@ const HowItWorksPage = ({ appData }) => {
   }, []);
 
   const timeline = [
-    { num: '01', title: 'Joining',           dot: 'bg-indigo-500',  body: "Choose your circle, enter your details, and your first contribution processes immediately. You're in." },
-    { num: '02', title: 'Recurring Giving',  dot: 'bg-amber-400',   body: 'Once your circle reaches 400 members, your contribution is charged on the same date each month, automatically.' },
-    { num: '03', title: 'Flexibility',       dot: 'bg-slate-300',   body: 'Your subscription is yours. Pause or cancel any time before your next billing date. No penalty, no runaround.' },
-    { num: '04', title: "Tax & Ma'aser",     dot: 'bg-emerald-400', body: <>The charitable portion is tax-deductible. Our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
+    { num: '01', title: 'Joining',           titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details, and your first contribution processes immediately. You're in." },
+    { num: '02', title: 'Recurring Giving',  titleColor: 'text-amber-700',   body: 'Once your circle reaches 400 members, your contribution is charged on the same day each month, automatically.' },
+    { num: '03', title: 'Flexibility',       titleColor: 'text-slate-500',   body: 'Your subscription is yours. Pause or cancel any time before your next billing date. No penalty, no runaround.' },
+    { num: '04', title: "Tax & Ma'aser",     titleColor: 'text-emerald-600', body: <>The charitable portion is tax deductible. Our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
-
-  const [tlRef, tlActiveIdx, tlOnScroll] = useCarouselActive(timeline.length);
 
   return (
     <PageLayout 
@@ -381,45 +458,131 @@ const HowItWorksPage = ({ appData }) => {
       intro="Consistent, collective giving creates impact that individual giving simply can't."
     >
       
+      {/* The Circle - Triggered by scroll threshold */}
       <section className="py-16 md:py-24 px-4 bg-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center">
-          <div className="md:col-span-5 reveal">
+        <div className={`max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center transition-all duration-[800ms] ease-out transform ${circleRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+          <div className="md:col-span-5">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
-            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The 400-member cap is what creates a massive monthly grant while keeping prize odds high.</p>
+            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds high.</p>
           </div>
 
-          <div className="md:col-span-7 reveal" style={{transitionDelay: '150ms'}}>
+          <div className="md:col-span-7">
             <PoolComparison appData={appData} />
           </div>
         </div>
       </section>
 
-      <section className="py-20 md:py-28 px-4 bg-slate-900 text-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16 text-center md:text-left reveal">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">The Grant</p>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 leading-[1.05]">One massive check. <br className="hidden md:block"/>Every month.</h2>
-            <p className="text-xl text-slate-300 font-medium max-w-2xl">The pooled funds are issued as a single grant to one vetted nonprofit partner. Not split across dozens of organizations. Not dripped out over time.</p>
+{/* THE GRANT */}
+<section className="py-8 md:py-12 px-4 bg-slate-950 text-white relative overflow-hidden">
+  <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
+    backgroundImage: 'radial-gradient(circle, #fbbf24 1px, transparent 1px)',
+    backgroundSize: '40px 40px'
+  }}></div>
+
+  <div className="max-w-5xl mx-auto relative">
+    {/* Header */}
+    <div className="mb-6 md:mb-8 reveal max-w-3xl">
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grant</p>
+      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3 leading-[1.1] text-white">
+        Zero strings. Zero ask.
+      </h2>
+      <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed">
+        Most major grants take a year of fundraising work to land. Ours takes none.
+      </p>
+    </div>
+
+    {/* Cards side by side at all sizes */}
+    <div className="grid grid-cols-2 gap-2 md:gap-4">
+
+      {/* OLD WAY */}
+      <div className="rounded-xl md:rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3.5 md:p-6 reveal flex flex-col">
+        <div className="mb-3 md:mb-4">
+          <p className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
+          <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
+            Most Charities:
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 mb-3 md:mb-4 flex-1">
+          {[
+            'Plan annual galas',
+            'Hire grant writers',
+            'Run direct mail',
+            'Manage donor relations',
+            'Pay venue & agency fees',
+            'Months of pursuit',
+          ].map((task, i, arr) => {
+            const isLast = i === arr.length - 1;
+            const isInLastDesktopRow = i >= arr.length - 2;
+            return (
+              <div
+                key={i}
+                className={`flex items-start gap-1.5 md:gap-2.5 py-1.5 md:py-2.5 border-white/[0.06] ${
+                  isLast ? 'border-b-0' : 'border-b'
+                } ${
+                  isInLastDesktopRow && !isLast ? 'md:border-b-0' : ''
+                }`}
+              >
+                <span className="text-rose-500/55 text-[9px] md:text-xs font-bold mt-[3px] md:mt-[5px] leading-none shrink-0" aria-hidden>✕</span>
+                <span className="text-[11px] md:text-sm text-slate-300 font-normal leading-snug">{task}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="pt-3 md:pt-4 border-t border-white/[0.08]">
+          <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
+            <p className="text-lg md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
+            <p className="text-[8px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16">
-            <div className="group reveal" style={{transitionDelay: '100ms'}}>
-              <h3 className="text-7xl md:text-8xl font-black text-amber-400 tracking-tighter mb-3 transition-transform group-hover:scale-105 origin-left cursor-default">$400k</h3>
-              <h4 className="text-xl font-bold mb-3 text-white">Scale matters</h4>
-              <p className="text-base md:text-lg text-slate-300 leading-relaxed font-medium">Transformational gifts need scale. The kind that let an organization expand or hit a critical milestone. $250 doesn't do that. $400,000 does.</p>
-            </div>
-            <div className="group reveal" style={{transitionDelay: '250ms'}}>
-              <h3 className="text-7xl md:text-8xl font-black text-emerald-400 tracking-tighter mb-3 transition-transform group-hover:scale-105 origin-left cursor-default">0%</h3>
-              <h4 className="text-xl font-bold mb-3 text-white">Zero acquisition cost</h4>
-              <p className="text-base md:text-lg text-slate-300 leading-relaxed font-medium">Our charity partners receive this grant with zero fundraising cost on their end. No gala. No campaign. Just the grant.</p>
-            </div>
+          <p className="text-[10px] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
+            Spent fundraising, every year.
+          </p>
+        </div>
+      </div>
+
+      {/* AMPLIFY WAY */}
+      <div
+        className="rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400/[0.07] via-amber-400/[0.02] to-transparent border border-amber-400/[0.22] p-3.5 md:p-6 reveal flex flex-col"
+        style={{ transitionDelay: '120ms' }}
+      >
+        <div className="mb-3 md:mb-4">
+          <p className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
+          <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
+            The Charity:
+          </h3>
+        </div>
+
+        <div className="flex-1 flex items-center mb-3 md:mb-4">
+          <div>
+            <p className="text-xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
+              Cashes the check.
+            </p>
+            <p className="text-xs md:text-lg text-amber-200/65 font-normal italic">
+              That's it.
+            </p>
           </div>
         </div>
-      </section>
+
+        <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
+          <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
+            <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0%</p>
+            <p className="text-[8px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Acquisition cost</p>
+          </div>
+          <p className="text-[10px] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
+            All those hours go to chesed.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
       <WhyPrizes />
 
+      {/* The Drawings + Odds Visualizer */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 md:mb-14 reveal">
@@ -468,54 +631,128 @@ const HowItWorksPage = ({ appData }) => {
         </div>
       </section>
 
-      <section className="py-20 md:py-28 px-4 md:px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-12 md:mb-16 text-center md:text-left reveal">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
-          </div>
-          
-          <div className="hidden md:block space-y-12 pl-4 border-l-4 border-indigo-100">
-            {timeline.map((item, i) => (
-              <div key={item.num} className="relative pl-8 reveal" style={{transitionDelay: `${(i + 1) * 100}ms`}}>
-                <div className={`absolute w-4 h-4 rounded-full ${item.dot} left-[-10px] top-2`}></div>
-                <h3 className="text-2xl font-black uppercase tracking-wide text-slate-900 mb-3">{item.num}. {item.title}</h3>
-                <p className="text-xl text-slate-600 font-medium leading-relaxed">{item.body}</p>
+      {/* Your Membership — Sticky Scroll Section */}
+      <section className="bg-white border-t border-slate-200">
+        <div ref={membershipSectionRef} className="h-[200vh]">
+          <div className="sticky top-[64px] md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 overflow-hidden py-12">
+            <div className="max-w-5xl mx-auto w-full">
+              
+              <div className="mb-12 md:mb-16 text-center md:text-left">
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
+                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
               </div>
-            ))}
-          </div>
+              
+              {/* DESKTOP: horizontal track with scroll-animated progress */}
+              <div className="hidden md:block relative">
 
-          <div className="md:hidden -mx-4">
-            <div
-              ref={tlRef}
-              onScroll={tlOnScroll}
-              className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 scrollbar-none"
-            >
-              {timeline.map((item) => (
-                <div key={item.num} data-card className="snap-center shrink-0 w-[80%] bg-slate-50 border border-slate-200 rounded-2xl p-6 flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`w-3 h-3 rounded-full ${item.dot}`}></div>
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-400">Step {item.num}</span>
-                  </div>
-                  <h3 className="text-xl font-black text-slate-900 mb-3 tracking-tight">{item.title}</h3>
-                  <p className="text-base text-slate-600 font-medium leading-relaxed">{item.body}</p>
+                {/* Connector dots - strictly invisible until Step 1 starts (progress > 3) */}
+                <div 
+                  className={`absolute top-7 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
+                  style={{ left: '12.5%', right: '12.5%' }}
+                >
+                  {Array.from({ length: 33 }).map((_, i) => {
+                    const dotPosition = (i / 32) * 100;
+                    const isPassed = membershipProgress >= dotPosition;
+                    return (
+                      <span
+                        key={i}
+                        className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                        style={{
+                          backgroundColor: '#fbbf24',
+                          opacity: isPassed ? 0.9 : 0.15,
+                          boxShadow: isPassed ? '0 0 6px rgba(251,191,36,0.6)' : 'none',
+                        }}
+                      />
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-            <div className="flex justify-center gap-2 mt-3">
-              {timeline.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 rounded-full transition-all duration-300 ${i === tlActiveIdx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-300'}`}
-                />
-              ))}
-            </div>
-          </div>
 
-          <div className="mt-14 md:mt-16 pt-12 border-t border-slate-100 text-center reveal" style={{transitionDelay: '500ms'}}>
-            <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-indigo-50 px-8 py-4 rounded-xl">
-              See the Circles & Prizes <ChevronRight size={18} />
-            </Link>
+                {/* Steps grid */}
+                <div className="relative grid grid-cols-4 gap-6 z-10">
+                  {timeline.map((item, i) => {
+                    // Triggers exactly matched to the dot progression
+                    const triggers = [3, 31, 64, 96];
+                    const isActive = membershipProgress > triggers[i];
+                    
+                    return (
+                      <div 
+                        key={item.num} 
+                        className={`flex flex-col items-center text-center transition-all duration-[500ms] ease-out transform ${
+                          isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                        }`}
+                      >
+                        <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-base mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
+                          {item.num}
+                        </div>
+                        <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
+                          {item.title}
+                        </p>
+                        <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[220px]">
+                          {item.body}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* MOBILE: vertical stack with scroll-animated progress */}
+              <div className="md:hidden flex flex-col gap-8 relative z-10">
+                {/* Vertical line - strictly invisible until Step 1 starts */}
+                <div className={`absolute left-[27px] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
+                  {Array.from({ length: 30 }).map((_, i) => {
+                    const dotPosition = (i / 29) * 100;
+                    const isPassed = membershipProgress >= dotPosition;
+                    return (
+                      <span 
+                        key={i} 
+                        className="w-1.5 h-1.5 rounded-full transition-all duration-300 shrink-0" 
+                        style={{ 
+                          backgroundColor: '#fbbf24', 
+                          opacity: isPassed ? 0.9 : 0.15, 
+                          boxShadow: isPassed ? '0 0 6px rgba(251,191,36,0.6)' : 'none' 
+                        }} 
+                      />
+                    );
+                  })}
+                </div>
+
+                {timeline.map((item, i) => {
+                  const triggers = [3, 31, 64, 96];
+                  const isActive = membershipProgress > triggers[i];
+                  return (
+                    <div 
+                      key={item.num} 
+                      className={`flex gap-5 transition-all duration-500 ease-out transform ${
+                        isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                      }`}
+                    >
+                      <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-black text-base ring-4 ring-white bg-slate-900 text-white shadow-soft relative z-10">
+                        {item.num}
+                      </div>
+                      <div className="pt-1.5">
+                        <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2 ${item.titleColor}`}>
+                          {item.title}
+                        </p>
+                        <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                          {item.body}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Final CTA Button - waits until the 4th item is completely fully passed */}
+              <div className={`mt-14 md:mt-16 pt-12 border-t border-slate-100 text-center transition-all duration-[500ms] transform ${
+                membershipProgress >= 98 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+              }`}>
+                <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-indigo-50 px-8 py-4 rounded-xl">
+                  See the Circles & Prizes <ChevronRight size={18} />
+                </Link>
+              </div>
+
+            </div>
           </div>
         </div>
       </section>

@@ -31,14 +31,6 @@ body {
   transform: translateY(0);
 }
 
-/* Premium subtle grid for the Dark Hero */
-header.bg-indigo-950 {
-  background-image: 
-    linear-gradient(rgba(99, 102, 241, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 102, 241, 0.07) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-
 /* Smoother scrollbar hiding for carousels (you already use this pattern) */
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }

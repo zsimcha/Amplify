@@ -175,7 +175,8 @@ const HomePage = ({ appData }) => {
 
       {/* How it Works Section */}
       <section id="how" className="relative bg-white border-t border-slate-100">
-        <div ref={howSectionRef} className="h-[150vh]">
+        {/* Changed from 150vh to 200vh to slow down the scroll animation */}
+        <div ref={howSectionRef} className="h-[200vh]">
           <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-start max-w-7xl mx-auto px-4 overflow-hidden pt-10 md:pt-16 pb-12">
             
             <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
@@ -188,11 +189,11 @@ const HomePage = ({ appData }) => {
             
             <div className="relative">
               <div className="hidden md:block absolute top-[52px] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
-                <div className="h-full bg-indigo-500 rounded-full transition-[width] duration-100 ease-linear" style={{ width: `${lineProgress}%` }}></div>
-              </div>
-              <div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
-                <div className="w-full bg-indigo-500 rounded-full transition-[height] duration-100 ease-linear" style={{ height: `${lineProgress}%` }}></div>
-              </div>
+  <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${lineProgress}%` }}></div>
+</div>
+<div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
+  <div className="w-full bg-indigo-500 rounded-full" style={{ height: `${lineProgress}%` }}></div>
+</div>
               
               <div className="flex flex-col md:grid md:grid-cols-3 gap-16 md:gap-12 relative z-10">
                   <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
@@ -230,38 +231,97 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* MANIFESTO — tighter padding + removed serif on the headline */}
-      <section className="py-14 md:py-20 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto relative z-10">
-          <div className="w-16 h-1.5 bg-amber-400 mb-8 md:mb-10"></div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.02] mb-8 md:mb-10">
-            <span className="text-white">People give.</span><br/>
-            <span className="text-indigo-300 italic">That's not the problem.</span>
-          </h2>
-          <p className="text-2xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.3] mb-8 md:mb-10 max-w-3xl">
-            What changes things is showing up the same way, every month. Together.
-          </p>
-          <p className="text-2xl md:text-2xl lg:text-3xl text-white font-medium leading-[1.3] max-w-3xl">
-            One massive grant. One charity.<br className="hidden md:block"/> Win up to <span className="text-amber-400 font-black">$100,000</span> as a thank-you.
-          </p>
-        </div>
-      </section>
+{/* MANIFESTO */}
+<section className="py-10 md:py-16 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
+  {/* Subtle gradient */}
+  <div className="absolute inset-0 pointer-events-none" style={{
+    background: 'radial-gradient(ellipse at 85% 15%, rgba(251, 191, 36, 0.07), transparent 55%)'
+  }}></div>
 
+  {/* Corner constellation */}
+  <div className="absolute top-6 right-4 md:top-10 md:right-12 w-32 md:w-56 h-32 md:h-56 pointer-events-none" aria-hidden="true">
+    <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
+      <circle cx="170" cy="30" r="2.5" fill="#fbbf24" opacity="0.75" />
+      <circle cx="140" cy="50" r="2" fill="#fbbf24" opacity="0.6" />
+      <circle cx="180" cy="60" r="1.8" fill="#fbbf24" opacity="0.55" />
+      <circle cx="120" cy="80" r="1.5" fill="#fbbf24" opacity="0.45" />
+      <circle cx="150" cy="90" r="1.5" fill="#fbbf24" opacity="0.5" />
+      <circle cx="185" cy="100" r="1.2" fill="#fbbf24" opacity="0.4" />
+      <circle cx="170" cy="130" r="1.2" fill="#fbbf24" opacity="0.35" />
+      <circle cx="100" cy="120" r="1" fill="#fbbf24" opacity="0.3" />
+      <circle cx="60" cy="60" r="1" fill="#fbbf24" opacity="0.3" />
+      <circle cx="80" cy="100" r="0.8" fill="#fbbf24" opacity="0.25" />
+      <circle cx="40" cy="40" r="0.8" fill="#fbbf24" opacity="0.2" />
+      <circle cx="160" cy="170" r="0.8" fill="#fbbf24" opacity="0.2" />
+    </svg>
+  </div>
+
+  <div className="max-w-4xl mx-auto relative z-10">
+    {/* Eyebrow row: straight quote + dash + label, inline */}
+    <div className="flex items-end gap-2 md:gap-3 mt-4 md:mt-6 mb-4 md:mb-6">
+      <span
+        className="text-amber-400/60 inline-block flex-shrink-0"
+        style={{
+          fontFamily: 'Arial, "Helvetica Neue", sans-serif',
+          fontSize: 'clamp(140px, 18vw, 240px)',
+          lineHeight: '0.4',
+          letterSpacing: '-0.05em',
+          marginBottom: '-0.1em',
+        }}
+      >
+        "
+      </span>
+
+      <div className="w-10 md:w-14 h-px bg-amber-400 flex-shrink-0 mb-2 md:mb-3"></div>
+
+      <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-400 flex-shrink-0 mb-2 md:mb-3 whitespace-nowrap">
+        Our Belief
+      </p>
+    </div>
+
+    {/* Headline */}
+    <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1] mb-6 md:mb-10">
+      <span className="text-white">People give.</span><br/>
+      <span className="text-indigo-300 italic font-normal">That's not the problem.</span>
+    </h2>
+
+    {/* Connector */}
+    <p className="text-xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.25] mb-6 md:mb-10 max-w-3xl">
+      What changes things is showing up the same way, every month. <span className="text-white font-semibold italic">Together.</span>
+    </p>
+
+    {/* Closing */}
+    <div className="space-y-2 md:space-y-3">
+      <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
+        One massive grant.
+      </p>
+      <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
+        One charity.
+      </p>
+      <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
+        Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank-you.
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* Rabbinic Endorsement — compact bar */}
       <section className="py-12 md:py-20 bg-white border-t border-slate-100 px-4">
         <div className="max-w-5xl mx-auto reveal">
           <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 shadow-soft">
-            <div className="shrink-0 flex md:flex-col items-center md:items-start gap-4 md:gap-3">
-              <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md">
-                <ShieldCheck size={28} className="text-amber-400" strokeWidth={2.25} />
-              </div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 md:mt-1">Rabbinic Endorsement</p>
-            </div>
+            {/* Centered shield and text */}
+            <div className="shrink-0 flex flex-row md:flex-col items-center gap-4 md:gap-3 md:w-32">
+  <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md shrink-0">
+    <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-amber-400" strokeWidth={2.25} />
+  </div>
+  <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 leading-tight md:text-center">
+    Rabbinic Endorsement
+  </p>
+</div>
 
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1] mb-2 md:mb-3">
-                Reviewed and endorsed by leading <span className="italic">Poskim</span>.
+                Endorsed by leading <span className="italic">Poskim</span>.
               </h2>
               <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our Rabbinic Panel has formally approved the model, including the use of Ma'aser, prize allocation, and charitable disbursement.</p>
             </div>
