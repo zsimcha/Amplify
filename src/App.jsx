@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { supabase } from './lib/supabase';
 import HomePage from './pages/HomePage';
 import HowItWorksPage from './pages/HowItWorksPage';
 import AboutPage from './pages/AboutPage';
@@ -67,6 +68,48 @@ const appData = {
 
 function App() {
   const [appState, setAppData] = useState(appData);
+
+  useEffect(() => {
+    const fetchCommunities = async () => {
+      const { data, error } = await supabase
+        .from('communities')
+        .select('name, members, monthly, silver, gold, diamond')
+        .order('name', { ascending: true });
+
+      if (error) {
+        console.error('Failed to fetch communities:', error);
+        return;
+      }
+      if (!data) return;
+
+      // Build the names array with "General Circle" pinned to the top
+      const otherNames = data
+        .map(c => c.name)
+        .filter(n => n !== 'General Circle')
+        .sort((a, b) => a.localeCompare(b));
+      const allNames = ['General Circle', ...otherNames];
+
+      // Build the lookup map, ensuring General Circle exists even if not in DB
+      const communitiesMap = { 'General Circle': { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } };
+      data.forEach(c => {
+        communitiesMap[c.name] = {
+          members: c.members || 0,
+          monthly: c.monthly || 0,
+          silver: c.silver || 0,
+          gold: c.gold || 0,
+          diamond: c.diamond || 0,
+        };
+      });
+
+      setAppData(prev => ({
+        ...prev,
+        allCommunityNames: allNames,
+        communities: communitiesMap,
+      }));
+    };
+
+    fetchCommunities();
+  }, []);
 
   return (
     <Router>

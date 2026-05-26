@@ -6,6 +6,17 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3" // Ad
 serve(async (req) => {
   console.log("Function invoked!");
 
+// Reject anything that doesn't carry our shared secret
+const expectedSecret = Deno.env.get("WELCOME_HOOK_SECRET");
+const providedSecret = req.headers.get("x-webhook-secret");
+if (!expectedSecret || providedSecret !== expectedSecret) {
+  console.log("Unauthorized webhook call");
+  return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    status: 401,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
   try {
     // 1. Load Environment Variables
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
