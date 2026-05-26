@@ -317,7 +317,6 @@ const WhyPrizes = () => {
         <div className="text-center mb-10 md:mb-14 reveal">
           <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Math</p>
           <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-slate-900">Why prizes?</h2>
-          <p className="text-lg md:text-xl text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">Consistent giving at scale is hard to sustain. Prizes solve that. And the math works out in the charity's favor.</p>
         </div>
 
         <div ref={cardsRef} className="flex flex-col md:flex-row items-stretch gap-3 md:gap-4 mb-12 md:mb-16 max-w-4xl mx-auto pt-8 md:pt-6">
@@ -370,7 +369,7 @@ const WhyPrizes = () => {
             We allocate less to prizes than most charities spend to acquire donors. A smaller percentage of a much larger pool delivers more.
           </p>
           <p className="text-sm md:text-base font-black uppercase tracking-widest border-t-4 border-amber-400 inline-block pt-6 text-slate-900">
-            That's not a compromise. That's how we optimize.
+            Same budget. Different result.
           </p>
         </div>
       </div>
@@ -385,21 +384,22 @@ const WhyPrizes = () => {
 const HowItWorksPage = ({ appData }) => {
   const membershipSectionRef = useRef(null);
   const [membershipProgress, setMembershipProgress] = useState(0);
-  const [circleRevealed, setCircleRevealed] = useState(false);
 
-  // Scroll listener for the top "The Circle" section so it waits for a scroll drop
+  // Standard observer for .reveal elements on the page
   useEffect(() => {
-    const handleInitialScroll = () => {
-      if (window.scrollY > 50) {
-        setCircleRevealed(true);
-      }
-    };
-    handleInitialScroll(); // check immediately on mount
-    window.addEventListener('scroll', handleInitialScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleInitialScroll);
+    const observerOnce = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observerOnce.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
+    document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
+    return () => observerOnce.disconnect();
   }, []);
 
-  // Throttled scroll listener specifically for the sticky "Your Membership" section
+  // Throttled scroll listener for the sticky "Your Membership" section only
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -409,9 +409,7 @@ const HowItWorksPage = ({ appData }) => {
         if (membershipSectionRef.current) {
           const rect = membershipSectionRef.current.getBoundingClientRect();
           const windowHeight = window.innerHeight;
-          // Calculate how far we've scrolled into the container
           const scrollDistance = -rect.top;
-          // Calculate total scrollable distance inside the wrapper
           const maxScroll = rect.height - windowHeight;
           
           if (maxScroll > 0) {
@@ -427,22 +425,8 @@ const HowItWorksPage = ({ appData }) => {
       });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initialize on mount
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Standard observer for .reveal elements elsewhere on the page
-  useEffect(() => {
-    const observerOnce = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observerOnce.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
-    document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
-    return () => observerOnce.disconnect();
   }, []);
 
   const timeline = [
@@ -458,9 +442,9 @@ const HowItWorksPage = ({ appData }) => {
       intro="Consistent, collective giving creates impact that individual giving simply can't."
     >
       
-      {/* The Circle - Triggered by scroll threshold */}
+      {/* The Circle — uses .reveal, fires on mount since it's above the fold */}
       <section className="py-16 md:py-24 px-4 bg-white">
-        <div className={`max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center transition-all duration-[800ms] ease-out transform ${circleRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center reveal">
           <div className="md:col-span-5">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
@@ -579,7 +563,6 @@ const HowItWorksPage = ({ appData }) => {
     </div>
   </div>
 </section>
-
       <WhyPrizes />
 
       {/* The Drawings + Odds Visualizer */}
@@ -644,8 +627,6 @@ const HowItWorksPage = ({ appData }) => {
               
               {/* DESKTOP: horizontal track with scroll-animated progress */}
               <div className="hidden md:block relative">
-
-                {/* Connector dots - strictly invisible until Step 1 starts (progress > 3) */}
                 <div 
                   className={`absolute top-7 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
                   style={{ left: '12.5%', right: '12.5%' }}
@@ -667,10 +648,8 @@ const HowItWorksPage = ({ appData }) => {
                   })}
                 </div>
 
-                {/* Steps grid */}
                 <div className="relative grid grid-cols-4 gap-6 z-10">
                   {timeline.map((item, i) => {
-                    // Triggers exactly matched to the dot progression
                     const triggers = [3, 31, 64, 96];
                     const isActive = membershipProgress > triggers[i];
                     
@@ -698,7 +677,6 @@ const HowItWorksPage = ({ appData }) => {
 
               {/* MOBILE: vertical stack with scroll-animated progress */}
               <div className="md:hidden flex flex-col gap-8 relative z-10">
-                {/* Vertical line - strictly invisible until Step 1 starts */}
                 <div className={`absolute left-[27px] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
                   {Array.from({ length: 30 }).map((_, i) => {
                     const dotPosition = (i / 29) * 100;
@@ -743,7 +721,6 @@ const HowItWorksPage = ({ appData }) => {
                 })}
               </div>
 
-              {/* Final CTA Button - waits until the 4th item is completely fully passed */}
               <div className={`mt-14 md:mt-16 pt-12 border-t border-slate-100 text-center transition-all duration-[500ms] transform ${
                 membershipProgress >= 98 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
               }`}>

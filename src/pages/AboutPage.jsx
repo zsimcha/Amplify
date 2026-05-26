@@ -1,23 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
 import { ChevronRight, ShieldCheck, Lock, CreditCard, FileText, TrendingUp, Building, Check, Gift, ArrowRight } from 'lucide-react';
 
 const AboutPage = () => {
   const location = useLocation();
-  const [heroRevealed, setHeroRevealed] = useState(false);
-
-  // Scroll listener for the top Hero section so it waits for a scroll drop
-  useEffect(() => {
-    const handleInitialScroll = () => {
-      if (window.scrollY > 50) {
-        setHeroRevealed(true);
-      }
-    };
-    handleInitialScroll(); // check immediately on mount
-    window.addEventListener('scroll', handleInitialScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleInitialScroll);
-  }, []);
 
   useEffect(() => {
     if (location.hash) {
@@ -48,9 +35,9 @@ const AboutPage = () => {
   return (
     <PageLayout title="About Amplify" intro="How we're building the future of collective giving.">
       
-      {/* MISSION + CONSTELLATION - Triggered by scroll threshold */}
+      {/* MISSION + CONSTELLATION - Standard reveal */}
       <section className="py-20 md:py-28 px-4 bg-white">
-        <div className={`max-w-6xl mx-auto transition-all duration-[800ms] ease-out transform ${heroRevealed ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className="max-w-6xl mx-auto reveal">
           <div>
             <div className="w-16 h-1.5 bg-amber-400 mb-8"></div>
             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tight mb-10 leading-[0.95]">
@@ -144,22 +131,22 @@ const AboutPage = () => {
                 {
                   icon: <TrendingUp size={24} className="text-indigo-600" />,
                   title: "The Multiplier Effect",
-                  body: "We believe in going big. Hundreds of donors uniting creates a multiplier that funds transformational projects no individual gift could."
+                  body: "Hundreds of donors uniting funds transformational grants that individual giving simply can't achieve."
                 },
                 {
                   icon: <Building size={24} className="text-amber-500" />,
                   title: "A Real, Verified Nonprofit",
-                  body: "Never wonder where your money goes. Every charity is vetted: financials, impact reports, the works. We pick organizations where one large grant actually makes a difference."
+                  body: "No black boxes. We rigorously vet financials and impact reports to select organizations where one massive grant fundamentally shifts their trajectory."
                 },
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
                   title: "Effortless Giving",
-                  body: "Set it once and you're done. Same amount, same day, every month - no reminders, no decisions, no missed months when life gets busy."
+                  body: "Automate your impact. Same amount, same date, every month. No reminders, no decision fatigue."
                 },
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
-                  title: "The Ultimate Win-Win",
-                  body: "Giving consistently is hard. So we made it fun! When your circle fills, a massive drawing goes live and everyone in it has a real shot at winning big."
+                  title: "High-Stakes Giving",
+                  body: "Consistent giving is hard to sustain. Prizes solve that. When your circle fills, you get a real shot at winning up to $100,000."
                 }
               ].map((item, i) => (
                 <div key={i} className="py-8 md:py-10 first:pt-2 md:first:pt-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 100}ms` }}>

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
+import CornerConstellation from '../components/CornerConstellation';
 
 const HomePage = ({ appData }) => {
   const navigate = useNavigate();
@@ -107,25 +108,25 @@ const HomePage = ({ appData }) => {
                 <span className="text-amber-400 italic">Amplify</span>
                 <span className="text-amber-400 italic"> Your Impact.</span>
               </h1>
-              
-              {/* Bumped from text-lg/xl → text-xl/2xl per feedback */}
+
+              {/* Updated sub-headline */}
               <p className="text-indigo-200 text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-2xl">
-                Amplify pools your monthly giving with an exclusive circle of donors to make a massive impact. <strong className="text-white">Win Up To $100,000</strong> <em className="text-white font-bold not-italic">every month</em> as a thank you for your commitment.
+                Amplify pools your monthly Tzedakah with a circle of donors to fund one transformational grant. <strong className="text-white">Win up to $100,000</strong> <em className="text-white font-bold not-italic">every month</em> as a thank-you for showing up.
               </p>
-              
-              {/* Bumped bullets from text-sm/base → text-base/lg */}
+
+              {/* Reordered + reworked bullets — Ma'aser first */}
               <div className="space-y-4 mb-10 text-left">
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Join a community of donors pooling their Tzedakah into a six-figure grant every month</span>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">You were going to give Ma'aser anyway. Now it could win you $100,000</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Exclusive drawings with odds as strong as 1 in 25</span>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Your monthly giving combines with a community of donors into a six-figure grant every month</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">You were going to give Ma'aser anyway. Now it could win you $100,000.</span>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Exclusive drawings with odds up to 1 in 25</span>
                 </div>
               </div>
 
@@ -158,7 +159,7 @@ const HomePage = ({ appData }) => {
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
               {[
                 { top: "Up to", num: "$100K", label: "Monthly Prize", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
-                { top: "Goal", num: "$5M+", label: "Yearly to Charity", colorClass: "text-white", labelClass: "text-slate-300" },
+                { top: "Projected", num: "$5M+", label: "Yearly to Charity", colorClass: "text-white", labelClass: "text-slate-300" },
                 { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
                 { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
@@ -175,7 +176,6 @@ const HomePage = ({ appData }) => {
 
       {/* How it Works Section */}
       <section id="how" className="relative bg-white border-t border-slate-100">
-        {/* Changed from 150vh to 200vh to slow down the scroll animation */}
         <div ref={howSectionRef} className="h-[200vh]">
           <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-start max-w-7xl mx-auto px-4 overflow-hidden pt-10 md:pt-16 pb-12">
             
@@ -189,11 +189,11 @@ const HomePage = ({ appData }) => {
             
             <div className="relative">
               <div className="hidden md:block absolute top-[52px] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
-  <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${lineProgress}%` }}></div>
-</div>
-<div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
-  <div className="w-full bg-indigo-500 rounded-full" style={{ height: `${lineProgress}%` }}></div>
-</div>
+                <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${lineProgress}%` }}></div>
+              </div>
+              <div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
+                <div className="w-full bg-indigo-500 rounded-full" style={{ height: `${lineProgress}%` }}></div>
+              </div>
               
               <div className="flex flex-col md:grid md:grid-cols-3 gap-16 md:gap-12 relative z-10">
                   <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
@@ -231,93 +231,76 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-{/* MANIFESTO */}
-<section className="py-10 md:py-16 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
-  {/* Subtle gradient */}
-  <div className="absolute inset-0 pointer-events-none" style={{
-    background: 'radial-gradient(ellipse at 85% 15%, rgba(251, 191, 36, 0.07), transparent 55%)'
-  }}></div>
+      {/* MANIFESTO — CornerConstellation replaces hand-placed dots and eyebrow row */}
+      <section className="py-16 md:py-24 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
+        {/* Subtle ambient gradient */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse at 85% 15%, rgba(251, 191, 36, 0.09), transparent 55%)'
+        }}></div>
 
-  {/* Corner constellation */}
-  <div className="absolute top-6 right-4 md:top-10 md:right-12 w-32 md:w-56 h-32 md:h-56 pointer-events-none" aria-hidden="true">
-    <svg viewBox="0 0 200 200" fill="none" className="w-full h-full">
-      <circle cx="170" cy="30" r="2.5" fill="#fbbf24" opacity="0.75" />
-      <circle cx="140" cy="50" r="2" fill="#fbbf24" opacity="0.6" />
-      <circle cx="180" cy="60" r="1.8" fill="#fbbf24" opacity="0.55" />
-      <circle cx="120" cy="80" r="1.5" fill="#fbbf24" opacity="0.45" />
-      <circle cx="150" cy="90" r="1.5" fill="#fbbf24" opacity="0.5" />
-      <circle cx="185" cy="100" r="1.2" fill="#fbbf24" opacity="0.4" />
-      <circle cx="170" cy="130" r="1.2" fill="#fbbf24" opacity="0.35" />
-      <circle cx="100" cy="120" r="1" fill="#fbbf24" opacity="0.3" />
-      <circle cx="60" cy="60" r="1" fill="#fbbf24" opacity="0.3" />
-      <circle cx="80" cy="100" r="0.8" fill="#fbbf24" opacity="0.25" />
-      <circle cx="40" cy="40" r="0.8" fill="#fbbf24" opacity="0.2" />
-      <circle cx="160" cy="170" r="0.8" fill="#fbbf24" opacity="0.2" />
-    </svg>
-  </div>
+        {/* Primary constellation — rigid grid, top-right */}
+        <CornerConstellation
+          corner="top-right"
+          width={420}
+          height={320}
+          density={18}
+          maxR={2.6}
+          jitter={0}
+          className="absolute -top-8 -right-8 w-[300px] md:w-[520px] h-[240px] md:h-[400px] pointer-events-none"
+        />
 
-  <div className="max-w-4xl mx-auto relative z-10">
-    {/* Eyebrow row: straight quote + dash + label, inline */}
-    <div className="flex items-end gap-2 md:gap-3 mt-4 md:mt-6 mb-4 md:mb-6">
-      <span
-        className="text-amber-400/60 inline-block flex-shrink-0"
-        style={{
-          fontFamily: 'Arial, "Helvetica Neue", sans-serif',
-          fontSize: 'clamp(140px, 18vw, 240px)',
-          lineHeight: '0.4',
-          letterSpacing: '-0.05em',
-          marginBottom: '-0.1em',
-        }}
-      >
-        "
-      </span>
+        {/* Faint secondary — rigid grid, bottom-left for asymmetry */}
+        <CornerConstellation
+          corner="bottom-left"
+          width={240}
+          height={180}
+          density={32}
+          maxR={1.8}
+          seed={11}
+          jitter={0}
+          className="absolute -bottom-6 -left-6 w-[200px] h-[160px] pointer-events-none opacity-30"
+        />
 
-      <div className="w-10 md:w-14 h-px bg-amber-400 flex-shrink-0 mb-2 md:mb-3"></div>
+        <div className="max-w-4xl mx-auto relative z-10">
+          {/* Headline — starts cold, no eyebrow */}
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1] mb-6 md:mb-10">
+            <span className="text-white">People give.</span><br/>
+            <span className="text-indigo-300 italic font-normal">That's not the problem.</span>
+          </h2>
 
-      <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-400 flex-shrink-0 mb-2 md:mb-3 whitespace-nowrap">
-        Our Belief
-      </p>
-    </div>
+          {/* Connector */}
+          <p className="text-xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.25] mb-6 md:mb-10 max-w-3xl">
+            What changes things is showing up the same way, every month.{' '}
+            <span className="text-white font-semibold italic">Together.</span>
+          </p>
 
-    {/* Headline */}
-    <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1] mb-6 md:mb-10">
-      <span className="text-white">People give.</span><br/>
-      <span className="text-indigo-300 italic font-normal">That's not the problem.</span>
-    </h2>
-
-    {/* Connector */}
-    <p className="text-xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.25] mb-6 md:mb-10 max-w-3xl">
-      What changes things is showing up the same way, every month. <span className="text-white font-semibold italic">Together.</span>
-    </p>
-
-    {/* Closing */}
-    <div className="space-y-2 md:space-y-3">
-      <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-        One massive grant.
-      </p>
-      <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-        One charity.
-      </p>
-      <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-        Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank-you.
-      </p>
-    </div>
-  </div>
-</section>
+          {/* Closing beats */}
+          <div className="space-y-2 md:space-y-3">
+            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
+              One massive grant.
+            </p>
+            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
+              One charity.
+            </p>
+            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
+              Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank-you.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Rabbinic Endorsement — compact bar */}
       <section className="py-12 md:py-20 bg-white border-t border-slate-100 px-4">
         <div className="max-w-5xl mx-auto reveal">
           <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 shadow-soft">
-            {/* Centered shield and text */}
             <div className="shrink-0 flex flex-row md:flex-col items-center gap-4 md:gap-3 md:w-32">
-  <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md shrink-0">
-    <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-amber-400" strokeWidth={2.25} />
-  </div>
-  <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 leading-tight md:text-center">
-    Rabbinic Endorsement
-  </p>
-</div>
+              <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md shrink-0">
+                <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-amber-400" strokeWidth={2.25} />
+              </div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 leading-tight md:text-center">
+                Rabbinic Endorsement
+              </p>
+            </div>
 
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1] mb-2 md:mb-3">
@@ -333,7 +316,7 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Beneficiary Section */}
+      {/* Beneficiary Section — logo pill removed, photo stands alone */}
       <section id="beneficiary" className="py-20 md:py-28 bg-slate-900 px-4 text-white">
         <div className="max-w-7xl mx-auto reveal">
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
@@ -366,12 +349,11 @@ const HomePage = ({ appData }) => {
                 </Link>
               </div>
             </div>
+
+            {/* Photo — logo pill removed, gradient stays for depth */}
             <div className="relative overflow-hidden rounded-2xl shadow-soft-xl min-h-[300px] md:min-h-[450px] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
-               <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
-               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white py-2 md:py-3 px-8 md:px-8 rounded-lg flex items-center justify-center shadow-xl">
-                  <img src="/ChaiLifeline.png" alt="Chai Lifeline Logo" className="h-10 md:h-12 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
-               </div>
+              <img src="/impact-photo.jpg" alt="Chai Lifeline" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
             </div>
           </div>
         </div>
@@ -432,9 +414,9 @@ const HomePage = ({ appData }) => {
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
-  			<span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Tzedakah Raised</span>
-  			<span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
-		    </div>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Tzedakah Raised</span>
+                      <span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
+                    </div>
                   </div>
 
                   <div className="px-6 py-5 flex-grow bg-white">
@@ -479,7 +461,7 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Upgraded CTA Section */}
+      {/* CTA Section */}
       <section className="py-12 md:py-16 bg-slate-900 px-4 text-center overflow-hidden">
         <div className="max-w-3xl mx-auto relative z-10 reveal">
           <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-6">

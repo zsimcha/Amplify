@@ -61,9 +61,6 @@ const ImpactPage = () => {
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-soft-xl relative bg-slate-900">
                 <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80" onError={(e) => { e.currentTarget.style.display='none'; }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 bg-white py-2 md:py-3 px-7 md:px-8 rounded-lg flex items-center justify-center shadow-xl">
-                  <img src="/ChaiLifeline.png" alt="Chai Lifeline" className="h-9 md:h-11 w-auto object-contain" onError={(e) => { e.currentTarget.style.display='none'; }} />
-                </div>
               </div>
             </div>
             
