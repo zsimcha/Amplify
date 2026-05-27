@@ -84,7 +84,7 @@ const HomePage = ({ appData }) => {
   const showStep3 = lineProgress >= 88;
 
   const primaryFaqs = [
-    { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank-you, members get a shot at winning up to $100,000 every month." },
+    { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank you, members get a shot at winning up to $100,000 every month." },
     { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes the grant transformational in the first place. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000, delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. That's not a compromise. That's the model." },
     { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible. The pooled contributions form both the monthly grant and the prize pool." },
     { q: "Who selects the charities?", a: "Charities are properly vetted in advance. Financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone." }
@@ -111,7 +111,7 @@ const HomePage = ({ appData }) => {
 
               {/* Updated sub-headline */}
               <p className="text-indigo-200 text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-2xl">
-                Amplify pools your monthly Tzedakah with a circle of donors to fund one transformational grant. <strong className="text-white">Win up to $100,000</strong> <em className="text-white font-bold not-italic">every month</em> as a thank-you for showing up.
+                Amplify pools your monthly Tzedakah with a circle of donors to fund one transformational grant. <strong className="text-white">Win up to $100,000</strong> <em className="text-white font-bold not-italic">every month</em> as a thank you for showing up.
               </p>
 
               {/* Reordered + reworked bullets — Ma'aser first */}
@@ -122,7 +122,7 @@ const HomePage = ({ appData }) => {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Your monthly giving combines with a community of donors into a six-figure grant every month</span>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Your monthly giving turns into a six-figure grant every month</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
@@ -283,7 +283,7 @@ const HomePage = ({ appData }) => {
               One charity.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank-you.
+              Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank you.
             </p>
           </div>
         </div>

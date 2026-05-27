@@ -131,22 +131,22 @@ const AboutPage = () => {
                 {
                   icon: <TrendingUp size={24} className="text-indigo-600" />,
                   title: "The Multiplier Effect",
-                  body: "Hundreds of donors uniting funds transformational grants that individual giving simply can't achieve."
+                  body: "We believe in going big. Hundreds of donors uniting funds transformational grants that individual givers can't."
                 },
                 {
                   icon: <Building size={24} className="text-amber-500" />,
                   title: "A Real, Verified Nonprofit",
-                  body: "No black boxes. We rigorously vet financials and impact reports to select organizations where one massive grant fundamentally shifts their trajectory."
+                  body: "Never wonder where your money goes. We rigorously vet financials and impact reports, ensuring our collective grant lands where it’s needed most."
                 },
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
                   title: "Effortless Giving",
-                  body: "Automate your impact. Same amount, same date, every month. No reminders, no decision fatigue."
+                  body: "Your membership puts your giving on autopilot, ensuring you make a powerful impact every month. No reminders, no forgetting."
                 },
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
-                  title: "High-Stakes Giving",
-                  body: "Consistent giving is hard to sustain. Prizes solve that. When your circle fills, you get a real shot at winning up to $100,000."
+                  title: "The Ultimate Win-Win",
+                  body: "By combining transformational Tzedakah with massive monthly rewards, we ensure the charities win big, and you do too."
                 }
               ].map((item, i) => (
                 <div key={i} className="py-8 md:py-10 first:pt-2 md:first:pt-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 100}ms` }}>
@@ -241,8 +241,8 @@ const AboutPage = () => {
             <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '150ms' }}>
               <Lock size={28} strokeWidth={2.25} className="text-indigo-300" />
               <div>
-                <p className="text-lg md:text-3xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-tight">Held Separately</p>
-                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Prize pool · audited account</p>
+                <p className="text-lg md:text-3xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-tight">Separate <br/> Prize Pools</p>
+                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">In a dedicated, audited account</p>
               </div>
             </div>
 
@@ -271,7 +271,7 @@ const AboutPage = () => {
             <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Rabbinic Endorsement</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Reviewed and approved.</h2>
             <p className="text-lg text-slate-600 font-medium leading-relaxed">
-              Amplify's model - including the use of Ma'aser, prize allocation, and charitable disbursement - has been formally reviewed and approved by these Poskim.
+              Amplify's model, including the use of Ma'aser, prize allocation, and charitable disbursement, has been formally reviewed and approved by Poskim.
             </p>
           </div>
 

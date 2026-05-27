@@ -44,9 +44,9 @@ const ImpactPage = () => {
       
       <section className="py-16 md:py-20 px-4 bg-white">
         <div className="max-w-4xl mx-auto reveal">
-          <p className="text-2xl md:text-4xl text-slate-900 font-black leading-tight tracking-tight">
+          <p className="text-2xl md:text-3xl text-slate-900 font-black leading-tight tracking-tight">
             The best grant isn't just money.<br/>
-            <span className="text-slate-400 italic font-medium">It's the right amount, to the right organization, at the right moment.</span>
+            <span className="text-slate-400 italic font-medium">It's the right amount, to the right organization, at the right time.</span>
           </p>
         </div>
       </section>
@@ -205,8 +205,8 @@ const ImpactPage = () => {
           {(() => {
             const steps = [
               { num: '01', title: 'Financials',     border: 'border-indigo-600',  body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
-              { num: '02', title: 'Clear Impact',   border: 'border-amber-400',   body: "Not 'it helps our general fund.' We look for organizations that can tell us exactly what program this grant funds, and how many families it will reach." },
-              { num: '03', title: 'Ready to Scale', border: 'border-blue-400',    body: "Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where this grant acts as a true catalyst." },
+              { num: '02', title: 'Clear Impact',   border: 'border-amber-400',   body: "Not ''it helps our general fund.'' We look for organizations that can tell us exactly what program this grant funds and how many people it will reach." },
+              { num: '03', title: 'Ready to Scale', border: 'border-blue-400',    body: "Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where our grant acts as a true catalyst." },
               { num: '04', title: 'Proven Trust',   border: 'border-emerald-400', body: 'We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.' },
             ];
 

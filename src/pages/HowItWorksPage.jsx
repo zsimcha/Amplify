@@ -369,7 +369,7 @@ const WhyPrizes = () => {
             We allocate less to prizes than most charities spend to acquire donors. A smaller percentage of a much larger pool delivers more.
           </p>
           <p className="text-sm md:text-base font-black uppercase tracking-widest border-t-4 border-amber-400 inline-block pt-6 text-slate-900">
-            Same budget. Different result.
+            That's not a compromise. That's how we optimize.
           </p>
         </div>
       </div>
@@ -430,16 +430,16 @@ const HowItWorksPage = ({ appData }) => {
   }, []);
 
   const timeline = [
-    { num: '01', title: 'Joining',           titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details, and your first contribution processes immediately. You're in." },
+    { num: '01', title: 'Joining',           titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
     { num: '02', title: 'Recurring Giving',  titleColor: 'text-amber-700',   body: 'Once your circle reaches 400 members, your contribution is charged on the same day each month, automatically.' },
     { num: '03', title: 'Flexibility',       titleColor: 'text-slate-500',   body: 'Your subscription is yours. Pause or cancel any time before your next billing date. No penalty, no runaround.' },
-    { num: '04', title: "Tax & Ma'aser",     titleColor: 'text-emerald-600', body: <>The charitable portion is tax deductible. Our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
+    { num: '04', title: "Tax & Ma'aser",     titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
 
   return (
     <PageLayout 
       title="How It Works" 
-      intro="Consistent, collective giving creates impact that individual giving simply can't."
+      intro="Consistent, collective Tzedakah creates impact that individual giving just can't."
     >
       
       {/* The Circle — uses .reveal, fires on mount since it's above the fold */}
@@ -448,7 +448,7 @@ const HowItWorksPage = ({ appData }) => {
           <div className="md:col-span-5">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
-            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds high.</p>
+            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds so strong.</p>
           </div>
 
           <div className="md:col-span-7">
@@ -571,7 +571,7 @@ const HowItWorksPage = ({ appData }) => {
           <div className="text-center mb-10 md:mb-14 reveal">
             <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Odds</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-[1.1]">When a circle fills, the drawing goes live.</h2>
-            <p className="text-lg md:text-xl text-slate-600 font-medium max-w-2xl mx-auto">Compared to most sweepstakes, your odds aren't theoretical. They're real.</p>
+            <p className="text-lg md:text-xl text-slate-600 font-medium max-w-2xl mx-auto">Compared to most sweepstakes, your odds are real.</p>
           </div>
 
           <div className="mb-12 reveal max-w-5xl mx-auto">
