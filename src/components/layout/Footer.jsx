@@ -51,7 +51,7 @@ const Footer = () => {
         {/* Bottom: Divider + Copyright */}
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <p className="text-[11px] text-slate-500 leading-relaxed max-w-3xl">
-            Amplify is a sweepstakes-based giving platform. A portion of each circle's pool funds prize drawings. Charitable contributions are administered through Givinga, a registered 501(c)(3) DAF, and granted to our partner organizations. No purchase necessary to enter or win. See <Link to="/rules" className="text-slate-300 hover:text-white underline">official rules</Link> for full details.
+            Amplify is a sweepstakes-based giving platform. A portion of each circle's pool funds prize drawings. Charitable contributions are administered through (Nonprofit), a registered 501(c)(3) DAF, and granted to our partner organizations. No purchase necessary to enter or win. See <Link to="/rules" className="text-slate-300 hover:text-white underline">official rules</Link> for full details.
           </p>
           <p className="text-[11px] text-slate-500 shrink-0 font-medium">
             © {new Date().getFullYear()} Amplify LLC. All rights reserved.

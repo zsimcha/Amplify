@@ -42,16 +42,7 @@ const ImpactPage = () => {
   return (
     <PageLayout title="Our Impact" intro="One organization. One transformational grant. Every month.">
       
-      <section className="py-16 md:py-20 px-4 bg-white">
-        <div className="max-w-4xl mx-auto reveal">
-          <p className="text-2xl md:text-3xl text-slate-900 font-black leading-tight tracking-tight">
-            The best grant isn't just money.<br/>
-            <span className="text-slate-400 italic font-medium">It's the right amount, to the right organization, at the right time.</span>
-          </p>
-        </div>
-      </section>
-
-      {/* Partner — quote now compact, sits inline */}
+            {/* Partner — quote now compact, sits inline */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-y border-slate-200">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
@@ -67,7 +58,7 @@ const ImpactPage = () => {
             {/* Copy column */}
             <div className="order-2 md:order-1 reveal">
               <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">This Month's Partner</p>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-5">Chai Lifeline</h2>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-5">Chessed</h2>
               
               <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6 md:mb-8">
                 <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
@@ -85,7 +76,7 @@ const ImpactPage = () => {
               </div>
 
               <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed mb-4">
-                Chai Lifeline supports families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support.
+                Chessed supports families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support.
               </p>
               <p className="text-base md:text-lg text-slate-900 font-bold leading-relaxed mb-6">
                 Our grant goes directly to making sure no family faces this alone.
@@ -94,13 +85,13 @@ const ImpactPage = () => {
               {/* Compact quote — sits inline, doesn't extend the section */}
               <div className="relative bg-white border-l-4 border-amber-400 rounded-r-2xl p-5 md:p-6 shadow-soft mb-6">
                 <p className="text-sm md:text-base text-slate-700 font-medium italic leading-relaxed mb-3">
-                  "[Short, punchy quote from Chai Lifeline leadership about what this grant enables — keep to ~2 sentences max.]"
+                  "[Short, punchy quote from leadership about what this grant enables — keep to ~2 sentences max.]"
                 </p>
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">— Director Name, Chai Lifeline</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">— Director Name</p>
               </div>
 
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Grants administered through <span className="text-slate-700 font-bold">Givinga</span>, a registered 501(c)(3) donor-advised fund.
+                Grants administered through <span className="text-slate-700 font-bold">(Nonprofit)</span>, a registered 501(c)(3) donor-advised fund.
               </p>
             </div>
 
@@ -117,7 +108,7 @@ const ImpactPage = () => {
         Amplify in motion.
       </h2>
       <p className="text-lg text-slate-600 font-medium leading-relaxed">
-        Here's exactly how this month's grant gets deployed at Chai Lifeline.
+        Here's exactly how this month's grant gets deployed at Chessed.
       </p>
     </div>
 
@@ -189,7 +180,7 @@ const ImpactPage = () => {
     </div>
 
     <p className="text-xs text-slate-500 font-medium mt-8 max-w-3xl leading-relaxed">
-      Allocation determined in coordination with Chai Lifeline leadership. A detailed impact report is shared with all members at month's end.
+      Allocation determined in coordination with Chessed leadership. A detailed impact report is shared with all members at month's end.
     </p>
   </div>
 </section>
@@ -198,7 +189,6 @@ const ImpactPage = () => {
       <section className="py-20 md:py-28 px-4 bg-slate-50 border-t border-slate-200">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12 md:mb-16 reveal">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Process</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Our vetting process.</h2>
           </div>
 

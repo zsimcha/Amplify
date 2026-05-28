@@ -136,7 +136,7 @@ const AboutPage = () => {
                 {
                   icon: <Building size={24} className="text-amber-500" />,
                   title: "A Real, Verified Nonprofit",
-                  body: "Never wonder where your money goes. We rigorously vet financials and impact reports, ensuring our collective grant lands where it’s needed most."
+                  body: "Never wonder where your money goes. We check the financials, impact reports, the works, ensuring our collective grant lands where it’s needed most."
                 },
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
@@ -174,7 +174,7 @@ const AboutPage = () => {
           <div className="text-center mb-12 md:mb-16 reveal">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-4">Compliance</p>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-white">Trust & Transparency.</h2>
-            <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Enterprise-grade infrastructure ensures your data, payments, and impact are fully secure.</p>
+            <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Bank-grade security ensures your data and payments are fully secure.</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 md:auto-rows-[220px]">
@@ -194,7 +194,7 @@ const AboutPage = () => {
               <div className="relative my-6 md:my-auto md:py-4 space-y-1">
                 {[
                   { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: '100% transferred' },
-                  { num: '02', label: 'Givinga · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
+                  { num: '02', label: '(Nonprofit) · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
                   { num: '03', label: 'Vetted Charity', detail: 'Single grant. Full amount.', meta: 'Documented impact' },
                 ].map((item, i, arr) => (
                   <React.Fragment key={i}>
@@ -276,36 +276,31 @@ const AboutPage = () => {
           </div>
 
           {/* Portrait gallery - Updated grid */}
-          <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-4xl mx-auto">
-            {[
-              { initial: '', accent: 'from-indigo-100 to-indigo-50' },
-              { initial: '', accent: 'from-amber-100 to-amber-50' },
-              { initial: '', accent: 'from-slate-100 to-slate-50' },
-            ].map((rabbi, i) => (
-              <div key={i} className="flex flex-col items-center text-center reveal" style={{ transitionDelay: `${i * 120}ms` }}>
-                <div className="relative mb-4 md:mb-6 group w-full">
-                  {/* Aspect ratio locks the height relative to width so it scales down on phones gracefully */}
-                  <div className={`w-full aspect-[4/5] md:w-52 md:h-60 mx-auto rounded-xl md:rounded-3xl overflow-hidden bg-gradient-to-br ${rabbi.accent} shadow-soft-lg border border-slate-200 transition-transform duration-500 group-hover:scale-[1.02]`}>
-                    {/* When ready: <img src="/rabbi-1.jpg" alt="Rabbi Name" className="w-full h-full object-cover" /> */}
-                  </div>
-                  {/* Scaled badge for mobile */}
-                  <div className="absolute -bottom-1.5 -right-1.5 md:-bottom-2 md:-right-2 w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-2xl bg-white border-2 border-amber-400 shadow-md flex items-center justify-center">
-                    <ShieldCheck className="text-amber-500 w-4 h-4 md:w-5 md:h-5" strokeWidth={2.5} />
-                  </div>
-                </div>
-                
-                {/* Scaled text for mobile */}
-                <h3 className="text-sm md:text-2xl font-bold text-slate-900 mb-1 md:mb-1.5 tracking-tight">Rabbi Name</h3>
-                <p className="text-[10px] md:text-sm text-slate-500 font-medium leading-relaxed">Title / Community</p>
-              </div>
-            ))}
-          </div>
+<div className="grid grid-cols-3 gap-3 md:gap-6 max-w-4xl mx-auto">
+  {[
+    { initial: '', accent: 'from-indigo-100 to-indigo-50' },
+    { initial: '', accent: 'from-amber-100 to-amber-50' },
+    { initial: '', accent: 'from-slate-100 to-slate-50' },
+  ].map((rabbi, i) => (
+    <div key={i} className="flex flex-col items-center text-center reveal" style={{ transitionDelay: `${i * 120}ms` }}>
+      <div className="relative mb-4 md:mb-6 group w-full">
+        {/* Aspect ratio locks the height relative to width so it scales down on phones gracefully */}
+        <div className={`w-full aspect-[4/5] md:w-52 md:h-60 mx-auto rounded-xl md:rounded-3xl overflow-hidden bg-gradient-to-br ${rabbi.accent} shadow-soft-lg border border-slate-200 transition-transform duration-500 group-hover:scale-[1.02]`}>
+          {/* When ready: <img src="/rabbi-1.jpg" alt="Rabbi Name" className="w-full h-full object-cover" /> */}
+        </div>
+      </div>
+      
+      {/* Scaled text for mobile */}
+      <h3 className="text-sm md:text-2xl font-bold text-slate-900 mb-1 md:mb-1.5 tracking-tight">Rabbi Name</h3>
+      <p className="text-[10px] md:text-sm text-slate-500 font-medium leading-relaxed">Title / Community</p>
+    </div>
+  ))}
+</div>
 
-          {/* Personal note */}
+          {/* Halachic Integrity */}
           <div className="max-w-2xl mx-auto text-center mt-16 md:mt-24 reveal">
-            <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="flex items-center justify-center gap-0 mb-6">
               <div className="w-12 h-px bg-slate-300"></div>
-              <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-slate-400">A Personal Note</span>
               <div className="w-12 h-px bg-slate-300"></div>
             </div>
             <p className="text-sm md:text-lg text-slate-600 font-medium leading-relaxed italic">

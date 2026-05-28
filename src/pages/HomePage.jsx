@@ -111,7 +111,7 @@ const HomePage = ({ appData }) => {
 
               {/* Updated sub-headline */}
               <p className="text-indigo-200 text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-2xl">
-                Amplify pools your monthly Tzedakah with a circle of donors to fund one transformational grant. <strong className="text-white">Win up to $100,000</strong> <em className="text-white font-bold not-italic">every month</em> as a thank you for showing up.
+                Pool your monthly Tzedakah with a circle of donors to fund one massive grant every month, <strong className="text-white">with a chance to win up to $100,000</strong> <em className="text-white font-bold not-italic"></em>
               </p>
 
               {/* Reordered + reworked bullets — Ma'aser first */}
@@ -180,8 +180,7 @@ const HomePage = ({ appData }) => {
           <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-start max-w-7xl mx-auto px-4 overflow-hidden pt-10 md:pt-16 pb-12">
             
             <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
-              <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Mechanics</p>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
                 Strategic giving, simplified.<br className="hidden md:block"/>
                 <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
               </h2>
@@ -322,9 +321,9 @@ const HomePage = ({ appData }) => {
           <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div className="flex flex-col justify-center text-center md:text-left">
               <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Who We're Helping This Month</p>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 md:mb-8 tracking-tight uppercase italic">Chai Lifeline</h2>
+              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 md:mb-8 tracking-tight uppercase italic">Chessed</h2>
               <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8 md:mb-10">
-                Chai Lifeline is there for families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
+                Chessed is there for families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
               </p>
               
               <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 justify-center md:justify-start mb-6">
@@ -340,7 +339,7 @@ const HomePage = ({ appData }) => {
               </div>
 
               <p className="text-xs text-slate-400 font-medium mb-10 leading-relaxed">
-                Grants administered through <span className="text-slate-200 font-bold">Givinga</span>, a registered 501(c)(3) donor-advised fund.
+                Grants administered through <span className="text-slate-200 font-bold">(Nonprofit)</span>, a registered 501(c)(3) donor-advised fund.
               </p>
 
               <div className="text-center md:text-left">

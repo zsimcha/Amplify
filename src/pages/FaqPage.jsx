@@ -14,9 +14,9 @@ const FaqPage = () => {
     {
       title: "The Model",
       faqs: [
-        { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank-you, members get a shot at winning up to $100,000 every month." },
-        { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes the grant transformational in the first place. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000, delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. In fact, the amount we allocate to prizes is less than most organizations would spend to raise the same funds. That's not a compromise. That's the model." },
-        { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible. The pooled contributions form both the monthly grant and the prize pool." },
+        { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant. And as a thank you, members get a real shot at winning up to $100,000 every month." },
+        { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes this work. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000, delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. In fact, the amount we allocate to prizes is less than most organizations would spend to raise the same funds." },
+        { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members, offering incredible odds. The pooled contributions form both the monthly grant and the prize pool." },
         { q: "How many circles run at once?", a: "Multiple circles can run simultaneously across all three tiers. As Amplify grows, the total monthly grant impact grows with it." },
         { q: "Who selects the charities?", a: <>Charities are properly vetted in advance. Financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone. <Link to="/impact" className="text-indigo-600 hover:underline">Full details on our Impact page →</Link></> },
         { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify exists for those who want their consistent monthly giving to combine into a massive, coordinated grant that changes the game." }
@@ -25,7 +25,7 @@ const FaqPage = () => {
     {
       title: "Ma'aser & Halacha",
       faqs: [
-        { q: "Can I use Ma'aser toward my Amplify membership?", a: <>This is an important question and one we take seriously. Our Rabbinic Panel has reviewed the model and approved the use of Ma'aser funds for it. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See their guidance on our About page →</Link><br/><br/>We also encourage you to check with your own posek if you have specific questions about your situation.</> },
+        { q: "Can I use Ma'aser toward my Amplify membership?", a: <>This is an important question and one we take seriously. Our Rabbinic Panel has reviewed the model and approved the use of Ma'aser funds for it. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">Learn more on our About page →</Link><br/><br/>We also encourage you to check with your own posek if you have specific questions about your situation.</> },
         { q: "Has the model been reviewed by Rabbinic authorities?", a: <>Yes. Amplify's structure, including using Ma'aser, prize allocation, and charitable disbursement, has been formally reviewed and endorsed by our Rabbinic Panel. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">Meet our Rabbinic Panel →</Link></> }
       ]
     },
@@ -34,7 +34,7 @@ const FaqPage = () => {
       faqs: [
         { q: "When am I charged?", a: "Your first contribution processes immediately upon joining. Subsequent charges occur on the same date each month, after your circle reaches 400 members and goes live." },
         { q: "Can I cancel?", a: <>Yes. Memberships can be paused or canceled at any time before your next scheduled monthly charge. Just send a quick email to <a href="mailto:support@amplifygive.com" className="text-indigo-600 hover:underline">support@amplifygive.com</a> and we'll take care of it.</> },
-        { q: "Is my contribution tax-deductible?", a: "Contributions are made to Givinga, a registered 501(c)(3) donor-advised fund, and are tax-deductible to the extent permitted by law. Prize winnings are subject to applicable tax regulations. We recommend consulting your tax advisor for your specific situation." },
+        { q: "Is my contribution tax-deductible?", a: "Contributions are made to (Nonprofit), a registered 501(c)(3) donor-advised fund, and are tax-deductible to the extent permitted by law. Prize winnings are subject to applicable tax regulations. We recommend consulting your tax advisor for your specific situation." },
         { q: "How are winners notified?", a: "Winners are contacted directly via the email on their account and announced publicly on our Winners page with their consent." },
         { q: "Is my payment information secure?", a: "Yes. All payments are processed via Stripe. Your card details are never stored on Amplify's servers." }
       ]
@@ -42,7 +42,7 @@ const FaqPage = () => {
     {
       title: "The Prizes",
       faqs: [
-        { q: "What are the odds of winning?", a: <>Each member receives one grand prize entry per month, odds of 1 in 400 per circle. With all secondary prizes included, total winning odds reach up to 1 in 25 when a circle is full. <Link to="/how-it-works" className="text-indigo-600 hover:underline">Check our tiers breakdown for exact odds →</Link></> },
+        { q: "What are the odds of winning?", a: <>Each member receives one grand prize entry per month, odds of 1 in 400 per circle. With all secondary prizes included, total winning odds reach up to 1 in 25 when a circle is full. <Link to="/Circles" className="text-indigo-600 hover:underline">Check our tiers breakdown for exact odds →</Link></> },
         { q: "When does the drawing happen?", a: "Monthly, once a circle reaches 400 members. The drawing date is published in advance for each active circle." },
         { q: "Who administers the drawings?", a: "Drawings are conducted in compliance with US sweepstakes regulations. All results are documented and available for review." },
         { q: "No purchase necessary?", a: <>Correct. <Link to="/rules" className="text-indigo-600 hover:underline">See official rules</Link> for free entry details.</> }
@@ -51,7 +51,7 @@ const FaqPage = () => {
   ];
 
   return (
-    <PageLayout title="Frequently Asked Questions" intro="Everything you need to know about the Amplify model, compliance, and mechanics.">
+    <PageLayout title="Frequently Asked Questions" intro="Everything you need to know about Amplify.">
       <section className="py-16 md:py-24 px-4 bg-slate-50 min-h-screen">
         <div className="max-w-6xl mx-auto">
           {faqSections.map((section, sectionIndex) => (

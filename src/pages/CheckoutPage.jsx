@@ -630,7 +630,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-4">
                           <span className="flex items-center gap-1.5"><Shield size={12} /> Secured by Stripe</span>
                           <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                          <span>501(c)(3) via Givinga</span>
+                          <span>501(c)(3) via (Nonprofit)</span>
                         </div>
                       </div>
                   </form>

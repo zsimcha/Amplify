@@ -202,9 +202,9 @@ const OddsVisualizer = ({ tierData }) => {
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
             <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: oddsCalloutColor}}>
-              {oddsValue}
-            </p>
-            <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
+  {oddsValue}<sup className="text-base font-bold opacity-60">*</sup>
+</p>
+<p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:gap-4 pt-2">
@@ -315,8 +315,7 @@ const WhyPrizes = () => {
     <section className="py-20 md:py-28 px-4 bg-white border-b border-slate-200">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10 md:mb-14 reveal">
-          <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Math</p>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-slate-900">Why prizes?</h2>
+         <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-slate-900">Why prizes?</h2>
         </div>
 
         <div ref={cardsRef} className="flex flex-col md:flex-row items-stretch gap-3 md:gap-4 mb-12 md:mb-16 max-w-4xl mx-auto pt-8 md:pt-6">
@@ -446,7 +445,6 @@ const HowItWorksPage = ({ appData }) => {
       <section className="py-16 md:py-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center reveal">
           <div className="md:col-span-5">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
             <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds so strong.</p>
           </div>
@@ -479,8 +477,10 @@ const HowItWorksPage = ({ appData }) => {
     {/* Cards side by side at all sizes */}
     <div className="grid grid-cols-2 gap-2 md:gap-4">
 
-      {/* OLD WAY */}
-      <div className="rounded-xl md:rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3.5 md:p-6 reveal flex flex-col">
+      {/* OLD WAY — subtle cool halo */}
+      <div
+        className="rounded-xl md:rounded-2xl bg-white/[0.02] border border-white/[0.08] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_40px_-10px_rgba(148,163,184,0.18),inset_0_1px_0_rgba(255,255,255,0.04)]"
+      >
         <div className="mb-3 md:mb-4">
           <p className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
           <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
@@ -526,9 +526,9 @@ const HowItWorksPage = ({ appData }) => {
         </div>
       </div>
 
-      {/* AMPLIFY WAY */}
+      {/* AMPLIFY WAY — stronger amber halo */}
       <div
-        className="rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400/[0.07] via-amber-400/[0.02] to-transparent border border-amber-400/[0.22] p-3.5 md:p-6 reveal flex flex-col"
+        className="rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400/[0.07] via-amber-400/[0.02] to-transparent border border-amber-400/[0.3] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_55px_-10px_rgba(251,191,36,0.32),inset_0_1px_0_rgba(251,191,36,0.12)]"
         style={{ transitionDelay: '120ms' }}
       >
         <div className="mb-3 md:mb-4">
@@ -563,6 +563,7 @@ const HowItWorksPage = ({ appData }) => {
     </div>
   </div>
 </section>
+
       <WhyPrizes />
 
       {/* The Drawings + Odds Visualizer */}

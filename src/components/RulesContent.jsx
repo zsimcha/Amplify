@@ -7,7 +7,7 @@ const RulesContent = () => (
     </p>
     
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Sponsor, Administrator, and Designated Beneficiary</h3>
-    <p className="mb-6">The Amplify Founders Circle Sweepstakes (the "Sweepstakes") is sponsored and administered by Amplify Ltd., [Insert Address] ("Sponsor"). Voluntary contributions are remitted to a donor-advised fund administered by Givinga, Inc., [Insert Address] ("DAF Administrator"), which subsequently grants net proceeds to a designated charitable beneficiary specifically identified on the Platform for each separate Promotional Period.</p>
+    <p className="mb-6">The Amplify Founders Circle Sweepstakes (the "Sweepstakes") is sponsored and administered by Amplify Ltd., [Insert Address] ("Sponsor"). Voluntary contributions are remitted to a donor-advised fund administered by (Nonprofit), Inc., [Insert Address] ("DAF Administrator"), which subsequently grants net proceeds to a designated charitable beneficiary specifically identified on the Platform for each separate Promotional Period.</p>
 
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Promotional Periods</h3>
     <p className="mb-6">The Sweepstakes operates through a series of distinct, recurring calendar-month promotional periods (each, a "Promotional Period"). Each Promotional Period commences on the first day of the calendar month at 12:00:00 AM Eastern Time ("ET") and concludes on the last day of the calendar month at 11:59:59 PM ET.</p>
