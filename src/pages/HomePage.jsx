@@ -111,7 +111,7 @@ const HomePage = ({ appData }) => {
 
               {/* Updated sub-headline */}
               <p className="text-indigo-200 text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-2xl">
-                Pool your monthly Tzedakah with a circle of donors to fund one massive grant every month, <strong className="text-white">with a chance to win up to $100,000</strong> <em className="text-white font-bold not-italic"></em>
+                Pool your monthly Tzedakah with a circle of donors to fund one massive grant every month, <strong className="text-white">with a chance to win up to $100,000</strong>
               </p>
 
               {/* Reordered + reworked bullets — Ma'aser first */}
@@ -122,7 +122,7 @@ const HomePage = ({ appData }) => {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Your monthly giving turns into a six-figure grant every month</span>
+                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Your regular giving turns into a six-figure grant each month</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
@@ -158,10 +158,10 @@ const HomePage = ({ appData }) => {
           <div className="w-full bg-slate-700 border-b border-slate-600 pb-8 md:pb-10 pt-2">
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
               {[
-                { top: "Up to", num: "$100K", label: "Monthly Prize", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
-                { top: "Projected", num: "$5M+", label: "Yearly to Charity", colorClass: "text-white", labelClass: "text-slate-300" },
+                { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
+                { top: "One", num: "$400K+", label: "Monthly Grant", colorClass: "text-white", labelClass: "text-slate-300" },
                 { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
-                { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
+                { top: "Projected", num: "$5M+", label: "Yearly To Charity", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
                   <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
@@ -181,7 +181,7 @@ const HomePage = ({ appData }) => {
             
             <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
-                Strategic giving, simplified.<br className="hidden md:block"/>
+                Strategic giving, simplified,<br className="hidden md:block"/>
                 <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
               </h2>
             </div>
@@ -199,7 +199,7 @@ const HomePage = ({ appData }) => {
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">01</div>
                     <div className="bg-white px-2 py-1 relative z-10">
                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Donors join a circle and combine their monthly giving into one massive fund.</p>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Donors join a circle and combine their monthly giving into one large scale fund.</p>
                     </div>
                   </div>
                   
@@ -207,15 +207,15 @@ const HomePage = ({ appData }) => {
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
                     <div className="bg-white px-2 py-1 relative z-10">
                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The pool funds a single, transformational grant to one vetted nonprofit. Every month.</p>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The pool funds a single, six figure grant to one vetted nonprofit. Every month.</p>
                     </div>
                   </div>
                   
                   <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
                     <div className="bg-white px-2 py-1 relative z-10">
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Win Big</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing unlocks. Winning odds up to 1 in 25. Prizes up to $100,000.</p>
+                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Rewards Unlock</h3>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25. Prizes up to $100,000.</p>
                     </div>
                   </div>
               </div>
@@ -276,10 +276,10 @@ const HomePage = ({ appData }) => {
           {/* Closing beats */}
           <div className="space-y-2 md:space-y-3">
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              One massive grant.
+              One charity.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              One charity.
+              One transformational grant.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
               Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank you.
@@ -362,7 +362,7 @@ const HomePage = ({ appData }) => {
       <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your <span className="italic">impact.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your impact.</h2>
             <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds one massive grant. With real odds of winning big.</p>
           </div>
           

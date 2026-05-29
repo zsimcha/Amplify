@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { LogoIcon } from './SecondaryNavbar';
 
@@ -20,6 +20,24 @@ const MainNavbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Active link styling for desktop nav.
+  // Current page gets the "hover destination" color persistently,
+  // so the user always sees which page they're on.
+  const desktopNavClass = ({ isActive }) => {
+    const base = 'transition-colors uppercase tracking-[0.2em]';
+    if (isActive) {
+      return `${base} ${isScrolled ? 'text-indigo-900' : 'text-white'}`;
+    }
+    return `${base} ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`;
+  };
+
+  // Active link styling for the mobile menu — active page reads indigo
+  // so it stands out from the slate stack.
+  const mobileNavClass = ({ isActive }) =>
+    `text-left border-b border-slate-50 pb-3 transition-colors ${
+      isActive ? 'text-indigo-700' : ''
+    }`;
+
   return (
     <>
       <nav className={`fixed w-full z-40 top-0 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-sm py-0' : 'bg-transparent py-2'}`}>
@@ -34,11 +52,11 @@ const MainNavbar = () => {
           </Link>
           
           <div className={`hidden md:flex items-center gap-7 lg:gap-8 text-[11px] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
-            <Link to="/how-it-works" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>How it works</Link>
-            <Link to="/about" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>About</Link>
-            <Link to="/impact" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>Our Impact</Link>
-            <Link to="/circles" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>Circles</Link>
-            <Link to="/faq" className={`transition-colors uppercase tracking-[0.2em] ${isScrolled ? 'hover:text-indigo-900' : 'hover:text-white'}`}>FAQ</Link>
+            <NavLink to="/how-it-works" className={desktopNavClass}>How it works</NavLink>
+            <NavLink to="/about" className={desktopNavClass}>About</NavLink>
+            <NavLink to="/impact" className={desktopNavClass}>Our Impact</NavLink>
+            <NavLink to="/circles" className={desktopNavClass}>Circles</NavLink>
+            <NavLink to="/faq" className={desktopNavClass}>FAQ</NavLink>
           </div>
           
           <button className={`md:hidden p-2 transition-colors ${isScrolled ? 'text-indigo-900' : 'text-white'}`} onClick={() => setIsMenuOpen(true)} aria-label="Open Menu">
@@ -59,11 +77,11 @@ const MainNavbar = () => {
                 <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2"><X size={28}/></button>
             </div>
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-base font-bold text-slate-900 uppercase tracking-widest text-left">
-                <Link to="/how-it-works" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">How it works</Link>
-                <Link to="/about" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">About</Link>
-                <Link to="/impact" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">Our Impact</Link>
-                <Link to="/circles" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">Circles</Link>
-                <Link to="/faq" onClick={() => setIsMenuOpen(false)} className="text-left border-b border-slate-50 pb-3">FAQ</Link>
+                <NavLink to="/how-it-works" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>How it works</NavLink>
+                <NavLink to="/about" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>About</NavLink>
+                <NavLink to="/impact" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>Our Impact</NavLink>
+                <NavLink to="/circles" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>Circles</NavLink>
+                <NavLink to="/faq" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>FAQ</NavLink>
             </div>
             <div className="p-6 border-t border-slate-50 shrink-0 text-left">
                 <Link to="/circles" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center w-full py-5 bg-amber-400 text-slate-900 rounded-lg font-bold uppercase tracking-widest text-sm shadow-xl shadow-amber-400/20">

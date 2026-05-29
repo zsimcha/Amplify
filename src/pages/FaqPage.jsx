@@ -14,12 +14,12 @@ const FaqPage = () => {
     {
       title: "The Model",
       faqs: [
-        { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant. And as a thank you, members get a real shot at winning up to $100,000 every month." },
-        { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes this work. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000, delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. In fact, the amount we allocate to prizes is less than most organizations would spend to raise the same funds." },
-        { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members, offering incredible odds. The pooled contributions form both the monthly grant and the prize pool." },
+        { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members contribute to a shared fund that is distributed as a single grant to a vetted nonprofit each cycle. Each cycle also includes a prize drawing designed to support ongoing participation in the giving model." },
+        { q: "Why prizes? Doesn't that take money from charity?", a: "The prize system is what enables consistent participation at scale. Without it, this would function like a typical monthly donation platform. With it, contributions remain steady, which allows us to deliver a significantly larger recurring monthly grant to a single nonprofit." },
+        { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are coordinated into a single grant. When the circle fills, that month’s grant is deployed and the cycle begins again. Each cycle also includes a prize drawing as part of the participation model." },
         { q: "How many circles run at once?", a: "Multiple circles can run simultaneously across all three tiers. As Amplify grows, the total monthly grant impact grows with it." },
         { q: "Who selects the charities?", a: <>Charities are properly vetted in advance. Financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone. <Link to="/impact" className="text-indigo-600 hover:underline">Full details on our Impact page →</Link></> },
-        { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify exists for those who want their consistent monthly giving to combine into a massive, coordinated grant that changes the game." }
+        { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify is designed for people who want their monthly contributions coordinated into a single, larger recurring grant." }
       ]
     },
     {
@@ -42,9 +42,9 @@ const FaqPage = () => {
     {
       title: "The Prizes",
       faqs: [
-        { q: "What are the odds of winning?", a: <>Each member receives one grand prize entry per month, odds of 1 in 400 per circle. With all secondary prizes included, total winning odds reach up to 1 in 25 when a circle is full. <Link to="/Circles" className="text-indigo-600 hover:underline">Check our tiers breakdown for exact odds →</Link></> },
+        { q: "What are the odds of winning?", a: <> Members receive one entry per monthly cycle. Each circle distributes a primary prize and additional secondary prizes. Odds vary per circle. <Link to="/Circles" className="text-indigo-600 hover:underline">Check our tiers breakdown for exact odds →</Link></> },
         { q: "When does the drawing happen?", a: "Monthly, once a circle reaches 400 members. The drawing date is published in advance for each active circle." },
-        { q: "Who administers the drawings?", a: "Drawings are conducted in compliance with US sweepstakes regulations. All results are documented and available for review." },
+        { q: "Who administers the drawings?", a: "Drawings are conducted in compliance with U.S. sweepstakes regulations and are fully documented." },
         { q: "No purchase necessary?", a: <>Correct. <Link to="/rules" className="text-indigo-600 hover:underline">See official rules</Link> for free entry details.</> }
       ]
     }

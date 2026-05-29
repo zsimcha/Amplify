@@ -280,8 +280,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
               <div className="w-full h-px bg-white/10"></div>
               <div className="flex justify-between items-center animate-in fade-in slide-in-from-top-1 duration-200">
                 <div className="flex items-center gap-2">
-                  <p className="text-[9px] md:text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Processing Fee</p>
-                  <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded">Covered</span>
+                  <p className="text-[10px] md:text-[11px] font-bold text-indigo-400 uppercase tracking-widest">Processing Fee</p>
+                  <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded">Covered</span>
                 </div>
                 <p className="text-sm md:text-base font-bold tabular-nums">+${processingFee.toFixed(2)}</p>
               </div>
@@ -299,11 +299,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
           <div className="w-full h-px bg-white/10"></div>
           <div className="grid grid-cols-2 gap-3 md:gap-4">
             <div className="bg-white/5 p-3 rounded-xl">
-              <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds*</p>
+              <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds*</p>
               <p className="font-bold text-sm md:text-base">1 / 400</p>
             </div>
             <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
-              <p className="text-[8px] md:text-[9px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds*</p>
+              <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds*</p>
               <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
             </div>
           </div>
@@ -315,9 +315,9 @@ const CheckoutPage = ({ appData, setAppData }) => {
               Your contribution goes directly into the active pool. The drawing activates the moment your circle reaches 400 members.
             </p>
           </div>
-          <p className="text-[8px] md:text-[9px] text-indigo-300/70 font-medium leading-relaxed text-center px-2">
-            * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-indigo-200 transition-colors">official rules</Link> for details.
-          </p>
+          <p className="text-[10px] md:text-[11px] text-indigo-300/70 font-medium leading-relaxed text-center px-2">
+  * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-indigo-200 transition-colors">official rules</Link> for details.
+</p>
         </div>
       </>
     );

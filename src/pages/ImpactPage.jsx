@@ -104,9 +104,7 @@ const ImpactPage = () => {
   <div className="max-w-6xl mx-auto">
     <div className="mb-12 md:mb-16 max-w-3xl reveal">
       <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Where the grant goes</p>
-      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-[1.05]">
-        Amplify in motion.
-      </h2>
+      <h2 className="text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight mb-4 leading-[1.05]">Amplify in motion.</h2>
       <p className="text-lg text-slate-600 font-medium leading-relaxed">
         Here's exactly how this month's grant gets deployed at Chessed.
       </p>
@@ -189,7 +187,7 @@ const ImpactPage = () => {
       <section className="py-20 md:py-28 px-4 bg-slate-50 border-t border-slate-200">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12 md:mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Our vetting process.</h2>
+<h2 className="text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight">Our vetting process.</h2>
           </div>
 
           {(() => {

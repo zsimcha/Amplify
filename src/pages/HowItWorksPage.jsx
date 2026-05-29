@@ -202,9 +202,12 @@ const OddsVisualizer = ({ tierData }) => {
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
             <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: oddsCalloutColor}}>
-  {oddsValue}<sup className="text-base font-bold opacity-60">*</sup>
-</p>
-<p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
+              <span className="relative inline-block">
+                {oddsValue}
+                <span className="absolute top-0 -right-2 md:-right-2 text-lg md:text-xl font-bold opacity-50">*</span>
+              </span>
+            </p>
+            <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:gap-4 pt-2">
@@ -217,12 +220,15 @@ const OddsVisualizer = ({ tierData }) => {
               <p className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{cfg.winners}</p>
             </div>
           </div>
+
+          <p className="text-[10px] text-slate-400 font-medium leading-relaxed pt-3 border-t border-slate-100">
+            *Actual odds of winning depend on total eligible entries. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-600 transition-colors">official rules</Link>.
+          </p>
         </div>
       </div>
     </div>
   );
 };
-
 
 // ============================================================================
 // POOL COMPARISON
@@ -315,21 +321,22 @@ const WhyPrizes = () => {
     <section className="py-20 md:py-28 px-4 bg-white border-b border-slate-200">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10 md:mb-14 reveal">
-         <h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-slate-900">Why prizes?</h2>
-        </div>
+  <p className="text-xs font-bold text-amber-600 uppercase tracking-[0.3em] mb-4">The Prizes</p>
+<h2 className="text-4xl md:text-6xl font-black tracking-tight mb-6 text-slate-900">Designed To Keep Giving Alive</h2>
+</div>
 
         <div ref={cardsRef} className="flex flex-col md:flex-row items-stretch gap-3 md:gap-4 mb-12 md:mb-16 max-w-4xl mx-auto pt-8 md:pt-6">
 
           <div className="flex-1 bg-slate-50 border border-slate-200 rounded-3xl p-6 md:p-8 flex flex-col">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-4">Without Prizes</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-4">Traditional Giving</p>
             <p className="text-6xl md:text-7xl font-black text-slate-300 tracking-tighter mb-1 leading-none tabular-nums">
               ${count40}K
             </p>
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 mt-2">Typical Monthly Pool</p>
-            <p className="text-sm text-slate-500 font-medium leading-relaxed mb-auto">Members drop off. Donations dry up. The pool stays small.</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 mt-2">Fragmented Monthly Fundraising</p>
+            <p className="text-sm text-slate-500 font-medium leading-relaxed mb-auto">Donations become inconsistent. Momentum fades. Funding stays limited.</p>
             <div className="mt-6 pt-5 border-t border-slate-200">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Donor Retention</p>
-              <p className="text-2xl font-black text-slate-400 tracking-tight tabular-nums">~25%</p>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Recurring Donor Fatigue</p>
+              <p className="text-xl font-black text-slate-400 tracking-tight tabular-nums">Funding Dries Up</p>
             </div>
           </div>
 
@@ -350,15 +357,15 @@ const WhyPrizes = () => {
           <div className="flex-1 bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 shadow-soft-xl relative flex flex-col">
             <div className="absolute -top-3 left-6 md:left-10 bg-amber-400 text-slate-900 text-xs font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-md z-10">Amplify</div>
 
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">With Prizes</p>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">Incentivized Giving</p>
             <p className="text-6xl md:text-7xl font-black text-amber-400 tracking-tighter mb-1 leading-none tabular-nums">
               ${count400}K
             </p>
-            <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70 mb-3 mt-2">Transformational Pool</p>
-            <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Members stay engaged. The charity receives one massive grant with zero acquisition cost.</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70 mb-3 mt-2">Collective Monthly Fundraising</p>
+            <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Prizes keep members engaged. The charity receives one massive grant with zero acquisition cost.</p>
             <div className="mt-6 pt-5 border-t border-slate-800">
-              <p className="text-xs font-bold text-amber-400/70 uppercase tracking-widest mb-1">Donor Retention</p>
-              <p className="text-2xl font-black text-amber-400 tracking-tight tabular-nums">100%</p>
+              <p className="text-xs font-bold text-amber-400/70 uppercase tracking-widest mb-1">Retention Based Model</p>
+              <p className="text-xl font-black text-amber-400 tracking-tight tabular-nums">Built For Consistency</p>
             </div>
           </div>
         </div>
@@ -441,19 +448,22 @@ const HowItWorksPage = ({ appData }) => {
       intro="Consistent, collective Tzedakah creates impact that individual giving just can't."
     >
       
-      {/* The Circle — uses .reveal, fires on mount since it's above the fold */}
-      <section className="py-16 md:py-24 px-4 bg-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center reveal">
-          <div className="md:col-span-5">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
-            <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds so strong.</p>
-          </div>
+{/* The Circle — chart leads, copy supports */}
+<section className="py-16 md:py-24 px-4 bg-white">
+  <div className="max-w-6xl mx-auto grid md:grid-cols-12 gap-10 lg:gap-16 items-center reveal">
 
-          <div className="md:col-span-7">
-            <PoolComparison appData={appData} />
-          </div>
-        </div>
-      </section>
+    <div className="md:col-span-7">
+      <PoolComparison appData={appData} />
+    </div>
+
+    <div className="md:col-span-5">
+      <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
+      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
+      <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds so strong.</p>
+    </div>
+
+  </div>
+</section>
 
 {/* THE GRANT */}
 <section className="py-8 md:py-12 px-4 bg-slate-950 text-white relative overflow-hidden">
@@ -467,7 +477,7 @@ const HowItWorksPage = ({ appData }) => {
     <div className="mb-6 md:mb-8 reveal max-w-3xl">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grant</p>
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3 leading-[1.1] text-white">
-        Zero strings. Zero ask.
+        Funding Without Fundraising
       </h2>
       <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed">
         Most major grants take a year of fundraising work to land. Ours takes none.
@@ -477,9 +487,9 @@ const HowItWorksPage = ({ appData }) => {
     {/* Cards side by side at all sizes */}
     <div className="grid grid-cols-2 gap-2 md:gap-4">
 
-      {/* OLD WAY — subtle cool halo */}
+       {/* OLD WAY — now a visible box + subtle cool halo */}
       <div
-        className="rounded-xl md:rounded-2xl bg-white/[0.02] border border-white/[0.08] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_40px_-10px_rgba(148,163,184,0.18),inset_0_1px_0_rgba(255,255,255,0.04)]"
+        className="rounded-xl md:rounded-2xl bg-white/[0.05] border border-white/[0.14] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_48px_-8px_rgba(148,163,184,0.22),inset_0_1px_0_rgba(255,255,255,0.06)]"
       >
         <div className="mb-3 md:mb-4">
           <p className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
@@ -502,7 +512,7 @@ const HowItWorksPage = ({ appData }) => {
             return (
               <div
                 key={i}
-                className={`flex items-start gap-1.5 md:gap-2.5 py-1.5 md:py-2.5 border-white/[0.06] ${
+                className={`flex items-start gap-1.5 md:gap-2.5 py-1.5 md:py-2.5 border-white/[0.08] ${
                   isLast ? 'border-b-0' : 'border-b'
                 } ${
                   isInLastDesktopRow && !isLast ? 'md:border-b-0' : ''
@@ -515,10 +525,10 @@ const HowItWorksPage = ({ appData }) => {
           })}
         </div>
 
-        <div className="pt-3 md:pt-4 border-t border-white/[0.08]">
+        <div className="pt-3 md:pt-4 border-t border-white/[0.1]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-lg md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
-            <p className="text-[8px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
+            <p className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
           </div>
           <p className="text-[10px] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
             Spent fundraising, every year.
@@ -552,7 +562,7 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0%</p>
-            <p className="text-[8px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Acquisition cost</p>
+            <p className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Acquisition cost</p>
           </div>
           <p className="text-[10px] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
             All those hours go to chesed.

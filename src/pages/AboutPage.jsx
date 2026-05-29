@@ -40,8 +40,8 @@ const AboutPage = () => {
         <div className="max-w-6xl mx-auto reveal">
           <div>
             <div className="w-16 h-1.5 bg-amber-400 mb-8"></div>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 tracking-tight mb-10 leading-[0.95]">
-              Bigger together.
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight mb-10 leading-[0.95]">
+              Tzedakah, Redesigned.
             </h2>
           </div>
 
@@ -145,8 +145,8 @@ const AboutPage = () => {
                 },
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
-                  title: "The Ultimate Win-Win",
-                  body: "By combining transformational Tzedakah with massive monthly rewards, we ensure the charities win big, and you do too."
+                  title: "The Retention Engine",
+                  body: "Monthly rewards keep donors consistently engaged, helping charities receive larger and more reliable funding."
                 }
               ].map((item, i) => (
                 <div key={i} className="py-8 md:py-10 first:pt-2 md:first:pt-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 100}ms` }}>
@@ -172,8 +172,7 @@ const AboutPage = () => {
       <section className="py-16 md:py-24 px-4 bg-black text-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-4">Compliance</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-white">Trust & Transparency.</h2>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-white">Compliance & Transparency</h2>
             <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Bank-grade security ensures your data and payments are fully secure.</p>
           </div>
 
@@ -297,16 +296,15 @@ const AboutPage = () => {
   ))}
 </div>
 
-          {/* Halachic Integrity */}
-          <div className="max-w-2xl mx-auto text-center mt-16 md:mt-24 reveal">
-            <div className="flex items-center justify-center gap-0 mb-6">
-              <div className="w-12 h-px bg-slate-300"></div>
-              <div className="w-12 h-px bg-slate-300"></div>
-            </div>
-            <p className="text-sm md:text-lg text-slate-600 font-medium leading-relaxed italic">
-              We take the halachic integrity of your giving seriously. If you have specific questions about how your Amplify membership interacts with your Ma'aser obligations, we encourage you to speak with your own posek.
-            </p>
-          </div>
+         {/* Halachic Integrity */}
+<div className="max-w-2xl mx-auto text-center mt-16 md:mt-24 reveal">
+  <div className="flex justify-center mb-6">
+    <div className="w-24 h-px bg-slate-300"></div>
+  </div>
+  <p className="text-sm md:text-lg text-slate-600 font-medium leading-relaxed italic">
+    We take the halachic integrity of your giving seriously. If you have specific questions about how your Amplify membership interacts with your Ma'aser obligations, we encourage you to speak with your own posek.
+  </p>
+</div>
         </div>
       </section>
 
