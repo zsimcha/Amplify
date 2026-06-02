@@ -378,7 +378,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                   ============================================================ */}
               <div className="lg:col-span-7 space-y-6 md:space-y-8">
                 <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-8 space-y-6">
-                  <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Secure Your Spot</h2>
+                  <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Join Your Circle</h2>
                   
                   {/* ---- Community selector (existing) ---- */}
                   <div className="mb-6 md:mb-8 relative z-30">

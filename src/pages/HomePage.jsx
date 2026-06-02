@@ -84,11 +84,11 @@ const HomePage = ({ appData }) => {
   const showStep3 = lineProgress >= 88;
 
   const primaryFaqs = [
-    { q: "What is Amplify?", a: "Amplify is a giving platform that pools your monthly Tzedakah with a circle of donors into one massive grant, and as a thank you, members get a shot at winning up to $100,000 every month." },
-    { q: "Why prizes? Doesn't that take money from charity?", a: "It's actually the opposite. The prize model is what makes the grant transformational in the first place. A giving circle without prizes might raise $40,000 in a good month. With prizes attracting and retaining consistent donors, it raises $400,000, delivered to a charity that spent nothing to acquire it. A smaller percentage of a much larger pool does more good than 100% of a small one. That's not a compromise. That's the model." },
-    { q: "How does the circle model work?", a: "Each circle has exactly 400 spots. The moment a circle fills up, the massive monthly prize drawing goes live for those members. It keeps the odds incredible. The pooled contributions form both the monthly grant and the prize pool." },
-    { q: "Who selects the charities?", a: "Charities are properly vetted in advance. Financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone." }
-  ];
+  { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members pool their Tzedakah into a single grant for one vetted nonprofit each cycle. Each cycle also includes a prize drawing, designed to keep participation consistent month over month." },
+  { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members engaged month after month. Consistent participation lets Amplify deliver significantly larger grants than traditional monthly giving programs. That means more reliable funding for nonprofits and a more engaging experience for members." },
+  { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are coordinated into a single grant. When the circle fills, that month's grant is deployed and the cycle begins again." },
+  { q: "Who selects the charities?", a: "Charities are properly vetted in advance. Financials, 990s, impact, the works. We focus on organizations where a single large grant can reach a real milestone." }
+];
 
   const [openFaq, setOpenFaq] = useState(null);
 
@@ -103,39 +103,22 @@ const HomePage = ({ appData }) => {
         <div className="max-w-7xl mx-auto px-4 pb-4 md:pb-6 relative z-10 flex-grow">
           <div className="grid lg:grid-cols-12 gap-10 md:gap-16 items-center">
             <div className="text-left lg:col-span-6 animate-hero">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9] uppercase">
-                Give Together.<br/>
-                <span className="text-amber-400 italic">Amplify</span>
-                <span className="text-amber-400 italic"> Your Impact.</span>
-              </h1>
+  <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9] uppercase">
+    Give Together.<br/>
+    <span className="text-amber-400 italic">Amplify</span>
+    <span className="text-amber-400 italic"> Your Impact.</span>
+  </h1>
 
-              {/* Updated sub-headline */}
-              <p className="text-indigo-200 text-xl md:text-2xl mb-8 font-medium leading-relaxed max-w-2xl">
-                Pool your monthly Tzedakah with a circle of donors to fund one massive grant every month, <strong className="text-white">with a chance to win up to $100,000</strong>
-              </p>
+  <p className="text-indigo-200 text-xl md:text-2xl mb-10 font-medium leading-relaxed max-w-2xl">
+    Amplify pools your monthly Tzedakah with a circle of givers. Each month, you fund a massive grant and could <strong className="text-white"> win up to $100,000</strong>.
+  </p>
 
-              {/* Reordered + reworked bullets — Ma'aser first */}
-              <div className="space-y-4 mb-10 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">You were going to give Ma'aser anyway. Now it could win you $100,000</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Your regular giving turns into a six-figure grant each month</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2.5 shrink-0"></div>
-                  <span className="text-base md:text-lg font-medium text-indigo-100 leading-snug">Exclusive drawings with odds up to 1 in 25</span>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 text-left">
-                <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
-                  Join the Circle
-                </button>
-              </div>
-            </div>
+  <div className="flex flex-col sm:flex-row gap-4 text-left">
+    <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
+      Join the Circle
+    </button>
+  </div>
+</div>
 
             <div className="lg:col-span-6 relative mt-8 md:mt-0 animate-hero flex justify-center">
               <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl overflow-hidden bg-indigo-900 relative shadow-soft-xl ring-1 ring-white/10">
@@ -181,7 +164,7 @@ const HomePage = ({ appData }) => {
             
             <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
-                Strategic giving, simplified,<br className="hidden md:block"/>
+                Collective giving, simplified,<br className="hidden md:block"/>
                 <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
               </h2>
             </div>
@@ -199,7 +182,7 @@ const HomePage = ({ appData }) => {
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">01</div>
                     <div className="bg-white px-2 py-1 relative z-10">
                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Donors join a circle and combine their monthly giving into one large scale fund.</p>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Members join a circle and combine their monthly giving into one large scale fund.</p>
                     </div>
                   </div>
                   
@@ -215,7 +198,7 @@ const HomePage = ({ appData }) => {
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
                     <div className="bg-white px-2 py-1 relative z-10">
                       <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Rewards Unlock</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25. Prizes up to $100,000.</p>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25!</p>
                     </div>
                   </div>
               </div>
@@ -343,9 +326,9 @@ const HomePage = ({ appData }) => {
               </p>
 
               <div className="text-center md:text-left">
-                <Link to="/impact" className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm">
-                  Learn about how we select our charity partners <ChevronRight size={16} />
-                </Link>
+                <Link to="/grant" className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm">
+  Learn about how we select our charity partners <ChevronRight size={16} />
+</Link>
               </div>
             </div>
 
@@ -363,7 +346,7 @@ const HomePage = ({ appData }) => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your impact.</h2>
-            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds one massive grant. With real odds of winning big.</p>
+            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds a major monthly grant. With real odds of winning big.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto pb-8">
@@ -413,7 +396,7 @@ const HomePage = ({ appData }) => {
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Tzedakah Raised</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Monthly Pool</span>
                       <span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
                     </div>
                   </div>

@@ -4,7 +4,7 @@ import { supabase } from './lib/supabase';
 import HomePage from './pages/HomePage';
 import HowItWorksPage from './pages/HowItWorksPage';
 import AboutPage from './pages/AboutPage';
-import ImpactPage from './pages/ImpactPage';
+import GrantPage from './pages/GrantPage';
 import FaqPage from './pages/FaqPage';
 import CirclesPage from './pages/CirclesPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -119,7 +119,7 @@ function App() {
         
         <Route path="/how-it-works" element={<HowItWorksPage appData={appState} />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/impact" element={<ImpactPage />} />
+        <Route path="/grant" element={<GrantPage />} />
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/circles" element={<CirclesPage appData={appState} />} />
 

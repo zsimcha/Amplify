@@ -247,7 +247,7 @@ const PoolComparison = ({ appData }) => {
   return (
     <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-soft">
       <div className="mb-8 md:mb-10">
-        <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Monthly Grant Raised</p>
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Monthly Pool</p>
         <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
           Each tier, when full.
         </h3>
@@ -580,9 +580,9 @@ const HowItWorksPage = ({ appData }) => {
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 md:mb-14 reveal">
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">The Odds</p>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-[1.1]">When a circle fills, the drawing goes live.</h2>
-            <p className="text-lg md:text-xl text-slate-600 font-medium max-w-2xl mx-auto">Compared to most sweepstakes, your odds are real.</p>
+            <p className="text-xs font-bold text-slate-900 uppercase tracking-[0.3em] mb-4">The Drawing</p>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-[1.1]">You give real Tzedakah. 
+	<span className="italic text-indigo-600"> We give you real odds.</span> </h2>
           </div>
 
           <div className="mb-12 reveal max-w-5xl mx-auto">

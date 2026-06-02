@@ -101,10 +101,10 @@ const AboutPage = () => {
 
             <div className="md:col-span-5">
               <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed mb-5">
-                Most of us give sporadically. We mean to give more consistently. Life gets in the way.
+                Most of us give sporadically. We mean to give more consistently, but life gets in the way.
               </p>
               <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">
-                Amplify combines hundreds of monthly gifts into one massive grant. <span className="text-slate-900 font-bold">No expensive fundraiser required.</span>
+                <span className="text-slate-900 font-bold">Amplify closes that gap. </span>Your giving becomes automatic, and pooled with hundreds of others, it turns into one major grant every month.
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@ const AboutPage = () => {
                 {
                   icon: <TrendingUp size={24} className="text-indigo-600" />,
                   title: "The Multiplier Effect",
-                  body: "We believe in going big. Hundreds of donors uniting funds transformational grants that individual givers can't."
+                  body: "We believe in going big. Hundreds of members uniting funds transformational grants that individual givers can't."
                 },
                 {
                   icon: <Building size={24} className="text-amber-500" />,
@@ -145,8 +145,8 @@ const AboutPage = () => {
                 },
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
-                  title: "The Retention Engine",
-                  body: "Monthly rewards keep donors consistently engaged, helping charities receive larger and more reliable funding."
+                  title: "Reliable Every Month",
+                  body: "Monthly rewards keep members engaged, helping charities receive larger and more reliable funding."
                 }
               ].map((item, i) => (
                 <div key={i} className="py-8 md:py-10 first:pt-2 md:first:pt-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 100}ms` }}>
@@ -215,9 +215,9 @@ const AboutPage = () => {
               </div>
 
               <div className="relative">
-                <Link to="/impact" className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs uppercase tracking-widest hover:gap-2.5 transition-all">
-                  How partners are vetted <ArrowRight size={14} />
-                </Link>
+                <Link to="/grant" className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs uppercase tracking-widest hover:gap-2.5 transition-all">
+  How partners are vetted <ArrowRight size={14} />
+</Link>
               </div>
             </div>
 

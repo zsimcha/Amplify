@@ -21,7 +21,7 @@ const CirclesPage = ({ appData }) => {
   return (
     <PageLayout 
       title="Pick Your Circle" 
-      intro="Each circle funds one massive grant. With real odds of winning big."
+      intro="Each circle funds a major monthly grant. With real odds of winning big."
     >
       <section className="py-16 md:py-24 bg-white px-4" onClick={() => setActiveTooltip(null)}>
         <div className="max-w-6xl mx-auto">
@@ -73,7 +73,7 @@ const CirclesPage = ({ appData }) => {
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
-  			<span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Tzedakah Raised</span>
+  			<span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Monthly Pool</span>
   			<span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
 		     </div>
                   </div>

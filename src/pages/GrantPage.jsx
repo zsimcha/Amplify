@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
 import { ChevronRight, Heart, Phone, Tent, Siren } from 'lucide-react';
 
-const ImpactPage = () => {
+const GrantPage = () => {
   useEffect(() => {
     const observerOnce = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -40,7 +40,7 @@ const ImpactPage = () => {
   };
 
   return (
-    <PageLayout title="Our Impact" intro="One organization. One transformational grant. Every month.">
+    <PageLayout title="The Grant" intro="One organization, every month. Here's exactly where it goes.">
       
             {/* Partner — quote now compact, sits inline */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-y border-slate-200">
@@ -248,4 +248,4 @@ const ImpactPage = () => {
   );
 };
 
-export default ImpactPage;
+export default GrantPage;
