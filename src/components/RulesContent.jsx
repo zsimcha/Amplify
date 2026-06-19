@@ -7,13 +7,13 @@ const RulesContent = () => (
     </p>
     
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Sponsor, Administrator, and Designated Beneficiary</h3>
-    <p className="mb-6">The Amplify Founders Circle Sweepstakes (the "Sweepstakes") is sponsored and administered by Amplify Ltd., [Insert Address] ("Sponsor"). Voluntary contributions are remitted to a donor-advised fund administered by (Nonprofit), Inc., [Insert Address] ("DAF Administrator"), which subsequently grants net proceeds to a designated charitable beneficiary specifically identified on the Platform for each separate Promotional Period.</p>
+    <p className="mb-6">The Amplify Sweepstakes (the "Sweepstakes") is sponsored and administered by Amplify LLC, [Insert Address] ("Sponsor")[cite: 4]. Voluntary contributions are remitted to a donor-advised fund administered by (Nonprofit), Inc., [Insert Address] ("DAF Administrator"), which subsequently grants net proceeds to a designated charitable beneficiary specifically identified on the Platform for each separate Promotional Period.</p>
 
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Promotional Periods</h3>
     <p className="mb-6">The Sweepstakes operates through a series of distinct, recurring calendar-month promotional periods (each, a "Promotional Period"). Each Promotional Period commences on the first day of the calendar month at 12:00:00 AM Eastern Time ("ET") and concludes on the last day of the calendar month at 11:59:59 PM ET.</p>
 
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Eligibility</h3>
-    <p className="mb-6">The Sweepstakes is strictly open to legal residents of the fifty (50) United States and the District of Columbia who have reached the age of eighteen (18) years or older (or the age of majority in their jurisdiction of residence) at the time of entry. Employees, independent contractors, officers, and directors of the Sponsor, the DAF Administrator, the designated charitable beneficiary, their respective affiliates, advertising agencies, and immediate family members (spouse, parents, siblings, children) or persons living in the same household are ineligible to participate. Entrants must not be listed on any state or federal sanctions lists and must successfully pass all required identity verification protocols.</p>
+    <p className="mb-6">The Sweepstakes is strictly open to legal residents of the fifty (50) United States and the District of Columbia who are eighteen (18) years of age or older (19 in Alabama and Nebraska, and 21 in Mississippi) at the time of entry[cite: 4]. Employees, independent contractors, officers, and directors of the Sponsor, the DAF Administrator, the designated charitable beneficiary, their respective affiliates, advertising agencies, and immediate family members (spouse, parents, siblings, children) or persons living in the same household are ineligible to participate. Entrants must not be listed on any state or federal sanctions lists and must successfully pass all required identity verification protocols.</p>
 
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">4 &nbsp;&nbsp; Circle Mechanics and Draw Triggers</h3>
     <p className="mb-6">The Sweepstakes utilizes a tiered structure ($250, $500, and $1,000 Tiers). Within each Tier, entries are organized into groups defined as "Circles."</p>
@@ -33,7 +33,7 @@ const RulesContent = () => (
     <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 uppercase tracking-tight">Method B: Alternative Method of Entry (AMOE) – Free Mail-In</h4>
     <p className="mb-6">To enter without making a financial contribution, eligible individuals must handwrite their complete first and last name, valid email address, physical mailing address (no P.O. Boxes), telephone number, date of birth, the specific Calendar Month of entry, the unique monthly phrase (posted on the Platform on the 1st of each month), and the Specific Tier ($250, $500, or $1,000) they wish to enter on a standard 3.5" x 5" postcard.</p>
     <ul className="list-disc pl-6 space-y-4 mb-6">
-      <li className="pl-2"><strong>Mailing Address:</strong> Mail the postcard with proper postage affixed to: Amplify Founders Circle AMOE, [Insert Address].</li>
+      <li className="pl-2"><strong>Mailing Address:</strong> Mail the postcard with proper postage affixed to: Amplify AMOE, [Insert Address][cite: 4].</li>
       <li className="pl-2"><strong>Limits and Processing:</strong> Limit one (1) AMOE entry per person, per month. Postcards must be postmarked by the end date of the applicable Promotional Period and received no later than five (5) business days prior to the Drawing Date. Mechanically reproduced, photocopied, illegible, or incomplete entries are strictly void.</li>
       <li className="pl-2"><strong>AMOE Allocation Algorithm:</strong> Valid AMOE entries are aggregated by Tier. Immediately prior to the Drawing Date, the Sponsor will utilize a deterministic algorithm to allocate the AMOE entries in a round-robin fashion across all Active Circles within that specific Tier. In the event of a tie during allocation, postmark dates and digital scan timestamps will be utilized to determine placement. This protocol ensures that all AMOE entries are treated with equal dignity and possess the exact same mathematical probability of winning as paid entries within their assigned Circle.</li>
     </ul>
@@ -77,7 +77,7 @@ const RulesContent = () => (
     <p className="mb-6">Potential Winners will be notified via email and/or telephone within forty-eight (48) hours following the drawing.</p>
     <ul className="list-disc pl-6 space-y-4 mb-6">
       <li className="pl-2"><strong>Response and Verification:</strong> Potential Winners must respond within three (3) business days. Verification requires the execution and return of an Affidavit of Eligibility, a Liability Release, and a Publicity Release (where permitted by law).</li>
-      <li className="pl-2"><strong>Identity and Tax Documentation:</strong> Potential Winners must pass rigorous identity verification protocols, including the provision of a government-issued photo ID. Furthermore, because all prizes exceed the federal reporting threshold, all Winners must submit a completed and valid IRS Form W-9.</li>
+      <li className="pl-2"><strong>Identity and Tax Documentation:</strong> Potential Winners must pass rigorous identity verification protocols, including the provision of a government-issued photo ID. Furthermore, for all prizes that exceed the federal reporting threshold, all Winners must submit a completed and valid IRS Form W-9[cite: 4].</li>
       <li className="pl-2"><strong>Tax Liability:</strong> All federal, state, and local taxes, and any other costs associated with prize acceptance, are the sole responsibility of the Winner. The Sponsor will issue an IRS Form 1099-MISC to all Winners. If a Winner fails to respond, fails identity verification, or refuses to provide a W-9, the prize is forfeited, and an alternate winner will be selected.</li>
     </ul>
 
@@ -86,6 +86,9 @@ const RulesContent = () => (
 
     <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">10 &nbsp;&nbsp; General Conditions</h3>
     <p className="mb-6">The Sponsor reserves the right to suspend, modify, or cancel the Sweepstakes in the event of technical failure, network attacks, fraud, force majeure, or any other circumstance that destroys the integrity or viability of the promotion. Disputes will be governed by the laws of Florida and resolved via binding arbitration as stipulated in the Platform Terms of Service.</p>
+    
+    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">11 &nbsp;&nbsp; Winners List</h3>
+    <p className="mb-6">To request a list of winners, send a self-addressed, stamped envelope to: Amplify Winners List Request, [Insert Address][cite: 4]. Requests must be received within sixty (60) days following the conclusion of the applicable Promotional Period[cite: 4]. Residents of Vermont and Washington may omit return postage[cite: 4].</p>
   </>
 );
 

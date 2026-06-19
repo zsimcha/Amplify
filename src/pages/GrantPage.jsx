@@ -62,7 +62,7 @@ const GrantPage = () => {
               
               <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6 md:mb-8">
                 <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Grant</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Projected Grant</p>
                   <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">$400K</p>
                 </div>
                 <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
@@ -152,7 +152,7 @@ const GrantPage = () => {
           accent: 'text-emerald-700 bg-emerald-50',
           percent: '20%', 
           label: 'Summer Camp', 
-          detail: 'Full scholarships for children to attend Camp Simcha.'
+          detail: 'Full scholarships for children to attend Camp.'
         },
         { 
           icon: <Siren size={22} strokeWidth={2} />, 
@@ -193,7 +193,7 @@ const GrantPage = () => {
           {(() => {
             const steps = [
               { num: '01', title: 'Financials',     border: 'border-indigo-600',  body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
-              { num: '02', title: 'Clear Impact',   border: 'border-amber-400',   body: "Not ''it helps our general fund.'' We look for organizations that can tell us exactly what program this grant funds and how many people it will reach." },
+              { num: '02', title: 'Clear Impact',   border: 'border-amber-400',   body: "Not  \"it helps our general fund.\" We look for organizations that can tell us exactly what program this grant funds and how many people it will reach." },
               { num: '03', title: 'Ready to Scale', border: 'border-blue-400',    body: "Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where our grant acts as a true catalyst." },
               { num: '04', title: 'Proven Trust',   border: 'border-emerald-400', body: 'We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.' },
             ];

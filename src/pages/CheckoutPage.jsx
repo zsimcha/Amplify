@@ -23,7 +23,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const initialTier = location.state?.tier || 'silver';
 
   const [selectedTier, setSelectedTier] = useState(initialTier);
-  const [selectedCommunity, setSelectedCommunity] = useState("General Circle");
+  const [selectedCommunity, setSelectedCommunity] = useState("General");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -221,7 +221,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
       setAppData(prev => {
         const isNewCommunity = !prev.allCommunityNames.includes(selectedCommunity);
         const updatedNames = isNewCommunity 
-            ? ["General Circle", ...prev.allCommunityNames.filter(c => c !== "General Circle"), selectedCommunity].sort((a, b) => a === "General Circle" ? -1 : b === "General Circle" ? 1 : a.localeCompare(b))
+            ? ["General", ...prev.allCommunityNames.filter(c => c !== "General"), selectedCommunity].sort((a, b) => a === "General" ? -1 : b === "General" ? 1 : a.localeCompare(b))
             : prev.allCommunityNames;
 
         return {
@@ -297,17 +297,18 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
           {/* Odds boxes */}
           <div className="w-full h-px bg-white/10"></div>
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            <div className="bg-white/5 p-3 rounded-xl">
-              <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds*</p>
-              <p className="font-bold text-sm md:text-base">1 / 400</p>
-            </div>
-            <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
-              <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds*</p>
-              <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
-            </div>
-          </div>
-        </div>
+<div className="grid grid-cols-2 gap-3 md:gap-4">
+  <div className="bg-white/5 p-3 rounded-xl">
+    <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds</p>
+    <p className="text-[9px] font-bold uppercase tracking-widest text-indigo-300/60 leading-none mb-0.5">Up to</p>
+    <p className="font-bold text-sm md:text-base">1 / 400</p>
+  </div>
+  <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
+    <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds</p>
+    <p className="text-[9px] font-bold uppercase tracking-widest text-indigo-300/60 leading-none mb-0.5">Up to</p>
+    <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
+  </div>
+</div>        </div>
 
         <div className="mt-6 md:mt-8 space-y-3 md:space-y-4">
           <div className="p-3 md:p-4 bg-indigo-900/50 rounded-xl md:rounded-2xl border border-indigo-800/50 text-center">
@@ -316,7 +317,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
             </p>
           </div>
           <p className="text-[10px] md:text-[11px] text-indigo-300/70 font-medium leading-relaxed text-center px-2">
-  * Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-indigo-200 transition-colors">official rules</Link> for details.
+  Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-indigo-200 transition-colors">official rules</Link> for details.
 </p>
         </div>
       </>
@@ -367,7 +368,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
                 <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
                 <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
                 <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-12">
-                  Welcome to the {selectedCommunity !== 'General Circle' ? selectedCommunity : 'General'} Circle. Your monthly impact starts today.
+              Welcome to the {selectedCommunity} community. Your monthly impact starts today.
+
                 </p>
                 <Link to="/" className="inline-block px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
             </div>
@@ -392,7 +394,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl md:rounded-2xl shadow-2xl z-30 overflow-hidden flex flex-col animate-in fade-in slide-in-from-top-2">
                             <div className="p-2 md:p-3 border-b border-slate-100 bg-slate-50 flex items-center gap-2 md:gap-3">
                               <Search size={16} className="text-slate-400 ml-2"/>
-                              <input type="text" aria-label="Search cities" className="w-full bg-transparent outline-none text-xs md:text-sm font-bold text-slate-700 placeholder-slate-400 py-2" placeholder="Search cities..." value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setFocusedIndex(-1); }} onKeyDown={handleDropdownKeyDown} autoFocus />
+                              <input type="text" aria-label="Search or add cities" className="w-full bg-transparent outline-none text-xs md:text-sm font-bold text-slate-700 placeholder-slate-400 py-2" placeholder="Search or add cities" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); setFocusedIndex(-1); }} onKeyDown={handleDropdownKeyDown} autoFocus />
                             </div>
                             <ul role="listbox" className="max-h-56 overflow-y-auto p-1.5 md:p-2 scroll-smooth bg-white">
                               {filteredCommunities.map((name, index) => (

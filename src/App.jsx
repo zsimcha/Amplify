@@ -62,8 +62,8 @@ const appData = {
     gold: { price: 500, prize: "$50,000", totalOdds: "1 / 50", otherPrizes: ["1x $2,500", "6x $1,000"] },
     diamond: { price: 1000, prize: "$100,000", totalOdds: "1 / 25", otherPrizes: ["1x $5,000", "2x $3,000", "12x $2,000"] }
   },
-  allCommunityNames: ["General Circle"],
-  communities: { "General Circle": { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } }
+  allCommunityNames: ["General"],
+  communities: { "General": { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } }
 };
 
 function App() {
@@ -82,15 +82,15 @@ function App() {
       }
       if (!data) return;
 
-      // Build the names array with "General Circle" pinned to the top
+      // Build the names array with "General" pinned to the top
       const otherNames = data
         .map(c => c.name)
-        .filter(n => n !== 'General Circle')
+        .filter(n => n !== 'General')
         .sort((a, b) => a.localeCompare(b));
-      const allNames = ['General Circle', ...otherNames];
+      const allNames = ['General', ...otherNames];
 
-      // Build the lookup map, ensuring General Circle exists even if not in DB
-      const communitiesMap = { 'General Circle': { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } };
+      // Build the lookup map, ensuring General exists even if not in DB
+      const communitiesMap = { 'General': { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } };
       data.forEach(c => {
         communitiesMap[c.name] = {
           members: c.members || 0,

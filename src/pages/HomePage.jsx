@@ -85,9 +85,10 @@ const HomePage = ({ appData }) => {
 
   const primaryFaqs = [
   { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members pool their Tzedakah into a single grant for one vetted nonprofit each cycle. Each cycle also includes a prize drawing, designed to keep participation consistent month over month." },
-  { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members engaged month after month. Consistent participation lets Amplify deliver significantly larger grants than traditional monthly giving programs. That means more reliable funding for nonprofits and a more engaging experience for members." },
+  { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members showing up month after month, and that consistency is what lets Amplify deliver significantly larger grants than traditional monthly giving programs. We spend less on prizes than most charities spend just to find a new donor. That's not a compromise. That's how we optimize."
+ },
   { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are coordinated into a single grant. When the circle fills, that month's grant is deployed and the cycle begins again." },
-  { q: "Who selects the charities?", a: "Charities are properly vetted in advance. Financials, 990s, impact, the works. We focus on organizations where a single large grant can reach a real milestone." }
+  { q: "Who selects the charities?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where one large grant hits a real milestone. <Link to="/grant" className="text-indigo-600 hover:underline">The full process is on The Grant page.</Link></> }
 ];
 
   const [openFaq, setOpenFaq] = useState(null);
@@ -110,7 +111,7 @@ const HomePage = ({ appData }) => {
   </h1>
 
   <p className="text-indigo-200 text-xl md:text-2xl mb-10 font-medium leading-relaxed max-w-2xl">
-    Amplify pools your monthly Tzedakah with a circle of givers. Each month, you fund a massive grant and could <strong className="text-white"> win up to $100,000</strong>.
+    Amplify pools your monthly Tzedakah with a circle of givers. Each month, you fund a massive grant and get a <strong className="text-white"> real shot at winning up to $100,000</strong>.
   </p>
 
   <div className="flex flex-col sm:flex-row gap-4 text-left">
@@ -142,9 +143,9 @@ const HomePage = ({ appData }) => {
             <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
               {[
                 { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
-                { top: "One", num: "$400K+", label: "Monthly Grant", colorClass: "text-white", labelClass: "text-slate-300" },
+                { top: "Projected", num: "$5M+", label: "Yearly To Charity", colorClass: "text-white", labelClass: "text-slate-300" },
                 { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
-                { top: "Projected", num: "$5M+", label: "Yearly To Charity", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
+                { top: "Goal", num: "$400K+", label: "Monthly Grant", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
                   <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
@@ -197,8 +198,8 @@ const HomePage = ({ appData }) => {
                   <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                     <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
                     <div className="bg-white px-2 py-1 relative z-10">
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Rewards Unlock</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25!</p>
+                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight"> The Thank You</h3>
+                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25.</p>
                     </div>
                   </div>
               </div>
@@ -280,13 +281,13 @@ const HomePage = ({ appData }) => {
                 <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-amber-400" strokeWidth={2.25} />
               </div>
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 leading-tight md:text-center">
-                Rabbinic Endorsement
+                Rabbinic Panel
               </p>
             </div>
 
             <div className="flex-1">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1] mb-2 md:mb-3">
-                Endorsed by leading <span className="italic">Poskim</span>.
+                Approved by leading <span className="italic">Poskim</span>.
               </h2>
               <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our Rabbinic Panel has formally approved the model, including the use of Ma'aser, prize allocation, and charitable disbursement.</p>
             </div>
@@ -346,7 +347,7 @@ const HomePage = ({ appData }) => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your impact.</h2>
-            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds a major monthly grant. With real odds of winning big.</p>
+            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds a major monthly grant. Real Tzedakah, real odds.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto pb-8">

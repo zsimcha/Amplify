@@ -15,10 +15,11 @@ const FaqPage = () => {
       title: "The Model",
       faqs: [
         { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members contribute to a shared fund that is distributed as a single grant to a vetted nonprofit each cycle. Each cycle also includes a prize drawing designed to support ongoing participation in the giving model." },
-        { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members engaged month after month. Consistent participation lets Amplify deliver significantly larger grants than traditional monthly giving programs — which means more reliable funding for nonprofits, and a more engaging experience for members." },
+          { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members showing up month after month, and that consistency is what lets Amplify deliver significantly larger grants than traditional monthly giving programs. Plus, we spend less on prizes than most charities spend just to find a new donor."
+ },
         { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are coordinated into a single grant. When the circle fills, that month’s grant is deployed and the cycle begins again. Each cycle also includes a prize drawing as part of the participation model." },
         { q: "How many circles run at once?", a: "Multiple circles can run simultaneously across all three tiers. As Amplify grows, the total monthly grant impact grows with it." },
-        { q: "Who selects the charities?", a: <>Charities are properly vetted in advance. Financials, impact, the works. We focus on organizations where a single large grant can reach a critical milestone. <Link to="/grant" className="text-indigo-600 hover:underline">Full details on The Grant page →</Link></> },
+        { q: "Who selects the charities?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where one large grant hits a real milestone. <Link to="/grant" className="text-indigo-600 hover:underline">The full process is on The Grant page.</Link></> },
         { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify is designed for people who want their monthly contributions coordinated into a single, larger recurring grant." }
       ]
     },

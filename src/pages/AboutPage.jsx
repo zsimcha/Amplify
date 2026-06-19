@@ -89,7 +89,7 @@ const AboutPage = () => {
                   </text>
                   <text x="200" y="232" textAnchor="middle" className="fill-white" 
                         style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-                    Every Month
+                    Monthly Goal
                   </text>
                   <text x="200" y="252" textAnchor="middle" className="fill-white/85" 
                         style={{ fontSize: '11px', fontWeight: 500 }}>
@@ -194,7 +194,7 @@ const AboutPage = () => {
                 {[
                   { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: '100% transferred' },
                   { num: '02', label: '(Nonprofit) · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
-                  { num: '03', label: 'Vetted Charity', detail: 'Single grant. Full amount.', meta: 'Documented impact' },
+                  { num: '03', label: 'Vetted Charity', detail: 'One focused grant, maximum impact', meta: 'Full Report' },
                 ].map((item, i, arr) => (
                   <React.Fragment key={i}>
                     <div className={`flex items-start gap-3 md:gap-4 py-2.5 md:py-3 px-3 md:px-4 rounded-xl border ${item.highlight ? 'bg-amber-400/10 border-amber-300/30' : 'bg-white/5 border-white/10'}`}>
@@ -232,7 +232,7 @@ const AboutPage = () => {
             <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '100ms' }}>
               <CreditCard size={28} strokeWidth={2.25} className="text-amber-400" />
               <div>
-                <p className="text-lg md:text-3xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-tight">Stripe-Secured</p>
+                <p className="text-lg md:text-3xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-tight">Stripe <br/> Secured</p>
                 <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Card details never touch our servers</p>
               </div>
             </div>
@@ -248,7 +248,7 @@ const AboutPage = () => {
             <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between hover:bg-white/10 transition-colors min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '200ms' }}>
               <FileText size={28} strokeWidth={2.25} className="text-slate-300" />
               <div>
-                <p className="text-2xl md:text-4xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-none">Documented</p>
+                <p className="text-2xl md:text-4xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-none">Fully Documented</p>
                 <Link to="/rules" className="inline-flex items-center gap-1 text-amber-400 font-bold text-[10px] md:text-xs uppercase tracking-widest hover:gap-1.5 transition-all mt-1">
                   Official rules <ArrowRight size={12} />
                 </Link>
@@ -267,8 +267,8 @@ const AboutPage = () => {
 
         <div className="max-w-6xl mx-auto relative">
           <div className="max-w-3xl mx-auto text-center mb-16 md:mb-20 reveal">
-            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Rabbinic Endorsement</p>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Reviewed and approved.</h2>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Rabbinic Panel</p>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6">Reviewed and approved</h2>
             <p className="text-lg text-slate-600 font-medium leading-relaxed">
               Amplify's model, including the use of Ma'aser, prize allocation, and charitable disbursement, has been formally reviewed and approved by Poskim.
             </p>
@@ -276,27 +276,23 @@ const AboutPage = () => {
 
           {/* Portrait gallery - Updated grid */}
 <div className="grid grid-cols-3 gap-3 md:gap-6 max-w-4xl mx-auto">
-  {[
-    { initial: '', accent: 'from-indigo-100 to-indigo-50' },
-    { initial: '', accent: 'from-amber-100 to-amber-50' },
-    { initial: '', accent: 'from-slate-100 to-slate-50' },
-  ].map((rabbi, i) => (
-    <div key={i} className="flex flex-col items-center text-center reveal" style={{ transitionDelay: `${i * 120}ms` }}>
-      <div className="relative mb-4 md:mb-6 group w-full">
-        {/* Aspect ratio locks the height relative to width so it scales down on phones gracefully */}
-        <div className={`w-full aspect-[4/5] md:w-52 md:h-60 mx-auto rounded-xl md:rounded-3xl overflow-hidden bg-gradient-to-br ${rabbi.accent} shadow-soft-lg border border-slate-200 transition-transform duration-500 group-hover:scale-[1.02]`}>
-          {/* When ready: <img src="/rabbi-1.jpg" alt="Rabbi Name" className="w-full h-full object-cover" /> */}
-        </div>
+{[
+  { name: 'Rav Zev Leff', img: '/rabbi-1.png', accent: 'from-slate-100 to-slate-50' },
+  { name: 'Rav Hershel Schachter', img: '/rabbi-2.png', accent: 'from-slate-100 to-slate-50' },
+  { name: 'Rav Asher Weiss', img: '/rabbi-3.png', accent: 'from-slate-100 to-slate-50' },
+].map((rabbi, i) => (
+  <div key={i} className="flex flex-col items-center text-center reveal" style={{ transitionDelay: `${i * 120}ms` }}>
+    <div className="relative mb-4 md:mb-6 group w-full">
+      <div className={`w-full aspect-[4/5] md:w-52 md:h-60 mx-auto rounded-xl md:rounded-3xl overflow-hidden bg-gradient-to-br ${rabbi.accent} shadow-soft-lg border border-slate-200 transition-transform duration-500 group-hover:scale-[1.02]`}>
+        <img src={rabbi.img} alt={rabbi.name} className="w-full h-full object-cover object-top grayscale" />
       </div>
-      
-      {/* Scaled text for mobile */}
-      <h3 className="text-sm md:text-2xl font-bold text-slate-900 mb-1 md:mb-1.5 tracking-tight">Rabbi Name</h3>
-      <p className="text-[10px] md:text-sm text-slate-500 font-medium leading-relaxed">Title / Community</p>
     </div>
-  ))}
+    <h3 className="text-sm md:text-2xl font-bold text-slate-900 tracking-tight">{rabbi.name}</h3>
+  </div>
+))}
 </div>
 
-         {/* Halachic Integrity */}
+        {/* Halachic Integrity */}
 <div className="max-w-2xl mx-auto text-center mt-16 md:mt-24 reveal">
   <div className="flex justify-center mb-6">
     <div className="w-24 h-px bg-slate-300"></div>
@@ -304,28 +300,15 @@ const AboutPage = () => {
   <p className="text-sm md:text-lg text-slate-600 font-medium leading-relaxed italic">
     We take the halachic integrity of your giving seriously. If you have specific questions about how your Amplify membership interacts with your Ma'aser obligations, we encourage you to speak with your own posek.
   </p>
-</div>
-        </div>
-      </section>
 
-      <section className="py-16 md:py-20 bg-indigo-950 px-4 text-center">
-        <div className="max-w-3xl mx-auto reveal">
-          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
-            Ready to give bigger?
-          </h2>
-          <p className="text-indigo-200 font-medium text-lg md:text-xl mb-10 leading-relaxed">
-            Join a circle. Pool your Tzedakah.<br />Win up to $100,000 every month.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/circles" className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow inline-flex items-center justify-center">
-              Join the Circle
-            </Link>
-            <Link to="/how-it-works" className="px-10 py-4 bg-transparent border border-indigo-700 text-indigo-200 rounded-lg font-bold text-sm md:text-base hover:border-indigo-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">
-              How It Works
-            </Link>
-          </div>
-        </div>
-      </section>
+  <div className="mt-10 md:mt-12">
+    <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-slate-50 px-8 py-4 rounded-xl border border-slate-200 hover:bg-white shadow-soft">
+      See the Circles & Prizes <ChevronRight size={18} />
+    </Link>
+  </div>
+</div>
+</div>
+</section>
 
     </PageLayout>
   );

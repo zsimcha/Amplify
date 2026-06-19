@@ -199,16 +199,14 @@ const OddsVisualizer = ({ tierData }) => {
             ))}
           </div>
 
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
-            <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: oddsCalloutColor}}>
-              <span className="relative inline-block">
-                {oddsValue}
-                <span className="absolute top-0 -right-2 md:-right-2 text-lg md:text-xl font-bold opacity-50">*</span>
-              </span>
-            </p>
-            <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
-          </div>
+<div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
+  <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
+  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Up to</p>
+  <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: oddsCalloutColor}}>
+    {oddsValue}
+  </p>
+  <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
+</div>
 
           <div className="grid grid-cols-2 gap-3 md:gap-4 pt-2">
             <div>
@@ -222,7 +220,7 @@ const OddsVisualizer = ({ tierData }) => {
           </div>
 
           <p className="text-[10px] text-slate-400 font-medium leading-relaxed pt-3 border-t border-slate-100">
-            *Actual odds of winning depend on total eligible entries. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-600 transition-colors">official rules</Link>.
+            Image for illustrative purposes only. Actual odds of winning depend on total eligible entries. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-600 transition-colors">official rules</Link>.
           </p>
         </div>
       </div>
@@ -445,7 +443,7 @@ const HowItWorksPage = ({ appData }) => {
   return (
     <PageLayout 
       title="How It Works" 
-      intro="Consistent, collective Tzedakah creates impact that individual giving just can't."
+      intro="Here's exactly how a circle works, start to finish"
     >
       
 {/* The Circle — chart leads, copy supports */}
@@ -458,7 +456,7 @@ const HowItWorksPage = ({ appData }) => {
 
     <div className="md:col-span-5">
       <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
-      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every donor is part of a circle.</h2>
+      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every member is part of a circle.</h2>
       <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds so strong.</p>
     </div>
 
@@ -561,11 +559,11 @@ const HowItWorksPage = ({ appData }) => {
 
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
-            <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0%</p>
-            <p className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Acquisition cost</p>
+            <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
+            <p className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Fundraising</p>
           </div>
           <p className="text-[10px] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
-            All those hours go to chesed.
+            All that time now goes to Chesed.
           </p>
         </div>
       </div>
@@ -732,15 +730,27 @@ const HowItWorksPage = ({ appData }) => {
                 })}
               </div>
 
-              <div className={`mt-14 md:mt-16 pt-12 border-t border-slate-100 text-center transition-all duration-[500ms] transform ${
-                membershipProgress >= 98 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-              }`}>
-                <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-indigo-50 px-8 py-4 rounded-xl">
-                  See the Circles & Prizes <ChevronRight size={18} />
-                </Link>
-              </div>
+             </div>
+          </div>
+        </div>
+      </section>
 
-            </div>
+      {/* Closing CTA */}
+      <section className="py-16 md:py-20 bg-indigo-950 px-4 text-center">
+        <div className="max-w-3xl mx-auto reveal">
+          <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6">
+            Ready to give bigger?
+          </h2>
+          <p className="text-indigo-200 font-medium text-lg md:text-xl mb-10 leading-relaxed">
+            Join a circle. Pool your Tzedakah.<br />And get a real shot at winning up to $100,000.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/circles" className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow inline-flex items-center justify-center">
+              Join the Circle
+            </Link>
+            <Link to="/grant" className="px-10 py-4 bg-transparent border border-indigo-700 text-indigo-200 rounded-lg font-bold text-sm md:text-base hover:border-indigo-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">
+              The Grant
+            </Link>
           </div>
         </div>
       </section>

@@ -21,7 +21,7 @@ const CirclesPage = ({ appData }) => {
   return (
     <PageLayout 
       title="Pick Your Circle" 
-      intro="Each circle funds a major monthly grant. With real odds of winning big."
+      intro="Each circle funds a major monthly grant. Real Tzedakah, real odds."
     >
       <section className="py-16 md:py-24 bg-white px-4" onClick={() => setActiveTooltip(null)}>
         <div className="max-w-6xl mx-auto">
