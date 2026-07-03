@@ -623,117 +623,117 @@ const HowItWorksPage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Your Membership — Sticky Scroll Section */}
-      <section className="bg-white border-t border-slate-200">
-        <div ref={membershipSectionRef} className="h-[200vh]">
-          <div className="sticky top-[64px] md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 overflow-hidden py-12">
-            <div className="max-w-5xl mx-auto w-full">
-              
-              <div className="mb-12 md:mb-16 text-center md:text-left">
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
-                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
-              </div>
-              
-              {/* DESKTOP: horizontal track with scroll-animated progress */}
-              <div className="hidden md:block relative">
-                <div 
-                  className={`absolute top-7 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
-                  style={{ left: '12.5%', right: '12.5%' }}
+{/* Your Membership — Sticky Scroll Section */}
+<section className="bg-white border-t border-slate-200">
+  <div ref={membershipSectionRef} className="h-[200vh]">
+    <div className="sticky top-[64px] md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 overflow-hidden py-12">
+      <div className="max-w-5xl mx-auto w-full">
+
+        <div className="mb-12 md:mb-16 2xl:mb-24 text-center md:text-left">
+          <p className="text-xs 2xl:text-sm font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
+          <h2 className="text-4xl md:text-5xl 2xl:text-6xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
+        </div>
+
+        {/* DESKTOP: horizontal track with scroll-animated progress */}
+        <div className="hidden md:block relative">
+          <div
+            className={`absolute top-7 2xl:top-10 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
+            style={{ left: '12.5%', right: '12.5%' }}
+          >
+            {Array.from({ length: 33 }).map((_, i) => {
+              const dotPosition = (i / 32) * 100;
+              const isPassed = membershipProgress >= dotPosition;
+              return (
+                <span
+                  key={i}
+                  className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: '#fbbf24',
+                    opacity: isPassed ? 0.9 : 0.15,
+                    boxShadow: isPassed ? '0 0 6px rgba(251,191,36,0.6)' : 'none',
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          <div className="relative grid grid-cols-4 gap-6 z-10">
+            {timeline.map((item, i) => {
+              const triggers = [3, 31, 64, 96];
+              const isActive = membershipProgress > triggers[i];
+
+              return (
+                <div
+                  key={item.num}
+                  className={`flex flex-col items-center text-center transition-all duration-[500ms] ease-out transform ${
+                    isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                  }`}
                 >
-                  {Array.from({ length: 33 }).map((_, i) => {
-                    const dotPosition = (i / 32) * 100;
-                    const isPassed = membershipProgress >= dotPosition;
-                    return (
-                      <span
-                        key={i}
-                        className="w-1.5 h-1.5 rounded-full transition-all duration-300"
-                        style={{
-                          backgroundColor: '#fbbf24',
-                          opacity: isPassed ? 0.9 : 0.15,
-                          boxShadow: isPassed ? '0 0 6px rgba(251,191,36,0.6)' : 'none',
-                        }}
-                      />
-                    );
-                  })}
+                  <div className="w-14 h-14 2xl:w-20 2xl:h-20 rounded-full flex items-center justify-center font-black text-base 2xl:text-2xl mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
+                    {item.num}
+                  </div>
+                  <p className={`text-xs 2xl:text-sm font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
+                    {item.title}
+                  </p>
+                  <p className="text-sm 2xl:text-lg text-slate-600 font-medium leading-relaxed max-w-[220px]">
+                    {item.body}
+                  </p>
                 </div>
-
-                <div className="relative grid grid-cols-4 gap-6 z-10">
-                  {timeline.map((item, i) => {
-                    const triggers = [3, 31, 64, 96];
-                    const isActive = membershipProgress > triggers[i];
-                    
-                    return (
-                      <div 
-                        key={item.num} 
-                        className={`flex flex-col items-center text-center transition-all duration-[500ms] ease-out transform ${
-                          isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                        }`}
-                      >
-                        <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-base mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
-                          {item.num}
-                        </div>
-                        <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
-                          {item.title}
-                        </p>
-                        <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[220px]">
-                          {item.body}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* MOBILE: vertical stack with scroll-animated progress */}
-              <div className="md:hidden flex flex-col gap-8 relative z-10">
-                <div className={`absolute left-[27px] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
-                  {Array.from({ length: 30 }).map((_, i) => {
-                    const dotPosition = (i / 29) * 100;
-                    const isPassed = membershipProgress >= dotPosition;
-                    return (
-                      <span 
-                        key={i} 
-                        className="w-1.5 h-1.5 rounded-full transition-all duration-300 shrink-0" 
-                        style={{ 
-                          backgroundColor: '#fbbf24', 
-                          opacity: isPassed ? 0.9 : 0.15, 
-                          boxShadow: isPassed ? '0 0 6px rgba(251,191,36,0.6)' : 'none' 
-                        }} 
-                      />
-                    );
-                  })}
-                </div>
-
-                {timeline.map((item, i) => {
-                  const triggers = [3, 31, 64, 96];
-                  const isActive = membershipProgress > triggers[i];
-                  return (
-                    <div 
-                      key={item.num} 
-                      className={`flex gap-5 transition-all duration-500 ease-out transform ${
-                        isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                      }`}
-                    >
-                      <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-black text-base ring-4 ring-white bg-slate-900 text-white shadow-soft relative z-10">
-                        {item.num}
-                      </div>
-                      <div className="pt-1.5">
-                        <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2 ${item.titleColor}`}>
-                          {item.title}
-                        </p>
-                        <p className="text-sm text-slate-600 font-medium leading-relaxed">
-                          {item.body}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-             </div>
+              );
+            })}
           </div>
         </div>
-      </section>
+
+        {/* MOBILE: vertical stack with scroll-animated progress */}
+        <div className="md:hidden flex flex-col gap-8 relative z-10">
+          <div className={`absolute left-[27px] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
+            {Array.from({ length: 30 }).map((_, i) => {
+              const dotPosition = (i / 29) * 100;
+              const isPassed = membershipProgress >= dotPosition;
+              return (
+                <span
+                  key={i}
+                  className="w-1.5 h-1.5 rounded-full transition-all duration-300 shrink-0"
+                  style={{
+                    backgroundColor: '#fbbf24',
+                    opacity: isPassed ? 0.9 : 0.15,
+                    boxShadow: isPassed ? '0 0 6px rgba(251,191,36,0.6)' : 'none',
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          {timeline.map((item, i) => {
+            const triggers = [3, 31, 64, 96];
+            const isActive = membershipProgress > triggers[i];
+            return (
+              <div
+                key={item.num}
+                className={`flex gap-5 transition-all duration-500 ease-out transform ${
+                  isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                }`}
+              >
+                <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-black text-base ring-4 ring-white bg-slate-900 text-white shadow-soft relative z-10">
+                  {item.num}
+                </div>
+                <div className="pt-1.5">
+                  <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2 ${item.titleColor}`}>
+                    {item.title}
+                  </p>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                    {item.body}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Closing CTA */}
       <section className="py-16 md:py-20 bg-indigo-950 px-4 text-center">
