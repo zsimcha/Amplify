@@ -4,6 +4,7 @@ import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, Che
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 import CornerConstellation from '../components/CornerConstellation';
+import useViewportScale from '../hooks/useViewportScale';
 
 const HomePage = ({ appData }) => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const HomePage = ({ appData }) => {
   
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
+  const contentScale = useViewportScale();
 
   useEffect(() => {
     if (location.hash) {
@@ -161,10 +163,12 @@ const HomePage = ({ appData }) => {
 {/* How it Works Section */}
 <section id="how" className="relative bg-white border-t border-slate-100">
   <div ref={howSectionRef} className="h-[200vh]">
-    <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center max-w-7xl mx-auto px-4 overflow-hidden py-10 md:py-16">
+    <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center overflow-hidden py-10 md:py-16">
+     {/* Content scales with the viewport so the pinned stage stays filled on large monitors */}
+     <div className="w-full max-w-7xl mx-auto px-4" style={{ transform: contentScale > 1 ? `scale(${contentScale})` : 'none' }}>
 
-      <div className="mb-10 md:mb-16 2xl:mb-20 text-center md:text-left transition-opacity duration-500">
-        <h2 className="text-4xl md:text-5xl 2xl:text-6xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
+      <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
+        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
           Collective giving, simplified,<br className="hidden md:block" />
           <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
         </h2>
@@ -182,34 +186,35 @@ const HomePage = ({ appData }) => {
           <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">01</div>
             <div className="bg-white px-2 py-1 relative z-10">
-              <h3 className="text-lg md:text-2xl 2xl:text-3xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base 2xl:text-lg font-medium">Members join a circle and combine their monthly giving into one large scale fund.</p>
+              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Members join a circle and combine their monthly giving into one large scale fund.</p>
             </div>
           </div>
 
           <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
             <div className="bg-white px-2 py-1 relative z-10">
-              <h3 className="text-lg md:text-2xl 2xl:text-3xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base 2xl:text-lg font-medium">The pool funds a single, six figure grant to one vetted nonprofit. Every month.</p>
+              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The pool funds a single, six figure grant to one vetted nonprofit. Every month.</p>
             </div>
           </div>
 
           <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
             <div className="bg-white px-2 py-1 relative z-10">
-              <h3 className="text-lg md:text-2xl 2xl:text-3xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight"> The Thank You</h3>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base 2xl:text-lg font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25.</p>
+              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight"> The Thank You</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`mt-12 md:mt-20 2xl:mt-24 text-center relative z-20 transition-opacity duration-500 ${showStep3 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-        <Link to="/how-it-works" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm 2xl:text-base">
+      <div className={`mt-12 md:mt-20 text-center relative z-20 transition-opacity duration-500 ${showStep3 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <Link to="/how-it-works" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm">
           Want the full breakdown? See exactly how it works <ChevronRight size={18} />
         </Link>
       </div>
+     </div>
     </div>
   </div>
 </section>
