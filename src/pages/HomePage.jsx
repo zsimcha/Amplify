@@ -158,61 +158,61 @@ const HomePage = ({ appData }) => {
         </div>
       </header>
 
-      {/* How it Works Section */}
-      <section id="how" className="relative bg-white border-t border-slate-100">
-        <div ref={howSectionRef} className="h-[200vh]">
-          <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-start max-w-7xl mx-auto px-4 overflow-hidden pt-10 md:pt-16 pb-12">
-            
-            <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
-                Collective giving, simplified,<br className="hidden md:block"/>
-                <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
-              </h2>
-            </div>
-            
-            <div className="relative">
-              <div className="hidden md:block absolute top-[52px] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
-                <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${lineProgress}%` }}></div>
-              </div>
-              <div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
-                <div className="w-full bg-indigo-500 rounded-full" style={{ height: `${lineProgress}%` }}></div>
-              </div>
-              
-              <div className="flex flex-col md:grid md:grid-cols-3 gap-16 md:gap-12 relative z-10">
-                  <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                    <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">01</div>
-                    <div className="bg-white px-2 py-1 relative z-10">
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Members join a circle and combine their monthly giving into one large scale fund.</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                    <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
-                    <div className="bg-white px-2 py-1 relative z-10">
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The pool funds a single, six figure grant to one vetted nonprofit. Every month.</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
-                    <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
-                    <div className="bg-white px-2 py-1 relative z-10">
-                      <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight"> The Thank You</h3>
-                      <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25.</p>
-                    </div>
-                  </div>
-              </div>
-            </div>
+{/* How it Works Section */}
+<section id="how" className="relative bg-white border-t border-slate-100">
+  <div ref={howSectionRef} className="h-[200vh]">
+    <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center max-w-7xl mx-auto px-4 overflow-hidden py-10 md:py-16">
 
-            <div className={`mt-12 md:mt-20 text-center relative z-20 transition-opacity duration-500 ${showStep3 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-              <Link to="/how-it-works" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm">
-                Want the full breakdown? See exactly how it works <ChevronRight size={18} />
-              </Link>
+      <div className="mb-10 md:mb-16 2xl:mb-20 text-center md:text-left transition-opacity duration-500">
+        <h2 className="text-4xl md:text-5xl 2xl:text-6xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
+          Collective giving, simplified,<br className="hidden md:block" />
+          <span className="block mt-3 md:mt-0 md:inline md:ml-2 italic text-indigo-600">And amplified.</span>
+        </h2>
+      </div>
+
+      <div className="relative">
+        <div className="hidden md:block absolute top-[52px] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
+          <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${lineProgress}%` }}></div>
+        </div>
+        <div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
+          <div className="w-full bg-indigo-500 rounded-full" style={{ height: `${lineProgress}%` }}></div>
+        </div>
+
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-16 md:gap-12 relative z-10">
+          <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">01</div>
+            <div className="bg-white px-2 py-1 relative z-10">
+              <h3 className="text-lg md:text-2xl 2xl:text-3xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Everyone pools in</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base 2xl:text-lg font-medium">Members join a circle and combine their monthly giving into one large scale fund.</p>
+            </div>
+          </div>
+
+          <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
+            <div className="bg-white px-2 py-1 relative z-10">
+              <h3 className="text-lg md:text-2xl 2xl:text-3xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base 2xl:text-lg font-medium">The pool funds a single, six figure grant to one vetted nonprofit. Every month.</p>
+            </div>
+          </div>
+
+          <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+            <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">03</div>
+            <div className="bg-white px-2 py-1 relative z-10">
+              <h3 className="text-lg md:text-2xl 2xl:text-3xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight"> The Thank You</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base 2xl:text-lg font-medium">When your circle hits 400, the drawing is held. Winning odds up to 1 in 25.</p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      <div className={`mt-12 md:mt-20 2xl:mt-24 text-center relative z-20 transition-opacity duration-500 ${showStep3 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        <Link to="/how-it-works" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm 2xl:text-base">
+          Want the full breakdown? See exactly how it works <ChevronRight size={18} />
+        </Link>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* MANIFESTO — CornerConstellation replaces hand-placed dots and eyebrow row */}
       <section className="py-16 md:py-24 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
