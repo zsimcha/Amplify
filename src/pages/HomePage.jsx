@@ -4,7 +4,11 @@ import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, Che
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 import CornerConstellation from '../components/CornerConstellation';
-import useViewportScale from '../hooks/useViewportScale';
+
+// Anchor-scroll offset tied to the root font size: the navbar is rem-sized, so
+// it grows under the large-screen scaling in index.css and a fixed 70px would
+// leave anchors tucked underneath it.
+const navOffset = () => 4.375 * parseFloat(getComputedStyle(document.documentElement).fontSize);
 
 const HomePage = ({ appData }) => {
   const navigate = useNavigate();
@@ -13,7 +17,6 @@ const HomePage = ({ appData }) => {
   
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
-  const contentScale = useViewportScale();
 
   useEffect(() => {
     if (location.hash) {
@@ -21,7 +24,7 @@ const HomePage = ({ appData }) => {
       const t = setTimeout(() => {
         const element = document.getElementById(id);
         if (element) {
-          window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - 70, behavior: 'auto' });
+          window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'auto' });
         }
       }, 60);
       return () => clearTimeout(t);
@@ -117,7 +120,7 @@ const HomePage = ({ appData }) => {
   </p>
 
   <div className="flex flex-col sm:flex-row gap-4 text-left">
-    <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
+    <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
       Join the Circle
     </button>
   </div>
@@ -150,7 +153,7 @@ const HomePage = ({ appData }) => {
                 { top: "Goal", num: "$400K+", label: "Monthly Grant", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
-                  <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[14px] leading-none ${stat.labelClass}`}>{stat.top}</p>
+                  <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[0.875rem] leading-none ${stat.labelClass}`}>{stat.top}</p>
                   <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.colorClass}`}>{stat.num}</p>
                   <p className={`text-xs font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.labelClass}`}>{stat.label}</p>
                 </div>
@@ -163,9 +166,8 @@ const HomePage = ({ appData }) => {
 {/* How it Works Section */}
 <section id="how" className="relative bg-white border-t border-slate-100">
   <div ref={howSectionRef} className="h-[200vh]">
-    <div className="sticky top-16 md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center overflow-hidden py-10 md:py-16">
-     {/* Content scales with the viewport so the pinned stage stays filled on large monitors */}
-     <div className="w-full max-w-7xl mx-auto px-4" style={{ transform: contentScale > 1 ? `scale(${contentScale})` : 'none' }}>
+    <div className="sticky top-16 md:top-20 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex flex-col justify-center overflow-hidden py-10 md:py-16">
+     <div className="w-full max-w-7xl mx-auto px-4">
 
       <div className="mb-10 md:mb-16 text-center md:text-left transition-opacity duration-500">
         <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase leading-tight md:leading-tight">
@@ -175,7 +177,7 @@ const HomePage = ({ appData }) => {
       </div>
 
       <div className="relative">
-        <div className="hidden md:block absolute top-[52px] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
+        <div className="hidden md:block absolute top-[3.25rem] left-[10%] right-[16%] h-0.5 bg-transparent z-0">
           <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${lineProgress}%` }}></div>
         </div>
         <div className="md:hidden absolute top-[15%] bottom-[15%] left-1/2 -translate-x-1/2 w-0.5 bg-transparent z-0">
@@ -339,7 +341,7 @@ const HomePage = ({ appData }) => {
             </div>
 
             {/* Photo — logo pill removed, gradient stays for depth */}
-            <div className="relative overflow-hidden rounded-2xl shadow-soft-xl min-h-[300px] md:min-h-[450px] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
+            <div className="relative overflow-hidden rounded-2xl shadow-soft-xl min-h-[18.75rem] md:min-h-[28.125rem] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
               <img src="/impact-photo.jpg" alt="Chai Lifeline" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
             </div>
@@ -383,7 +385,7 @@ const HomePage = ({ appData }) => {
                     <div className="flex justify-between items-center relative">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
+                        <span className="text-[0.625rem] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
                     <div className="flex justify-between items-center relative">
@@ -398,7 +400,7 @@ const HomePage = ({ appData }) => {
                         </div>
                       </div>
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
+                        <span className="text-[0.625rem] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
@@ -460,7 +462,7 @@ const HomePage = ({ appData }) => {
             And win up to $100,000 while you're at it.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth'}); }} className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow">
+            <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'smooth'}); }} className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow">
               Join the Circle
             </button>
             <Link to="/faq" className="px-10 py-4 bg-transparent border border-slate-700 text-slate-300 rounded-lg font-bold text-sm md:text-base hover:border-slate-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">

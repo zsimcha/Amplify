@@ -46,40 +46,40 @@ const CirclesPage = ({ appData }) => {
                   </div>
 
                   <div className="px-6 pt-8 pb-6 text-center flex flex-col items-center justify-center bg-white">
-                    <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Monthly Grand Prize</p>
+                    <p className="text-[0.6875rem] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Monthly Grand Prize</p>
                     <p className={`text-5xl md:text-6xl font-black tracking-tighter leading-none ${headerColor}`}>{appData.tierData[tier].prize}</p>
                   </div>
 
                   <div className="mx-6 py-4 border-t border-b border-slate-200 flex flex-col gap-4 relative z-20">
                     <div className="flex justify-between items-center relative">
-                      <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
+                      <span className="text-[0.6875rem] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">Grand Prize Odds</span>
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
-                        <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
+                        <span className="text-[0.5rem] md:text-[0.5625rem] text-slate-400 font-bold uppercase tracking-widest">Up to</span> 1 / 400
                       </span>
                     </div>
                     <div className="flex justify-between items-center relative">
                       <div className="inline-flex items-center gap-1.5">
-                        <span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Winning Odds</span>
+                        <span className="text-[0.6875rem] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Winning Odds</span>
                         <div className="relative inline-flex items-center" onMouseEnter={() => setActiveTooltip(`${tier}-tot`)} onMouseLeave={() => setActiveTooltip(null)} onClick={(e) => { e.stopPropagation(); setActiveTooltip(activeTooltip === `${tier}-tot` ? null : `${tier}-tot`); }}>
                           <HelpCircle size={14} className="text-slate-400 cursor-pointer" />
-                          <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 max-w-[80vw] bg-slate-900 text-white p-3 rounded-xl shadow-xl text-[10px] leading-relaxed font-medium normal-case transition-all duration-200 z-[100] text-center pointer-events-none ${activeTooltip === `${tier}-tot` ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover:opacity-100 md:group-hover:visible'}`}>
+                          <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-56 max-w-[80vw] bg-slate-900 text-white p-3 rounded-xl shadow-xl text-[0.625rem] leading-relaxed font-medium normal-case transition-all duration-200 z-[100] text-center pointer-events-none ${activeTooltip === `${tier}-tot` ? 'opacity-100 visible' : 'opacity-0 invisible md:group-hover:opacity-100 md:group-hover:visible'}`}>
                               The estimated probability of winning any prize when the circle fills.
                               <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-slate-900 transform rotate-45"></div>
                           </div>
                         </div>
                       </div>
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
-                        <span className="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
+                        <span className="text-[0.5rem] md:text-[0.5625rem] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
-  			<span className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Monthly Pool</span>
+  			<span className="text-[0.6875rem] md:text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Monthly Pool</span>
   			<span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
 		     </div>
                   </div>
 
                   <div className="px-6 py-5 flex-grow bg-white">
-                    <p className="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Monthly Prizes</p>
+                    <p className="text-[0.6875rem] md:text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Other Monthly Prizes</p>
                     <div className="space-y-0 relative z-10">
                       {appData.tierData[tier].otherPrizes.map((p, i) => {
                         let qty = '1 winner';
@@ -113,7 +113,7 @@ const CirclesPage = ({ appData }) => {
           </div>
           
           <div className="mt-10 text-center px-4">
-            <p className="text-slate-500 text-[11px] md:text-xs font-medium leading-relaxed text-center max-w-2xl mx-auto">
+            <p className="text-slate-500 text-[0.6875rem] md:text-xs font-medium leading-relaxed text-center max-w-2xl mx-auto">
               Actual odds of winning depend on total eligible entries. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-700 transition-colors">official rules</Link>.
             </p>
           </div>

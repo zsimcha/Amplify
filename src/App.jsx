@@ -24,9 +24,9 @@ const LegalPageLayout = ({ title, children }) => (
       <div className="max-w-3xl mx-auto bg-white rounded-2xl md:rounded-3xl shadow-sm border border-slate-200 px-6 py-10 md:px-14 md:py-16">
         {title && (
           <header className="mb-10 md:mb-14 pb-8 border-b border-slate-200">
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-3">Legal</p>
+            <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-3">Legal</p>
             <h1 className="text-3xl md:text-5xl font-black uppercase italic text-indigo-950 tracking-tighter leading-[1.05]">{title}</h1>
-            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400 mt-4">Last updated: January 2026</p>
+            <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 mt-4">Last updated: January 2026</p>
           </header>
         )}
         <div className="text-slate-700 font-medium leading-relaxed text-sm md:text-base">

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
 import { ChevronRight } from 'lucide-react';
-import useViewportScale from '../hooks/useViewportScale';
 
 const useCountUp = (target, duration = 1500, trigger = false) => {
   const [val, setVal] = useState(0);
@@ -202,7 +201,7 @@ const OddsVisualizer = ({ tierData }) => {
 
 <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 md:p-6 text-center">
   <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Your Winning Odds</p>
-  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Up to</p>
+  <p className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-500 mb-1">Up to</p>
   <p className="text-5xl md:text-6xl font-black tracking-tighter mb-1 leading-none" style={{color: oddsCalloutColor}}>
     {oddsValue}
   </p>
@@ -220,7 +219,7 @@ const OddsVisualizer = ({ tierData }) => {
             </div>
           </div>
 
-          <p className="text-[10px] text-slate-400 font-medium leading-relaxed pt-3 border-t border-slate-100">
+          <p className="text-[0.625rem] text-slate-400 font-medium leading-relaxed pt-3 border-t border-slate-100">
             Image for illustrative purposes only. Actual odds of winning depend on total eligible entries. No purchase necessary. See <Link to="/rules" className="underline hover:text-slate-600 transition-colors">official rules</Link>.
           </p>
         </div>
@@ -252,7 +251,7 @@ const PoolComparison = ({ appData }) => {
         </h3>
       </div>
 
-      <div className="flex items-end justify-center md:justify-around gap-3 md:gap-8 h-[280px] md:h-[340px] border-b-2 border-slate-200 relative">
+      <div className="flex items-end justify-center md:justify-around gap-3 md:gap-8 h-[17.5rem] md:h-[21.25rem] border-b-2 border-slate-200 relative">
         <div className="absolute inset-x-0 top-0 bottom-0 flex flex-col justify-between pointer-events-none" aria-hidden>
           {[0, 1, 2, 3].map(i => (
             <div key={i} className="border-t border-slate-100 border-dashed h-0"></div>
@@ -265,7 +264,7 @@ const PoolComparison = ({ appData }) => {
           const s = styles[tier];
 
           return (
-            <div key={tier} className="flex-1 max-w-[140px] flex flex-col items-center justify-end relative h-full">
+            <div key={tier} className="flex-1 max-w-[8.75rem] flex flex-col items-center justify-end relative h-full">
               <p className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter mb-3 tabular-nums">
                 ${(pool / 1000).toFixed(0)}k
               </p>
@@ -294,7 +293,7 @@ const PoolComparison = ({ appData }) => {
         {tiers.map((tier) => {
           const s = styles[tier];
           return (
-            <div key={tier} className="flex-1 max-w-[140px] text-center">
+            <div key={tier} className="flex-1 max-w-[8.75rem] text-center">
               <p className={`text-xs font-black uppercase tracking-[0.25em] ${s.labelText} mb-1`}>{s.label}</p>
               <p className="text-xs font-medium text-slate-400 tabular-nums">
                 ${appData.tierData[tier].price.toLocaleString()}/mo × 400
@@ -389,7 +388,6 @@ const WhyPrizes = () => {
 const HowItWorksPage = ({ appData }) => {
   const membershipSectionRef = useRef(null);
   const [membershipProgress, setMembershipProgress] = useState(0);
-  const contentScale = useViewportScale();
 
   // Standard observer for .reveal elements on the page
   useEffect(() => {
@@ -492,7 +490,7 @@ const HowItWorksPage = ({ appData }) => {
         className="rounded-xl md:rounded-2xl bg-white/[0.05] border border-white/[0.14] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_48px_-8px_rgba(148,163,184,0.22),inset_0_1px_0_rgba(255,255,255,0.06)]"
       >
         <div className="mb-3 md:mb-4">
-          <p className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
+          <p className="text-[0.5625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
           <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
             Most Charities:
           </h3>
@@ -518,8 +516,8 @@ const HowItWorksPage = ({ appData }) => {
                   isInLastDesktopRow && !isLast ? 'md:border-b-0' : ''
                 }`}
               >
-                <span className="text-rose-500/55 text-[9px] md:text-xs font-bold mt-[3px] md:mt-[5px] leading-none shrink-0" aria-hidden>✕</span>
-                <span className="text-[11px] md:text-sm text-slate-300 font-normal leading-snug">{task}</span>
+                <span className="text-rose-500/55 text-[0.5625rem] md:text-xs font-bold mt-[0.1875rem] md:mt-[0.3125rem] leading-none shrink-0" aria-hidden>✕</span>
+                <span className="text-[0.6875rem] md:text-sm text-slate-300 font-normal leading-snug">{task}</span>
               </div>
             );
           })}
@@ -528,9 +526,9 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-white/[0.1]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-lg md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
-            <p className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
+            <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
           </div>
-          <p className="text-[10px] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
+          <p className="text-[0.625rem] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
             Spent fundraising, every year.
           </p>
         </div>
@@ -542,7 +540,7 @@ const HowItWorksPage = ({ appData }) => {
         style={{ transitionDelay: '120ms' }}
       >
         <div className="mb-3 md:mb-4">
-          <p className="text-[9px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
+          <p className="text-[0.5625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
           <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
             The Charity:
           </h3>
@@ -562,9 +560,9 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
-            <p className="text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Fundraising</p>
+            <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Fundraising</p>
           </div>
-          <p className="text-[10px] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
+          <p className="text-[0.625rem] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
             All that time now goes to Chesed.
           </p>
         </div>
@@ -628,9 +626,8 @@ const HowItWorksPage = ({ appData }) => {
 {/* Your Membership — Sticky Scroll Section */}
 <section className="bg-white border-t border-slate-200">
   <div ref={membershipSectionRef} className="h-[200vh]">
-    <div className="sticky top-[64px] md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 overflow-hidden py-12">
-      {/* Content scales with the viewport so the pinned stage stays filled on large monitors */}
-      <div className="max-w-5xl mx-auto w-full" style={{ transform: contentScale > 1 ? `scale(${contentScale})` : 'none' }}>
+    <div className="sticky top-16 md:top-20 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex flex-col justify-center px-4 overflow-hidden pt-6 pb-16 md:pt-8 md:pb-24">
+      <div className="max-w-5xl mx-auto w-full">
 
         <div className="mb-12 md:mb-16 text-center md:text-left">
           <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
@@ -678,7 +675,7 @@ const HowItWorksPage = ({ appData }) => {
                   <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
                     {item.title}
                   </p>
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[220px]">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[13.75rem]">
                     {item.body}
                   </p>
                 </div>
@@ -689,7 +686,7 @@ const HowItWorksPage = ({ appData }) => {
 
         {/* MOBILE: vertical stack with scroll-animated progress */}
         <div className="md:hidden flex flex-col gap-8 relative z-10">
-          <div className={`absolute left-[27px] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`absolute left-[1.6875rem] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
             {Array.from({ length: 30 }).map((_, i) => {
               const dotPosition = (i / 29) * 100;
               const isPassed = membershipProgress >= dotPosition;
