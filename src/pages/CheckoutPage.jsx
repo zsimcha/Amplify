@@ -355,7 +355,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
           </button>
           {summaryExpanded && (
             <div id="mobile-summary-detail" className="px-4 pb-5 pt-2 border-t border-indigo-900 animate-in slide-in-from-top-2 duration-200">
-              <SummaryContent />
+              {SummaryContent()}
             </div>
           )}
         </div>
@@ -650,7 +650,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                     <div className="flex items-center justify-between mb-6 md:mb-8">
                       <h3 className="text-lg md:text-xl font-black uppercase tracking-widest text-indigo-300">Summary</h3>
                     </div>
-                    <SummaryContent />
+                    {SummaryContent()}
                   </div>
                 </div>
               </div>

@@ -3,6 +3,14 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "https://esm.sh/resend@3.2.0"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3"
 
+// Escapes the four characters that let a string become live HTML.
+// Always returns a string, even for null/undefined input.
+const esc = (s: string) => String(s ?? "")
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+
 serve(async (req) => {
   console.log("Function invoked!");
 
@@ -88,7 +96,7 @@ serve(async (req) => {
             </h1>
 
             <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Hi <strong>${fullName || 'there'}</strong>,
+              Hi <strong>${esc(fullName) || 'there'}</strong>,
             </p>
 
             <p style="color: #475569; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
@@ -101,11 +109,11 @@ serve(async (req) => {
               <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
                 <tr>
                   <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">Community</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right;">${communityName}</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right;">${esc(communityName)}</td>
                 </tr>
                 <tr>
                   <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">Impact Tier</td>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right; text-transform: capitalize;">${tier}</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-weight: 700; text-align: right; text-transform: capitalize;">${esc(tier)}</td>
                 </tr>
                 <tr>
                   <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0; color: #475569; font-weight: 500;">Monthly Grand Prize</td>
