@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
 import { ChevronRight } from 'lucide-react';
+import useViewportScale from '../hooks/useViewportScale';
 
 const useCountUp = (target, duration = 1500, trigger = false) => {
   const [val, setVal] = useState(0);
@@ -388,6 +389,7 @@ const WhyPrizes = () => {
 const HowItWorksPage = ({ appData }) => {
   const membershipSectionRef = useRef(null);
   const [membershipProgress, setMembershipProgress] = useState(0);
+  const contentScale = useViewportScale();
 
   // Standard observer for .reveal elements on the page
   useEffect(() => {
@@ -627,17 +629,18 @@ const HowItWorksPage = ({ appData }) => {
 <section className="bg-white border-t border-slate-200">
   <div ref={membershipSectionRef} className="h-[200vh]">
     <div className="sticky top-[64px] md:top-[80px] min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex flex-col justify-center px-4 overflow-hidden py-12">
-      <div className="max-w-5xl mx-auto w-full">
+      {/* Content scales with the viewport so the pinned stage stays filled on large monitors */}
+      <div className="max-w-5xl mx-auto w-full" style={{ transform: contentScale > 1 ? `scale(${contentScale})` : 'none' }}>
 
-        <div className="mb-12 md:mb-16 2xl:mb-24 text-center md:text-left">
-          <p className="text-xs 2xl:text-sm font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
-          <h2 className="text-4xl md:text-5xl 2xl:text-6xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
+        <div className="mb-12 md:mb-16 text-center md:text-left">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Your Membership</p>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">Simple, flexible, automatic.</h2>
         </div>
 
         {/* DESKTOP: horizontal track with scroll-animated progress */}
         <div className="hidden md:block relative">
           <div
-            className={`absolute top-7 2xl:top-10 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute top-7 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
             style={{ left: '12.5%', right: '12.5%' }}
           >
             {Array.from({ length: 33 }).map((_, i) => {
@@ -669,13 +672,13 @@ const HowItWorksPage = ({ appData }) => {
                     isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <div className="w-14 h-14 2xl:w-20 2xl:h-20 rounded-full flex items-center justify-center font-black text-base 2xl:text-2xl mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-base mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
                     {item.num}
                   </div>
-                  <p className={`text-xs 2xl:text-sm font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
+                  <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
                     {item.title}
                   </p>
-                  <p className="text-sm 2xl:text-lg text-slate-600 font-medium leading-relaxed max-w-[220px]">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[220px]">
                     {item.body}
                   </p>
                 </div>
