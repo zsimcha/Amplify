@@ -51,7 +51,7 @@ const MainNavbar = () => {
             </span>
           </Link>
           
-          <div className={`hidden md:flex items-center gap-7 lg:gap-8 text-[11px] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
+          <div className={`hidden md:flex items-center gap-7 lg:gap-8 text-[0.6875rem] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
             <NavLink to="/how-it-works" className={desktopNavClass}>How it works</NavLink>
             <NavLink to="/about" className={desktopNavClass}>About</NavLink>
 	    <NavLink to="/grant" className={desktopNavClass}>The Grant</NavLink>

@@ -259,17 +259,17 @@ const CheckoutPage = ({ appData, setAppData }) => {
       <>
         <div className="space-y-4 md:space-y-6">
           <div>
-            <p className="text-[9px] md:text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Selected Circle</p>
+            <p className="text-[0.5625rem] md:text-[0.625rem] font-bold text-indigo-400 uppercase tracking-widest mb-1">Selected Circle</p>
             <p className={`text-2xl md:text-3xl font-black uppercase italic tracking-tighter ${tierColor}`}>{selectedTier}</p>
           </div>
           <div className="w-full h-px bg-white/10"></div>
           <div className="flex justify-between items-end">
             <div>
-              <p className="text-[9px] md:text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Monthly Gift</p>
+              <p className="text-[0.5625rem] md:text-[0.625rem] font-bold text-indigo-400 uppercase tracking-widest mb-1">Monthly Gift</p>
               <p className="text-lg md:text-xl font-bold">${basePrice.toLocaleString()}</p>
             </div>
             <div className="text-right">
-              <p className="text-[9px] md:text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">Grand Prize</p>
+              <p className="text-[0.5625rem] md:text-[0.625rem] font-bold text-indigo-400 uppercase tracking-widest mb-1">Grand Prize</p>
               <p className={`text-lg md:text-xl font-bold ${tierColor}`}>{appData.tierData[selectedTier].prize}</p>
             </div>
           </div>
@@ -280,8 +280,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
               <div className="w-full h-px bg-white/10"></div>
               <div className="flex justify-between items-center animate-in fade-in slide-in-from-top-1 duration-200">
                 <div className="flex items-center gap-2">
-                  <p className="text-[10px] md:text-[11px] font-bold text-indigo-400 uppercase tracking-widest">Processing Fee</p>
-                  <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded">Covered</span>
+                  <p className="text-[0.625rem] md:text-[0.6875rem] font-bold text-indigo-400 uppercase tracking-widest">Processing Fee</p>
+                  <span className="text-[0.625rem] md:text-[0.6875rem] font-bold uppercase tracking-widest text-emerald-300 bg-emerald-500/15 px-2 py-0.5 rounded">Covered</span>
                 </div>
                 <p className="text-sm md:text-base font-bold tabular-nums">+${processingFee.toFixed(2)}</p>
               </div>
@@ -299,24 +299,24 @@ const CheckoutPage = ({ appData, setAppData }) => {
           <div className="w-full h-px bg-white/10"></div>
 <div className="grid grid-cols-2 gap-3 md:gap-4">
   <div className="bg-white/5 p-3 rounded-xl">
-    <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds</p>
-    <p className="text-[9px] font-bold uppercase tracking-widest text-indigo-300/60 leading-none mb-0.5">Up to</p>
+    <p className="text-[0.625rem] md:text-[0.6875rem] font-bold text-indigo-300 uppercase tracking-wider mb-1">Grand Prize Odds</p>
+    <p className="text-[0.5625rem] font-bold uppercase tracking-widest text-indigo-300/60 leading-none mb-0.5">Up to</p>
     <p className="font-bold text-sm md:text-base">1 / 400</p>
   </div>
   <div className="bg-white/5 p-3 rounded-xl border border-indigo-400/30">
-    <p className="text-[10px] md:text-[11px] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds</p>
-    <p className="text-[9px] font-bold uppercase tracking-widest text-indigo-300/60 leading-none mb-0.5">Up to</p>
+    <p className="text-[0.625rem] md:text-[0.6875rem] font-bold text-indigo-300 uppercase tracking-wider mb-1">Winning Odds</p>
+    <p className="text-[0.5625rem] font-bold uppercase tracking-widest text-indigo-300/60 leading-none mb-0.5">Up to</p>
     <p className="font-bold text-sm md:text-base">{appData.tierData[selectedTier].totalOdds}</p>
   </div>
 </div>        </div>
 
         <div className="mt-6 md:mt-8 space-y-3 md:space-y-4">
           <div className="p-3 md:p-4 bg-indigo-900/50 rounded-xl md:rounded-2xl border border-indigo-800/50 text-center">
-            <p className="text-[9px] md:text-[10px] text-indigo-200 font-medium leading-relaxed">
+            <p className="text-[0.5625rem] md:text-[0.625rem] text-indigo-200 font-medium leading-relaxed">
               Your contribution goes directly into the active pool. The drawing activates the moment your circle reaches 400 members.
             </p>
           </div>
-          <p className="text-[10px] md:text-[11px] text-indigo-300/70 font-medium leading-relaxed text-center px-2">
+          <p className="text-[0.625rem] md:text-[0.6875rem] text-indigo-300/70 font-medium leading-relaxed text-center px-2">
   Actual odds of winning depend on the total number of eligible entries received. No purchase necessary. See <Link to="/rules" className="underline hover:text-indigo-200 transition-colors">official rules</Link> for details.
 </p>
         </div>
@@ -344,12 +344,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
             <div className="flex items-center gap-3 min-w-0">
               <div className={`w-2 h-2 rounded-full shrink-0 ${selectedTier === 'silver' ? 'bg-slate-300' : selectedTier === 'gold' ? 'bg-[#eab308]' : 'bg-[#818cf8]'}`}></div>
               <div className="min-w-0">
-                <p className={`text-[9px] font-black uppercase tracking-widest leading-none mb-1 ${selectedTier === 'silver' ? 'text-slate-300' : selectedTier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]'}`}>{selectedTier} Circle</p>
+                <p className={`text-[0.5625rem] font-black uppercase tracking-widest leading-none mb-1 ${selectedTier === 'silver' ? 'text-slate-300' : selectedTier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]'}`}>{selectedTier} Circle</p>
                 <p className="text-sm font-bold truncate">${totalCharged.toFixed(2)}<span className="font-medium text-indigo-300">/mo</span></p>
               </div>
             </div>
             <div className="flex items-center gap-1.5 text-indigo-300 shrink-0">
-              <span className="text-[10px] font-bold uppercase tracking-widest">{summaryExpanded ? 'Hide' : 'Details'}</span>
+              <span className="text-[0.625rem] font-bold uppercase tracking-widest">{summaryExpanded ? 'Hide' : 'Details'}</span>
               {summaryExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </div>
           </button>
@@ -384,7 +384,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                   
                   {/* ---- Community selector (existing) ---- */}
                   <div className="mb-6 md:mb-8 relative z-30">
-                      <label id="community-label" className="block text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Select Community</label>
+                      <label id="community-label" className="block text-[0.625rem] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Select Community</label>
                       <div className="relative" ref={dropdownRef}>
                         <button type="button" aria-haspopup="listbox" aria-expanded={dropdownOpen} onClick={() => { setDropdownOpen(!dropdownOpen); setFocusedIndex(-1); }} onKeyDown={handleDropdownKeyDown} className="w-full bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl py-3 md:py-4 px-4 md:px-6 font-bold text-sm md:text-base text-indigo-950 focus:ring-2 focus:ring-indigo-500 outline-none text-left flex justify-between items-center transition-all hover:bg-slate-100">
                           <span className="truncate pr-4">{selectedCommunity}</span>
@@ -423,23 +423,23 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label htmlFor="fullName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Full Name</label>
+                            <label htmlFor="fullName" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Full Name</label>
                             <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={handleNameChange} className={`w-full bg-slate-50 border ${validationErrors.fullName ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="John Doe" />
-                            {validationErrors.fullName && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.fullName}</p>}
+                            {validationErrors.fullName && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.fullName}</p>}
                           </div>
                           <div>
-                            <label htmlFor="email" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Email</label>
+                            <label htmlFor="email" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Email</label>
                             <input id="email" name="email" autoComplete="email" type="email" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className={`w-full bg-slate-50 border ${validationErrors.email ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="john@example.com" />
-                            {validationErrors.email && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.email}</p>}
+                            {validationErrors.email && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.email}</p>}
                           </div>
 
                           {/* DISPLAY NAME SECTION */}
                           <div className="md:col-span-2">
                             <div className="flex justify-between items-end mb-2">
-                              <label htmlFor="displayName" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Display Name</label>
+                              <label htmlFor="displayName" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500">Display Name</label>
                               <label className="flex items-center gap-2 cursor-pointer group">
                                 <input type="checkbox" checked={checkoutForm.isAnonymous} onChange={handleAnonymousChange} className="accent-indigo-900 w-3.5 h-3.5 cursor-pointer rounded-sm" />
-                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-slate-700 transition-colors select-none">Make Anonymous</span>
+                                <span className="text-[0.625rem] font-bold text-slate-500 uppercase tracking-widest group-hover:text-slate-700 transition-colors select-none">Make Anonymous</span>
                               </label>
                             </div>
                             <input 
@@ -452,34 +452,34 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               placeholder="How you'll appear to others" 
                             />
                             {validationErrors.displayName ? (
-                              <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.displayName}</p>
+                              <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.displayName}</p>
                             ) : (
-                              <p className="text-[9px] text-slate-400 mt-1.5 font-medium">This is how your name will appear on the public community roster.</p>
+                              <p className="text-[0.5625rem] text-slate-400 mt-1.5 font-medium">This is how your name will appear on the public community roster.</p>
                             )}
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                           <div>
-                            <label htmlFor="phone" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
+                            <label htmlFor="phone" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
                             <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={`w-full bg-slate-50 border ${validationErrors.phone ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="555-123-4567" />
-                            {validationErrors.phone && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.phone}</p>}
+                            {validationErrors.phone && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.phone}</p>}
                           </div>
                           <div>
-                            <label htmlFor="address" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
+                            <label htmlFor="address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
                             <input id="address" name="street-address" autoComplete="street-address" type="text" value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={`w-full bg-slate-50 border ${validationErrors.address ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="123 Main St" />
-                            {validationErrors.address && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.address}</p>}
+                            {validationErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.address}</p>}
                           </div>
                         </div>
 
                         <div className="grid grid-cols-6 gap-4">
                           <div className="col-span-6 md:col-span-3">
-                            <label htmlFor="city" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
+                            <label htmlFor="city" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
                             <input id="city" name="address-level2" autoComplete="address-level2" type="text" value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={`w-full bg-slate-50 border ${validationErrors.city ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="New York" />
-                            {validationErrors.city && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.city}</p>}
+                            {validationErrors.city && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.city}</p>}
                           </div>
                           <div className="col-span-3 md:col-span-1">
-                            <label htmlFor="state" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
+                            <label htmlFor="state" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
                             <div className="relative">
                               <select id="state" name="address-level1" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value})} className={`w-full bg-slate-50 border appearance-none ${validationErrors.state ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
                                 <option value="" disabled>--</option>
@@ -489,12 +489,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               </select>
                               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                             </div>
-                            {validationErrors.state && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.state}</p>}
+                            {validationErrors.state && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.state}</p>}
                           </div>
                           <div className="col-span-3 md:col-span-2">
-                            <label htmlFor="zip" className="block text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
+                            <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
                             <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={`w-full bg-slate-50 border ${validationErrors.zipCode ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="10001" />
-                            {validationErrors.zipCode && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.zipCode}</p>}
+                            {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
                           </div>
                         </div>
                       </section>
@@ -508,13 +508,13 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         {/* Express checkout — Apple Pay / Google Pay placeholder.
                             Stripe's PaymentElement auto-renders these when supported. */}
                         <div>
-                          <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 text-center">Express Checkout</p>
-                          <div id="stripe-express-checkout-element" className="min-h-[44px] bg-white border border-dashed border-slate-300 rounded-xl flex items-center justify-center text-xs text-slate-400 font-medium px-4 text-center">
+                          <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 text-center">Express Checkout</p>
+                          <div id="stripe-express-checkout-element" className="min-h-[2.75rem] bg-white border border-dashed border-slate-300 rounded-xl flex items-center justify-center text-xs text-slate-400 font-medium px-4 text-center">
                             Apple Pay / Google Pay buttons render here automatically
                           </div>
                           <div className="flex items-center gap-3 mt-4">
                             <div className="flex-grow h-px bg-slate-200"></div>
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">or pay another way</span>
+                            <span className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400">or pay another way</span>
                             <div className="flex-grow h-px bg-slate-200"></div>
                           </div>
                         </div>
@@ -542,7 +542,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               <p className="font-bold text-slate-900">
                                 Cover the ${processingFee.toFixed(2)} processing fee
                               </p>
-                              <p className="text-slate-600 font-medium mt-0.5 text-[13px] leading-relaxed">
+                              <p className="text-slate-600 font-medium mt-0.5 text-[0.8125rem] leading-relaxed">
                                 So your full <span className="font-bold text-slate-900">${basePrice.toFixed(2)}</span> reaches the giving pool. None absorbed by card processing costs.
                               </p>
                             </div>
@@ -552,7 +552,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             <Check size={18} className="text-emerald-600 shrink-0 mt-0.5" />
                             <div className="text-sm">
                               <p className="font-bold text-emerald-900">No processing fee</p>
-                              <p className="text-emerald-800/80 font-medium mt-0.5 text-[13px] leading-relaxed">
+                              <p className="text-emerald-800/80 font-medium mt-0.5 text-[0.8125rem] leading-relaxed">
                                 Bank transfers are essentially free. Your full ${basePrice.toFixed(2)} goes directly into the giving pool.
                               </p>
                             </div>
@@ -572,16 +572,16 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
                         {!billingSameAsAccount && (
                           <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 p-4 rounded-xl bg-slate-50 border border-transparent">
-                            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Billing Address</p>
+                            <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Billing Address</p>
                             <div>
                               <input type="text" value={billingAddress.line1} onChange={e => setBillingAddress({...billingAddress, line1: e.target.value})} autoComplete="billing street-address" className={`w-full bg-slate-50 border ${validationErrors.billingLine1 ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Street address" />
-                              {validationErrors.billingLine1 && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingLine1}</p>}
+                              {validationErrors.billingLine1 && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingLine1}</p>}
                             </div>
                             <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className="w-full bg-slate-50 border border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100 rounded-xl p-3 text-sm outline-none transition-all" placeholder="Apt, suite, etc. (optional)" />
                             <div className="grid grid-cols-6 gap-3">
                               <div className="col-span-6 md:col-span-3">
                                 <input type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={`w-full bg-slate-50 border ${validationErrors.billingCity ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="City" />
-                                {validationErrors.billingCity && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingCity}</p>}
+                                {validationErrors.billingCity && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingCity}</p>}
                               </div>
                               <div className="col-span-3 md:col-span-1">
                                 <div className="relative">
@@ -591,11 +591,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
                                   </select>
                                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
                                 </div>
-                                {validationErrors.billingState && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingState}</p>}
+                                {validationErrors.billingState && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingState}</p>}
                               </div>
                               <div className="col-span-3 md:col-span-2">
                                 <input type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={`w-full bg-slate-50 border ${validationErrors.billingZip ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="ZIP" />
-                                {validationErrors.billingZip && <p className="text-red-500 text-[10px] mt-1 font-bold">{validationErrors.billingZip}</p>}
+                                {validationErrors.billingZip && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingZip}</p>}
                               </div>
                             </div>
                           </div>
@@ -614,7 +614,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             />
                             <Check size={14} strokeWidth={3} className="text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
                           </div>
-                          <p className="text-[10px] md:text-xs text-slate-500 font-medium leading-relaxed select-none">
+                          <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed select-none">
                             I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring monthly contribution.
                           </p>
                         </label>
@@ -629,7 +629,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Lock size={16} /> Pay ${totalCharged.toFixed(2)} / Month</>}
                         </button>
 
-                        <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-4">
+                        <div className="flex items-center justify-center gap-4 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mt-4">
                           <span className="flex items-center gap-1.5"><Shield size={12} /> Secured by Stripe</span>
                           <span className="w-1 h-1 rounded-full bg-slate-300"></span>
                           <span>501(c)(3) via (Nonprofit)</span>
@@ -684,7 +684,7 @@ const PaymentMethodTab = ({ icon, label, sublabel, active, onClick }) => (
     )}
     <div className={`flex justify-center mb-1.5 ${active ? 'text-indigo-900' : 'text-slate-500'}`}>{icon}</div>
     <p className={`text-xs font-black uppercase tracking-wider ${active ? 'text-indigo-950' : 'text-slate-900'}`}>{label}</p>
-    <p className={`text-[9px] font-bold uppercase tracking-wider mt-0.5 ${active ? 'text-indigo-700' : 'text-slate-400'}`}>{sublabel}</p>
+    <p className={`text-[0.5625rem] font-bold uppercase tracking-wider mt-0.5 ${active ? 'text-indigo-700' : 'text-slate-400'}`}>{sublabel}</p>
   </button>
 );
 
@@ -719,7 +719,7 @@ const StripeElementPlaceholder = ({ method }) => {
 
   return (
     <div className="bg-white border border-dashed border-slate-300 rounded-xl p-4">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">{config.title}</p>
+      <p className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-500 mb-3">{config.title}</p>
       <div id={`stripe-payment-element-${method}`} className="space-y-2">
         {config.fields.map((field, i) => (
           <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-400 font-medium">
@@ -727,7 +727,7 @@ const StripeElementPlaceholder = ({ method }) => {
           </div>
         ))}
       </div>
-      <p className="text-[10px] text-slate-500 font-medium mt-3 flex items-start gap-1.5 leading-relaxed">
+      <p className="text-[0.625rem] text-slate-500 font-medium mt-3 flex items-start gap-1.5 leading-relaxed">
         <Info size={11} className="shrink-0 mt-0.5" />
         <span>{config.hint}</span>
       </p>

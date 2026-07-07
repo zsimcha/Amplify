@@ -24,7 +24,7 @@ const SecondaryNavbar = () => {
           <div className="bg-indigo-900 text-white p-1 md:p-1.5 rounded-lg md:rounded-xl"><LogoIcon /></div>
           <span className="text-xl md:text-2xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
         </Link>
-        <Link to={backTo} className="text-slate-500 font-bold uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-1 hover:text-indigo-900">
+        <Link to={backTo} className="text-slate-500 font-bold uppercase tracking-widest text-[0.625rem] md:text-xs flex items-center gap-1 hover:text-indigo-900">
           <ArrowLeft size={16} /><span>Back</span>
         </Link>
       </div>

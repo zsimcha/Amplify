@@ -176,7 +176,7 @@ const AboutPage = () => {
             <p className="text-lg text-slate-400 font-medium max-w-2xl mx-auto">Bank-grade security ensures your data and payments are fully secure.</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 md:auto-rows-[220px]">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 md:auto-rows-[13.75rem]">
 
             {/* Added col-span-2 for mobile so it spans the top row */}
             <div className="col-span-2 md:col-span-2 md:row-span-2 bg-gradient-to-br from-indigo-700 to-indigo-950 rounded-3xl p-6 md:p-10 reveal flex flex-col relative overflow-hidden">
@@ -203,7 +203,7 @@ const AboutPage = () => {
                         <p className={`text-sm font-bold ${item.highlight ? 'text-amber-200' : 'text-white'}`}>{item.label}</p>
                         <p className="text-xs text-indigo-200/80 font-medium mt-0.5 leading-snug">{item.detail}</p>
                       </div>
-                      <span className={`text-[10px] font-bold uppercase tracking-widest shrink-0 self-center hidden sm:inline ${item.highlight ? 'text-amber-300/80' : 'text-indigo-300/60'}`}>{item.meta}</span>
+                      <span className={`text-[0.625rem] font-bold uppercase tracking-widest shrink-0 self-center hidden sm:inline ${item.highlight ? 'text-amber-300/80' : 'text-indigo-300/60'}`}>{item.meta}</span>
                     </div>
                     {i < arr.length - 1 && (
                       <div className="flex justify-start pl-7 md:pl-8 -my-0.5">
@@ -221,35 +221,35 @@ const AboutPage = () => {
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '50ms' }}>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[10rem] md:min-h-[11.25rem]" style={{ transitionDelay: '50ms' }}>
               <ShieldCheck size={28} strokeWidth={2.25} className="text-emerald-400" />
               <div>
                 <p className="text-2xl md:text-4xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-none">100%</p>
-                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">US Federal & State Compliant</p>
+                <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400">US Federal & State Compliant</p>
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '100ms' }}>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[10rem] md:min-h-[11.25rem]" style={{ transitionDelay: '100ms' }}>
               <CreditCard size={28} strokeWidth={2.25} className="text-amber-400" />
               <div>
                 <p className="text-lg md:text-3xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-tight">Stripe <br/> Secured</p>
-                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Card details never touch our servers</p>
+                <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400">Card details never touch our servers</p>
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '150ms' }}>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between min-h-[10rem] md:min-h-[11.25rem]" style={{ transitionDelay: '150ms' }}>
               <Lock size={28} strokeWidth={2.25} className="text-indigo-300" />
               <div>
                 <p className="text-lg md:text-3xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-tight">Separate <br/> Prize Pools</p>
-                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">In a dedicated, audited account</p>
+                <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400">In a dedicated, audited account</p>
               </div>
             </div>
 
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between hover:bg-white/10 transition-colors min-h-[160px] md:min-h-[180px]" style={{ transitionDelay: '200ms' }}>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-5 md:p-8 reveal flex flex-col justify-between hover:bg-white/10 transition-colors min-h-[10rem] md:min-h-[11.25rem]" style={{ transitionDelay: '200ms' }}>
               <FileText size={28} strokeWidth={2.25} className="text-slate-300" />
               <div>
                 <p className="text-2xl md:text-4xl font-black tracking-tight text-white mb-1 md:mb-1.5 leading-none">Fully Documented</p>
-                <Link to="/rules" className="inline-flex items-center gap-1 text-amber-400 font-bold text-[10px] md:text-xs uppercase tracking-widest hover:gap-1.5 transition-all mt-1">
+                <Link to="/rules" className="inline-flex items-center gap-1 text-amber-400 font-bold text-[0.625rem] md:text-xs uppercase tracking-widest hover:gap-1.5 transition-all mt-1">
                   Official rules <ArrowRight size={12} />
                 </Link>
               </div>

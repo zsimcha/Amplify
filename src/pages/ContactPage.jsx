@@ -144,7 +144,7 @@ const ContactPage = () => {
                     }} 
                   />
                   {emailError && (
-                    <p className="text-red-500 text-[10px] mt-1.5 font-bold flex items-center gap-1">
+                    <p className="text-red-500 text-[0.625rem] mt-1.5 font-bold flex items-center gap-1">
                       <AlertCircle size={12} /> {emailError}
                     </p>
                   )}

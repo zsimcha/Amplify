@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Scale the whole design proportionally on screens wider than the 1536px
+   design baseline. Nearly all sizing (type, spacing, max-w containers) is
+   rem-based, so raising the root font size zooms the entire layout uniformly:
+   at 2560px wide the site keeps laptop proportions instead of pinching into a
+   1280px center column. 1.0417vw equals 16px at exactly 1536px wide, so the
+   transition is seamless; the cap stops type growing absurd on 4K+. */
+@media (min-width: 1536px) {
+  html {
+    font-size: clamp(16px, 1.0417vw, 26px);
+  }
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
