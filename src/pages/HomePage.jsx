@@ -236,7 +236,7 @@ const HomePage = ({ appData }) => {
           density={18}
           maxR={2.6}
           jitter={0}
-          className="absolute -top-8 -right-8 w-[300px] md:w-[520px] h-[240px] md:h-[400px] pointer-events-none"
+          className="absolute -top-8 -right-8 w-[18.75rem] md:w-[32.5rem] h-[15rem] md:h-[25rem] pointer-events-none"
         />
 
         {/* Faint secondary — rigid grid, bottom-left for asymmetry */}

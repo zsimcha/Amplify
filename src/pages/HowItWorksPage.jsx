@@ -637,7 +637,7 @@ const HowItWorksPage = ({ appData }) => {
         {/* DESKTOP: horizontal track with scroll-animated progress */}
         <div className="hidden md:block relative">
           <div
-            className={`absolute top-7 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
+            className={`absolute top-8 z-0 pointer-events-none flex items-center justify-between transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}
             style={{ left: '12.5%', right: '12.5%' }}
           >
             {Array.from({ length: 33 }).map((_, i) => {
@@ -669,13 +669,13 @@ const HowItWorksPage = ({ appData }) => {
                     isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-base mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center font-black text-xl mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
                     {item.num}
                   </div>
-                  <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
+                  <p className={`text-sm font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
                     {item.title}
                   </p>
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[13.75rem]">
+                  <p className="text-base text-slate-600 font-medium leading-relaxed max-w-[15rem]">
                     {item.body}
                   </p>
                 </div>
@@ -686,7 +686,7 @@ const HowItWorksPage = ({ appData }) => {
 
         {/* MOBILE: vertical stack with scroll-animated progress */}
         <div className="md:hidden flex flex-col gap-8 relative z-10">
-          <div className={`absolute left-[1.6875rem] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
+          <div className={`absolute left-[1.9375rem] top-6 bottom-6 w-0.5 z-0 flex flex-col justify-between items-center transition-opacity duration-700 ${membershipProgress > 3 ? 'opacity-100' : 'opacity-0'}`}>
             {Array.from({ length: 30 }).map((_, i) => {
               const dotPosition = (i / 29) * 100;
               const isPassed = membershipProgress >= dotPosition;
@@ -714,14 +714,14 @@ const HowItWorksPage = ({ appData }) => {
                   isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
-                <div className="w-14 h-14 rounded-full shrink-0 flex items-center justify-center font-black text-base ring-4 ring-white bg-slate-900 text-white shadow-soft relative z-10">
+                <div className="w-16 h-16 rounded-full shrink-0 flex items-center justify-center font-black text-xl ring-4 ring-white bg-slate-900 text-white shadow-soft relative z-10">
                   {item.num}
                 </div>
-                <div className="pt-1.5">
-                  <p className={`text-xs font-black uppercase tracking-[0.22em] mb-2 ${item.titleColor}`}>
+                <div className="pt-2">
+                  <p className={`text-sm font-black uppercase tracking-[0.22em] mb-2 ${item.titleColor}`}>
                     {item.title}
                   </p>
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                  <p className="text-base text-slate-600 font-medium leading-relaxed">
                     {item.body}
                   </p>
                 </div>
