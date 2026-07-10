@@ -629,6 +629,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Lock size={16} /> Pay ${totalCharged.toFixed(2)} / Month</>}
                         </button>
 
+                        {/* Auto-renewal disclosure — plain text adjacent to the payment
+                            authorization, per auto-renewal laws (e.g. CA ARL). */}
+                        <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed text-center mt-4">
+                          Your contribution renews every month until you cancel your subscription. You can cancel by <Link to="/contact" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">contacting us</Link>.
+                        </p>
+
                         <div className="flex items-center justify-center gap-4 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mt-4">
                           <span className="flex items-center gap-1.5"><Shield size={12} /> Secured by Stripe</span>
                           <span className="w-1 h-1 rounded-full bg-slate-300"></span>
