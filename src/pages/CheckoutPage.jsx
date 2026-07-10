@@ -625,21 +625,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             </div>
                         )}
 
-                        {/* Auto-renewal disclosure — clear & conspicuous, placed adjacent to
-                            the payment authorization per auto-renewal laws (e.g. CA ARL). */}
-                        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-                          <Info size={16} className="text-amber-600 shrink-0 mt-0.5" />
-                          <div className="text-[0.6875rem] md:text-xs text-amber-900 leading-relaxed">
-                            <p className="font-black uppercase tracking-widest text-amber-700 mb-1">Auto-Renewal Notice</p>
-                            <p className="font-medium">
-                              Your ${totalCharged.toFixed(2)} contribution automatically renews and you'll be charged every month until you cancel your subscription. You can cancel anytime from your account or by <Link to="/contact" className="font-bold underline hover:text-amber-950 transition-colors">contacting us</Link>.
-                            </p>
-                          </div>
-                        </div>
-
                         <button type="submit" disabled={isLoading} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-2 md:gap-3 disabled:opacity-70 disabled:cursor-not-allowed active:bg-black">
                           {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Lock size={16} /> Pay ${totalCharged.toFixed(2)} / Month</>}
                         </button>
+
+                        {/* Auto-renewal disclosure — plain text adjacent to the payment
+                            authorization, per auto-renewal laws (e.g. CA ARL). */}
+                        <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed text-center mt-4">
+                          Your contribution renews every month until you cancel your subscription. You can cancel by <Link to="/contact" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">contacting us</Link>.
+                        </p>
 
                         <div className="flex items-center justify-center gap-4 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mt-4">
                           <span className="flex items-center gap-1.5"><Shield size={12} /> Secured by Stripe</span>
