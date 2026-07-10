@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
+import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown } from 'lucide-react';
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 import CornerConstellation from '../components/CornerConstellation';
@@ -282,24 +282,13 @@ const HomePage = ({ appData }) => {
       {/* Rabbinic Endorsement — compact bar */}
       <section className="py-12 md:py-20 bg-white border-t border-slate-100 px-4">
         <div className="max-w-5xl mx-auto reveal">
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 shadow-soft">
-            <div className="shrink-0 flex flex-row md:flex-col items-center gap-4 md:gap-3 md:w-32">
-              <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md shrink-0">
-                <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-amber-400" strokeWidth={2.25} />
-              </div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 leading-tight md:text-center">
-                Rabbinic Panel
-              </p>
-            </div>
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col items-center text-center gap-4 md:gap-5 shadow-soft">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1]">
+              Approved by leading <span className="italic">Poskim</span>.
+            </h2>
+            <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed max-w-2xl">Our Rabbinic Panel has formally approved the model, including the use of Ma'aser, prize allocation, and charitable disbursement.</p>
 
-            <div className="flex-1">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1] mb-2 md:mb-3">
-                Approved by leading <span className="italic">Poskim</span>.
-              </h2>
-              <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our Rabbinic Panel has formally approved the model, including the use of Ma'aser, prize allocation, and charitable disbursement.</p>
-            </div>
-
-            <Link to="/about#rabbinic-panel" className="shrink-0 inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-xs md:text-sm self-start md:self-center whitespace-nowrap">
+            <Link to="/about#rabbinic-panel" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-xs md:text-sm whitespace-nowrap">
               See the panel <ChevronRight size={16} />
             </Link>
           </div>
