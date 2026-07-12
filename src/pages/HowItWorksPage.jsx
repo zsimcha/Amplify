@@ -78,7 +78,7 @@ const OddsVisualizer = ({ tierData }) => {
   // silver.
   const tierConfig = {
     silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
-    gold:    { winners: 8,  color: '#ca8a04', glow: '#facc15' },
+    gold:    { winners: 8,  color: '#eab308', glow: '#facc15' },
     diamond: { winners: 16, color: '#4f46e5', glow: '#818cf8' },
   };
 
