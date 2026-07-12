@@ -71,10 +71,15 @@ const useCarouselActive = (count) => {
 const OddsVisualizer = ({ tierData }) => {
   const [activeTier, setActiveTier] = useState('diamond');
 
+  // Each winner dot fills with `color` and carries a `drop-shadow` halo in
+  // `glow`. The "pop" comes from a deep, high-contrast fill paired with a
+  // *lighter* glow, which reads as a two-tone luminous halo. Keep that recipe
+  // consistent across all three tiers so gold and diamond read as strongly as
+  // silver.
   const tierConfig = {
     silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
-    gold:    { winners: 8,  color: '#eab308', glow: '#eab308' },
-    diamond: { winners: 16, color: '#818cf8', glow: '#818cf8' },
+    gold:    { winners: 8,  color: '#eab308', glow: '#facc15' },
+    diamond: { winners: 16, color: '#4f46e5', glow: '#818cf8' },
   };
 
   const winnerSet = useMemo(() => {
@@ -126,9 +131,13 @@ const OddsVisualizer = ({ tierData }) => {
 
   const cfg = tierConfig[activeTier];
   const oddsValue = tierData[activeTier].totalOdds.replace(/\s/g, '');
+  // The odds callout sits on a near-black gradient, so use each tier's lighter
+  // `glow` tone for the big number and winners stat rather than the now-deeper
+  // dot fill (which would be too dark to read there). Silver's fill is darker
+  // still, so it keeps its bespoke lighter overrides.
   const isSilver = activeTier === 'silver';
-  const oddsCalloutColor = isSilver ? '#94a3b8' : cfg.color;
-  const winnersStatColor = isSilver ? '#64748b' : cfg.color;
+  const oddsCalloutColor = isSilver ? '#94a3b8' : cfg.glow;
+  const winnersStatColor = isSilver ? '#64748b' : cfg.glow;
 
   return (
     <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-soft">
