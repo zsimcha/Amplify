@@ -225,7 +225,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: checkoutForm.email,
           password: accountPassword,
-          options: { data: { full_name: checkoutForm.fullName } },
+          options: {
+            data: { full_name: checkoutForm.fullName },
+            // Where the confirmation link lands after the user confirms.
+            // Must be listed in Supabase Auth → URL Configuration → Redirect URLs.
+            emailRedirectTo: `${window.location.origin}/account`,
+          },
         });
 
         if (signUpError) {

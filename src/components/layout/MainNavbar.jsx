@@ -66,15 +66,15 @@ const MainNavbar = () => {
           </button>
           
           <div className="hidden md:flex items-center gap-5">
-            <NavLink
-              to={user ? '/account' : '/login'}
-              className={`flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-widest transition-colors ${isScrolled ? 'text-slate-500 hover:text-indigo-900' : 'text-indigo-200 hover:text-white'}`}
-            >
-              <User size={14} /> {user ? 'My Account' : 'Sign In'}
-            </NavLink>
             <Link to="/circles" className="flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
               Join the Circle
             </Link>
+            <NavLink
+              to={user ? '/account' : '/login'}
+              className={`flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-widest transition-colors ${isScrolled ? 'text-slate-400 hover:text-indigo-900' : 'text-indigo-200/80 hover:text-white'}`}
+            >
+              <User size={14} /> {user ? 'My Account' : 'Sign In'}
+            </NavLink>
           </div>
         </div>
       </nav>
