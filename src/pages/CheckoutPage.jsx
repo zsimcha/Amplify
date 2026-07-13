@@ -5,6 +5,7 @@ import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle,
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
 
 const US_STATES = [
   "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", 
@@ -20,6 +21,7 @@ const STRIPE_FEE_FIXED = 0.30;
 
 const CheckoutPage = ({ appData, setAppData }) => {
   const location = useLocation();
+  const { user } = useAuth();
   const initialTier = location.state?.tier || 'silver';
 
   const [selectedTier, setSelectedTier] = useState(initialTier);
@@ -41,7 +43,20 @@ const CheckoutPage = ({ appData, setAppData }) => {
     zipCode: '' 
   });
   const [hasEditedDisplayName, setHasEditedDisplayName] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false); 
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  // Account credentials (only collected when the visitor isn't signed in).
+  // The password goes straight to Supabase Auth (auth.signUp) — it is never
+  // stored in application tables or sent anywhere else.
+  const [accountPassword, setAccountPassword] = useState('');
+  const [accountPasswordConfirm, setAccountPasswordConfirm] = useState('');
+
+  // Signed-in members check out under their existing account.
+  useEffect(() => {
+    if (user?.email) {
+      setCheckoutForm(prev => (prev.email ? prev : { ...prev, email: user.email }));
+    }
+  }, [user]);
   
   const [validationErrors, setValidationErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -158,6 +173,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
     if (!checkoutForm.state) errors.state = "Select a state.";
     if (!zipRegex.test(checkoutForm.zipCode)) errors.zipCode = "Enter a valid zip code.";
 
+    // Account credentials (new visitors only — signed-in members already have one)
+    if (!user) {
+      if (accountPassword.length < 8) errors.accountPassword = "Password must be at least 8 characters.";
+      if (accountPassword !== accountPasswordConfirm) errors.accountPasswordConfirm = "Passwords do not match.";
+    }
+
     // Billing address validation (only if user opted out of "same as above")
     if (!billingSameAsAccount) {
       if (!billingAddress.line1.trim()) errors.billingLine1 = "Billing address is required.";
@@ -196,6 +217,34 @@ const CheckoutPage = ({ appData, setAppData }) => {
       // 
       // For now we just fire the existing Supabase RPC.
       // ============================================================
+
+      // 0. Create the member's account first (Supabase Auth handles the
+      //    password — hashed server-side, never stored in our tables).
+      //    Signed-in members skip this and check out under their account.
+      if (!user) {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: checkoutForm.email,
+          password: accountPassword,
+          options: { data: { full_name: checkoutForm.fullName } },
+        });
+
+        if (signUpError) {
+          if (/already registered/i.test(signUpError.message || '')) {
+            throw new Error("An account already exists for this email. Please sign in first, then complete your checkout.");
+          }
+          throw new Error(signUpError.message || "Could not create your account. Please try again.");
+        }
+
+        // When email confirmation is required, Supabase returns an obfuscated
+        // user with no identities for emails that already have an account.
+        if (signUpData?.user && Array.isArray(signUpData.user.identities) && signUpData.user.identities.length === 0) {
+          throw new Error("An account already exists for this email. Please sign in first, then complete your checkout.");
+        }
+        // If a session was returned, the RPC below runs authenticated and the
+        // subscription links to the account immediately. If email confirmation
+        // is required (no session yet), the subscription links automatically
+        // the moment the member confirms their email.
+      }
 
       const { error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
@@ -371,6 +420,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
               Welcome to the {selectedCommunity} community. Your monthly impact starts today.
 
                 </p>
+                {!user && (
+                  <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-10 -mt-4 md:-mt-8">
+                    We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage your membership anytime from <span className="font-bold text-slate-500">My Account</span>.
+                  </p>
+                )}
                 <Link to="/" className="inline-block px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
             </div>
           ) : (
@@ -458,6 +512,34 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             )}
                           </div>
                         </div>
+
+                        {/* ACCOUNT CREDENTIALS — password is handled by Supabase Auth,
+                            never stored in application tables. Hidden when signed in. */}
+                        {user ? (
+                          <div className="bg-indigo-50/60 border border-indigo-100 rounded-xl p-4 flex items-start gap-3">
+                            <CheckCircle size={16} className="text-indigo-600 shrink-0 mt-0.5" />
+                            <p className="text-xs md:text-[0.8125rem] text-indigo-900 font-medium leading-relaxed">
+                              You're signed in as <span className="font-bold">{user.email}</span>. This membership will be added to your account.
+                            </p>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div className="md:col-span-2 -mb-1">
+                              <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400">Create Your Account</p>
+                              <p className="text-[0.5625rem] text-slate-400 mt-1 font-medium">Manage your membership, receipts, and payment details anytime.</p>
+                            </div>
+                            <div>
+                              <label htmlFor="accountPassword" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Password</label>
+                              <input id="accountPassword" type="password" autoComplete="new-password" value={accountPassword} onChange={e => setAccountPassword(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPassword ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="At least 8 characters" />
+                              {validationErrors.accountPassword && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.accountPassword}</p>}
+                            </div>
+                            <div>
+                              <label htmlFor="accountPasswordConfirm" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Confirm Password</label>
+                              <input id="accountPasswordConfirm" type="password" autoComplete="new-password" value={accountPasswordConfirm} onChange={e => setAccountPasswordConfirm(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPasswordConfirm ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Re-enter your password" />
+                              {validationErrors.accountPasswordConfirm && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.accountPasswordConfirm}</p>}
+                            </div>
+                          </div>
+                        )}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                           <div>
