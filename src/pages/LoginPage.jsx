@@ -21,6 +21,10 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Set when sign-in fails specifically because the email isn't confirmed yet,
+  // so we can guide the user instead of showing a misleading "wrong password".
+  const [needsConfirm, setNeedsConfirm] = useState(false);
+  const [resendState, setResendState] = useState(null); // null | 'sending' | 'sent'
 
   // Already signed in? Go straight to the account page.
   useEffect(() => {
@@ -33,12 +37,21 @@ const LoginPage = () => {
     e.preventDefault();
     setError(null);
     setNotice(null);
+    setNeedsConfirm(false);
+    setResendState(null);
     setIsSubmitting(true);
     try {
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
-        // Generic message — never reveal whether the email exists.
-        setError('Invalid email or password.');
+        // Supabase returns a distinct error when the account exists but the
+        // email hasn't been confirmed yet — surface that specifically so the
+        // user isn't told their password is wrong. Everything else stays
+        // generic so real credentials aren't confirmed to an attacker.
+        if (signInError.code === 'email_not_confirmed' || /not confirmed/i.test(signInError.message || '')) {
+          setNeedsConfirm(true);
+        } else {
+          setError('Invalid email or password.');
+        }
         return;
       }
       navigate(location.state?.from || '/account', { replace: true });
@@ -46,6 +59,21 @@ const LoginPage = () => {
       setError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setResendState('sending');
+    try {
+      await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/account` },
+      });
+    } catch {
+      // Ignore — we show the same confirmation regardless (no enumeration).
+    } finally {
+      setResendState('sent');
     }
   };
 
@@ -89,6 +117,29 @@ const LoginPage = () => {
             {notice && (
               <div className="mb-5 bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
                 <CheckCircle size={14} className="mt-0.5 shrink-0" /> <p>{notice}</p>
+              </div>
+            )}
+            {needsConfirm && (
+              <div className="mb-5 bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
+                <AlertCircle size={14} className="mt-0.5 shrink-0" />
+                <div>
+                  <p className="mb-1">Please confirm your email first.</p>
+                  <p className="font-medium text-amber-700/90 leading-relaxed">
+                    We sent a confirmation link when you signed up. Check your inbox to activate your account, then sign in.
+                  </p>
+                  {resendState === 'sent' ? (
+                    <p className="mt-2 font-medium text-amber-700/90">If your account still needs confirming, a new link is on its way.</p>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleResendConfirmation}
+                      disabled={resendState === 'sending'}
+                      className="mt-2 underline hover:text-amber-950 transition-colors disabled:opacity-60"
+                    >
+                      {resendState === 'sending' ? 'Sending...' : 'Resend confirmation email'}
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -141,7 +192,7 @@ const LoginPage = () => {
             <div className="mt-6 flex flex-col gap-3 text-center">
               <button
                 type="button"
-                onClick={() => { setMode(mode === 'signin' ? 'forgot' : 'signin'); setError(null); setNotice(null); }}
+                onClick={() => { setMode(mode === 'signin' ? 'forgot' : 'signin'); setError(null); setNotice(null); setNeedsConfirm(false); setResendState(null); }}
                 className="text-xs font-bold text-indigo-600 hover:text-indigo-900 transition-colors uppercase tracking-widest"
               >
                 {mode === 'signin' ? 'Forgot your password?' : 'Back to sign in'}

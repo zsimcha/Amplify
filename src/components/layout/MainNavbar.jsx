@@ -65,15 +65,17 @@ const MainNavbar = () => {
             <Menu size={24} />
           </button>
           
-          <div className="hidden md:flex items-center gap-5">
+          <div className="hidden md:flex items-center gap-4">
             <Link to="/circles" className="flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
               Join the Circle
             </Link>
             <NavLink
               to={user ? '/account' : '/login'}
-              className={`flex items-center gap-1.5 text-[0.6875rem] font-bold uppercase tracking-widest transition-colors ${isScrolled ? 'text-slate-400 hover:text-indigo-900' : 'text-indigo-200/80 hover:text-white'}`}
+              aria-label={user ? 'My Account' : 'Sign In'}
+              title={user ? 'My Account' : 'Sign In'}
+              className={`flex items-center justify-center h-10 transition-colors ${isScrolled ? 'text-slate-400 hover:text-indigo-900' : 'text-indigo-200/80 hover:text-white'}`}
             >
-              <User size={14} /> {user ? 'My Account' : 'Sign In'}
+              <User size={24} strokeWidth={2.25} />
             </NavLink>
           </div>
         </div>
