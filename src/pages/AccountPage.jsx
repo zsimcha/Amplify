@@ -8,7 +8,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown
+  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
@@ -55,6 +55,7 @@ const AccountPage = () => {
   const [subscriptions, setSubscriptions] = useState(null); // null = loading
   const [subsError, setSubsError] = useState(null);
   const [confirmCancelId, setConfirmCancelId] = useState(null);
+  const [cancelModalId, setCancelModalId] = useState(null); // retention modal (tiers with a lower option)
   const [cancellingId, setCancellingId] = useState(null);
   const [cancelFeedback, setCancelFeedback] = useState(null);
 
@@ -113,6 +114,7 @@ const AccountPage = () => {
     } finally {
       setCancellingId(null);
       setConfirmCancelId(null);
+      setCancelModalId(null);
     }
   };
 
@@ -369,21 +371,6 @@ const AccountPage = () => {
                                 Keep Membership
                               </button>
                             </div>
-                            {/* Offer a lower tier as an alternative to leaving — shown only when
-                                there's actually a cheaper plan to move to. Purely optional; the
-                                cancel button above stays a single click. */}
-                            {tierStyle.price > 250 && (
-                              <p className="mt-3 pt-3 border-t border-red-200/60 text-[0.6875rem] text-slate-600 font-medium leading-relaxed">
-                                Prefer to lower your monthly contribution instead of leaving?{' '}
-                                <button
-                                  onClick={() => { setConfirmCancelId(null); setChangePlanId(sub.id); setPendingTier(null); setCancelFeedback(null); }}
-                                  disabled={cancellingId === sub.id}
-                                  className="font-bold text-indigo-600 hover:text-indigo-900 underline transition-colors"
-                                >
-                                  Change your plan
-                                </button>
-                              </p>
-                            )}
                           </div>
                         ) : (
                           <div className="flex items-center justify-between gap-3">
@@ -394,13 +381,74 @@ const AccountPage = () => {
                               <ArrowUpDown size={12} /> Change plan
                             </button>
                             <button
-                              onClick={() => { setConfirmCancelId(sub.id); setChangePlanId(null); setPendingTier(null); setCancelFeedback(null); }}
+                              onClick={() => {
+                                setChangePlanId(null); setPendingTier(null); setCancelFeedback(null);
+                                // Tiers with a lower option get the retention modal first;
+                                // Silver (nothing lower to offer) goes straight to confirm.
+                                if (tierStyle.price > 250) setCancelModalId(sub.id);
+                                else setConfirmCancelId(sub.id);
+                              }}
                               className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"
                             >
                               Cancel membership
                             </button>
                           </div>
                         )}
+                      </div>
+                    )}
+
+                    {/* Retention modal — a single, dismissible offer to downgrade
+                        instead of leaving. Cancel stays one obvious click, so
+                        this offers an alternative rather than obstructing the exit. */}
+                    {cancelModalId === sub.id && (
+                      <div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-150"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Cancel membership"
+                        onClick={() => setCancelModalId(null)}
+                      >
+                        <div
+                          className="relative bg-white rounded-2xl md:rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 animate-in zoom-in-95 duration-200"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <button
+                            onClick={() => setCancelModalId(null)}
+                            aria-label="Close"
+                            className="absolute top-4 right-4 text-slate-300 hover:text-slate-500 transition-colors"
+                          >
+                            <X size={18} />
+                          </button>
+
+                          <h3 className="text-xl md:text-2xl font-black uppercase italic text-indigo-950 tracking-tight mb-3 pr-6">Before you go</h3>
+                          <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
+                            Prefer to lower your monthly contribution instead of leaving? You can move to a lower tier and stay in a circle for less each month.
+                          </p>
+
+                          <button
+                            onClick={() => { setCancelModalId(null); setChangePlanId(sub.id); setPendingTier(null); }}
+                            className="w-full py-3.5 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black transition-colors flex items-center justify-center gap-2"
+                          >
+                            <ArrowUpDown size={14} /> See lower plans
+                          </button>
+
+                          <div className="my-4 flex items-center gap-3">
+                            <div className="flex-grow h-px bg-slate-100"></div>
+                            <span className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-300">or</span>
+                            <div className="flex-grow h-px bg-slate-100"></div>
+                          </div>
+
+                          <p className="text-[0.6875rem] text-slate-500 font-medium leading-relaxed mb-3 text-center">
+                            Cancelling leaves your circle and stops future monthly contributions.
+                          </p>
+                          <button
+                            onClick={() => handleCancel(sub.id)}
+                            disabled={cancellingId === sub.id}
+                            className="w-full py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-black uppercase tracking-widest text-[0.625rem] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors disabled:opacity-60"
+                          >
+                            {cancellingId === sub.id ? 'Cancelling...' : 'Cancel my membership'}
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
