@@ -8,7 +8,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, XCircle, ChevronRight, ArrowUpDown
+  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
@@ -17,9 +17,9 @@ import { useAuth } from '../context/AuthContext';
 
 // Display-only; authoritative pricing lives server-side in process_checkout.
 const TIER_DISPLAY = {
-  silver:  { price: 250,  text: 'text-slate-500',   dot: 'bg-slate-400' },
-  gold:    { price: 500,  text: 'text-[#ca8a04]',   dot: 'bg-[#eab308]' },
-  diamond: { price: 1000, text: 'text-indigo-600',  dot: 'bg-[#818cf8]' },
+  silver:  { price: 250,  prize: '$25,000',  odds: '1 / 100', text: 'text-slate-500',  dot: 'bg-slate-400' },
+  gold:    { price: 500,  prize: '$50,000',  odds: '1 / 50',  text: 'text-[#ca8a04]',  dot: 'bg-[#eab308]' },
+  diamond: { price: 1000, prize: '$100,000', odds: '1 / 25',  text: 'text-indigo-600', dot: 'bg-[#818cf8]' },
 };
 
 const STATUS_STYLES = {
@@ -296,9 +296,19 @@ const AccountPage = () => {
                                           : 'border-slate-200 bg-white hover:border-slate-300'
                                     }`}
                                   >
+                                    {isCurrent && <p className="text-[0.5rem] font-black uppercase tracking-widest text-slate-400 mb-1">Current</p>}
                                     <p className={`text-sm font-black uppercase italic tracking-tight ${ts.text}`}>{t}</p>
                                     <p className="text-[0.625rem] font-bold text-slate-500 mt-0.5">${ts.price}/mo</p>
-                                    {isCurrent && <p className="text-[0.5rem] font-black uppercase tracking-widest text-slate-400 mt-1">Current</p>}
+                                    <div className="mt-2 pt-2 border-t border-slate-100 space-y-1.5 text-left">
+                                      <div>
+                                        <p className="text-[0.5rem] font-bold uppercase tracking-widest text-slate-400 leading-none">Grand Prize</p>
+                                        <p className={`text-[0.6875rem] font-black ${ts.text}`}>{ts.prize}</p>
+                                      </div>
+                                      <div>
+                                        <p className="text-[0.5rem] font-bold uppercase tracking-widest text-slate-400 leading-none">Odds up to</p>
+                                        <p className="text-[0.6875rem] font-black text-slate-700 tabular-nums">{ts.odds}</p>
+                                      </div>
+                                    </div>
                                   </button>
                                 );
                               })}
@@ -361,19 +371,18 @@ const AccountPage = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center justify-between gap-3">
                             <button
                               onClick={() => { setChangePlanId(sub.id); setPendingTier(null); setConfirmCancelId(null); setChangeFeedback(null); }}
-                              className="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-900 transition-colors"
+                              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
                             >
                               <ArrowUpDown size={12} /> Change plan
                             </button>
-                            <span className="w-px h-3 bg-slate-200"></span>
                             <button
                               onClick={() => { setConfirmCancelId(sub.id); setChangePlanId(null); setPendingTier(null); setCancelFeedback(null); }}
-                              className="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"
+                              className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"
                             >
-                              <XCircle size={12} /> Cancel membership
+                              Cancel membership
                             </button>
                           </div>
                         )}
