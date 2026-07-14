@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
 import { LogoIcon } from './SecondaryNavbar';
+import { useAuth } from '../../context/AuthContext';
 
 const MainNavbar = () => {
   const location = useLocation();
+  const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -63,9 +65,19 @@ const MainNavbar = () => {
             <Menu size={24} />
           </button>
           
-          <Link to="/circles" className="hidden md:flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
-            Join the Circle
-          </Link>
+          <div className="hidden md:flex items-center gap-4">
+            <Link to="/circles" className="flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
+              Join the Circle
+            </Link>
+            <NavLink
+              to={user ? '/account' : '/login'}
+              aria-label={user ? 'My Account' : 'Sign In'}
+              title={user ? 'My Account' : 'Sign In'}
+              className={`flex items-center justify-center h-10 transition-colors ${isScrolled ? 'text-slate-400 hover:text-indigo-900' : 'text-indigo-200/80 hover:text-white'}`}
+            >
+              <User size={24} strokeWidth={2.25} />
+            </NavLink>
+          </div>
         </div>
       </nav>
 
@@ -82,6 +94,9 @@ const MainNavbar = () => {
                 <NavLink to="/grant" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>The Grant</NavLink>
                 <NavLink to="/circles" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>Circles</NavLink>
                 <NavLink to="/faq" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>FAQ</NavLink>
+                <NavLink to={user ? '/account' : '/login'} onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>
+                  <span className="flex items-center gap-2"><User size={16} /> {user ? 'My Account' : 'Sign In'}</span>
+                </NavLink>
             </div>
             <div className="p-6 border-t border-slate-50 shrink-0 text-left">
                 <Link to="/circles" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center w-full py-5 bg-amber-400 text-slate-900 rounded-lg font-bold uppercase tracking-widest text-sm shadow-xl shadow-amber-400/20">

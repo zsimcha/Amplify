@@ -9,7 +9,11 @@ import FaqPage from './pages/FaqPage';
 import CirclesPage from './pages/CirclesPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
+import LoginPage from './pages/LoginPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import AccountPage from './pages/AccountPage';
 import NotFoundPage from './pages/NotFoundPage';
+import { AuthProvider } from './context/AuthContext';
 import RulesContent from './components/RulesContent';
 import PrivacyPolicyContent from './components/PrivacyPolicyContent';
 import TermsContent from './components/TermsContent';
@@ -112,6 +116,7 @@ function App() {
   }, []);
 
   return (
+    <AuthProvider>
     <Router>
       <ScrollToTop />
       <Routes>
@@ -126,6 +131,10 @@ function App() {
         <Route path="/checkout" element={<CheckoutPage appData={appState} setAppData={setAppData} />} />
         <Route path="/contact" element={<ContactPage />} />
 
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/account" element={<AccountPage />} />
+
         <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /></LegalPageLayout>} />
         <Route path="/privacy" element={<LegalPageLayout title="Privacy Policy"><PrivacyPolicyContent /></LegalPageLayout>} />
         <Route path="/terms" element={<LegalPageLayout title="Terms of Service"><TermsContent /></LegalPageLayout>} />
@@ -134,6 +143,7 @@ function App() {
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 
