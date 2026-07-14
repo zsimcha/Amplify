@@ -1,5 +1,5 @@
 // src/pages/CheckoutPage.jsx
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
@@ -24,7 +24,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const { user } = useAuth();
   const initialTier = location.state?.tier || 'silver';
 
-  const [selectedTier, setSelectedTier] = useState(initialTier);
+  const [selectedTier] = useState(initialTier);
   const [selectedCommunity, setSelectedCommunity] = useState("General");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,6 +59,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
   }, [user]);
   
   const [validationErrors, setValidationErrors] = useState({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [touched, setTouched] = useState({}); // fields the user has visited (by error key)
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
@@ -157,13 +159,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const feeBeingCovered = (paymentMethod !== 'bank') && coverFee;
   const totalCharged = feeBeingCovered ? basePrice + processingFee : basePrice;
 
-  const validateForm = () => {
+  // Pure: derives the current error set from form state (no side effects), so
+  // it can be reused for both submit-time and live (on-change) validation.
+  const computeErrors = useCallback(() => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     const zipRegex = /^\d{5}(-\d{4})?$/;
     const cleanPhone = checkoutForm.phone.replace(/\D/g, '');
-    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone); 
-    
+    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone);
+
     if (!checkoutForm.fullName.trim()) errors.fullName = "Full name is required.";
     if (!checkoutForm.displayName.trim() && !checkoutForm.isAnonymous) errors.displayName = "Display name is required.";
     if (!emailRegex.test(checkoutForm.email)) errors.email = "Enter a valid email.";
@@ -189,13 +193,38 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
     if (!agreedToTerms) errors.terms = "You must agree to the terms to proceed.";
 
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    return errors;
+  }, [checkoutForm, user, accountPassword, accountPasswordConfirm, billingSameAsAccount, billingAddress, agreedToTerms]);
+
+  const validateForm = () => Object.keys(computeErrors()).length === 0;
+
+  // A few input ids don't match their error key.
+  const ID_TO_ERROR_KEY = { zip: 'zipCode' };
+
+  // Mark a field visited once the user leaves it (React onBlur bubbles), so its
+  // error can start showing. Delegated from the <form> so we don't wire every input.
+  const handleFieldBlur = (e) => {
+    const id = e.target?.id;
+    if (!id) return;
+    const key = ID_TO_ERROR_KEY[id] || id;
+    setTouched(prev => (prev[key] ? prev : { ...prev, [key]: true }));
   };
+
+  // Keep displayed errors in sync with the form. A field's error shows once it's
+  // been visited (on blur) or after a submit attempt, and clears live as it's
+  // fixed — so users see errors as they fill the form, not only on submit.
+  useEffect(() => {
+    const all = computeErrors();
+    const visible = submitAttempted
+      ? all
+      : Object.fromEntries(Object.entries(all).filter(([key]) => touched[key]));
+    setValidationErrors(visible);
+  }, [computeErrors, submitAttempted, touched]);
 
   const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
+    setSubmitAttempted(true);
     if (!validateForm()) return;
     
     setIsLoading(true);
@@ -229,7 +258,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
             data: { full_name: checkoutForm.fullName },
             // Where the confirmation link lands after the user confirms.
             // Must be listed in Supabase Auth → URL Configuration → Redirect URLs.
-            emailRedirectTo: `${window.location.origin}/account`,
+            emailRedirectTo: `${window.location.origin}/welcome`,
           },
         });
 
@@ -468,7 +497,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       </div>
                   </div>
 
-                  <form onSubmit={handleCheckoutSubmit} className="space-y-6">
+                  <form onSubmit={handleCheckoutSubmit} onBlur={handleFieldBlur} className="space-y-6">
                       
                       {/* ============ SECTION 1: YOUR DETAILS ============ */}
                       <section className="space-y-4">
@@ -661,18 +690,18 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           <div className="space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 p-4 rounded-xl bg-slate-50 border border-transparent">
                             <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Billing Address</p>
                             <div>
-                              <input type="text" value={billingAddress.line1} onChange={e => setBillingAddress({...billingAddress, line1: e.target.value})} autoComplete="billing street-address" className={`w-full bg-slate-50 border ${validationErrors.billingLine1 ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Street address" />
+                              <input id="billingLine1" type="text" value={billingAddress.line1} onChange={e => setBillingAddress({...billingAddress, line1: e.target.value})} autoComplete="billing street-address" className={`w-full bg-slate-50 border ${validationErrors.billingLine1 ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Street address" />
                               {validationErrors.billingLine1 && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingLine1}</p>}
                             </div>
                             <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className="w-full bg-slate-50 border border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100 rounded-xl p-3 text-sm outline-none transition-all" placeholder="Apt, suite, etc. (optional)" />
                             <div className="grid grid-cols-6 gap-3">
                               <div className="col-span-6 md:col-span-3">
-                                <input type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={`w-full bg-slate-50 border ${validationErrors.billingCity ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="City" />
+                                <input id="billingCity" type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={`w-full bg-slate-50 border ${validationErrors.billingCity ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="City" />
                                 {validationErrors.billingCity && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingCity}</p>}
                               </div>
                               <div className="col-span-3 md:col-span-1">
                                 <div className="relative">
-                                  <select value={billingAddress.state} onChange={e => setBillingAddress({...billingAddress, state: e.target.value})} className={`w-full bg-slate-50 border appearance-none ${validationErrors.billingState ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
+                                  <select id="billingState" value={billingAddress.state} onChange={e => setBillingAddress({...billingAddress, state: e.target.value})} className={`w-full bg-slate-50 border appearance-none ${validationErrors.billingState ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all cursor-pointer`}>
                                     <option value="" disabled>--</option>
                                     {US_STATES.map(state => (<option key={state} value={state}>{state}</option>))}
                                   </select>
@@ -681,7 +710,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                                 {validationErrors.billingState && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingState}</p>}
                               </div>
                               <div className="col-span-3 md:col-span-2">
-                                <input type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={`w-full bg-slate-50 border ${validationErrors.billingZip ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="ZIP" />
+                                <input id="billingZip" type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={`w-full bg-slate-50 border ${validationErrors.billingZip ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="ZIP" />
                                 {validationErrors.billingZip && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingZip}</p>}
                               </div>
                             </div>
@@ -706,9 +735,19 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </p>
                         </label>
 
-                        {validationErrors.terms && (
-                            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
-                                <AlertCircle size={14} className="mt-0.5 shrink-0"/> <p>{validationErrors.terms}</p>
+                        {/* Validation summary — surfaces every error next to the Pay
+                            button so nothing is missed when scrolled to the bottom.
+                            Only appears after a submit attempt; updates live as fields
+                            are corrected. */}
+                        {submitAttempted && Object.keys(validationErrors).length > 0 && (
+                            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in" role="alert">
+                                <AlertCircle size={14} className="mt-0.5 shrink-0"/>
+                                <div>
+                                    <p className="mb-1">Please fix the following before continuing:</p>
+                                    <ul className="list-disc list-inside font-medium space-y-0.5">
+                                        {[...new Set(Object.values(validationErrors))].map((msg, i) => <li key={i}>{msg}</li>)}
+                                    </ul>
+                                </div>
                             </div>
                         )}
 
