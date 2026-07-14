@@ -8,7 +8,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, XCircle, ChevronRight
+  CheckCircle, ShieldCheck, XCircle, ChevronRight, ArrowUpDown
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
@@ -57,6 +57,11 @@ const AccountPage = () => {
   const [confirmCancelId, setConfirmCancelId] = useState(null);
   const [cancellingId, setCancellingId] = useState(null);
   const [cancelFeedback, setCancelFeedback] = useState(null);
+
+  const [changePlanId, setChangePlanId] = useState(null); // sub whose plan-picker is open
+  const [pendingTier, setPendingTier] = useState(null);   // tier selected, awaiting confirm
+  const [changingId, setChangingId] = useState(null);
+  const [changeFeedback, setChangeFeedback] = useState(null);
 
   const [newEmail, setNewEmail] = useState('');
   const [emailFeedback, setEmailFeedback] = useState(null);
@@ -108,6 +113,34 @@ const AccountPage = () => {
     } finally {
       setCancellingId(null);
       setConfirmCancelId(null);
+    }
+  };
+
+  const handleChangeTier = async (subscriptionId, newTier) => {
+    setChangingId(subscriptionId);
+    setChangeFeedback(null);
+    try {
+      const { data, error } = await supabase.rpc('change_my_tier', {
+        p_subscription_id: subscriptionId,
+        p_new_tier: newTier,
+      });
+      if (error) {
+        setChangeFeedback({ kind: 'error', text: 'Could not change your plan. Please try again or contact us.' });
+        return;
+      }
+      // The RPC returns { success: false, message } for rejected changes.
+      if (data && data.success === false) {
+        setChangeFeedback({ kind: 'error', text: data.message || 'Could not change your plan.' });
+        return;
+      }
+      setChangeFeedback({ kind: 'success', text: `Your plan has been changed to ${newTier}. Your monthly contribution updates accordingly.` });
+      await fetchSubscriptions();
+      setChangePlanId(null);
+      setPendingTier(null);
+    } catch {
+      setChangeFeedback({ kind: 'error', text: 'Something went wrong. Please try again.' });
+    } finally {
+      setChangingId(null);
     }
   };
 
@@ -241,7 +274,70 @@ const AccountPage = () => {
 
                     {isActive && (
                       <div className="mt-4 pt-4 border-t border-slate-100">
-                        {confirmCancelId === sub.id ? (
+                        {changePlanId === sub.id ? (
+                          <div className="animate-in fade-in">
+                            <p className="text-xs font-bold text-slate-700 mb-3">Choose your plan</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              {['silver', 'gold', 'diamond'].map((t) => {
+                                const ts = TIER_DISPLAY[t];
+                                const isCurrent = t === sub.tier;
+                                const isPending = t === pendingTier;
+                                return (
+                                  <button
+                                    key={t}
+                                    type="button"
+                                    disabled={isCurrent || changingId === sub.id}
+                                    onClick={() => setPendingTier(isPending ? null : t)}
+                                    className={`relative p-3 rounded-xl border-2 text-center transition-all ${
+                                      isCurrent
+                                        ? 'border-slate-200 bg-slate-50 cursor-default'
+                                        : isPending
+                                          ? 'border-indigo-600 bg-indigo-50 ring-2 ring-indigo-100'
+                                          : 'border-slate-200 bg-white hover:border-slate-300'
+                                    }`}
+                                  >
+                                    <p className={`text-sm font-black uppercase italic tracking-tight ${ts.text}`}>{t}</p>
+                                    <p className="text-[0.625rem] font-bold text-slate-500 mt-0.5">${ts.price}/mo</p>
+                                    {isCurrent && <p className="text-[0.5rem] font-black uppercase tracking-widest text-slate-400 mt-1">Current</p>}
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {pendingTier ? (
+                              <div className="mt-3 bg-indigo-50 border border-indigo-100 rounded-xl p-3 animate-in fade-in">
+                                <p className="text-[0.6875rem] text-indigo-900 font-medium leading-relaxed mb-3">
+                                  {TIER_DISPLAY[pendingTier].price > tierStyle.price ? 'Upgrade' : 'Downgrade'} to{' '}
+                                  <span className="font-black uppercase">{pendingTier}</span> — your monthly contribution changes from{' '}
+                                  <span className="font-bold">${tierStyle.price}</span> to <span className="font-bold">${TIER_DISPLAY[pendingTier].price}</span>, and you'll move to a {pendingTier} circle.
+                                </p>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => handleChangeTier(sub.id, pendingTier)}
+                                    disabled={changingId === sub.id}
+                                    className="px-4 py-2 bg-indigo-900 text-white rounded-lg text-[0.625rem] font-black uppercase tracking-widest hover:bg-black transition-colors disabled:opacity-60"
+                                  >
+                                    {changingId === sub.id ? 'Changing...' : 'Confirm Change'}
+                                  </button>
+                                  <button
+                                    onClick={() => { setChangePlanId(null); setPendingTier(null); }}
+                                    disabled={changingId === sub.id}
+                                    className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[0.625rem] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => { setChangePlanId(null); setPendingTier(null); }}
+                                className="mt-3 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                              >
+                                Close
+                              </button>
+                            )}
+                          </div>
+                        ) : confirmCancelId === sub.id ? (
                           <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-in fade-in">
                             <p className="text-xs font-bold text-red-700 mb-1">Cancel this membership?</p>
                             <p className="text-[0.6875rem] text-red-600/80 font-medium leading-relaxed mb-3">
@@ -265,18 +361,28 @@ const AccountPage = () => {
                             </div>
                           </div>
                         ) : (
-                          <button
-                            onClick={() => { setConfirmCancelId(sub.id); setCancelFeedback(null); }}
-                            className="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"
-                          >
-                            <XCircle size={12} /> Cancel membership
-                          </button>
+                          <div className="flex items-center gap-4">
+                            <button
+                              onClick={() => { setChangePlanId(sub.id); setPendingTier(null); setConfirmCancelId(null); setChangeFeedback(null); }}
+                              className="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-900 transition-colors"
+                            >
+                              <ArrowUpDown size={12} /> Change plan
+                            </button>
+                            <span className="w-px h-3 bg-slate-200"></span>
+                            <button
+                              onClick={() => { setConfirmCancelId(sub.id); setChangePlanId(null); setPendingTier(null); setCancelFeedback(null); }}
+                              className="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"
+                            >
+                              <XCircle size={12} /> Cancel membership
+                            </button>
+                          </div>
                         )}
                       </div>
                     )}
                   </div>
                 );
               })}
+              {changeFeedback && <Feedback kind={changeFeedback.kind}>{changeFeedback.text}</Feedback>}
               {cancelFeedback && <Feedback kind={cancelFeedback.kind}>{cancelFeedback.text}</Feedback>}
             </div>
           )}
