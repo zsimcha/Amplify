@@ -1,5 +1,5 @@
 // src/pages/CheckoutPage.jsx
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
@@ -24,7 +24,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const { user } = useAuth();
   const initialTier = location.state?.tier || 'silver';
 
-  const [selectedTier, setSelectedTier] = useState(initialTier);
+  const [selectedTier] = useState(initialTier);
   const [selectedCommunity, setSelectedCommunity] = useState("General");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,6 +59,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   }, [user]);
   
   const [validationErrors, setValidationErrors] = useState({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
@@ -157,13 +158,15 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const feeBeingCovered = (paymentMethod !== 'bank') && coverFee;
   const totalCharged = feeBeingCovered ? basePrice + processingFee : basePrice;
 
-  const validateForm = () => {
+  // Pure: derives the current error set from form state (no side effects), so
+  // it can be reused for both submit-time and live (on-change) validation.
+  const computeErrors = useCallback(() => {
     const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
     const zipRegex = /^\d{5}(-\d{4})?$/;
     const cleanPhone = checkoutForm.phone.replace(/\D/g, '');
-    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone); 
-    
+    const isInvalidPhone = cleanPhone.length < 10 || /^(\d)\1{9}$/.test(cleanPhone);
+
     if (!checkoutForm.fullName.trim()) errors.fullName = "Full name is required.";
     if (!checkoutForm.displayName.trim() && !checkoutForm.isAnonymous) errors.displayName = "Display name is required.";
     if (!emailRegex.test(checkoutForm.email)) errors.email = "Enter a valid email.";
@@ -189,13 +192,26 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
     if (!agreedToTerms) errors.terms = "You must agree to the terms to proceed.";
 
+    return errors;
+  }, [checkoutForm, user, accountPassword, accountPasswordConfirm, billingSameAsAccount, billingAddress, agreedToTerms]);
+
+  const validateForm = () => {
+    const errors = computeErrors();
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
+  // Once the user has attempted to submit, keep errors in sync live so each one
+  // clears the moment it's corrected (and reappears if re-broken).
+  useEffect(() => {
+    if (!submitAttempted) return;
+    setValidationErrors(computeErrors());
+  }, [submitAttempted, computeErrors]);
+
   const handleCheckoutSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
+    setSubmitAttempted(true);
     if (!validateForm()) return;
     
     setIsLoading(true);
@@ -229,7 +245,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
             data: { full_name: checkoutForm.fullName },
             // Where the confirmation link lands after the user confirms.
             // Must be listed in Supabase Auth → URL Configuration → Redirect URLs.
-            emailRedirectTo: `${window.location.origin}/account`,
+            emailRedirectTo: `${window.location.origin}/welcome`,
           },
         });
 
@@ -706,9 +722,19 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </p>
                         </label>
 
-                        {validationErrors.terms && (
-                            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
-                                <AlertCircle size={14} className="mt-0.5 shrink-0"/> <p>{validationErrors.terms}</p>
+                        {/* Validation summary — surfaces every error next to the Pay
+                            button so nothing is missed when scrolled to the bottom.
+                            Only appears after a submit attempt; updates live as fields
+                            are corrected. */}
+                        {submitAttempted && Object.keys(validationErrors).length > 0 && (
+                            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in" role="alert">
+                                <AlertCircle size={14} className="mt-0.5 shrink-0"/>
+                                <div>
+                                    <p className="mb-1">Please fix the following before continuing:</p>
+                                    <ul className="list-disc list-inside font-medium space-y-0.5">
+                                        {[...new Set(Object.values(validationErrors))].map((msg, i) => <li key={i}>{msg}</li>)}
+                                    </ul>
+                                </div>
                             </div>
                         )}
 
