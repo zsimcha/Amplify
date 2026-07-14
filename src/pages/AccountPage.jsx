@@ -369,6 +369,21 @@ const AccountPage = () => {
                                 Keep Membership
                               </button>
                             </div>
+                            {/* Offer a lower tier as an alternative to leaving — shown only when
+                                there's actually a cheaper plan to move to. Purely optional; the
+                                cancel button above stays a single click. */}
+                            {tierStyle.price > 250 && (
+                              <p className="mt-3 pt-3 border-t border-red-200/60 text-[0.6875rem] text-slate-600 font-medium leading-relaxed">
+                                Prefer to lower your monthly contribution instead of leaving?{' '}
+                                <button
+                                  onClick={() => { setConfirmCancelId(null); setChangePlanId(sub.id); setPendingTier(null); setCancelFeedback(null); }}
+                                  disabled={cancellingId === sub.id}
+                                  className="font-bold text-indigo-600 hover:text-indigo-900 underline transition-colors"
+                                >
+                                  Change your plan
+                                </button>
+                              </p>
+                            )}
                           </div>
                         ) : (
                           <div className="flex items-center justify-between gap-3">
