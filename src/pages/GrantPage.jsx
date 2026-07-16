@@ -85,7 +85,7 @@ const GrantPage = () => {
               {/* Compact quote — sits inline, doesn't extend the section */}
               <div className="relative bg-white border-l-4 border-amber-400 rounded-r-2xl p-5 md:p-6 shadow-soft mb-6">
                 <p className="text-sm md:text-base text-slate-700 font-medium italic leading-relaxed mb-3">
-                  "[Short, punchy quote from leadership about what this grant enables — keep to ~2 sentences max.]"
+                  "[quote from director]"
                 </p>
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-500">— Director Name</p>
               </div>
