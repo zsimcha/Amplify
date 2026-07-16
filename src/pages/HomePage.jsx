@@ -359,7 +359,6 @@ const HomePage = ({ appData }) => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto pb-8">
             {['silver', 'gold', 'diamond'].map((tier, index) => {
-              const totalPool = (appData.tierData[tier].price * 400).toLocaleString();
               const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
               const dotColor = tier === 'silver' ? 'bg-slate-400' : tier === 'gold' ? 'bg-[#eab308]' : 'bg-[#818cf8]';
 
@@ -402,10 +401,6 @@ const HomePage = ({ appData }) => {
                       <span className="text-base md:text-lg font-black text-slate-700 flex items-center gap-1.5">
                         <span className="text-[0.625rem] text-slate-400 font-bold uppercase tracking-widest">Up to</span> {appData.tierData[tier].totalOdds}
                       </span>
-                    </div>
-                    <div className="flex justify-between items-center gap-3 mt-1 pt-3 border-t border-slate-200">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest flex-1 leading-tight">Total Monthly Pool</span>
-                      <span className="text-lg md:text-xl font-black text-slate-700 shrink-0">${totalPool}</span>
                     </div>
                   </div>
 
