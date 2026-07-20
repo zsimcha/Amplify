@@ -56,7 +56,7 @@ const MainNavbar = () => {
           <div className={`hidden md:flex items-center gap-7 lg:gap-8 text-[0.6875rem] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
             <NavLink to="/how-it-works" className={desktopNavClass}>How it works</NavLink>
             <NavLink to="/about" className={desktopNavClass}>About</NavLink>
-	    <NavLink to="/grant" className={desktopNavClass}>The Grant</NavLink>
+	    <NavLink to="/grant" className={desktopNavClass}>Partners</NavLink>
             <NavLink to="/circles" className={desktopNavClass}>Circles</NavLink>
             <NavLink to="/faq" className={desktopNavClass}>FAQ</NavLink>
           </div>
@@ -91,7 +91,7 @@ const MainNavbar = () => {
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-base font-bold text-slate-900 uppercase tracking-widest text-left">
                 <NavLink to="/how-it-works" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>How it works</NavLink>
                 <NavLink to="/about" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>About</NavLink>
-                <NavLink to="/grant" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>The Grant</NavLink>
+                <NavLink to="/grant" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>Partners</NavLink>
                 <NavLink to="/circles" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>Circles</NavLink>
                 <NavLink to="/faq" onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>FAQ</NavLink>
                 <NavLink to={user ? '/account' : '/login'} onClick={() => setIsMenuOpen(false)} className={mobileNavClass}>

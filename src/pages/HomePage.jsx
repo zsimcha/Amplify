@@ -90,11 +90,11 @@ const HomePage = ({ appData }) => {
   const showStep3 = lineProgress >= 88;
 
   const primaryFaqs = [
-  { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members pool their Tzedakah into a single grant for one vetted nonprofit each cycle. Each cycle also includes a prize drawing, designed to keep participation consistent month over month." },
+  { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members pool their Tzedakah, then each member chooses which vetted Chessed organizations their share supports. Every cycle also includes a prize drawing, designed to keep participation consistent month over month." },
   { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members showing up month after month, and that consistency is what lets Amplify deliver significantly larger grants than traditional monthly giving programs. We spend less on prizes than most charities spend just to find a new donor. That's not a compromise. That's how we optimize."
  },
-  { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are coordinated into a single grant. When the circle fills, that month's grant is deployed and the cycle begins again." },
-  { q: "Who selects the charities?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where one large grant hits a real milestone. <Link to="/grant" className="text-indigo-600 hover:underline">The full process is on The Grant page.</Link></> }
+  { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are pooled together. Each member directs their share to the causes they choose, so one pool funds many grants across our partners. When the circle fills, that cycle's grants are deployed and the next begins." },
+  { q: "Who selects the charities?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where a large grant hits a real milestone. <Link to="/grant" className="text-indigo-600 hover:underline">The full process is on the Partners page.</Link></> }
 ];
 
   const [openFaq, setOpenFaq] = useState(null);
@@ -198,7 +198,7 @@ const HomePage = ({ appData }) => {
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
             <div className="bg-white px-2 py-1 relative z-10">
               <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Pick your cause</h3>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Choose which vetted Chessed organization your giving supports. Feel like a different cause next month? Switch anytime.</p>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Direct your monthly giving to the vetted Chessed organizations you care about most. Back one or split across several, and change it any month.</p>
             </div>
           </div>
 
