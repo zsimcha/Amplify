@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Check, Heart, Building, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
+import { Check, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
+import FeaturedPartners from '../components/FeaturedPartners';
 import CornerConstellation from '../components/CornerConstellation';
 
 // Anchor-scroll offset tied to the root font size: the navbar is rem-sized, so
@@ -116,7 +117,7 @@ const HomePage = ({ appData }) => {
   </h1>
 
   <p className="text-indigo-200 text-xl md:text-2xl mb-10 font-medium leading-relaxed max-w-2xl">
-    Amplify pools your monthly Tzedakah with a circle of givers. Each month, you fund a massive grant and get a <strong className="text-white"> real shot at winning up to $100,000</strong>.
+    Amplify pools your monthly Tzedakah with a circle of givers. Each month, support your favorite Chessed organizations and get a <strong className="text-white"> real shot at winning up to $100,000</strong>.
   </p>
 
   <div className="flex flex-col sm:flex-row gap-4 text-left">
@@ -150,7 +151,7 @@ const HomePage = ({ appData }) => {
                 { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
                 { top: "Projected", num: "$5M+", label: "Yearly To Charity", colorClass: "text-white", labelClass: "text-slate-300" },
                 { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
-                { top: "Goal", num: "$400K+", label: "Monthly Grant", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
+                { top: "Goal", num: "$400K+", label: "Monthly Grants", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center w-full">
                   <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[0.875rem] leading-none ${stat.labelClass}`}>{stat.top}</p>
@@ -196,8 +197,8 @@ const HomePage = ({ appData }) => {
           <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
             <div className="bg-white px-2 py-1 relative z-10">
-              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">One grant. One charity.</h3>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">The pool funds a single, six figure grant to one vetted nonprofit. Every month.</p>
+              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Pick your cause</h3>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Choose which vetted Chessed organization your giving supports. Feel like a different cause next month? Switch anytime.</p>
             </div>
           </div>
 
@@ -267,10 +268,10 @@ const HomePage = ({ appData }) => {
           {/* Closing beats */}
           <div className="space-y-2 md:space-y-3">
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              One charity.
+              Many causes.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              One transformational grant.
+              One movement.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
               Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank you.
@@ -306,55 +307,15 @@ const HomePage = ({ appData }) => {
         </div>
       </section>
 
-      {/* Beneficiary Section — logo pill removed, photo stands alone */}
-      <section id="beneficiary" className="py-20 md:py-28 bg-slate-900 px-4 text-white">
-        <div className="max-w-7xl mx-auto reveal">
-          <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
-            <div className="flex flex-col justify-center text-center md:text-left">
-              <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Who We're Helping This Month</p>
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-6 md:mb-8 tracking-tight uppercase italic">Chessed</h2>
-              <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8 md:mb-10">
-                Chessed is there for families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support. Whatever a family needs. Our grant goes directly to making sure no child or family faces this alone.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 justify-center md:justify-start mb-6">
-                <div className="flex items-center gap-3">
-                  <Building size={20} className="text-slate-400" />
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofit</p>
-                </div>
-                <div className="hidden sm:block w-px h-6 bg-slate-700"></div>
-                <div className="flex items-center gap-3">
-                  <Heart size={20} className="text-red-400 fill-current" />
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Impact Goal: $400,000</p>
-                </div>
-              </div>
-
-              <p className="text-xs text-slate-400 font-medium mb-10 leading-relaxed">
-                Grants administered through <span className="text-slate-200 font-bold">(Nonprofit)</span>, a registered 501(c)(3) donor-advised fund.
-              </p>
-
-              <div className="text-center md:text-left">
-                <Link to="/grant" className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm">
-  Learn about how we select our charity partners <ChevronRight size={16} />
-</Link>
-              </div>
-            </div>
-
-            {/* Photo — logo pill removed, gradient stays for depth */}
-            <div className="relative overflow-hidden rounded-2xl shadow-soft-xl min-h-[18.75rem] md:min-h-[28.125rem] border border-slate-700 transition-transform duration-500 hover:scale-[1.02]">
-              <img src="/impact-photo.jpg" alt="Chai Lifeline" className="absolute inset-0 w-full h-full object-cover opacity-70" onError={(e) => { e.currentTarget.style.display='none'; }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent"></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Featured Partners — crossfade photo banner + auto-scrolling logo marquee */}
+      <FeaturedPartners />
 
       {/* Tiers Section */}
       <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your impact.</h2>
-            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds a major monthly grant. Real Tzedakah, real odds.</p>
+            <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds major monthly grants. Real Tzedakah, real odds.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto pb-8">
