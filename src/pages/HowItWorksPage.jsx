@@ -369,7 +369,7 @@ const WhyPrizes = () => {
               ${count400}K
             </p>
             <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70 mb-3 mt-2">Collective Monthly Fundraising</p>
-            <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Prizes keep members engaged. The charity receives one massive grant with zero acquisition cost.</p>
+            <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Prizes keep members showing up every month. That consistency means your Tzedakah goes straight to Chessed, not toward finding the next donor.</p>
             <div className="mt-6 pt-5 border-t border-slate-800">
               <p className="text-xs font-bold text-amber-400/70 uppercase tracking-widest mb-1">Retention Based Model</p>
               <p className="text-xl font-black text-amber-400 tracking-tight tabular-nums">Built For Consistency</p>
@@ -443,10 +443,11 @@ const HowItWorksPage = ({ appData }) => {
   }, []);
 
   const timeline = [
-    { num: '01', title: 'Joining',           titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
-    { num: '02', title: 'Recurring Giving',  titleColor: 'text-amber-700',   body: 'Once your circle reaches 400 members, your contribution is charged on the same day each month, automatically.' },
-    { num: '03', title: 'Flexibility',       titleColor: 'text-slate-500',   body: 'Your subscription is yours. Pause or cancel any time before your next billing date. No penalty, no runaround.' },
-    { num: '04', title: "Tax & Ma'aser",     titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
+    { num: '01', title: 'Joining',              titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
+    { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: 'Pick one Chessed organization, or split your giving across a few. Change it any month.' },
+    { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Once your circle reaches 400 members, your contribution is charged on the same day each month, automatically.' },
+    { num: '04', title: 'Flexibility',           titleColor: 'text-slate-500',   body: 'Your subscription is yours. Pause or cancel any time before your next billing date. No penalty, no runaround.' },
+    { num: '05', title: "Tax & Ma'aser",         titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
 
   return (
@@ -466,7 +467,7 @@ const HowItWorksPage = ({ appData }) => {
     <div className="md:col-span-5">
       <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">The Circle</p>
       <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">Every member is part of a circle.</h2>
-      <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates a massive monthly grant while keeping prize odds so strong.</p>
+      <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">Each circle is capped at exactly 400 members. The cap is what creates massive monthly impact while keeping prize odds so strong.</p>
     </div>
 
   </div>
@@ -484,10 +485,10 @@ const HowItWorksPage = ({ appData }) => {
     <div className="mb-6 md:mb-8 reveal max-w-3xl">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grant</p>
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3 leading-[1.1] text-white">
-        Funding Without Fundraising
+        Your Donation Goes Farther
       </h2>
       <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed">
-        Most major grants take a year of fundraising work to land. Ours takes none.
+        With most giving, part of every dollar pays to raise the next one. Not here.
       </p>
     </div>
 
@@ -501,7 +502,7 @@ const HowItWorksPage = ({ appData }) => {
         <div className="mb-3 md:mb-4">
           <p className="text-[0.5625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
           <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
-            Most Charities:
+            Where A Normal Dollar Goes:
           </h3>
         </div>
 
@@ -538,7 +539,7 @@ const HowItWorksPage = ({ appData }) => {
             <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
           </div>
           <p className="text-[0.625rem] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
-            Spent fundraising, every year.
+            Funded by donations, every year.
           </p>
         </div>
       </div>
@@ -551,14 +552,14 @@ const HowItWorksPage = ({ appData }) => {
         <div className="mb-3 md:mb-4">
           <p className="text-[0.5625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
           <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
-            The Charity:
+            Where Your Donation Goes:
           </h3>
         </div>
 
         <div className="flex-1 flex items-center mb-3 md:mb-4">
           <div>
             <p className="text-xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
-              Cashes the check.
+              Straight to Chessed.
             </p>
             <p className="text-xs md:text-lg text-amber-200/65 font-normal italic">
               That's it.
@@ -569,10 +570,10 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
-            <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Fundraising</p>
+            <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Spent Finding Donors</p>
           </div>
           <p className="text-[0.625rem] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
-            All that time now goes to Chesed.
+            All of it reaches the mission.
           </p>
         </div>
       </div>
@@ -666,9 +667,9 @@ const HowItWorksPage = ({ appData }) => {
             })}
           </div>
 
-          <div className="relative grid grid-cols-4 gap-6 z-10">
+          <div className="relative grid grid-cols-5 gap-4 z-10">
             {timeline.map((item, i) => {
-              const triggers = [3, 31, 64, 96];
+              const triggers = [3, 26, 50, 73, 96];
               const isActive = membershipProgress > triggers[i];
 
               return (
@@ -678,13 +679,13 @@ const HowItWorksPage = ({ appData }) => {
                     isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center font-black text-xl mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-lg mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
                     {item.num}
                   </div>
-                  <p className={`text-sm font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
+                  <p className={`text-xs font-black uppercase tracking-[0.18em] mb-2.5 ${item.titleColor}`}>
                     {item.title}
                   </p>
-                  <p className="text-base text-slate-600 font-medium leading-relaxed max-w-[15rem]">
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[11.5rem]">
                     {item.body}
                   </p>
                 </div>
@@ -714,7 +715,7 @@ const HowItWorksPage = ({ appData }) => {
           </div>
 
           {timeline.map((item, i) => {
-            const triggers = [3, 31, 64, 96];
+            const triggers = [3, 26, 50, 73, 96];
             const isActive = membershipProgress > triggers[i];
             return (
               <div

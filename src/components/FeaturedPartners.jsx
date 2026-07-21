@@ -97,7 +97,8 @@ const FeaturedPartners = () => {
           <div className="text-center md:text-left">
             <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Partners</p>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">
-              The Chessed <span className="italic text-amber-400">you choose</span>.
+              The Chessed<br/>
+              <span className="italic text-amber-400">you choose</span>.
             </h2>
             <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8">
               From crisis support and lifting families in need to Torah education, campus life,

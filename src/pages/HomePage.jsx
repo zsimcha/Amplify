@@ -197,7 +197,7 @@ const HomePage = ({ appData }) => {
           <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-[250ms] ease-out transform ${showStep2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
             <div className="bg-white px-2 py-1 relative z-10">
-              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Pick your cause</h3>
+              <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Choose a cause</h3>
               <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Choose one, or a few, Chessed organizations to support. Keep it the same forever, or switch it up every month.</p>
             </div>
           </div>
@@ -417,13 +417,10 @@ const HomePage = ({ appData }) => {
             Pick a circle. Give every month.<br />
             And win up to $100,000 while you're at it.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex justify-center">
             <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'smooth'}); }} className="px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-colors uppercase tracking-widest shadow-amber-glow">
               Join the Circle
             </button>
-            <Link to="/faq" className="px-10 py-4 bg-transparent border border-slate-700 text-slate-300 rounded-lg font-bold text-sm md:text-base hover:border-slate-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">
-              Have Questions?
-            </Link>
           </div>
         </div>
       </section>
