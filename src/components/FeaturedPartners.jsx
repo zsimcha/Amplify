@@ -97,12 +97,12 @@ const FeaturedPartners = () => {
           <div className="text-center md:text-left">
             <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Partners</p>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">
-              The causes you're <span className="italic text-amber-400">amplifying</span>.
+              The Chessed <span className="italic text-amber-400">you choose</span>.
             </h2>
             <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8">
-              From medical crisis support and food security to Torah education, campus life, and
-              emergency response, Amplify members back a growing family of vetted Chessed nonprofits.
-              Every month, you choose where your giving goes.
+              From crisis support and lifting families in need to Torah education, campus life,
+              and emergency response, Amplify backs a growing list of vetted Chessed organizations.
+              Every month, you choose exactly where your Tzedakah goes.
             </p>
 
             {/* Trust + combined-goal badges */}
@@ -111,7 +111,6 @@ const FeaturedPartners = () => {
                 <Building size={20} className="text-slate-400" />
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofits</p>
               </div>
-              <div className="hidden sm:block w-px h-6 bg-slate-700"></div>
               <div className="flex items-center gap-3">
                 <Heart size={20} className="text-red-400 fill-current" />
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
