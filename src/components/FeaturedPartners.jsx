@@ -90,12 +90,12 @@ const FeaturedPartners = () => {
   }, [loaded]);
 
   return (
-    <section id="partners" className="py-20 md:py-28 bg-slate-900 px-4 text-white overflow-hidden">
+    <section id="causes" className="py-20 md:py-28 bg-slate-900 px-4 text-white overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center reveal">
           {/* Copy */}
           <div className="text-center md:text-left">
-            <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Partners</p>
+            <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Causes</p>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">
               The Chessed<br/>
               <span className="italic text-amber-400">you choose</span>.
@@ -115,7 +115,7 @@ const FeaturedPartners = () => {
               <div className="flex items-center gap-3">
                 <Heart size={20} className="text-red-400 fill-current" />
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
-                  $400K+ Monthly Goal <span className="text-slate-500">· All Partners</span>
+                  $400K+ Monthly Goal <span className="text-slate-500">· All Causes</span>
                 </p>
               </div>
             </div>
@@ -124,7 +124,7 @@ const FeaturedPartners = () => {
               to="/grant"
               className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm"
             >
-              Meet our charity partners <ChevronRight size={16} />
+              See our causes <ChevronRight size={16} />
             </Link>
           </div>
 

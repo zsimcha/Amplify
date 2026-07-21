@@ -369,7 +369,7 @@ const WhyPrizes = () => {
               ${count400}K
             </p>
             <p className="text-xs font-bold uppercase tracking-widest text-amber-400/70 mb-3 mt-2">Collective Monthly Fundraising</p>
-            <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Prizes keep members showing up every month. That consistency means your Tzedakah goes straight to Chessed, not toward finding the next donor.</p>
+            <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Prizes keep members showing up, month after month. That consistency is what turns modest monthly gifts into six-figure grants for the causes you choose.</p>
             <div className="mt-6 pt-5 border-t border-slate-800">
               <p className="text-xs font-bold text-amber-400/70 uppercase tracking-widest mb-1">Retention Based Model</p>
               <p className="text-xl font-black text-amber-400 tracking-tight tabular-nums">Built For Consistency</p>
@@ -445,9 +445,8 @@ const HowItWorksPage = ({ appData }) => {
   const timeline = [
     { num: '01', title: 'Joining',              titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
     { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: 'Pick one Chessed organization, or split your giving across a few. Change it any month.' },
-    { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Once your circle reaches 400 members, your contribution is charged on the same day each month, automatically.' },
-    { num: '04', title: 'Flexibility',           titleColor: 'text-slate-500',   body: 'Your subscription is yours. Pause or cancel any time before your next billing date. No penalty, no runaround.' },
-    { num: '05', title: "Tax & Ma'aser",         titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
+    { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Charged automatically each month once your circle fills. Pause or cancel any time, no penalty, no runaround.' },
+    { num: '04', title: "Tax & Ma'aser",         titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
 
   return (
@@ -483,9 +482,9 @@ const HowItWorksPage = ({ appData }) => {
   <div className="max-w-5xl mx-auto relative">
     {/* Header */}
     <div className="mb-6 md:mb-8 reveal max-w-3xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grant</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grants</p>
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3 leading-[1.1] text-white">
-        Your Donation Goes Farther
+        Your Donation Goes Further
       </h2>
       <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed">
         With most giving, part of every dollar pays to raise the next one. Not here.
@@ -667,9 +666,9 @@ const HowItWorksPage = ({ appData }) => {
             })}
           </div>
 
-          <div className="relative grid grid-cols-5 gap-4 z-10">
+          <div className="relative grid grid-cols-4 gap-6 z-10">
             {timeline.map((item, i) => {
-              const triggers = [3, 26, 50, 73, 96];
+              const triggers = [3, 31, 64, 96];
               const isActive = membershipProgress > triggers[i];
 
               return (
@@ -679,13 +678,13 @@ const HowItWorksPage = ({ appData }) => {
                     isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
-                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-lg mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center font-black text-xl mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
                     {item.num}
                   </div>
-                  <p className={`text-xs font-black uppercase tracking-[0.18em] mb-2.5 ${item.titleColor}`}>
+                  <p className={`text-sm font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
                     {item.title}
                   </p>
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed max-w-[11.5rem]">
+                  <p className="text-base text-slate-600 font-medium leading-relaxed max-w-[15rem]">
                     {item.body}
                   </p>
                 </div>
@@ -715,7 +714,7 @@ const HowItWorksPage = ({ appData }) => {
           </div>
 
           {timeline.map((item, i) => {
-            const triggers = [3, 26, 50, 73, 96];
+            const triggers = [3, 31, 64, 96];
             const isActive = membershipProgress > triggers[i];
             return (
               <div
@@ -759,7 +758,7 @@ const HowItWorksPage = ({ appData }) => {
               Join the Circle
             </Link>
             <Link to="/grant" className="px-10 py-4 bg-transparent border border-indigo-700 text-indigo-200 rounded-lg font-bold text-sm md:text-base hover:border-indigo-500 hover:text-white transition-colors uppercase tracking-widest inline-flex items-center justify-center">
-              The Grant
+              Our Causes
             </Link>
           </div>
         </div>

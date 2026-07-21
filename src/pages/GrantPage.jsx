@@ -40,7 +40,7 @@ const GrantPage = () => {
   };
 
   return (
-    <PageLayout title="The Grant" intro="One organization, every month. Here's exactly where it goes.">
+    <PageLayout title="Our Causes" intro="The verified nonprofits your circle funds, and how we choose them.">
       
             {/* Partner — quote now compact, sits inline */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-y border-slate-200">
