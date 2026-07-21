@@ -89,81 +89,70 @@ const FeaturedPartners = () => {
     return () => clearInterval(t);
   }, [loaded]);
 
-  const currentName = loaded.length ? SHOWCASE[loaded[idx]].name : null;
-
   return (
     <section id="partners" className="py-20 md:py-28 bg-slate-900 px-4 text-white overflow-hidden">
-      <div className="max-w-6xl mx-auto reveal">
-        {/* Heading + breadth blurb */}
-        <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
-          <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Partners</p>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">
-            The causes you're <span className="italic text-amber-400">amplifying</span>.
-          </h2>
-          <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed">
-            From medical crisis support and food security to Torah education, campus life, and
-            emergency response, Amplify members back a growing roster of vetted Chessed organizations.
-            Every month, you choose where your giving goes.
-          </p>
-        </div>
-
-        {/* Trust + combined-goal badges */}
-        <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-8 justify-center mb-10 md:mb-14">
-          <div className="flex items-center gap-3">
-            <Building size={20} className="text-slate-400" />
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofits</p>
-          </div>
-          <div className="hidden sm:block w-px h-6 bg-slate-700"></div>
-          <div className="flex items-center gap-3">
-            <Heart size={20} className="text-red-400 fill-current" />
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
-              $400K+ Monthly Goal <span className="text-slate-500">· All Partners</span>
+      <div className="max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center reveal">
+          {/* Copy */}
+          <div className="text-center md:text-left">
+            <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Partners</p>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">
+              The causes you're <span className="italic text-amber-400">amplifying</span>.
+            </h2>
+            <p className="text-base md:text-lg text-slate-300 font-medium leading-relaxed mb-8">
+              From medical crisis support and food security to Torah education, campus life, and
+              emergency response, Amplify members back a growing family of vetted Chessed nonprofits.
+              Every month, you choose where your giving goes.
             </p>
-          </div>
-        </div>
 
-        {/* Crossfade photo banner */}
-        <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-soft-xl border border-slate-700 aspect-[16/10] sm:aspect-[16/8] md:aspect-[21/8] mb-6">
-          {loaded.length > 0 ? (
-            loaded.map((si, pos) => (
-              <img
-                key={si}
-                src={SHOWCASE[si].src}
-                alt={SHOWCASE[si].name}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${pos === idx ? 'opacity-70' : 'opacity-0'}`}
-              />
-            ))
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 to-slate-900"></div>
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent"></div>
-          {currentName && (
-            <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 flex items-center gap-2.5 bg-slate-900/70 backdrop-blur-sm rounded-full pl-3 pr-4 py-2 ring-1 ring-white/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-              <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-white">
-                Supporting <span className="text-amber-400">{currentName}</span>
-              </span>
+            {/* Trust + combined-goal badges */}
+            <div className="flex flex-wrap items-center gap-5 sm:gap-6 justify-center md:justify-start mb-8">
+              <div className="flex items-center gap-3">
+                <Building size={20} className="text-slate-400" />
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofits</p>
+              </div>
+              <div className="hidden sm:block w-px h-6 bg-slate-700"></div>
+              <div className="flex items-center gap-3">
+                <Heart size={20} className="text-red-400 fill-current" />
+                <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
+                  $400K+ Monthly Goal <span className="text-slate-500">· All Partners</span>
+                </p>
+              </div>
             </div>
-          )}
+
+            <Link
+              to="/grant"
+              className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm"
+            >
+              Meet our charity partners <ChevronRight size={16} />
+            </Link>
+          </div>
+
+          {/* Crossfade photo */}
+          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-soft-xl border border-slate-700 min-h-[18.75rem] md:min-h-[28.125rem]">
+            {loaded.length > 0 ? (
+              loaded.map((si, pos) => (
+                <img
+                  key={si}
+                  src={SHOWCASE[si].src}
+                  alt={SHOWCASE[si].name}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${pos === idx ? 'opacity-80' : 'opacity-0'}`}
+                />
+              ))
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 to-slate-900"></div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+          </div>
         </div>
 
         {/* Auto-scrolling logo marquee */}
-        <div className="relative marquee-mask py-2">
+        <div className="relative marquee-mask py-2 mt-14 md:mt-20 reveal">
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
             {[...PARTNERS, ...PARTNERS].map((p, i) => (
               <PartnerLogo key={`${p.slug}-${i}`} partner={p} />
             ))}
           </div>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center mt-12 md:mt-16">
-          <Link
-            to="/grant"
-            className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm"
-          >
-            Meet our charity partners <ChevronRight size={16} />
-          </Link>
         </div>
       </div>
     </section>
