@@ -1,27 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Building, Heart, ChevronRight } from 'lucide-react';
-
-// The current partner roster. Logos live in /public/partners/logos/<slug>.png
-// (a couple are one-offs, so an explicit `logo` overrides the slug path). Any
-// logo that fails to load falls back to the org's name in text, so this list
-// renders cleanly before the artwork is uploaded.
-const PARTNERS = [
-  { name: 'A Time', slug: 'atime' },
-  { name: 'Aish', slug: 'aish' },
-  { name: 'Bnai Akiva', slug: 'bnai-akiva' },
-  { name: 'Bonei Olam', slug: 'bonei-olam' },
-  { name: 'Camp HASC', slug: 'camp-hasc' },
-  { name: 'Chabad on Campus', slug: 'chabad-on-campus' },
-  { name: 'Chai Lifeline', slug: 'chai-lifeline', logo: '/ChaiLifeline.png' },
-  { name: 'Leket Israel', slug: 'leket-israel' },
-  { name: 'Mizrachi', slug: 'mizrachi' },
-  { name: 'Renewal', slug: 'renewal' },
-  { name: 'StandWithUs', slug: 'stand-with-us' },
-  { name: 'TorahAnytime', slug: 'torah-anytime' },
-  { name: 'United Hatzalah', slug: 'united-hatzalah' },
-  { name: 'Zaka', slug: 'zaka' },
-];
+import { partners as PARTNERS, partnerLogo } from '../data/partners';
 
 // Rotating showcase photos for the crossfade banner. Drop org photos into
 // /public/partners/photos/ and list them here; the banner preloads every entry
@@ -39,7 +19,7 @@ const SHOWCASE = [
 // One logo in the marquee. Tries the image, falls back to the org name.
 const PartnerLogo = ({ partner }) => {
   const [failed, setFailed] = useState(false);
-  const src = partner.logo || `/partners/logos/${partner.slug}.png`;
+  const src = partnerLogo(partner);
 
   return (
     <div className="flex items-center justify-center h-9 md:h-12 px-6 md:px-8 shrink-0">
