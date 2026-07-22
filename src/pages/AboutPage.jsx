@@ -194,7 +194,7 @@ const AboutPage = () => {
                 {[
                   { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: '100% transferred' },
                   { num: '02', label: '(Nonprofit) · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
-                  { num: '03', label: 'Vetted Organizations', detail: 'Focused grants, maximum impact', meta: 'Full Report' },
+                  { num: '03', label: 'Vetted Organizations', detail: 'Grants to your chosen causes', meta: 'Full Report' },
                 ].map((item, i, arr) => (
                   <React.Fragment key={i}>
                     <div className={`flex items-start gap-3 md:gap-4 py-2.5 md:py-3 px-3 md:px-4 rounded-xl border ${item.highlight ? 'bg-amber-400/10 border-amber-300/30' : 'bg-white/5 border-white/10'}`}>

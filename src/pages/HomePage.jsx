@@ -224,7 +224,7 @@ const HomePage = ({ appData }) => {
     {/* Scroll cue — sticky to the viewport bottom so it stays put regardless of
         the pinned content's height; fades as soon as the steps start revealing. */}
     <div className="sticky bottom-6 z-20 flex justify-center pointer-events-none">
-      <ScrollHint hidden={howScroll > 0.08} className="text-slate-400" />
+      <ScrollHint hidden={howScroll <= 0.02 || howScroll > 0.12} className="text-slate-400" />
     </div>
   </div>
 </section>

@@ -777,7 +777,7 @@ const HowItWorksPage = ({ appData }) => {
     {/* Scroll cue — sticky to the viewport bottom so it stays put regardless of
         the pinned content's height; fades once the timeline starts advancing. */}
     <div className="sticky bottom-6 z-20 flex justify-center pointer-events-none">
-      <ScrollHint hidden={membershipProgress > 8} className="text-slate-400" />
+      <ScrollHint hidden={membershipProgress <= 3 || membershipProgress > 14} className="text-slate-400" />
     </div>
   </div>
 </section>
