@@ -5,6 +5,7 @@ import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 import FeaturedPartners from '../components/FeaturedPartners';
 import CornerConstellation from '../components/CornerConstellation';
+import ScrollHint from '../components/ScrollHint';
 
 // Anchor-scroll offset tied to the root font size: the navbar is rem-sized, so
 // it grows under the large-screen scaling in index.css and a fixed 70px would
@@ -218,6 +219,12 @@ const HomePage = ({ appData }) => {
         </Link>
       </div>
      </div>
+    </div>
+
+    {/* Scroll cue — sticky to the viewport bottom so it stays put regardless of
+        the pinned content's height; fades as soon as the steps start revealing. */}
+    <div className="sticky bottom-6 z-20 flex justify-center pointer-events-none">
+      <ScrollHint hidden={howScroll > 0.08} className="text-slate-400" />
     </div>
   </div>
 </section>

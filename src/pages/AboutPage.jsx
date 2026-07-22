@@ -91,9 +91,9 @@ const AboutPage = () => {
                         style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
                     Monthly Goal
                   </text>
-                  <text x="200" y="252" textAnchor="middle" className="fill-white/85" 
+                  <text x="200" y="252" textAnchor="middle" className="fill-white/85"
                         style={{ fontSize: '11px', fontWeight: 500 }}>
-                    To a single charity.
+                    Across our causes.
                   </text>
                 </svg>
               </div>
@@ -104,7 +104,7 @@ const AboutPage = () => {
                 Most of us give sporadically. We mean to give more consistently, but life gets in the way.
               </p>
               <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">
-                <span className="text-slate-900 font-bold">Amplify closes that gap. </span>Your giving becomes automatic, and pooled with hundreds of others, it turns into one major grant every month.
+                <span className="text-slate-900 font-bold">Amplify closes that gap. </span>Your giving becomes automatic, and pooled with hundreds of others, it turns into major grants every month.
               </p>
             </div>
           </div>
@@ -135,8 +135,8 @@ const AboutPage = () => {
                 },
                 {
                   icon: <Building size={24} className="text-amber-500" />,
-                  title: "A Real, Verified Nonprofit",
-                  body: "Never wonder where your money goes. We check the financials, impact reports, the works, ensuring our collective grant lands where it’s needed most."
+                  title: "Real, Verified Nonprofits",
+                  body: "Never wonder where your money goes. We check the financials, impact reports, the works, ensuring our collective grants land where they’re needed most."
                 },
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
@@ -194,7 +194,7 @@ const AboutPage = () => {
                 {[
                   { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: '100% transferred' },
                   { num: '02', label: '(Nonprofit) · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
-                  { num: '03', label: 'Vetted Charity', detail: 'One focused grant, maximum impact', meta: 'Full Report' },
+                  { num: '03', label: 'Vetted Organizations', detail: 'Focused grants, maximum impact', meta: 'Full Report' },
                 ].map((item, i, arr) => (
                   <React.Fragment key={i}>
                     <div className={`flex items-start gap-3 md:gap-4 py-2.5 md:py-3 px-3 md:px-4 rounded-xl border ${item.highlight ? 'bg-amber-400/10 border-amber-300/30' : 'bg-white/5 border-white/10'}`}>

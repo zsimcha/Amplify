@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 
-// A subtle "scroll" affordance for tall, above-the-fold sections: a small
-// label plus three chevrons that light up in sequence. It fades out for good
-// the instant the user scrolls, so it never competes with real content.
-const ScrollHint = ({ className = '', label = 'Scroll' }) => {
-  const [hidden, setHidden] = useState(false);
+// A subtle "scroll" affordance for sections whose content only appears as you
+// scroll through them: a small label plus three chevrons that light up in
+// sequence, fading out the moment there's forward progress.
+//
+// Pass a controlled `hidden` boolean (e.g. derived from a section's scroll
+// progress) to drive it from a sticky section. With no `hidden` prop it falls
+// back to a top-of-page heuristic (visible until the window scrolls at all).
+const ScrollHint = ({ className = '', label = 'Scroll', hidden: hiddenProp }) => {
+  const controlled = hiddenProp !== undefined;
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    if (controlled) return;
     const onScroll = () => {
-      if (window.scrollY > 8) setHidden(true);
+      if (window.scrollY > 8) setScrolled(true);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [controlled]);
+
+  const hidden = controlled ? hiddenProp : scrolled;
 
   return (
     <div

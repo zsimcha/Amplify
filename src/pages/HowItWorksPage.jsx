@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
+import ScrollHint from '../components/ScrollHint';
 import { ChevronRight } from 'lucide-react';
 
 const useCountUp = (target, duration = 1500, trigger = false) => {
@@ -153,7 +154,7 @@ const OddsVisualizer = ({ tierData }) => {
       <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-center">
 
         <div className="md:col-span-6 lg:col-span-7">
-          <div className="max-w-[15rem] sm:max-w-xs mx-auto md:max-w-none">
+          <div className="max-w-[17rem] sm:max-w-xs mx-auto md:max-w-none">
             <svg viewBox="0 0 240 240" className="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
               {Array.from({ length: 400 }, (_, i) => {
                 const col = i % 20;
@@ -413,7 +414,7 @@ const HowItWorksPage = ({ appData }) => {
   const renderPrizeCard = (tier, index, compact = false) => {
     const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
     return (
-      <div className={`bg-white border border-slate-100 rounded-3xl shadow-soft reveal ${compact ? 'p-6' : 'p-8'}`} style={{ transitionDelay: `${index * 100}ms` }}>
+      <div className={`bg-white border border-slate-100 rounded-3xl shadow-soft reveal ${compact ? 'p-6 h-full' : 'p-8'}`} style={{ transitionDelay: `${index * 100}ms` }}>
         <h3 className={`font-black uppercase tracking-widest text-sm mb-5 pb-4 border-b border-slate-200 ${headerColor}`}>{tier} Circle Prizes</h3>
         <div className="flex justify-between items-center mb-5 pb-4 border-b border-slate-200">
           <span className="font-bold text-slate-400 uppercase text-xs tracking-widest">Grand Prize</span>
@@ -543,8 +544,8 @@ const HowItWorksPage = ({ appData }) => {
         className="rounded-xl md:rounded-2xl bg-white/[0.05] border border-white/[0.14] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_48px_-8px_rgba(148,163,184,0.22),inset_0_1px_0_rgba(255,255,255,0.06)]"
       >
         <div className="mb-3 md:mb-4">
-          <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
-          <h3 className="text-base md:text-lg font-semibold text-white tracking-tight leading-tight">
+          <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
+          <h3 className="text-lg md:text-xl font-semibold text-white tracking-tight leading-tight">
             Where A Normal Dollar Goes:
           </h3>
         </div>
@@ -569,8 +570,8 @@ const HowItWorksPage = ({ appData }) => {
                   isInLastDesktopRow && !isLast ? 'md:border-b-0' : ''
                 }`}
               >
-                <span className="text-rose-500/55 text-[0.5625rem] md:text-xs font-bold mt-[0.1875rem] md:mt-[0.3125rem] leading-none shrink-0" aria-hidden>✕</span>
-                <span className="text-[0.8125rem] md:text-sm text-slate-300 font-normal leading-snug">{task}</span>
+                <span className="text-rose-500/55 text-xs md:text-sm font-bold mt-[0.1875rem] md:mt-[0.3125rem] leading-none shrink-0" aria-hidden>✕</span>
+                <span className="text-sm md:text-base text-slate-300 font-normal leading-snug">{task}</span>
               </div>
             );
           })}
@@ -579,9 +580,9 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-white/[0.1]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-2xl md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
-            <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
+            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
           </div>
-          <p className="text-xs md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
+          <p className="text-[0.8125rem] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
             Funded by donations, every year.
           </p>
         </div>
@@ -593,18 +594,18 @@ const HowItWorksPage = ({ appData }) => {
         style={{ transitionDelay: '120ms' }}
       >
         <div className="mb-3 md:mb-4">
-          <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
-          <h3 className="text-base md:text-lg font-semibold text-white tracking-tight leading-tight">
+          <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
+          <h3 className="text-lg md:text-xl font-semibold text-white tracking-tight leading-tight">
             Where Your Donation Goes:
           </h3>
         </div>
 
         <div className="flex-1 flex items-center mb-3 md:mb-4">
           <div>
-            <p className="text-2xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
+            <p className="text-3xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
               Straight to Chessed.
             </p>
-            <p className="text-sm md:text-lg text-amber-200/65 font-normal italic">
+            <p className="text-base md:text-lg text-amber-200/65 font-normal italic">
               That's it.
             </p>
           </div>
@@ -613,9 +614,9 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-2xl md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
-            <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Spent Finding Donors</p>
+            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Spent Finding Donors</p>
           </div>
-          <p className="text-xs md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
+          <p className="text-[0.8125rem] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
             All of it reaches the mission.
           </p>
         </div>
@@ -771,6 +772,12 @@ const HowItWorksPage = ({ appData }) => {
         </div>
 
       </div>
+    </div>
+
+    {/* Scroll cue — sticky to the viewport bottom so it stays put regardless of
+        the pinned content's height; fades once the timeline starts advancing. */}
+    <div className="sticky bottom-6 z-20 flex justify-center pointer-events-none">
+      <ScrollHint hidden={membershipProgress > 8} className="text-slate-400" />
     </div>
   </div>
 </section>

@@ -2,7 +2,6 @@ import React from 'react';
 import MainNavbar from './MainNavbar';
 import Footer from './Footer';
 import CornerConstellation from '../CornerConstellation';
-import ScrollHint from '../ScrollHint';
 
 const PageLayout = ({ children, title, intro }) => {
   return (
@@ -36,7 +35,6 @@ const PageLayout = ({ children, title, intro }) => {
           <div className="max-w-4xl mx-auto relative animate-in fade-in slide-in-from-bottom-4 duration-700">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight uppercase mb-6">{title}</h1>
             {intro && <p className="text-indigo-200 text-lg md:text-xl font-medium leading-relaxed">{intro}</p>}
-            <ScrollHint label="Scroll" className="text-indigo-300 mt-10 md:mt-12" />
           </div>
         </header>
         
