@@ -71,3 +71,17 @@ body {
   -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
+
+/* Scroll hint: three chevrons pulse from dim to bright. Staggered animation
+   delays on each chevron make the light travel downward in sequence. */
+@keyframes scroll-hint-pulse {
+  0%, 100% { opacity: 0.2; }
+  50%      { opacity: 1; }
+}
+.scroll-hint-chevron {
+  opacity: 0.2;
+  animation: scroll-hint-pulse 1.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-chevron { animation: none; opacity: 0.55; }
+}

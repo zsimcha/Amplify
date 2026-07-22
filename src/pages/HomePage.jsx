@@ -198,7 +198,7 @@ const HomePage = ({ appData }) => {
             <div className="text-6xl md:text-8xl font-black text-slate-200 leading-none select-none mb-3 md:mb-5 relative z-10 tabular-nums bg-white px-2 rounded-xl">02</div>
             <div className="bg-white px-2 py-1 relative z-10">
               <h3 className="text-lg md:text-2xl font-bold text-slate-900 mb-2 md:mb-3 tracking-tight">Pick your cause</h3>
-              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Choose one Chessed organization, or a few. Switch it up any month.</p>
+              <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">Choose one or a few organizations to support. Keep it the same or switch it up every month.</p>
             </div>
           </div>
 

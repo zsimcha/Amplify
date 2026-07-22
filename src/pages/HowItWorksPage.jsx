@@ -141,10 +141,19 @@ const OddsVisualizer = ({ tierData }) => {
 
   return (
     <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-10 shadow-soft">
-      <div className="grid md:grid-cols-12 gap-8 md:gap-10 items-center">
+      {/* Mobile-only heading — pulled above the grid so the dot matrix and the
+          odds callout below it stay visible together on one screen. */}
+      <div className="md:hidden mb-5 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">Visualize Your Odds</p>
+        <h3 className="text-2xl font-black tracking-tight text-slate-900 leading-[1.05]">
+          Here's your shot at winning.
+        </h3>
+      </div>
+
+      <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-center">
 
         <div className="md:col-span-6 lg:col-span-7">
-          <div className="max-w-md mx-auto md:max-w-none">
+          <div className="max-w-[15rem] sm:max-w-xs mx-auto md:max-w-none">
             <svg viewBox="0 0 240 240" className="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
               {Array.from({ length: 400 }, (_, i) => {
                 const col = i % 20;
@@ -182,7 +191,7 @@ const OddsVisualizer = ({ tierData }) => {
         </div>
 
         <div className="md:col-span-6 lg:col-span-5 space-y-5 md:space-y-6">
-          <div>
+          <div className="hidden md:block">
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-3">Visualize Your Odds</p>
             <h3 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 leading-[1.05] mb-3">
               Here's your shot at winning.
@@ -397,6 +406,41 @@ const WhyPrizes = () => {
 const HowItWorksPage = ({ appData }) => {
   const membershipSectionRef = useRef(null);
   const [membershipProgress, setMembershipProgress] = useState(0);
+  const [prizeRef, prizeActiveIdx, handlePrizeScroll] = useCarouselActive(3);
+
+  // Renders one tier's prize card. `compact` tightens spacing for the mobile
+  // carousel so all three fit in a fraction of the stacked height.
+  const renderPrizeCard = (tier, index, compact = false) => {
+    const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
+    return (
+      <div className={`bg-white border border-slate-100 rounded-3xl shadow-soft reveal ${compact ? 'p-6' : 'p-8'}`} style={{ transitionDelay: `${index * 100}ms` }}>
+        <h3 className={`font-black uppercase tracking-widest text-sm mb-5 pb-4 border-b border-slate-200 ${headerColor}`}>{tier} Circle Prizes</h3>
+        <div className="flex justify-between items-center mb-5 pb-4 border-b border-slate-200">
+          <span className="font-bold text-slate-400 uppercase text-xs tracking-widest">Grand Prize</span>
+          <span className="font-black text-slate-900 text-3xl">{appData.tierData[tier].prize}</span>
+        </div>
+        <div className="space-y-3.5">
+          {appData.tierData[tier].otherPrizes.map((p, i) => {
+            let qty = '1 winner';
+            let amount = p;
+            const lowerP = p.toLowerCase();
+            if (lowerP.includes('x')) {
+              const parts = lowerP.split('x');
+              const count = parseInt(parts[0].trim());
+              qty = count === 1 ? '1 winner' : `${count} winners`;
+              amount = p.substring(lowerP.indexOf('x') + 1).trim();
+            }
+            return (
+              <div key={i} className="flex justify-between items-center text-base">
+                <span className="text-slate-500 font-bold">{qty}</span>
+                <span className="font-black text-slate-700">{amount}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   // Standard observer for .reveal elements on the page
   useEffect(() => {
@@ -499,8 +543,8 @@ const HowItWorksPage = ({ appData }) => {
         className="rounded-xl md:rounded-2xl bg-white/[0.05] border border-white/[0.14] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_48px_-8px_rgba(148,163,184,0.22),inset_0_1px_0_rgba(255,255,255,0.06)]"
       >
         <div className="mb-3 md:mb-4">
-          <p className="text-[0.5625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
-          <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
+          <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
+          <h3 className="text-base md:text-lg font-semibold text-white tracking-tight leading-tight">
             Where A Normal Dollar Goes:
           </h3>
         </div>
@@ -526,7 +570,7 @@ const HowItWorksPage = ({ appData }) => {
                 }`}
               >
                 <span className="text-rose-500/55 text-[0.5625rem] md:text-xs font-bold mt-[0.1875rem] md:mt-[0.3125rem] leading-none shrink-0" aria-hidden>✕</span>
-                <span className="text-[0.6875rem] md:text-sm text-slate-300 font-normal leading-snug">{task}</span>
+                <span className="text-[0.8125rem] md:text-sm text-slate-300 font-normal leading-snug">{task}</span>
               </div>
             );
           })}
@@ -534,10 +578,10 @@ const HowItWorksPage = ({ appData }) => {
 
         <div className="pt-3 md:pt-4 border-t border-white/[0.1]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
-            <p className="text-lg md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
+            <p className="text-2xl md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
             <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
           </div>
-          <p className="text-[0.625rem] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
+          <p className="text-xs md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
             Funded by donations, every year.
           </p>
         </div>
@@ -549,18 +593,18 @@ const HowItWorksPage = ({ appData }) => {
         style={{ transitionDelay: '120ms' }}
       >
         <div className="mb-3 md:mb-4">
-          <p className="text-[0.5625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
-          <h3 className="text-sm md:text-lg font-semibold text-white tracking-tight leading-tight">
+          <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
+          <h3 className="text-base md:text-lg font-semibold text-white tracking-tight leading-tight">
             Where Your Donation Goes:
           </h3>
         </div>
 
         <div className="flex-1 flex items-center mb-3 md:mb-4">
           <div>
-            <p className="text-xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
+            <p className="text-2xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
               Straight to Chessed.
             </p>
-            <p className="text-xs md:text-lg text-amber-200/65 font-normal italic">
+            <p className="text-sm md:text-lg text-amber-200/65 font-normal italic">
               That's it.
             </p>
           </div>
@@ -568,10 +612,10 @@ const HowItWorksPage = ({ appData }) => {
 
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
-            <p className="text-lg md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
+            <p className="text-2xl md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
             <p className="text-[0.625rem] md:text-[0.6875rem] font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Spent Finding Donors</p>
           </div>
-          <p className="text-[0.625rem] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
+          <p className="text-xs md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
             All of it reaches the mission.
           </p>
         </div>
@@ -596,38 +640,25 @@ const HowItWorksPage = ({ appData }) => {
             <OddsVisualizer tierData={appData.tierData} />
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            {['silver', 'gold', 'diamond'].map((tier, index) => {
-              const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
-              return (
-                <div key={tier} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-soft reveal" style={{transitionDelay: `${index * 100}ms`}}>
-                  <h3 className={`font-black uppercase tracking-widest text-sm mb-6 pb-4 border-b border-slate-200 ${headerColor}`}>{tier} Circle Prizes</h3>
-                  <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
-                    <span className="font-bold text-slate-400 uppercase text-xs tracking-widest">Grand Prize</span>
-                    <span className="font-black text-slate-900 text-3xl">{appData.tierData[tier].prize}</span>
-                  </div>
-                  <div className="space-y-4">
-                    {appData.tierData[tier].otherPrizes.map((p, i) => {
-                      let qty = '1 winner';
-                      let amount = p;
-                      const lowerP = p.toLowerCase();
-                      if (lowerP.includes('x')) {
-                        const parts = lowerP.split('x');
-                        const count = parseInt(parts[0].trim());
-                        qty = count === 1 ? '1 winner' : `${count} winners`;
-                        amount = p.substring(lowerP.indexOf('x') + 1).trim();
-                      }
-                      return (
-                        <div key={i} className="flex justify-between items-center text-base">
-                          <span className="text-slate-500 font-bold">{qty}</span>
-                          <span className="font-black text-slate-700">{amount}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
+          {/* Desktop: three columns side by side */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
+            {['silver', 'gold', 'diamond'].map((tier, index) => renderPrizeCard(tier, index))}
+          </div>
+
+          {/* Mobile: horizontal carousel keeps the height down to a single card */}
+          <div className="md:hidden -mx-4">
+            <div ref={prizeRef} onScroll={handlePrizeScroll} className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[8%] pb-2 scrollbar-none">
+              {['silver', 'gold', 'diamond'].map((tier, index) => (
+                <div key={tier} data-card className="snap-center shrink-0 w-[85%]">
+                  {renderPrizeCard(tier, index, true)}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              {['silver', 'gold', 'diamond'].map((_, i) => (
+                <div key={i} className={`h-2 rounded-full transition-all duration-300 ${i === prizeActiveIdx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-300'}`} />
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -91,8 +91,8 @@ const FeaturedPartners = () => {
 
   return (
     <section id="causes" className="py-20 md:py-28 bg-slate-900 px-4 text-white overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center reveal">
+      <div className="max-w-6xl mx-auto reveal">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* Copy */}
           <div className="text-center md:text-left">
             <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Causes</p>
@@ -146,8 +146,8 @@ const FeaturedPartners = () => {
           </div>
         </div>
 
-        {/* Auto-scrolling logo marquee */}
-        <div className="relative marquee-mask py-2 mt-14 md:mt-20 reveal">
+        {/* Auto-scrolling logo marquee — reveals together with the block above */}
+        <div className="relative marquee-mask py-2 mt-14 md:mt-20">
           <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
             {[...PARTNERS, ...PARTNERS].map((p, i) => (
               <PartnerLogo key={`${p.slug}-${i}`} partner={p} />
