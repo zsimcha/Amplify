@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
-import { ChevronRight, Plus, ShieldCheck, Heart } from 'lucide-react';
+import { ChevronRight, Plus } from 'lucide-react';
 import { partners, partnerLogo } from '../data/partners';
 
 // A single partner tile. The logo sits on the front; the description on the
@@ -18,7 +18,7 @@ const PartnerTile = ({ partner }) => {
       type="button"
       onClick={() => setFlipped((f) => !f)}
       aria-label={`${partner.name}. ${partner.category}. ${partner.description}`}
-      className="group relative aspect-square [perspective:1000px] rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+      className="group relative aspect-[5/4] sm:aspect-square [perspective:1000px] rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
     >
       <div
         className={`relative w-full h-full transition-transform duration-500 ease-out [transform-style:preserve-3d] md:group-hover:[transform:rotateY(180deg)] ${
@@ -51,15 +51,15 @@ const PartnerTile = ({ partner }) => {
               src={src}
               alt=""
               aria-hidden
-              className="absolute inset-0 m-auto w-3/4 h-3/4 object-contain opacity-[0.08] pointer-events-none"
+              className="absolute inset-0 m-auto w-4/5 h-4/5 object-contain opacity-25 pointer-events-none"
             />
           )}
           <div className="relative">
-            <p className="text-[0.5625rem] md:text-[0.625rem] font-bold uppercase tracking-widest text-amber-300 mb-1.5">
+            <p className="text-[0.5625rem] md:text-[0.625rem] font-bold uppercase tracking-widest text-amber-300 mb-1 md:mb-1.5">
               {partner.category}
             </p>
-            <h3 className="text-sm md:text-base font-bold tracking-tight mb-1.5 md:mb-2">{partner.name}</h3>
-            <p className="text-[0.75rem] md:text-[0.8125rem] text-indigo-100 font-medium leading-relaxed">
+            <h3 className="text-sm md:text-base font-bold tracking-tight mb-1 md:mb-2">{partner.name}</h3>
+            <p className="text-[0.6875rem] md:text-[0.8125rem] text-indigo-100 font-medium leading-snug md:leading-relaxed">
               {partner.description}
             </p>
           </div>
@@ -106,6 +106,8 @@ const GrantPage = () => {
     setVetActiveIdx(closest);
   };
 
+  const categories = [...new Set(partners.map((p) => p.category))];
+
   const vettingSteps = [
     { num: '01', title: 'Financials', border: 'border-indigo-600', body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
     { num: '02', title: 'Clear Impact', border: 'border-amber-400', body: 'Not "it helps our general fund." We look for organizations that can tell us exactly what our grants fund and how many people they reach.' },
@@ -116,31 +118,26 @@ const GrantPage = () => {
   return (
     <PageLayout title="Our Causes" intro="The verified nonprofits your circle funds, and how we choose them.">
 
-      {/* LEAD + IMPACT BAND */}
+      {/* LEAD — editorial intro + the breadth of cause areas */}
       <section className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
-        <div className="max-w-4xl mx-auto text-center reveal">
+        <div className="max-w-3xl mx-auto text-center reveal">
           <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Your Tzedakah at work</p>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">
-            Real organizations.<br className="hidden sm:block" /> Real impact.
+            Every cause you stand behind.
           </h2>
-          <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
-            Every month, Amplify members choose where their giving goes, directing collective grants to a
-            growing list of fully vetted Chessed organizations. These are the causes you're powering.
+          <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">
+            Each month, Amplify members choose where their giving goes, directing collective grants to a
+            growing list of fully vetted Chessed organizations, spanning crisis care, medical breakthroughs,
+            Torah education, campus life, and emergency response.
           </p>
-        </div>
 
-        <div className="max-w-3xl mx-auto mt-12 md:mt-16 grid grid-cols-3 gap-4 md:gap-6 reveal">
-          {[
-            { stat: '14', label: 'Vetted Partners', icon: <ShieldCheck size={20} className="text-indigo-600" /> },
-            { stat: '$400K+', label: 'Monthly Goal', icon: <Heart size={20} className="text-red-400 fill-current" /> },
-            { stat: '100%', label: 'To Charity', icon: <ShieldCheck size={20} className="text-emerald-500" /> },
-          ].map((s, i) => (
-            <div key={i} className="bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-6 text-center flex flex-col items-center">
-              <div className="mb-2 md:mb-3">{s.icon}</div>
-              <p className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter tabular-nums leading-none">{s.stat}</p>
-              <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">{s.label}</p>
-            </div>
-          ))}
+          <div className="mt-10 md:mt-12 flex flex-wrap justify-center gap-2 md:gap-2.5">
+            {categories.map((c) => (
+              <span key={c} className="rounded-full bg-slate-100 px-3.5 py-1.5 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">
+                {c}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -154,7 +151,7 @@ const GrantPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 reveal">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 reveal">
             {partners.map((p) => (
               <PartnerTile key={p.slug} partner={p} />
             ))}

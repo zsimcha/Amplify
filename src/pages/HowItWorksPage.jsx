@@ -407,6 +407,7 @@ const WhyPrizes = () => {
 const HowItWorksPage = ({ appData }) => {
   const membershipSectionRef = useRef(null);
   const [membershipProgress, setMembershipProgress] = useState(0);
+  const [membershipHintOn, setMembershipHintOn] = useState(false);
   const [prizeRef, prizeActiveIdx, handlePrizeScroll] = useCarouselActive(3);
 
   // Renders one tier's prize card. `compact` tightens spacing for the mobile
@@ -469,7 +470,7 @@ const HowItWorksPage = ({ appData }) => {
           const windowHeight = window.innerHeight;
           const scrollDistance = -rect.top;
           const maxScroll = rect.height - windowHeight;
-          
+
           if (maxScroll > 0) {
             const progress = (scrollDistance / maxScroll) * 100;
             setMembershipProgress(Math.max(0, Math.min(100, progress)));
@@ -478,6 +479,13 @@ const HowItWorksPage = ({ appData }) => {
           } else {
             setMembershipProgress(100);
           }
+
+          // Scroll cue: appears once the section header has scrolled to the
+          // middle of the viewport (during entry, before it pins), and fades
+          // once the reader is roughly a third of the way through the section.
+          const enteredHalfway = rect.top <= windowHeight * 0.5;
+          const scrolledThrough = maxScroll > 0 && scrollDistance > maxScroll * 0.35;
+          setMembershipHintOn(enteredHalfway && !scrolledThrough);
         }
         ticking = false;
       });
@@ -777,7 +785,7 @@ const HowItWorksPage = ({ appData }) => {
     {/* Scroll cue — sticky to the viewport bottom so it stays put regardless of
         the pinned content's height; fades once the timeline starts advancing. */}
     <div className="sticky bottom-6 z-20 flex justify-center pointer-events-none">
-      <ScrollHint hidden={membershipProgress <= 3 || membershipProgress > 14} className="text-slate-400" />
+      <ScrollHint hidden={!membershipHintOn} className="text-slate-400" />
     </div>
   </div>
 </section>
