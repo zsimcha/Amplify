@@ -19,6 +19,7 @@ const HomePage = ({ appData }) => {
   
   const howSectionRef = useRef(null);
   const [howScroll, setHowScroll] = useState(0);
+  const [howHintOn, setHowHintOn] = useState(false);
 
   useEffect(() => {
     if (location.hash) {
@@ -48,6 +49,11 @@ const HomePage = ({ appData }) => {
           if (maxScroll > 0) {
             const progress = scrollDistance / maxScroll;
             setHowScroll(Math.max(0, Math.min(1, progress)));
+            // Scroll cue: shows once the heading reaches the middle of the
+            // viewport (during entry) and vanishes as soon as step 01 reveals
+            // (showStep1 fires above 0.01 progress).
+            const enteredHalfway = rect.top <= windowHeight * 0.5;
+            setHowHintOn(enteredHalfway && progress <= 0.01);
           }
         }
         ticking = false;
@@ -117,8 +123,8 @@ const HomePage = ({ appData }) => {
     <span className="text-amber-400 italic"> Your Impact.</span>
   </h1>
 
-  <p className="text-indigo-200 text-xl md:text-2xl mb-10 font-medium leading-relaxed max-w-2xl">
-    Amplify pools your monthly Tzedakah with a circle of givers. Each month, support your favorite Chessed organizations and get a <strong className="text-white"> real shot at winning up to $100,000</strong>.
+  <p className="text-indigo-200 text-xl md:text-2xl mb-10 font-medium leading-snug max-w-xl">
+    Support your favorite Chessed organizations. A <strong className="text-white font-semibold">real shot at winning up to <span className="text-amber-400">$100,000</span></strong>. Every month.
   </p>
 
   <div className="flex flex-col sm:flex-row gap-4 text-left">
@@ -224,7 +230,7 @@ const HomePage = ({ appData }) => {
     {/* Scroll cue — sticky to the viewport bottom so it stays put regardless of
         the pinned content's height; fades as soon as the steps start revealing. */}
     <div className="sticky bottom-6 z-20 flex justify-center pointer-events-none">
-      <ScrollHint hidden={howScroll <= 0.02 || howScroll > 0.12} className="text-slate-400" />
+      <ScrollHint hidden={!howHintOn} className="text-slate-400" />
     </div>
   </div>
 </section>
@@ -275,10 +281,10 @@ const HomePage = ({ appData }) => {
           {/* Closing beats */}
           <div className="space-y-2 md:space-y-3">
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              Different causes.
+              One mission.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              One mission.
+              Different causes.
             </p>
             <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
               Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank you.

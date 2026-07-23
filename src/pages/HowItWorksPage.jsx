@@ -481,11 +481,11 @@ const HowItWorksPage = ({ appData }) => {
           }
 
           // Scroll cue: appears once the section header has scrolled to the
-          // middle of the viewport (during entry, before it pins), and fades
-          // once the reader is roughly a third of the way through the section.
+          // middle of the viewport (during entry, before it pins) and vanishes
+          // the moment the first timeline step reveals (step 01 triggers at 3%).
           const enteredHalfway = rect.top <= windowHeight * 0.5;
-          const scrolledThrough = maxScroll > 0 && scrollDistance > maxScroll * 0.35;
-          setMembershipHintOn(enteredHalfway && !scrolledThrough);
+          const firstStepShowing = maxScroll > 0 && scrollDistance > maxScroll * 0.03;
+          setMembershipHintOn(enteredHalfway && !firstStepShowing);
         }
         ticking = false;
       });
@@ -537,10 +537,10 @@ const HowItWorksPage = ({ appData }) => {
     <div className="mb-6 md:mb-8 reveal max-w-3xl">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grants</p>
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3 leading-[1.1] text-white">
-        Your Donation Goes Further
+        Your Giving Goes Further
       </h2>
       <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed">
-        With most giving, part of every dollar pays to raise the next one. Not here.
+        With most donations, part of every dollar pays to raise the next one. Not here.
       </p>
     </div>
 
@@ -604,7 +604,7 @@ const HowItWorksPage = ({ appData }) => {
         <div className="mb-3 md:mb-4">
           <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
           <h3 className="text-lg md:text-xl font-semibold text-white tracking-tight leading-tight">
-            Where Your Donation Goes:
+            Where Your Dollar Goes:
           </h3>
         </div>
 
