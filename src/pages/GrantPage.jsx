@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
+import CausesFlow from '../components/CausesFlow';
 import { ChevronRight, Plus } from 'lucide-react';
 import { partners, partnerLogo } from '../data/partners';
 
@@ -106,8 +107,6 @@ const GrantPage = () => {
     setVetActiveIdx(closest);
   };
 
-  const categories = [...new Set(partners.map((p) => p.category))];
-
   const vettingSteps = [
     { num: '01', title: 'Financials', border: 'border-indigo-600', body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
     { num: '02', title: 'Clear Impact', border: 'border-amber-400', body: 'Not "it helps our general fund." We look for organizations that can tell us exactly what our grants fund and how many people they reach.' },
@@ -118,28 +117,8 @@ const GrantPage = () => {
   return (
     <PageLayout title="Our Causes" intro="The verified nonprofits your circle funds, and how we choose them.">
 
-      {/* LEAD — editorial intro + the breadth of cause areas */}
-      <section className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
-        <div className="max-w-3xl mx-auto text-center reveal">
-          <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Your Tzedakah at work</p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">
-            Every cause you stand behind.
-          </h2>
-          <p className="text-lg md:text-xl text-slate-600 font-medium leading-relaxed">
-            Each month, Amplify members choose where their giving goes, directing collective grants to a
-            growing list of fully vetted Chessed organizations, spanning crisis care, medical breakthroughs,
-            Torah education, campus life, and emergency response.
-          </p>
-
-          <div className="mt-10 md:mt-12 flex flex-wrap justify-center gap-2 md:gap-2.5">
-            {categories.map((c) => (
-              <span key={c} className="rounded-full bg-slate-100 px-3.5 py-1.5 text-[0.6875rem] font-bold uppercase tracking-widest text-slate-500">
-                {c}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* LEAD — generative "givers flow to the causes" motion piece */}
+      <CausesFlow />
 
       {/* PARTNER DIRECTORY — flip tiles */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
