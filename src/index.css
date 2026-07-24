@@ -52,3 +52,36 @@ body {
   background-image: linear-gradient(135deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 8px 8px;
 }
+
+/* Infinite logo marquee. The track holds two copies of the partner list, so
+   sliding it exactly -50% loops seamlessly back to the start. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 45s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+}
+
+/* Fade the marquee edges into the background instead of a hard cutoff. */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+/* Scroll hint: three chevrons pulse from dim to bright. Staggered animation
+   delays on each chevron make the light travel downward in sequence. */
+@keyframes scroll-hint-pulse {
+  0%, 100% { opacity: 0.2; }
+  50%      { opacity: 1; }
+}
+.scroll-hint-chevron {
+  opacity: 0.2;
+  animation: scroll-hint-pulse 1.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-chevron { animation: none; opacity: 0.55; }
+}

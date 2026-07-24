@@ -1,23 +1,91 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
-import { ChevronRight, Heart, Phone, Tent, Siren } from 'lucide-react';
+import CornerConstellation from '../components/CornerConstellation';
+import { ChevronRight, Plus } from 'lucide-react';
+import { partners, partnerLogo } from '../data/partners';
+
+// A single partner tile. The logo sits on the front; the description on the
+// back, over a faded watermark of the same logo. Desktop flips on hover; touch
+// devices flip on tap (and tap works on desktop too, so it's keyboard/click
+// friendly). backface-visibility hides whichever face points away.
+const PartnerTile = ({ partner }) => {
+  const [flipped, setFlipped] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
+  const src = partnerLogo(partner);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setFlipped((f) => !f)}
+      aria-label={`${partner.name}. ${partner.category}. ${partner.description}`}
+      className="group relative aspect-[5/4] sm:aspect-square [perspective:1000px] rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+    >
+      <div
+        className={`relative w-full h-full transition-transform duration-500 ease-out [transform-style:preserve-3d] md:group-hover:[transform:rotateY(180deg)] ${
+          flipped ? '[transform:rotateY(180deg)]' : ''
+        }`}
+      >
+        {/* FRONT — logo */}
+        <div className="absolute inset-0 [backface-visibility:hidden] rounded-2xl border border-slate-200 bg-white shadow-soft flex items-center justify-center p-5 md:p-6">
+          {logoFailed ? (
+            <span className="text-sm md:text-lg font-black uppercase tracking-wide text-slate-700 text-center leading-tight">
+              {partner.name}
+            </span>
+          ) : (
+            <img
+              src={src}
+              alt={partner.name}
+              onError={() => setLogoFailed(true)}
+              className="max-h-[50%] max-w-[82%] w-auto object-contain"
+            />
+          )}
+          <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-colors">
+            <Plus size={12} strokeWidth={2.5} />
+          </span>
+        </div>
+
+        {/* BACK — description over a faded logo watermark */}
+        <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-2xl border border-indigo-800 bg-indigo-950 text-white overflow-hidden flex flex-col justify-center p-4 md:p-5 text-left">
+          {!logoFailed && (
+            <img
+              src={src}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 m-auto w-4/5 h-4/5 object-contain opacity-25 pointer-events-none"
+            />
+          )}
+          <div className="relative">
+            <p className="text-[0.5625rem] md:text-[0.625rem] font-bold uppercase tracking-widest text-amber-300 mb-1 md:mb-1.5">
+              {partner.category}
+            </p>
+            <h3 className="text-sm md:text-base font-bold tracking-tight mb-1 md:mb-2">{partner.name}</h3>
+            <p className="text-[0.6875rem] md:text-[0.8125rem] text-indigo-100 font-medium leading-snug md:leading-relaxed">
+              {partner.description}
+            </p>
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+};
 
 const GrantPage = () => {
   useEffect(() => {
     const observerOnce = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
           observerOnce.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: "0px 0px -10% 0px" });
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
 
     document.querySelectorAll('.reveal').forEach((el) => observerOnce.observe(el));
     return () => observerOnce.disconnect();
   }, []);
 
+  // Mobile carousel state for the vetting steps
   const vetScrollerRef = useRef(null);
   const [vetActiveIdx, setVetActiveIdx] = useState(0);
   const handleVetScroll = () => {
@@ -39,205 +107,127 @@ const GrantPage = () => {
     setVetActiveIdx(closest);
   };
 
+  const causeAreas = [...new Set(partners.map((p) => p.category))];
+
+  const vettingSteps = [
+    { num: '01', title: 'Financials', border: 'border-indigo-600', body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
+    { num: '02', title: 'Clear Impact', border: 'border-amber-400', body: 'Not "it helps our general fund." We look for organizations that can tell us exactly what our grants fund and how many people they reach.' },
+    { num: '03', title: 'Ready to Scale', border: 'border-blue-400', body: "Some nonprofits aren't built to deploy a large grant effectively. We look for partners where our funding acts as a true catalyst." },
+    { num: '04', title: 'Proven Trust', border: 'border-emerald-400', body: 'We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.' },
+  ];
+
   return (
-    <PageLayout title="The Grant" intro="One organization, every month. Here's exactly where it goes.">
-      
-            {/* Partner — quote now compact, sits inline */}
-      <section className="py-16 md:py-24 px-4 bg-slate-50 border-y border-slate-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
-            
-            {/* Image column */}
-            <div className="order-1 md:order-2 reveal" style={{ transitionDelay: '150ms' }}>
-              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-soft-xl relative bg-slate-900">
-                <img src="/impact-photo.jpg" alt="Impact" className="absolute inset-0 w-full h-full object-cover opacity-80" onError={(e) => { e.currentTarget.style.display='none'; }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+    <PageLayout title="Our Causes" intro="The verified nonprofits your circle funds, and how we choose them.">
+
+      {/* LEAD — editorial intro paired with a designed causes panel */}
+      <section className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+          <div className="reveal">
+            <div className="w-14 h-1.5 bg-amber-400 mb-6"></div>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Your Tzedakah at work</p>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">
+              Every cause you stand behind.
+            </h2>
+            <p className="text-lg text-slate-600 font-medium leading-relaxed">
+              Each month, Amplify members choose where their giving goes, directing collective grants to a
+              growing list of fully vetted Chessed organizations. From crisis care to Torah education,
+              your Tzedakah reaches the causes that matter most to you.
+            </p>
+          </div>
+
+          <div className="reveal" style={{ transitionDelay: '120ms' }}>
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-950 to-indigo-950 p-7 md:p-10 shadow-soft-xl ring-1 ring-white/10">
+              <CornerConstellation
+                corner="top-right"
+                width={360}
+                height={260}
+                density={20}
+                maxR={2.4}
+                jitter={0}
+                className="absolute -top-6 -right-6 w-[18rem] h-[13rem] pointer-events-none opacity-40"
+              />
+              <p className="relative text-[0.625rem] font-bold uppercase tracking-[0.4em] text-indigo-300/80 mb-6">
+                The causes you're powering
+              </p>
+              <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-x-6 gap-y-3 md:gap-y-3.5">
+                {causeAreas.map((c, i) => (
+                  <div key={c} className="flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0 shadow-[0_0_10px_rgba(251,191,36,0.8)]"></span>
+                    <span
+                      className="text-base md:text-xl lg:text-2xl font-black uppercase tracking-tight text-white leading-none whitespace-nowrap"
+                      style={{ opacity: 0.6 + (i % 3) * 0.13 }}
+                    >
+                      {c}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
-            
-            {/* Copy column */}
-            <div className="order-2 md:order-1 reveal">
-              <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">This Month's Partner</p>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-5">Chessed</h2>
-              
-              <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6 md:mb-8">
-                <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Projected Grant</p>
-                  <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">$400K</p>
-                </div>
-                <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Status</p>
-                  <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">501(c)(3)</p>
-                </div>
-                <div className="bg-white p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200 text-center md:text-left">
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Rated</p>
-                  <p className="font-black text-slate-900 text-sm md:text-lg tracking-tight">4/4 ★</p>
-                </div>
-              </div>
-
-              <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed mb-4">
-                Chessed supports families the moment a child is diagnosed with cancer or a life-threatening illness. Transportation, counseling, summer camp, crisis support.
-              </p>
-              <p className="text-base md:text-lg text-slate-900 font-bold leading-relaxed mb-6">
-                Our grant goes directly to making sure no family faces this alone.
-              </p>
-
-              {/* Compact quote — sits inline, doesn't extend the section */}
-              <div className="relative bg-white border-l-4 border-amber-400 rounded-r-2xl p-5 md:p-6 shadow-soft mb-6">
-                <p className="text-sm md:text-base text-slate-700 font-medium italic leading-relaxed mb-3">
-                  "[quote from director]"
-                </p>
-                <p className="text-xs font-bold uppercase tracking-widest text-slate-500">— Director Name</p>
-              </div>
-
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Grants administered through <span className="text-slate-700 font-bold">(Nonprofit)</span>, a registered 501(c)(3) donor-advised fund.
-              </p>
-            </div>
-
           </div>
         </div>
       </section>
 
-      {/* AMPLIFY IN MOTION — percent-based breakdown, no specific dollar amounts */}
-<section className="py-20 md:py-28 px-4 bg-white">
-  <div className="max-w-6xl mx-auto">
-    <div className="mb-12 md:mb-16 max-w-3xl reveal">
-      <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-4">Where the grant goes</p>
-      <h2 className="text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight mb-4 leading-[1.05]">Amplify in motion.</h2>
-      <p className="text-lg text-slate-600 font-medium leading-relaxed">
-        Here's exactly how this month's grant gets deployed at Chessed.
-      </p>
-    </div>
+      {/* PARTNER DIRECTORY — flip tiles */}
+      <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-10 md:mb-14 reveal">
+            <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-3">Meet the causes.</h2>
+            <p className="text-sm md:text-base text-slate-500 font-medium">
+              <span className="md:hidden">Tap</span><span className="hidden md:inline">Hover or tap</span> any partner to learn more.
+            </p>
+          </div>
 
-    {/* Visual allocation bar (no dollar labels) */}
-    <div className="bg-slate-50 border border-slate-100 rounded-3xl p-5 md:p-8 mb-6 md:mb-8 reveal">
-      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Allocation</p>
-      <div className="flex h-3 md:h-4 rounded-full overflow-hidden">
-        <div className="bg-indigo-500" style={{width: '38%'}} title="Family Transportation"></div>
-        <div className="bg-amber-400" style={{width: '25%'}} title="Mental Health Support"></div>
-        <div className="bg-emerald-500" style={{width: '20%'}} title="Summer Camp"></div>
-        <div className="bg-rose-500" style={{width: '17%'}} title="Crisis Intervention"></div>
-      </div>
-      {/* Inline legend */}
-      <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4 text-xs font-bold uppercase tracking-widest text-slate-500">
-        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-indigo-500"></span> Family Transport</span>
-        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-amber-400"></span> Mental Health</span>
-        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Summer Camp</span>
-        <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-rose-500"></span> Crisis Response</span>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-      {[
-        { 
-          icon: <Heart size={22} strokeWidth={2} />, 
-          bar: 'bg-indigo-500',
-          accent: 'text-indigo-600 bg-indigo-50',
-          percent: '38%', 
-          label: 'Family Transportation', 
-          detail: 'Rides to treatment for hundreds of families across the year.'
-        },
-        { 
-          icon: <Phone size={22} strokeWidth={2} />, 
-          bar: 'bg-amber-400',
-          accent: 'text-amber-700 bg-amber-50',
-          percent: '25%', 
-          label: 'Mental Health Support', 
-          detail: '24/7 counseling hotline staffed by licensed clinicians.'
-        },
-        { 
-          icon: <Tent size={22} strokeWidth={2} />, 
-          bar: 'bg-emerald-500',
-          accent: 'text-emerald-700 bg-emerald-50',
-          percent: '20%', 
-          label: 'Summer Camp', 
-          detail: 'Full scholarships for children to attend Camp.'
-        },
-        { 
-          icon: <Siren size={22} strokeWidth={2} />, 
-          bar: 'bg-rose-500',
-          accent: 'text-rose-700 bg-rose-50',
-          percent: '17%', 
-          label: 'Crisis Intervention', 
-          detail: 'Emergency response funding for new diagnoses and trauma.'
-        },
-      ].map((item, i) => (
-        <div key={i} className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-soft hover:shadow-soft-lg transition-shadow flex flex-col reveal" style={{transitionDelay: `${i * 100}ms`}}>
-          <div className={`h-1.5 ${item.bar}`}></div>
-          <div className="p-6 md:p-7 flex-1 flex flex-col">
-            <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${item.accent} mb-5`}>
-              {item.icon}
-            </div>
-            <p className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-2 tabular-nums leading-none">{item.percent}</p>
-            <h3 className="text-base md:text-lg font-bold text-slate-900 tracking-tight mb-2">{item.label}</h3>
-            <p className="text-sm text-slate-600 font-medium leading-relaxed">{item.detail}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 reveal">
+            {partners.map((p) => (
+              <PartnerTile key={p.slug} partner={p} />
+            ))}
           </div>
         </div>
-      ))}
-    </div>
+      </section>
 
-    <p className="text-xs text-slate-500 font-medium mt-8 max-w-3xl leading-relaxed">
-      Allocation determined in coordination with Chessed leadership. A detailed impact report is shared with all members at month's end.
-    </p>
-  </div>
-</section>
-
-      {/* Vetting Process — unchanged */}
-      <section className="py-20 md:py-28 px-4 bg-slate-50 border-t border-slate-200">
+      {/* HOW WE CHOOSE — vetting */}
+      <section className="py-20 md:py-28 px-4 bg-white border-t border-slate-100">
         <div className="max-w-5xl mx-auto">
           <div className="mb-12 md:mb-16 reveal">
-<h2 className="text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight">Our vetting process.</h2>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">How we choose</p>
+            <h2 className="text-3xl md:text-4xl font-semibold text-slate-900 tracking-tight">Our vetting process.</h2>
           </div>
 
-          {(() => {
-            const steps = [
-              { num: '01', title: 'Financials',     border: 'border-indigo-600',  body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
-              { num: '02', title: 'Clear Impact',   border: 'border-amber-400',   body: "Not  \"it helps our general fund.\" We look for organizations that can tell us exactly what program this grant funds and how many people it will reach." },
-              { num: '03', title: 'Ready to Scale', border: 'border-blue-400',    body: "Some nonprofits aren't structured to deploy a huge lump-sum gift effectively. We look for partners where our grant acts as a true catalyst." },
-              { num: '04', title: 'Proven Trust',   border: 'border-emerald-400', body: 'We prioritize organizations with an established track record in the communities we serve. Trust is earned, and we rely on partners who have already earned it.' },
-            ];
-
-            return (
-              <>
-                <div className="hidden md:block space-y-16">
-                  {steps.map((step, i) => (
-                    <div key={step.num} className="grid md:grid-cols-12 gap-8 items-start reveal" style={{ transitionDelay: `${i * 80}ms` }}>
-                      <div className="md:col-span-3">
-                        <span className="text-7xl font-black text-slate-200 block tracking-tighter">{step.num}</span>
-                      </div>
-                      <div className={`md:col-span-9 pt-2 border-t-4 ${step.border}`}>
-                        <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">{step.title}</h3>
-                        <p className="text-xl text-slate-600 font-medium leading-relaxed">{step.body}</p>
-                      </div>
-                    </div>
-                  ))}
+          <div className="hidden md:block space-y-16">
+            {vettingSteps.map((step, i) => (
+              <div key={step.num} className="grid md:grid-cols-12 gap-8 items-start reveal" style={{ transitionDelay: `${i * 80}ms` }}>
+                <div className="md:col-span-3">
+                  <span className="text-7xl font-black text-slate-200 block tracking-tighter">{step.num}</span>
                 </div>
+                <div className={`md:col-span-9 pt-2 border-t-4 ${step.border}`}>
+                  <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tight">{step.title}</h3>
+                  <p className="text-xl text-slate-600 font-medium leading-relaxed">{step.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
 
-                <div className="md:hidden -mx-4">
-                  <div ref={vetScrollerRef} onScroll={handleVetScroll} className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 scrollbar-none">
-                    {steps.map((step) => (
-                      <div key={step.num} data-card className="snap-center shrink-0 w-[80%] bg-white border border-slate-200 rounded-2xl shadow-soft overflow-hidden flex flex-col">
-                        <div className={`border-t-4 ${step.border} p-6 flex-1 flex flex-col`}>
-                          <span className="text-5xl font-black text-slate-200 block tracking-tighter mb-3">{step.num}</span>
-                          <h3 className="text-xl font-black text-slate-900 mb-3 tracking-tight">{step.title}</h3>
-                          <p className="text-base text-slate-600 font-medium leading-relaxed">{step.body}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-center gap-2 mt-3">
-                    {steps.map((_, i) => (
-                      <div key={i} className={`h-2 rounded-full transition-all duration-300 ${i === vetActiveIdx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-300'}`} />
-                    ))}
+          <div className="md:hidden -mx-4">
+            <div ref={vetScrollerRef} onScroll={handleVetScroll} className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[10%] pb-4 scrollbar-none">
+              {vettingSteps.map((step) => (
+                <div key={step.num} data-card className="snap-center shrink-0 w-[80%] bg-white border border-slate-200 rounded-2xl shadow-soft overflow-hidden flex flex-col">
+                  <div className={`border-t-4 ${step.border} p-6 flex-1 flex flex-col`}>
+                    <span className="text-5xl font-black text-slate-200 block tracking-tighter mb-3">{step.num}</span>
+                    <h3 className="text-xl font-black text-slate-900 mb-3 tracking-tight">{step.title}</h3>
+                    <p className="text-base text-slate-600 font-medium leading-relaxed">{step.body}</p>
                   </div>
                 </div>
-              </>
-            );
-          })()}
+              ))}
+            </div>
+            <div className="flex justify-center gap-2 mt-3">
+              {vettingSteps.map((_, i) => (
+                <div key={i} className={`h-2 rounded-full transition-all duration-300 ${i === vetActiveIdx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-300'}`} />
+              ))}
+            </div>
+          </div>
 
           <div className="mt-16 md:mt-20 pt-12 md:pt-16 border-t border-slate-200 text-center reveal">
-            <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-white px-8 py-4 rounded-xl shadow-soft">
+            <Link to="/circles" className="inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-sm bg-slate-50 px-8 py-4 rounded-xl shadow-soft">
               See the Circles & Prizes <ChevronRight size={18} />
             </Link>
           </div>
