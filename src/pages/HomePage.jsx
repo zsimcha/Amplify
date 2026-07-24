@@ -123,9 +123,17 @@ const HomePage = ({ appData }) => {
     <span className="text-amber-400 italic"> Your Impact.</span>
   </h1>
 
-  <p className="text-indigo-200 text-xl md:text-2xl mb-10 font-medium leading-snug max-w-xl">
-    Support your favorite Chessed organizations. A <strong className="text-white font-semibold">real shot at winning up to <span className="text-amber-400">$100,000</span></strong>. Every month.
-  </p>
+  <div className="mb-10 max-w-xl space-y-3">
+    <p className="text-indigo-200 text-lg md:text-xl font-medium leading-snug">
+      Support your favorite Chessed organizations.
+    </p>
+    <p className="text-white text-2xl md:text-3xl font-bold tracking-tight leading-[1.15]">
+      Get a real shot at winning up to <span className="text-amber-400">$100,000</span>.
+    </p>
+    <p className="text-indigo-300/70 text-xs font-bold uppercase tracking-[0.35em]">
+      Every month
+    </p>
+  </div>
 
   <div className="flex flex-col sm:flex-row gap-4 text-left">
     <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">

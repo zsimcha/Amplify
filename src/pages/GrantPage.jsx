@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
-import CausesFlow from '../components/CausesFlow';
+import CornerConstellation from '../components/CornerConstellation';
 import { ChevronRight, Plus } from 'lucide-react';
 import { partners, partnerLogo } from '../data/partners';
 
@@ -107,6 +107,8 @@ const GrantPage = () => {
     setVetActiveIdx(closest);
   };
 
+  const causeAreas = [...new Set(partners.map((p) => p.category))];
+
   const vettingSteps = [
     { num: '01', title: 'Financials', border: 'border-indigo-600', body: 'We review audited financials, 990 filings, and overhead ratios. We only partner with organizations that can account for every single dollar.' },
     { num: '02', title: 'Clear Impact', border: 'border-amber-400', body: 'Not "it helps our general fund." We look for organizations that can tell us exactly what our grants fund and how many people they reach.' },
@@ -117,8 +119,53 @@ const GrantPage = () => {
   return (
     <PageLayout title="Our Causes" intro="The verified nonprofits your circle funds, and how we choose them.">
 
-      {/* LEAD — generative "givers flow to the causes" motion piece */}
-      <CausesFlow />
+      {/* LEAD — editorial intro paired with a designed causes panel */}
+      <section className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+          <div className="reveal">
+            <div className="w-14 h-1.5 bg-amber-400 mb-6"></div>
+            <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-4">Your Tzedakah at work</p>
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-6 leading-[1.05]">
+              Every cause you stand behind.
+            </h2>
+            <p className="text-lg text-slate-600 font-medium leading-relaxed">
+              Each month, Amplify members choose where their giving goes, directing collective grants to a
+              growing list of fully vetted Chessed organizations. From crisis care to Torah education,
+              your Tzedakah reaches the causes that matter most to you.
+            </p>
+          </div>
+
+          <div className="reveal" style={{ transitionDelay: '120ms' }}>
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-950 to-indigo-950 p-7 md:p-10 shadow-soft-xl ring-1 ring-white/10">
+              <CornerConstellation
+                corner="top-right"
+                width={360}
+                height={260}
+                density={20}
+                maxR={2.4}
+                jitter={0}
+                className="absolute -top-6 -right-6 w-[18rem] h-[13rem] pointer-events-none opacity-40"
+              />
+              <p className="relative text-[0.625rem] font-bold uppercase tracking-[0.4em] text-indigo-300/80 mb-6">
+                The causes you're powering
+              </p>
+              <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-x-6 gap-y-3 md:gap-y-3.5">
+                {causeAreas.map((c, i) => (
+                  <div key={c} className="flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0 shadow-[0_0_10px_rgba(251,191,36,0.8)]"></span>
+                    <span
+                      className="text-base md:text-xl lg:text-2xl font-black uppercase tracking-tight text-white leading-none whitespace-nowrap"
+                      style={{ opacity: 0.6 + (i % 3) * 0.13 }}
+                    >
+                      {c}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* PARTNER DIRECTORY — flip tiles */}
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
