@@ -497,7 +497,7 @@ const HowItWorksPage = ({ appData }) => {
 
   const timeline = [
     { num: '01', title: 'Joining',              titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
-    { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: 'Pick one Chessed organization, or split your giving across a few. Change it any month.' },
+    { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: 'Pick one Chessed organization, or split your giving across a few. Change it every month, or keep it the same forever.' },
     { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Charged automatically each month once your circle fills. Pause or cancel any time, no penalty, no runaround.' },
     { num: '04', title: "Tax & Ma'aser",         titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
@@ -721,7 +721,7 @@ const HowItWorksPage = ({ appData }) => {
                   <div className="w-16 h-16 rounded-full flex items-center justify-center font-black text-xl mb-5 ring-4 ring-white bg-slate-900 text-white shadow-soft">
                     {item.num}
                   </div>
-                  <p className={`text-sm font-black uppercase tracking-[0.22em] mb-2.5 ${item.titleColor}`}>
+                  <p className={`text-sm font-black uppercase tracking-[0.22em] mb-2.5 min-h-[2.5rem] flex items-center justify-center text-center ${item.titleColor}`}>
                     {item.title}
                   </p>
                   <p className="text-base text-slate-600 font-medium leading-relaxed max-w-[15rem]">

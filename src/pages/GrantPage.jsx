@@ -19,7 +19,7 @@ const PartnerTile = ({ partner }) => {
       type="button"
       onClick={() => setFlipped((f) => !f)}
       aria-label={`${partner.name}. ${partner.category}. ${partner.description}`}
-      className="group relative aspect-[5/4] sm:aspect-square [perspective:1000px] rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
+      className="group relative aspect-[5/4] sm:aspect-square lg:aspect-[4/3] [perspective:1000px] rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2"
     >
       <div
         className={`relative w-full h-full transition-transform duration-500 ease-out [transform-style:preserve-3d] md:group-hover:[transform:rotateY(180deg)] ${
@@ -177,7 +177,7 @@ const GrantPage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 reveal">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 reveal">
             {partners.map((p) => (
               <PartnerTile key={p.slug} partner={p} />
             ))}

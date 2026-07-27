@@ -1,7 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Building, Heart, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { partners as PARTNERS, partnerLogo } from '../data/partners';
+
+// Bespoke marks (hand-drawn SVG instead of stock icons) so the trust badges
+// feel unique to Amplify. Swap these paths to restyle.
+const VerifiedMark = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
+    {/* faceted seal */}
+    <path
+      d="M12 2.2l2.6 1.7 3.1-.3 1 3 2.6 1.8-1 3 1 3-2.6 1.8-1 3-3.1-.3L12 21.8l-2.6-1.7-3.1.3-1-3L2.7 15.6l1-3-1-3 2.6-1.8 1-3 3.1.3z"
+      fill="currentColor"
+      fillOpacity="0.14"
+      stroke="currentColor"
+      strokeWidth="1.1"
+      strokeLinejoin="round"
+    />
+    <path d="M8.4 12.2l2.5 2.5 4.7-5.4" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const ImpactMark = ({ className = '' }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
+    {/* ripple radiating from a single gift — one pool reaching many */}
+    <circle cx="12" cy="12" r="2.6" fill="currentColor" />
+    <path d="M6.3 12a5.7 5.7 0 0 1 11.4 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    <path d="M2.6 12a9.4 9.4 0 0 1 18.8 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeOpacity="0.5" />
+  </svg>
+);
 
 // Rotating showcase photos for the crossfade banner. Drop org photos into
 // /public/partners/photos/ and list them here; the banner preloads every entry
@@ -75,8 +101,7 @@ const FeaturedPartners = () => {
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* Copy */}
           <div className="text-center md:text-left">
-            <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.4em] mb-4">Our Causes</p>
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight uppercase">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight uppercase leading-[0.95]">
               The Chessed<br/>
               <span className="italic text-amber-400">you choose</span>.
             </h2>
@@ -89,11 +114,11 @@ const FeaturedPartners = () => {
             {/* Trust + combined-goal badges */}
             <div className="flex flex-wrap items-center gap-5 sm:gap-6 justify-center md:justify-start mb-8">
               <div className="flex items-center gap-3">
-                <Building size={20} className="text-slate-400" />
+                <VerifiedMark className="w-5 h-5 text-emerald-400" />
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofits</p>
               </div>
               <div className="flex items-center gap-3">
-                <Heart size={20} className="text-red-400 fill-current" />
+                <ImpactMark className="w-5 h-5 text-amber-400" />
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
                   $400K+ Monthly Goal <span className="text-slate-500">· All Causes</span>
                 </p>
