@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
 import CornerConstellation from '../components/CornerConstellation';
+import ImpactBand from '../components/ImpactBand';
 import { ChevronRight, Plus } from 'lucide-react';
 import { partners, partnerLogo } from '../data/partners';
 
@@ -184,6 +185,9 @@ const GrantPage = () => {
           </div>
         </div>
       </section>
+
+      {/* IMPACT — animated outcome stats across partners */}
+      <ImpactBand />
 
       {/* HOW WE CHOOSE — vetting */}
       <section className="py-20 md:py-28 px-4 bg-white border-t border-slate-100">

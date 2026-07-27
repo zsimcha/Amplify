@@ -93,3 +93,18 @@ export const partners = [
 
 // Resolve a partner's logo path (explicit override or slug-based default).
 export const partnerLogo = (p) => p.logo || `/partners/logos/${p.slug}.png`;
+
+// ⚠️ PLACEHOLDER IMPACT FIGURES — replace `value` with the real numbers before
+// launch. `value` is the number the counter animates to; `abbrev: true` renders
+// it compactly (2000000 -> "2M", 800000 -> "800K"), otherwise it shows in full
+// with commas ("10,000"). All are shown with a trailing "+".
+export const impactStats = [
+  { org: 'Renewal',         value: 1000,    abbrev: false, label: 'Living kidney donations facilitated' },
+  { org: 'Leket Israel',    value: 2000000, abbrev: true,  label: 'Meals rescued every year' },
+  { org: 'United Hatzalah', value: 2000000, abbrev: true,  label: 'Emergencies answered' },
+  { org: 'Bonei Olam',      value: 10000,   abbrev: false, label: 'Babies born through treatment' },
+  { org: 'Chai Lifeline',   value: 6000,    abbrev: false, label: 'Children & families supported' },
+  { org: 'Camp HASC',       value: 500,     abbrev: false, label: 'Campers with disabilities each summer' },
+  { org: 'TorahAnytime',    value: 800000,  abbrev: true,  label: 'Free Torah classes on demand' },
+  { org: 'Zaka',            value: 3000,    abbrev: false, label: 'Volunteer first responders' },
+];
