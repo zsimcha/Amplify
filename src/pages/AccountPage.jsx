@@ -8,13 +8,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart
+  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart, Info
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
 import { supabase } from '../lib/supabase';
 import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities';
+import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
 
 // Display-only; authoritative pricing lives server-side in process_checkout.
@@ -50,6 +51,27 @@ const Feedback = ({ kind, children }) => (
 
 const inputClass = 'w-full bg-slate-50 border border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100 rounded-xl p-3 text-sm outline-none transition-all';
 
+// Small logo for the collapsed causes list; falls back to the org's initial
+// when the logo file isn't uploaded yet.
+const CauseLogo = ({ partner }) => {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0 text-sm font-black">
+        {partner.name.charAt(0)}
+      </div>
+    );
+  }
+  return (
+    <img
+      src={partnerLogo(partner)}
+      alt=""
+      onError={() => setFailed(true)}
+      className="w-10 h-10 object-contain shrink-0"
+    />
+  );
+};
+
 const AccountPage = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
@@ -81,6 +103,7 @@ const AccountPage = () => {
   const [causesLoadError, setCausesLoadError] = useState(false);
   const [causesSaving, setCausesSaving] = useState(false);
   const [causesFeedback, setCausesFeedback] = useState(null);
+  const [editingCauses, setEditingCauses] = useState(false);
 
   // Route guard: this page requires a session.
   useEffect(() => {
@@ -133,6 +156,7 @@ const AccountPage = () => {
     try {
       await saveMyCauses(causesDraft);
       setSavedCauses(causesDraft);
+      setEditingCauses(false);
       setCausesFeedback({ kind: 'success', text: 'Your causes have been updated.' });
     } catch {
       setCausesFeedback({ kind: 'error', text: 'Could not update your causes. Please try again.' });
@@ -509,13 +533,20 @@ const AccountPage = () => {
             <p className="text-sm text-slate-400 font-medium animate-pulse">Loading your causes...</p>
           ) : causesLoadError ? (
             <Feedback kind="error">Could not load your causes. Please refresh the page.</Feedback>
-          ) : (
+          ) : editingCauses ? (
+            /* Expanded: full tile picker */
             <>
               <p className="text-sm text-slate-600 font-medium mb-6">
-                Choose up to 4 organizations for your monthly giving to support. Change them anytime.
+                Choose up to 4 organizations for your monthly giving to support.
               </p>
               <CharitySelector value={causesDraft} onChange={setCausesDraft} max={4} />
-              <div className="mt-6 flex items-center gap-3">
+              <div className="mt-5 bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-start gap-2.5">
+                <Info size={14} className="text-slate-400 shrink-0 mt-0.5" />
+                <p className="text-[0.75rem] text-slate-600 font-medium leading-relaxed">
+                  If you don't pick any causes, your donation is split evenly among all of our partner organizations.
+                </p>
+              </div>
+              <div className="mt-5 flex items-center gap-3">
                 <button
                   onClick={handleSaveCauses}
                   disabled={!causesDirty || causesSaving}
@@ -523,15 +554,49 @@ const AccountPage = () => {
                 >
                   {causesSaving ? 'Saving...' : 'Save Changes'}
                 </button>
-                {causesDirty && !causesSaving && (
-                  <button
-                    onClick={() => setCausesDraft(savedCauses)}
-                    className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
-                  >
-                    Reset
-                  </button>
-                )}
+                <button
+                  onClick={() => { setCausesDraft(savedCauses); setEditingCauses(false); }}
+                  disabled={causesSaving}
+                  className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Cancel
+                </button>
               </div>
+              {causesFeedback && <Feedback kind={causesFeedback.kind}>{causesFeedback.text}</Feedback>}
+            </>
+          ) : (
+            /* Collapsed: just the selected orgs */
+            <>
+              {savedCauses.length === 0 ? (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-2.5">
+                  <Info size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                  <p className="text-xs md:text-[0.8125rem] text-slate-600 font-medium leading-relaxed">
+                    You haven't picked any causes, so your donation is split evenly among all of our partner organizations.
+                  </p>
+                </div>
+              ) : (
+                <ul className="divide-y divide-slate-100 border border-slate-100 rounded-xl overflow-hidden">
+                  {savedCauses.map((slug) => {
+                    const p = partners.find((x) => x.slug === slug);
+                    if (!p) return null;
+                    return (
+                      <li key={slug} className="flex items-center gap-3 p-3.5 bg-white">
+                        <CauseLogo partner={p} />
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-slate-900 truncate">{p.name}</p>
+                          <p className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mt-0.5">{p.category}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <button
+                onClick={() => { setCausesDraft(savedCauses); setCausesFeedback(null); setEditingCauses(true); }}
+                className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
+              >
+                <ArrowUpDown size={12} /> {savedCauses.length === 0 ? 'Choose causes' : 'Change causes'}
+              </button>
               {causesFeedback && <Feedback kind={causesFeedback.kind}>{causesFeedback.text}</Feedback>}
             </>
           )}

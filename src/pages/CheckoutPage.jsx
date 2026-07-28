@@ -67,11 +67,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [submitError, setSubmitError] = useState(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
 
-  // Post-checkout charity selection (up to 4 orgs).
+  // Post-checkout charity selection (up to 4 orgs). This runs as its own step
+  // between the payment form and the final confirmation screen.
   const [causeSlugs, setCauseSlugs] = useState([]);
   const [savingCauses, setSavingCauses] = useState(false);
+  const [causesStepDone, setCausesStepDone] = useState(false);
   const [causesSaved, setCausesSaved] = useState(false);
-  const [causesSkipped, setCausesSkipped] = useState(false);
   const [causesError, setCausesError] = useState(null);
 
   const handleSaveCauses = async () => {
@@ -87,6 +88,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
         setPendingCauses(causeSlugs);
       }
       setCausesSaved(true);
+      setCausesStepDone(true);
     } catch {
       setCausesError('Could not save your causes just now. You can set them anytime from My Account.');
     } finally {
@@ -115,11 +117,16 @@ const CheckoutPage = ({ appData, setAppData }) => {
   }, [summaryExpanded]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); 
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Each post-checkout step is its own screen — start them at the top.
+  useEffect(() => {
+    if (signupSuccess) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [signupSuccess, causesStepDone]);
 
   const toTitleCaseForCommunity = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   
@@ -475,83 +482,75 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-20 flex-grow w-full">
         <div className="max-w-5xl mx-auto">
-          {signupSuccess ? (
-            <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-16 animate-in zoom-in-95 duration-500 border border-slate-100">
-                <div className="text-center">
-                  <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
-                  <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
-                  <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-6 md:mb-8">
-                    Welcome to the {selectedCommunity} community. Your monthly impact starts today.
+          {signupSuccess && !causesStepDone ? (
+            /* ============ STEP: CHOOSE YOUR CAUSES ============
+               Its own screen, shown before the final confirmation. */
+            <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-16 animate-in fade-in slide-in-from-bottom-2 duration-500 border border-slate-100">
+              <div className="text-center mb-8 md:mb-10">
+                <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">Last step</p>
+                <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 italic uppercase tracking-tighter">Pick your causes.</h4>
+                <p className="text-slate-500 text-base md:text-lg font-medium max-w-xl mx-auto leading-relaxed">
+                  Choose up to 4 Chessed organizations for your giving to support. You can change them anytime.
+                </p>
+              </div>
+
+              <CharitySelector value={causeSlugs} onChange={setCauseSlugs} max={4} />
+
+              <div className="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3 max-w-2xl mx-auto">
+                <Info size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                <p className="text-xs md:text-[0.8125rem] text-slate-600 font-medium leading-relaxed">
+                  If you don't pick any causes, your donation is split evenly among all of our partner organizations.
+                </p>
+              </div>
+
+              {causesError && (
+                <div className="mt-4 max-w-2xl mx-auto bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2">
+                  <AlertCircle size={14} className="mt-0.5 shrink-0" /> <p>{causesError}</p>
+                </div>
+              )}
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={handleSaveCauses}
+                  disabled={savingCauses || causeSlugs.length === 0}
+                  className="w-full sm:w-auto px-12 py-4 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs md:text-sm hover:bg-black transition-all shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {savingCauses ? 'Saving...' : 'Continue'}
+                </button>
+                <button
+                  onClick={() => setCausesStepDone(true)}
+                  disabled={savingCauses}
+                  className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Skip, split among all
+                </button>
+              </div>
+            </div>
+          ) : signupSuccess ? (
+            /* ============ STEP: CONFIRMATION ============ */
+            <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-24 text-center animate-in zoom-in-95 duration-500 border border-slate-100">
+                <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
+                <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
+                <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-6 md:mb-8">
+                  Welcome to the {selectedCommunity} community. Your monthly impact starts today.
+                </p>
+
+                <div className="max-w-md mx-auto mb-8 md:mb-10 p-4 rounded-xl bg-indigo-50/70 border border-indigo-100">
+                  <p className="text-xs md:text-sm text-indigo-900 font-medium leading-relaxed">
+                    {causesSaved
+                      ? (user
+                          ? `You're supporting ${causeSlugs.length} ${causeSlugs.length === 1 ? 'organization' : 'organizations'}. Update your causes anytime from My Account.`
+                          : `We've saved your ${causeSlugs.length} ${causeSlugs.length === 1 ? 'cause' : 'causes'} and will apply them the moment you confirm your email and sign in.`)
+                      : 'Your donation will be split evenly among all of our partner organizations. You can choose specific causes anytime from My Account.'}
                   </p>
-                  {!user && (
-                    <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-2">
-                      We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage everything anytime from <span className="font-bold text-slate-500">My Account</span>.
-                    </p>
-                  )}
                 </div>
 
-                {/* ============ CHOOSE YOUR CAUSES ============ */}
-                <div className="mt-10 md:mt-12 border-t border-slate-100 pt-8 md:pt-10">
-                  {causesSaved ? (
-                    <div className="text-center max-w-md mx-auto animate-in fade-in">
-                      <div className="bg-indigo-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"><Check size={26} className="text-indigo-600" strokeWidth={2.5} /></div>
-                      <h5 className="text-xl md:text-2xl font-black uppercase tracking-tight text-indigo-950 mb-2">Your causes are set.</h5>
-                      <p className="text-slate-500 text-sm font-medium leading-relaxed">
-                        {user
-                          ? 'You can update which organizations you support anytime from My Account.'
-                          : "We've saved your picks and will apply them the moment you confirm your email and sign in."}
-                      </p>
-                    </div>
-                  ) : causesSkipped ? (
-                    <div className="text-center max-w-md mx-auto animate-in fade-in">
-                      <h5 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-2">No problem.</h5>
-                      <p className="text-slate-500 text-sm font-medium leading-relaxed mb-4">
-                        You can choose which organizations your giving supports anytime from My Account.
-                      </p>
-                      <button
-                        onClick={() => setCausesSkipped(false)}
-                        className="text-[0.625rem] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-800 transition-colors"
-                      >
-                        Choose them now
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="text-center mb-6 md:mb-8">
-                        <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">One last thing</p>
-                        <h5 className="text-2xl md:text-3xl font-black uppercase italic tracking-tight text-indigo-950 mb-2">Pick your causes.</h5>
-                        <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto leading-relaxed">
-                          Choose up to 4 Chessed organizations for your giving to support. You can change these anytime.
-                        </p>
-                      </div>
-                      <CharitySelector value={causeSlugs} onChange={setCauseSlugs} max={4} />
-                      {causesError && (
-                        <div className="mt-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2">
-                          <AlertCircle size={14} className="mt-0.5 shrink-0" /> <p>{causesError}</p>
-                        </div>
-                      )}
-                      <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-                        <button
-                          onClick={handleSaveCauses}
-                          disabled={savingCauses || causeSlugs.length === 0}
-                          className="w-full sm:w-auto px-10 py-3.5 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
-                        >
-                          {savingCauses ? 'Saving...' : `Save my ${causeSlugs.length || ''} cause${causeSlugs.length === 1 ? '' : 's'}`.trim()}
-                        </button>
-                        <button
-                          onClick={() => setCausesSkipped(true)}
-                          className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
-                        >
-                          Skip for now
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <div className="text-center mt-10 md:mt-12 border-t border-slate-100 pt-8">
-                  <Link to="/" className="inline-block px-12 py-4 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
-                </div>
+                {!user && (
+                  <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-10">
+                    We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage your membership anytime from <span className="font-bold text-slate-500">My Account</span>.
+                  </p>
+                )}
+                <Link to="/" className="inline-block px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-12">
