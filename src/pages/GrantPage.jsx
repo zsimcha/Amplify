@@ -124,8 +124,13 @@ const GrantPage = () => {
       <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10 md:mb-14 reveal">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-3">Every cause you stand behind.</h2>
-            <p className="text-sm md:text-base text-slate-500 font-medium">
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4">Every cause you stand behind.</h2>
+            <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto">
+              Each month, Amplify members choose where their giving goes, directing collective grants to a
+              growing list of fully vetted Chessed organizations. From crisis care to Torah education, your
+              Tzedakah reaches the causes that matter most to you.
+            </p>
+            <p className="mt-4 text-sm text-slate-400 font-medium">
               <span className="md:hidden">Tap</span><span className="hidden md:inline">Hover or tap</span> any partner to learn more.
             </p>
           </div>

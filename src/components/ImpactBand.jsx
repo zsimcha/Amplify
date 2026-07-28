@@ -73,21 +73,15 @@ const ImpactBand = () => {
   return (
     <section ref={ref} className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
       <div className="max-w-6xl mx-auto">
-        {/* Headline and its lead paragraph form one block; the rule beneath
-            binds that lead directly to the numbers so nothing reads as a
-            stray block of text sitting in whitespace. */}
-        <div className="max-w-2xl">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900">
-            Giving that adds up.
-          </h2>
-          <p className="mt-5 md:mt-6 text-lg md:text-xl text-slate-600 font-medium leading-relaxed">
-            Each month, Amplify members choose where their giving goes, directing collective grants to a
-            growing list of fully vetted Chessed organizations. From crisis care to Torah education, your
-            Tzedakah reaches the causes that matter most to you.
-          </p>
-        </div>
+        {/* Headline straight into the numbers — nothing between them, so the
+            counters are what you land on. The supporting copy that used to
+            sit here now introduces the partner directory below, where it's
+            contextually about choosing organizations. */}
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900 max-w-2xl">
+          Giving that adds up.
+        </h2>
 
-        <div className="mt-10 md:mt-14 pt-10 md:pt-14 border-t border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-y-14">
+        <div className="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-y-14">
           {impactStats.map((s) => (
             <Stat key={s.org} item={s} run={inView} />
           ))}
