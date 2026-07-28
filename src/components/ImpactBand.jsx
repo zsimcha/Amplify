@@ -46,9 +46,6 @@ const Stat = ({ item, run }) => {
       <p className="mt-3 md:mt-4 text-sm md:text-base font-semibold text-slate-600 leading-snug max-w-[16rem] mx-auto md:mx-0">
         {item.label}
       </p>
-      <p className="mt-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-indigo-600">
-        {item.org}
-      </p>
     </div>
   );
 };
@@ -77,7 +74,6 @@ const ImpactBand = () => {
     <section ref={ref} className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
       <div className="max-w-6xl mx-auto">
         <div className="mb-12 md:mb-16 max-w-2xl">
-          <div className="w-14 h-1.5 bg-amber-400 mb-6"></div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900">
             Giving that adds up.
           </h2>
@@ -89,8 +85,14 @@ const ImpactBand = () => {
           ))}
         </div>
 
+        <p className="mt-12 md:mt-16 max-w-2xl text-base md:text-lg text-slate-600 font-medium leading-relaxed">
+          Each month, Amplify members choose where their giving goes, directing collective grants to a
+          growing list of fully vetted Chessed organizations. From crisis care to Torah education, your
+          Tzedakah reaches the causes that matter most to you.
+        </p>
+
         {/* Remove this note once the figures above are final. */}
-        <p className="mt-12 text-[0.6875rem] font-medium text-slate-400">
+        <p className="mt-6 text-[0.6875rem] font-medium text-slate-400">
           Illustrative figures, pending final impact reporting from our partners.
         </p>
       </div>

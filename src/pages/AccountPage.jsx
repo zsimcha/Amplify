@@ -342,7 +342,8 @@ const AccountPage = () => {
                     </div>
 
                     {isActive && (
-                      <div className="mt-4 pt-4 border-t border-slate-100">
+                      <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
+                        {/* CHANGE PLAN — the primary, visible membership action */}
                         {changePlanId === sub.id ? (
                           <div className="animate-in fade-in">
                             <p className="text-xs font-bold text-slate-700 mb-3">Choose your plan</p>
@@ -416,7 +417,18 @@ const AccountPage = () => {
                               </button>
                             )}
                           </div>
-                        ) : confirmCancelId === sub.id ? (
+                        ) : (
+                          <button
+                            onClick={() => { setChangePlanId(sub.id); setPendingTier(null); setConfirmCancelId(null); setChangeFeedback(null); }}
+                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
+                          >
+                            <ArrowUpDown size={12} /> Change plan
+                          </button>
+                        )}
+
+                        {/* CANCEL — de-emphasized, always last so it's not the
+                            first thing a member sees when managing their membership. */}
+                        {confirmCancelId === sub.id ? (
                           <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-in fade-in">
                             <p className="text-xs font-bold text-red-700 mb-1">Cancel this membership?</p>
                             <p className="text-[0.6875rem] text-red-600/80 font-medium leading-relaxed mb-3">
@@ -440,22 +452,16 @@ const AccountPage = () => {
                             </div>
                           </div>
                         ) : (
-                          <div className="flex items-center justify-between gap-3">
-                            <button
-                              onClick={() => { setChangePlanId(sub.id); setPendingTier(null); setConfirmCancelId(null); setChangeFeedback(null); }}
-                              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
-                            >
-                              <ArrowUpDown size={12} /> Change plan
-                            </button>
+                          <div className="pt-3 border-t border-slate-100 text-right">
                             <button
                               onClick={() => {
-                                setChangePlanId(null); setPendingTier(null); setCancelFeedback(null);
+                                setCancelFeedback(null);
                                 // Tiers with a lower option get the retention modal first;
                                 // Silver (nothing lower to offer) goes straight to confirm.
                                 if (tierStyle.price > 250) setCancelModalId(sub.id);
                                 else setConfirmCancelId(sub.id);
                               }}
-                              className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors"
+                              className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-300 hover:text-red-600 transition-colors"
                             >
                               Cancel membership
                             </button>
