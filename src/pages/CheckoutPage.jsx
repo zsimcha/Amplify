@@ -4,7 +4,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
+import CharitySelector from '../components/CharitySelector';
 import { supabase } from '../lib/supabase';
+import { saveMyCauses, setPendingCauses } from '../lib/charities';
 import { useAuth } from '../context/AuthContext';
 
 const US_STATES = [
@@ -64,6 +66,33 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
+
+  // Post-checkout charity selection (up to 4 orgs).
+  const [causeSlugs, setCauseSlugs] = useState([]);
+  const [savingCauses, setSavingCauses] = useState(false);
+  const [causesSaved, setCausesSaved] = useState(false);
+  const [causesSkipped, setCausesSkipped] = useState(false);
+  const [causesError, setCausesError] = useState(null);
+
+  const handleSaveCauses = async () => {
+    setCausesError(null);
+    setSavingCauses(true);
+    try {
+      if (user) {
+        // Session available (existing member, or signup returned a session).
+        await saveMyCauses(causeSlugs);
+      } else {
+        // New member whose email confirmation is still pending — stash the
+        // selection locally; it's applied the first time they sign in.
+        setPendingCauses(causeSlugs);
+      }
+      setCausesSaved(true);
+    } catch {
+      setCausesError('Could not save your causes just now. You can set them anytime from My Account.');
+    } finally {
+      setSavingCauses(false);
+    }
+  };
 
   // ---- NEW: Payment state ----
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'bank' | 'wallet'
@@ -447,19 +476,82 @@ const CheckoutPage = ({ appData, setAppData }) => {
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-20 flex-grow w-full">
         <div className="max-w-5xl mx-auto">
           {signupSuccess ? (
-            <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-24 text-center animate-in zoom-in-95 duration-500 border border-slate-100">
-                <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
-                <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
-                <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-12">
-              Welcome to the {selectedCommunity} community. Your monthly impact starts today.
-
-                </p>
-                {!user && (
-                  <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-10 -mt-4 md:-mt-8">
-                    We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage your membership anytime from <span className="font-bold text-slate-500">My Account</span>.
+            <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-16 animate-in zoom-in-95 duration-500 border border-slate-100">
+                <div className="text-center">
+                  <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
+                  <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
+                  <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-6 md:mb-8">
+                    Welcome to the {selectedCommunity} community. Your monthly impact starts today.
                   </p>
-                )}
-                <Link to="/" className="inline-block px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
+                  {!user && (
+                    <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-2">
+                      We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage everything anytime from <span className="font-bold text-slate-500">My Account</span>.
+                    </p>
+                  )}
+                </div>
+
+                {/* ============ CHOOSE YOUR CAUSES ============ */}
+                <div className="mt-10 md:mt-12 border-t border-slate-100 pt-8 md:pt-10">
+                  {causesSaved ? (
+                    <div className="text-center max-w-md mx-auto animate-in fade-in">
+                      <div className="bg-indigo-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"><Check size={26} className="text-indigo-600" strokeWidth={2.5} /></div>
+                      <h5 className="text-xl md:text-2xl font-black uppercase tracking-tight text-indigo-950 mb-2">Your causes are set.</h5>
+                      <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                        {user
+                          ? 'You can update which organizations you support anytime from My Account.'
+                          : "We've saved your picks and will apply them the moment you confirm your email and sign in."}
+                      </p>
+                    </div>
+                  ) : causesSkipped ? (
+                    <div className="text-center max-w-md mx-auto animate-in fade-in">
+                      <h5 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-2">No problem.</h5>
+                      <p className="text-slate-500 text-sm font-medium leading-relaxed mb-4">
+                        You can choose which organizations your giving supports anytime from My Account.
+                      </p>
+                      <button
+                        onClick={() => setCausesSkipped(false)}
+                        className="text-[0.625rem] font-bold uppercase tracking-widest text-indigo-600 hover:text-indigo-800 transition-colors"
+                      >
+                        Choose them now
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-center mb-6 md:mb-8">
+                        <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">One last thing</p>
+                        <h5 className="text-2xl md:text-3xl font-black uppercase italic tracking-tight text-indigo-950 mb-2">Pick your causes.</h5>
+                        <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto leading-relaxed">
+                          Choose up to 4 Chessed organizations for your giving to support. You can change these anytime.
+                        </p>
+                      </div>
+                      <CharitySelector value={causeSlugs} onChange={setCauseSlugs} max={4} />
+                      {causesError && (
+                        <div className="mt-4 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2">
+                          <AlertCircle size={14} className="mt-0.5 shrink-0" /> <p>{causesError}</p>
+                        </div>
+                      )}
+                      <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button
+                          onClick={handleSaveCauses}
+                          disabled={savingCauses || causeSlugs.length === 0}
+                          className="w-full sm:w-auto px-10 py-3.5 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black transition-all shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                          {savingCauses ? 'Saving...' : `Save my ${causeSlugs.length || ''} cause${causeSlugs.length === 1 ? '' : 's'}`.trim()}
+                        </button>
+                        <button
+                          onClick={() => setCausesSkipped(true)}
+                          className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          Skip for now
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="text-center mt-10 md:mt-12 border-t border-slate-100 pt-8">
+                  <Link to="/" className="inline-block px-12 py-4 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
+                </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-12">

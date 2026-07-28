@@ -8,11 +8,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X
+  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
+import CharitySelector from '../components/CharitySelector';
 import { supabase } from '../lib/supabase';
+import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities';
 import { useAuth } from '../context/AuthContext';
 
 // Display-only; authoritative pricing lives server-side in process_checkout.
@@ -73,6 +75,13 @@ const AccountPage = () => {
   const [passwordFeedback, setPasswordFeedback] = useState(null);
   const [passwordSubmitting, setPasswordSubmitting] = useState(false);
 
+  // Charity selection
+  const [savedCauses, setSavedCauses] = useState(null); // null = loading
+  const [causesDraft, setCausesDraft] = useState([]);
+  const [causesLoadError, setCausesLoadError] = useState(false);
+  const [causesSaving, setCausesSaving] = useState(false);
+  const [causesFeedback, setCausesFeedback] = useState(null);
+
   // Route guard: this page requires a session.
   useEffect(() => {
     if (!loading && !user) {
@@ -97,6 +106,40 @@ const AccountPage = () => {
   useEffect(() => {
     if (user) fetchSubscriptions();
   }, [user, fetchSubscriptions]);
+
+  const loadCauses = useCallback(async () => {
+    try {
+      // Flush any selection made during a confirmation-pending checkout, then
+      // read the authoritative set.
+      await applyPendingCauses().catch(() => {});
+      const slugs = await getMyCauses();
+      setSavedCauses(slugs);
+      setCausesDraft(slugs);
+    } catch {
+      setCausesLoadError(true);
+      setSavedCauses([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) loadCauses();
+  }, [user, loadCauses]);
+
+  const causesDirty = savedCauses !== null && JSON.stringify(causesDraft) !== JSON.stringify(savedCauses);
+
+  const handleSaveCauses = async () => {
+    setCausesSaving(true);
+    setCausesFeedback(null);
+    try {
+      await saveMyCauses(causesDraft);
+      setSavedCauses(causesDraft);
+      setCausesFeedback({ kind: 'success', text: 'Your causes have been updated.' });
+    } catch {
+      setCausesFeedback({ kind: 'error', text: 'Could not update your causes. Please try again.' });
+    } finally {
+      setCausesSaving(false);
+    }
+  };
 
   const handleCancel = async (subscriptionId) => {
     setCancellingId(subscriptionId);
@@ -457,6 +500,40 @@ const AccountPage = () => {
               {changeFeedback && <Feedback kind={changeFeedback.kind}>{changeFeedback.text}</Feedback>}
               {cancelFeedback && <Feedback kind={cancelFeedback.kind}>{cancelFeedback.text}</Feedback>}
             </div>
+          )}
+        </SectionCard>
+
+        {/* ============ YOUR CAUSES ============ */}
+        <SectionCard icon={<Heart size={18} className="text-slate-400" />} title="Your Causes">
+          {savedCauses === null ? (
+            <p className="text-sm text-slate-400 font-medium animate-pulse">Loading your causes...</p>
+          ) : causesLoadError ? (
+            <Feedback kind="error">Could not load your causes. Please refresh the page.</Feedback>
+          ) : (
+            <>
+              <p className="text-sm text-slate-600 font-medium mb-6">
+                Choose up to 4 organizations for your monthly giving to support. Change them anytime.
+              </p>
+              <CharitySelector value={causesDraft} onChange={setCausesDraft} max={4} />
+              <div className="mt-6 flex items-center gap-3">
+                <button
+                  onClick={handleSaveCauses}
+                  disabled={!causesDirty || causesSaving}
+                  className="px-6 py-3 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-[0.625rem] md:text-xs hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {causesSaving ? 'Saving...' : 'Save Changes'}
+                </button>
+                {causesDirty && !causesSaving && (
+                  <button
+                    onClick={() => setCausesDraft(savedCauses)}
+                    className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+              {causesFeedback && <Feedback kind={causesFeedback.kind}>{causesFeedback.text}</Feedback>}
+            </>
           )}
         </SectionCard>
 
