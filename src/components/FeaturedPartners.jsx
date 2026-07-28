@@ -20,12 +20,22 @@ const VerifiedMark = ({ className = '' }) => (
   </svg>
 );
 
-const ImpactMark = ({ className = '' }) => (
+const CollectiveMark = ({ className = '' }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
-    {/* ripple radiating from a single gift — one pool reaching many */}
-    <circle cx="12" cy="12" r="2.6" fill="currentColor" />
-    <path d="M6.3 12a5.7 5.7 0 0 1 11.4 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-    <path d="M2.6 12a9.4 9.4 0 0 1 18.8 0" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeOpacity="0.5" />
+    {/* many givers pooling toward one shared goal */}
+    <g stroke="currentColor" strokeWidth="1" opacity="0.4">
+      <line x1="12" y1="12" x2="12" y2="4.2" />
+      <line x1="12" y1="12" x2="19.4" y2="8.6" />
+      <line x1="12" y1="12" x2="17.3" y2="18.4" />
+      <line x1="12" y1="12" x2="6.7" y2="18.4" />
+      <line x1="12" y1="12" x2="4.6" y2="8.6" />
+    </g>
+    <circle cx="12" cy="12" r="3" fill="currentColor" />
+    <circle cx="12" cy="4.2" r="1.5" fill="currentColor" opacity="0.85" />
+    <circle cx="19.4" cy="8.6" r="1.5" fill="currentColor" opacity="0.85" />
+    <circle cx="17.3" cy="18.4" r="1.5" fill="currentColor" opacity="0.85" />
+    <circle cx="6.7" cy="18.4" r="1.5" fill="currentColor" opacity="0.85" />
+    <circle cx="4.6" cy="8.6" r="1.5" fill="currentColor" opacity="0.85" />
   </svg>
 );
 
@@ -118,7 +128,7 @@ const FeaturedPartners = () => {
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">Verified Nonprofits</p>
               </div>
               <div className="flex items-center gap-3">
-                <ImpactMark className="w-5 h-5 text-amber-400" />
+                <CollectiveMark className="w-5 h-5 text-amber-400" />
                 <p className="text-xs font-bold uppercase tracking-widest text-slate-300">
                   $400K+ Monthly Goal <span className="text-slate-500">· All Causes</span>
                 </p>

@@ -83,16 +83,16 @@ const AboutPage = () => {
                   })}
 
                   {/* Center labels */}
-                  <text x="200" y="205" textAnchor="middle" className="fill-white" 
-                        style={{ fontSize: '52px', fontWeight: 900, letterSpacing: '-0.05em' }}>
+                  <text x="200" y="204" textAnchor="middle" className="fill-white"
+                        style={{ fontSize: '58px', fontWeight: 900, letterSpacing: '-0.05em' }}>
                     $400K
                   </text>
-                  <text x="200" y="232" textAnchor="middle" className="fill-white" 
-                        style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+                  <text x="200" y="233" textAnchor="middle" className="fill-white"
+                        style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
                     Monthly Goal
                   </text>
-                  <text x="200" y="252" textAnchor="middle" className="fill-white/85"
-                        style={{ fontSize: '11px', fontWeight: 500 }}>
+                  <text x="200" y="255" textAnchor="middle" className="fill-white/85"
+                        style={{ fontSize: '13px', fontWeight: 500 }}>
                     Across our causes.
                   </text>
                 </svg>

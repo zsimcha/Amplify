@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { impactStats } from '../data/partners';
-import CornerConstellation from './CornerConstellation';
 
 // Format an in-progress count. `abbrev` renders millions/thousands compactly.
 const format = (n, abbrev) => {
@@ -40,14 +39,14 @@ const Stat = ({ item, run }) => {
 
   return (
     <div className="text-center md:text-left">
-      <p className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white tabular-nums leading-none">
+      <p className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-slate-900 tabular-nums leading-none">
         {format(shown, item.abbrev)}
-        <span className="text-amber-400">+</span>
+        <span className="text-amber-500">+</span>
       </p>
-      <p className="mt-3 md:mt-4 text-sm md:text-base font-semibold text-indigo-100 leading-snug max-w-[16rem] mx-auto md:mx-0">
+      <p className="mt-3 md:mt-4 text-sm md:text-base font-semibold text-slate-600 leading-snug max-w-[16rem] mx-auto md:mx-0">
         {item.label}
       </p>
-      <p className="mt-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-indigo-400">
+      <p className="mt-1.5 text-[0.625rem] font-bold uppercase tracking-widest text-indigo-600">
         {item.org}
       </p>
     </div>
@@ -75,20 +74,11 @@ const ImpactBand = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-16 md:py-24 px-4 bg-indigo-950 text-white relative overflow-hidden border-y border-indigo-900">
-      <CornerConstellation
-        corner="top-right"
-        width={420}
-        height={300}
-        density={22}
-        maxR={2.4}
-        jitter={0}
-        className="absolute -top-8 -right-8 w-[22rem] h-[16rem] pointer-events-none opacity-30"
-      />
-      <div className="max-w-6xl mx-auto relative">
+    <section ref={ref} className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-12 md:mb-16 max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-400 mb-4">The impact you're part of</p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-[1.05]">
+          <div className="w-14 h-1.5 bg-amber-400 mb-6"></div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900">
             Giving that adds up.
           </h2>
         </div>
@@ -100,7 +90,7 @@ const ImpactBand = () => {
         </div>
 
         {/* Remove this note once the figures above are final. */}
-        <p className="mt-12 text-[0.6875rem] font-medium text-indigo-400/70">
+        <p className="mt-12 text-[0.6875rem] font-medium text-slate-400">
           Illustrative figures, pending final impact reporting from our partners.
         </p>
       </div>
