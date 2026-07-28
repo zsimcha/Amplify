@@ -1,7 +1,7 @@
 // src/pages/CheckoutPage.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info } from 'lucide-react';
+import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info, Eye, EyeOff } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
@@ -52,6 +52,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
   // stored in application tables or sent anywhere else.
   const [accountPassword, setAccountPassword] = useState('');
   const [accountPasswordConfirm, setAccountPasswordConfirm] = useState('');
+  const [showAccountPassword, setShowAccountPassword] = useState(false);
+  const [showAccountPasswordConfirm, setShowAccountPasswordConfirm] = useState(false);
 
   // Signed-in members check out under their existing account.
   useEffect(() => {
@@ -655,12 +657,22 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             </div>
                             <div>
                               <label htmlFor="accountPassword" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Password</label>
-                              <input id="accountPassword" type="password" autoComplete="new-password" value={accountPassword} onChange={e => setAccountPassword(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPassword ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="At least 8 characters" />
+                              <div className="relative">
+                                <input id="accountPassword" type={showAccountPassword ? 'text' : 'password'} autoComplete="new-password" value={accountPassword} onChange={e => setAccountPassword(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPassword ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 pr-10 text-sm outline-none transition-all`} placeholder="At least 8 characters" />
+                                <button type="button" onClick={() => setShowAccountPassword(v => !v)} tabIndex={-1} aria-label={showAccountPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                                  {showAccountPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                              </div>
                               {validationErrors.accountPassword && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.accountPassword}</p>}
                             </div>
                             <div>
                               <label htmlFor="accountPasswordConfirm" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Confirm Password</label>
-                              <input id="accountPasswordConfirm" type="password" autoComplete="new-password" value={accountPasswordConfirm} onChange={e => setAccountPasswordConfirm(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPasswordConfirm ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Re-enter your password" />
+                              <div className="relative">
+                                <input id="accountPasswordConfirm" type={showAccountPasswordConfirm ? 'text' : 'password'} autoComplete="new-password" value={accountPasswordConfirm} onChange={e => setAccountPasswordConfirm(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPasswordConfirm ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 pr-10 text-sm outline-none transition-all`} placeholder="Re-enter your password" />
+                                <button type="button" onClick={() => setShowAccountPasswordConfirm(v => !v)} tabIndex={-1} aria-label={showAccountPasswordConfirm ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                                  {showAccountPasswordConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                              </div>
                               {validationErrors.accountPasswordConfirm && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.accountPasswordConfirm}</p>}
                             </div>
                           </div>

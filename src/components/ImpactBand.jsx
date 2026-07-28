@@ -73,10 +73,21 @@ const ImpactBand = () => {
   return (
     <section ref={ref} className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12 md:mb-16 max-w-2xl">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900">
-            Giving that adds up.
-          </h2>
+        {/* Headline + supporting copy side by side, so the paragraph reads as
+            part of the section's lead rather than a stray block underneath. */}
+        <div className="mb-12 md:mb-16 grid md:grid-cols-12 gap-6 md:gap-10 items-end">
+          <div className="md:col-span-7">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900">
+              Giving that adds up.
+            </h2>
+          </div>
+          <div className="md:col-span-5">
+            <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed">
+              Each month, Amplify members choose where their giving goes, directing collective grants to a
+              growing list of fully vetted Chessed organizations. From crisis care to Torah education, your
+              Tzedakah reaches the causes that matter most to you.
+            </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-y-14">
@@ -85,14 +96,8 @@ const ImpactBand = () => {
           ))}
         </div>
 
-        <p className="mt-12 md:mt-16 max-w-2xl text-base md:text-lg text-slate-600 font-medium leading-relaxed">
-          Each month, Amplify members choose where their giving goes, directing collective grants to a
-          growing list of fully vetted Chessed organizations. From crisis care to Torah education, your
-          Tzedakah reaches the causes that matter most to you.
-        </p>
-
         {/* Remove this note once the figures above are final. */}
-        <p className="mt-6 text-[0.6875rem] font-medium text-slate-400">
+        <p className="mt-12 text-[0.6875rem] font-medium text-slate-400">
           Illustrative figures, pending final impact reporting from our partners.
         </p>
       </div>

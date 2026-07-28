@@ -419,116 +419,18 @@ const AccountPage = () => {
                           </div>
                         ) : (
                           <button
-                            onClick={() => { setChangePlanId(sub.id); setPendingTier(null); setConfirmCancelId(null); setChangeFeedback(null); }}
+                            onClick={() => { setChangePlanId(sub.id); setPendingTier(null); setChangeFeedback(null); }}
                             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
                           >
                             <ArrowUpDown size={12} /> Change plan
                           </button>
                         )}
-
-                        {/* CANCEL — de-emphasized, always last so it's not the
-                            first thing a member sees when managing their membership. */}
-                        {confirmCancelId === sub.id ? (
-                          <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-in fade-in">
-                            <p className="text-xs font-bold text-red-700 mb-1">Cancel this membership?</p>
-                            <p className="text-[0.6875rem] text-red-600/80 font-medium leading-relaxed mb-3">
-                              You'll leave your circle and stop future monthly contributions. This can't be undone from here.
-                            </p>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => handleCancel(sub.id)}
-                                disabled={cancellingId === sub.id}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg text-[0.625rem] font-black uppercase tracking-widest hover:bg-red-700 transition-colors disabled:opacity-60"
-                              >
-                                {cancellingId === sub.id ? 'Cancelling...' : 'Yes, Cancel'}
-                              </button>
-                              <button
-                                onClick={() => setConfirmCancelId(null)}
-                                disabled={cancellingId === sub.id}
-                                className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[0.625rem] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors"
-                              >
-                                Keep Membership
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="pt-3 border-t border-slate-100 text-right">
-                            <button
-                              onClick={() => {
-                                setCancelFeedback(null);
-                                // Tiers with a lower option get the retention modal first;
-                                // Silver (nothing lower to offer) goes straight to confirm.
-                                if (tierStyle.price > 250) setCancelModalId(sub.id);
-                                else setConfirmCancelId(sub.id);
-                              }}
-                              className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-300 hover:text-red-600 transition-colors"
-                            >
-                              Cancel membership
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Retention modal — a single, dismissible offer to downgrade
-                        instead of leaving. Cancel stays one obvious click, so
-                        this offers an alternative rather than obstructing the exit. */}
-                    {cancelModalId === sub.id && (
-                      <div
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-150"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label="Cancel membership"
-                        onClick={() => setCancelModalId(null)}
-                      >
-                        <div
-                          className="relative bg-white rounded-2xl md:rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 animate-in zoom-in-95 duration-200"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <button
-                            onClick={() => setCancelModalId(null)}
-                            aria-label="Close"
-                            className="absolute top-4 right-4 text-slate-300 hover:text-slate-500 transition-colors"
-                          >
-                            <X size={18} />
-                          </button>
-
-                          <h3 className="text-xl md:text-2xl font-black uppercase italic text-indigo-950 tracking-tight mb-3 pr-6">Before you go</h3>
-                          <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
-                            Prefer to lower your monthly contribution instead of leaving? You can move to a lower tier and stay in a circle for less each month.
-                          </p>
-
-                          <button
-                            onClick={() => { setCancelModalId(null); setChangePlanId(sub.id); setPendingTier(null); }}
-                            className="w-full py-3.5 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black transition-colors flex items-center justify-center gap-2"
-                          >
-                            <ArrowUpDown size={14} /> See lower plans
-                          </button>
-
-                          <div className="my-4 flex items-center gap-3">
-                            <div className="flex-grow h-px bg-slate-100"></div>
-                            <span className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-300">or</span>
-                            <div className="flex-grow h-px bg-slate-100"></div>
-                          </div>
-
-                          <p className="text-[0.6875rem] text-slate-500 font-medium leading-relaxed mb-3 text-center">
-                            Cancelling leaves your circle and stops future monthly contributions.
-                          </p>
-                          <button
-                            onClick={() => handleCancel(sub.id)}
-                            disabled={cancellingId === sub.id}
-                            className="w-full py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-black uppercase tracking-widest text-[0.625rem] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors disabled:opacity-60"
-                          >
-                            {cancellingId === sub.id ? 'Cancelling...' : 'Cancel my membership'}
-                          </button>
-                        </div>
                       </div>
                     )}
                   </div>
                 );
               })}
               {changeFeedback && <Feedback kind={changeFeedback.kind}>{changeFeedback.text}</Feedback>}
-              {cancelFeedback && <Feedback kind={cancelFeedback.kind}>{cancelFeedback.text}</Feedback>}
             </div>
           )}
         </SectionCard>
@@ -715,6 +617,118 @@ const AccountPage = () => {
             <p className="text-[0.625rem] text-slate-400 font-medium leading-relaxed pt-1">
               Billing management becomes available when payment processing goes live. Payment details are handled exclusively by Stripe — they never touch our servers.
             </p>
+
+            {/* Cancel — kept out of the Membership card entirely, all the way
+                at the bottom here so it's never the first thing a member sees. */}
+            {subscriptions && subscriptions.filter((s) => s.status === 'active').length > 0 && (
+              <div className="pt-5 mt-2 border-t border-slate-100 space-y-4">
+                {subscriptions.filter((s) => s.status === 'active').map((sub) => {
+                  const tierStyle = TIER_DISPLAY[sub.tier] || TIER_DISPLAY.silver;
+                  return (
+                    <div key={sub.id}>
+                      {confirmCancelId === sub.id ? (
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-in fade-in">
+                          <p className="text-xs font-bold text-red-700 mb-1">Cancel your {sub.tier} membership?</p>
+                          <p className="text-[0.6875rem] text-red-600/80 font-medium leading-relaxed mb-3">
+                            You'll leave your circle and stop future monthly contributions. This can't be undone from here.
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleCancel(sub.id)}
+                              disabled={cancellingId === sub.id}
+                              className="px-4 py-2 bg-red-600 text-white rounded-lg text-[0.625rem] font-black uppercase tracking-widest hover:bg-red-700 transition-colors disabled:opacity-60"
+                            >
+                              {cancellingId === sub.id ? 'Cancelling...' : 'Yes, Cancel'}
+                            </button>
+                            <button
+                              onClick={() => setConfirmCancelId(null)}
+                              disabled={cancellingId === sub.id}
+                              className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[0.625rem] font-black uppercase tracking-widest hover:bg-slate-50 transition-colors"
+                            >
+                              Keep Membership
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-[0.625rem] text-slate-400 font-medium">
+                            Want to leave your <span className="font-bold">{sub.tier}</span> circle?
+                          </p>
+                          <button
+                            onClick={() => {
+                              setCancelFeedback(null);
+                              // Tiers with a lower option get the retention modal first;
+                              // Silver (nothing lower to offer) goes straight to confirm.
+                              if (tierStyle.price > 250) setCancelModalId(sub.id);
+                              else setConfirmCancelId(sub.id);
+                            }}
+                            className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-red-600 transition-colors shrink-0"
+                          >
+                            Cancel membership
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Retention modal — a single, dismissible offer to downgrade
+                          instead of leaving. Cancel stays one obvious click, so this
+                          offers an alternative rather than obstructing the exit. */}
+                      {cancelModalId === sub.id && (
+                        <div
+                          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-150"
+                          role="dialog"
+                          aria-modal="true"
+                          aria-label="Cancel membership"
+                          onClick={() => setCancelModalId(null)}
+                        >
+                          <div
+                            className="relative bg-white rounded-2xl md:rounded-3xl shadow-2xl max-w-md w-full p-6 md:p-8 animate-in zoom-in-95 duration-200"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <button
+                              onClick={() => setCancelModalId(null)}
+                              aria-label="Close"
+                              className="absolute top-4 right-4 text-slate-300 hover:text-slate-500 transition-colors"
+                            >
+                              <X size={18} />
+                            </button>
+
+                            <h3 className="text-xl md:text-2xl font-black uppercase italic text-indigo-950 tracking-tight mb-3 pr-6">Before you go</h3>
+                            <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
+                              Prefer to lower your monthly contribution instead of leaving? You can move to a lower tier and stay in a circle for less each month.
+                            </p>
+
+                            <button
+                              onClick={() => { setCancelModalId(null); setChangePlanId(sub.id); setPendingTier(null); }}
+                              className="w-full py-3.5 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black transition-colors flex items-center justify-center gap-2"
+                            >
+                              <ArrowUpDown size={14} /> See lower plans
+                            </button>
+
+                            <div className="my-4 flex items-center gap-3">
+                              <div className="flex-grow h-px bg-slate-100"></div>
+                              <span className="text-[0.5625rem] font-bold uppercase tracking-widest text-slate-300">or</span>
+                              <div className="flex-grow h-px bg-slate-100"></div>
+                            </div>
+
+                            <p className="text-[0.6875rem] text-slate-500 font-medium leading-relaxed mb-3 text-center">
+                              Cancelling leaves your circle and stops future monthly contributions.
+                            </p>
+                            <button
+                              onClick={() => handleCancel(sub.id)}
+                              disabled={cancellingId === sub.id}
+                              className="w-full py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-black uppercase tracking-widest text-[0.625rem] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors disabled:opacity-60"
+                            >
+                              {cancellingId === sub.id ? 'Cancelling...' : 'Cancel my membership'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {cancelFeedback && <Feedback kind={cancelFeedback.kind}>{cancelFeedback.text}</Feedback>}
+              </div>
+            )}
           </div>
         </SectionCard>
 
