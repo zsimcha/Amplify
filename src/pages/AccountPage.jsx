@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
+import ReferralDashboard from '../components/ReferralDashboard';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 
@@ -459,6 +460,11 @@ const AccountPage = () => {
             </div>
           )}
         </SectionCard>
+
+        {/* ============ REFERRALS ============ */}
+        {/* Renders only for accounts with a row in `affiliates`, regardless of
+            whether they hold a subscription. Everyone else sees nothing here. */}
+        <ReferralDashboard />
 
         {/* ============ EMAIL ============ */}
         <SectionCard icon={<Mail size={18} className="text-slate-400" />} title="Email Address">

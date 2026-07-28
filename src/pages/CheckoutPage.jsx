@@ -6,6 +6,7 @@ import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
+import { getReferralSlug, clearReferral } from '../lib/referral';
 
 const US_STATES = [
   "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", 
@@ -291,13 +292,23 @@ const CheckoutPage = ({ appData, setAppData }) => {
         p_state: checkoutForm.state,
         p_zip_code: checkoutForm.zipCode,
         p_tier: selectedTier,
-        p_community_name: selectedCommunity
+        p_community_name: selectedCommunity,
+        // Referral attribution, if this visitor arrived via an ambassador link.
+        // The slug is only a hint — process_checkout validates that it belongs
+        // to a live affiliate, rejects self-referrals and existing donors, and
+        // silently records nothing if any check fails. Attribution can never
+        // fail a checkout.
+        p_referral_slug: getReferralSlug()
       });
 
       if (error) {
         console.error("Checkout Error:", error);
         throw new Error("Something went wrong processing your request. Please try again.");
       }
+
+      // Consume the attribution so a shared browser can't credit the same
+      // ambassador for an unrelated person signing up later.
+      clearReferral();
 
       // Optimistic UI Update with Community Race Condition Fix
       const tierPrice = appData.tierData[selectedTier].price;

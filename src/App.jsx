@@ -13,6 +13,8 @@ import LoginPage from './pages/LoginPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import EmailConfirmedPage from './pages/EmailConfirmedPage';
 import AccountPage from './pages/AccountPage';
+import AdminPage from './pages/AdminPage';
+import ReferralLandingPage from './pages/ReferralLandingPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { AuthProvider } from './context/AuthContext';
 import RulesContent from './components/RulesContent';
@@ -136,11 +138,18 @@ function App() {
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/welcome" element={<EmailConfirmedPage />} />
         <Route path="/account" element={<AccountPage />} />
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /></LegalPageLayout>} />
         <Route path="/privacy" element={<LegalPageLayout title="Privacy Policy"><PrivacyPolicyContent /></LegalPageLayout>} />
         <Route path="/terms" element={<LegalPageLayout title="Terms of Service"><TermsContent /></LegalPageLayout>} />
         <Route path="/referral" element={<LegalPageLayout title="Referral Program Terms"><ReferralProgramContent /></LegalPageLayout>} />
+
+        {/* Ambassador vanity links: amplifygive.com/{slug}. Declared last, but
+            React Router ranks static paths above dynamic ones regardless of
+            order, so every real route above still wins. Slugs that would
+            collide are additionally blocked by the reserved_slugs table. */}
+        <Route path="/:slug" element={<ReferralLandingPage />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

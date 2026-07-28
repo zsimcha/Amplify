@@ -4,8 +4,8 @@
 // own auth emails and POSTs here instead, letting us render + send them from
 // an Amplify address via Resend (the same provider send-welcome-email uses).
 //
-// Handles: signup confirmation, password recovery, magic link, email change,
-// and reauthentication OTP.
+// Handles: signup confirmation, ambassador invite, password recovery, magic
+// link, email change, and reauthentication OTP.
 //
 // ── Activation (one-time, in the Supabase dashboard) ────────────────────────
 //   1. Authentication → Hooks → "Send Email" hook → enable, point at this
@@ -52,13 +52,28 @@ type EmailData = {
 // The verification link lives on the Supabase Auth server (always reachable);
 // after verifying the token it redirects the user to redirect_to.
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const buildConfirmationURL = (d: EmailData, tokenHash: string) => {
+const buildConfirmationURL = (d: EmailData, tokenHash: string, redirectTo?: string) => {
   const params = new URLSearchParams({
     token: tokenHash,
     type: d.email_action_type,
-    redirect_to: d.redirect_to,
+    redirect_to: redirectTo ?? d.redirect_to,
   });
   return `${SUPABASE_URL}/auth/v1/verify?${params.toString()}`;
+};
+
+// Invites must land somewhere the recipient can actually set a password.
+// Supabase's dashboard "Invite user" button sends them to the bare Site URL,
+// which would drop a brand-new ambassador on the marketing homepage with a
+// session and no password. Overriding it here means the destination is right
+// no matter how the invite was sent.
+//
+// NOTE: this URL must be listed under Authentication → URL Configuration →
+// Redirect URLs, or Supabase will refuse the redirect after verification.
+const inviteRedirect = (d: EmailData) => {
+  const base = (d.redirect_to || d.site_url || "").replace(/\/+$/, "");
+  // Respect an explicit destination if the invite was sent with one.
+  if (base.includes("/reset-password")) return d.redirect_to;
+  return `${base}/reset-password?invite=1`;
 };
 
 // Branded shell shared by every message, mirroring send-welcome-email.
@@ -119,6 +134,24 @@ function renderMessage(d: EmailData) {
             para("Welcome to <strong>Amplify</strong>. Confirm your email address to activate your account and manage your membership, receipts, and payment details anytime.") +
             button(buildConfirmationURL(d, d.token_hash), "Confirm My Account"),
           footerNote: "You're receiving this because someone signed up for Amplify with this email. If that wasn't you, you can safely ignore it.",
+        }),
+      };
+
+    // Sent by supabase.auth.admin.inviteUserByEmail — how referral
+    // ambassadors are onboarded. Without this case these fell through to the
+    // generic "account notification" default, which reads as spam to someone
+    // who has never had an Amplify account.
+    case "invite":
+      return {
+        subject: "You're invited to the Amplify Referral Program",
+        html: shell({
+          heading: "You're invited",
+          bodyHtml:
+            para("You've been invited to join the <strong>Amplify</strong> Referral Program as an ambassador.") +
+            para("Set your password to activate your account. Your personal referral link and earnings dashboard are waiting inside, under <strong>My Account</strong>.") +
+            button(buildConfirmationURL(d, d.token_hash, inviteRedirect(d)), "Set My Password") +
+            para("This invitation link can only be used once. If it expires before you get to it, just ask us to send another."),
+          footerNote: "If you weren't expecting this invitation, you can safely ignore this email.",
         }),
       };
 

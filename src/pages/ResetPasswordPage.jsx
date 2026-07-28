@@ -2,8 +2,14 @@
 // Landing page for the password-recovery email link. Supabase JS picks the
 // recovery token out of the URL and establishes a temporary session; we then
 // let the user set a new password via auth.updateUser.
+//
+// Doubles as the destination for invited referral ambassadors, who arrive via
+// inviteUserByEmail with ?invite=1. Same mechanism — they're setting a password
+// for the first time rather than replacing one — so only the copy changes.
+// Without this, a brand-new ambassador would be told their "reset link" had
+// expired, having never requested a reset.
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Lock, AlertCircle, CheckCircle } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
@@ -13,6 +19,8 @@ import { useAuth } from '../context/AuthContext';
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const [searchParams] = useSearchParams();
+  const isInvite = searchParams.get('invite') === '1';
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -48,27 +56,35 @@ const ResetPasswordPage = () => {
       <div className="flex-grow flex items-center justify-center px-4 py-12 md:py-20">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-10">
-            <h1 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 tracking-tight mb-2">New Password</h1>
+            <h1 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 tracking-tight mb-2">
+              {isInvite ? 'Welcome to Amplify' : 'New Password'}
+            </h1>
 
             {loading ? (
               <p className="text-sm text-slate-500 font-medium animate-pulse">Verifying your link...</p>
             ) : !user ? (
               <div className="space-y-5">
                 <p className="text-sm text-slate-500 font-medium">
-                  This reset link is invalid or has expired.
+                  {isInvite
+                    ? 'This invitation link is invalid or has already been used. Ask us to send you a new one.'
+                    : 'This reset link is invalid or has expired.'}
                 </p>
                 <Link to="/login" className="inline-block text-xs font-bold text-indigo-600 hover:text-indigo-900 transition-colors uppercase tracking-widest">
-                  Request a new link
+                  {isInvite ? 'Back to sign in' : 'Request a new link'}
                 </Link>
               </div>
             ) : done ? (
               <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl text-sm font-bold flex items-start gap-2 animate-in fade-in">
                 <CheckCircle size={16} className="mt-0.5 shrink-0" />
-                <p>Password updated. Taking you to your account...</p>
+                <p>{isInvite ? 'Your account is ready. Taking you to your account...' : 'Password updated. Taking you to your account...'}</p>
               </div>
             ) : (
               <>
-                <p className="text-sm text-slate-500 font-medium mb-8">Choose a new password for your account.</p>
+                <p className="text-sm text-slate-500 font-medium mb-8">
+                  {isInvite
+                    ? "Choose a password to finish setting up your account. Your referral link and earnings are on your account page once you're in."
+                    : 'Choose a new password for your account.'}
+                </p>
 
                 {error && (
                   <div className="mb-5 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">
@@ -78,7 +94,7 @@ const ResetPasswordPage = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label htmlFor="new-password" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">New Password</label>
+                    <label htmlFor="new-password" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">{isInvite ? 'Password' : 'New Password'}</label>
                     <input
                       id="new-password"
                       type="password"
@@ -109,7 +125,7 @@ const ResetPasswordPage = () => {
                     disabled={isSubmitting}
                     className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? <span className="animate-pulse italic">Saving...</span> : <><Lock size={16} /> Set New Password</>}
+                    {isSubmitting ? <span className="animate-pulse italic">Saving...</span> : <><Lock size={16} /> {isInvite ? 'Activate My Account' : 'Set New Password'}</>}
                   </button>
                 </form>
               </>
