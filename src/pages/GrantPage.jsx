@@ -4,6 +4,7 @@ import PageLayout from '../components/layout/PageLayout';
 import ImpactBand from '../components/ImpactBand';
 import { ChevronRight, Plus } from 'lucide-react';
 import { partners, partnerLogo } from '../data/partners';
+import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 
 // A single partner tile. The logo sits on the front; the description on the
 // back, over a faded watermark of the same logo. Desktop flips on hover; touch
@@ -130,16 +131,31 @@ const GrantPage = () => {
               growing list of fully vetted Chessed organizations. From crisis care to Torah education, your
               Tzedakah reaches the causes that matter most to you.
             </p>
-            <p className="mt-4 text-sm text-slate-400 font-medium">
-              <span className="md:hidden">Tap</span><span className="hidden md:inline">Hover or tap</span> any partner to learn more.
-            </p>
+            {!HIDE_PARTNER_IDENTITIES && (
+              <p className="mt-4 text-sm text-slate-400 font-medium">
+                <span className="md:hidden">Tap</span><span className="hidden md:inline">Hover or tap</span> any partner to learn more.
+              </p>
+            )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 reveal">
-            {partners.map((p) => (
-              <PartnerTile key={p.slug} partner={p} />
-            ))}
-          </div>
+          {HIDE_PARTNER_IDENTITIES ? (
+            <div className="reveal max-w-2xl mx-auto rounded-2xl md:rounded-3xl border border-slate-200 bg-white px-6 py-12 md:py-16 text-center shadow-soft">
+              <p className="text-xs font-bold uppercase tracking-[0.35em] text-indigo-600 mb-4">Coming soon</p>
+              <h3 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 mb-3">
+                Our partner organizations will be announced soon.
+              </h3>
+              <p className="text-sm md:text-base text-slate-500 font-medium leading-relaxed max-w-md mx-auto">
+                We're finalizing partnerships with a growing list of vetted Chessed organizations.
+                Check back shortly to see everyone you'll be able to support.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 reveal">
+              {partners.map((p) => (
+                <PartnerTile key={p.slug} partner={p} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

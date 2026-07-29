@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { partners as PARTNERS, partnerLogo } from '../data/partners';
+import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
+import CornerConstellation from './CornerConstellation';
 
 // Bespoke marks (hand-drawn SVG instead of stock icons) so the trust badges
 // feel unique to Amplify. Swap these paths to restyle.
@@ -82,6 +84,9 @@ const FeaturedPartners = () => {
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
+    // During the blackout, don't even request the photos — the filenames are
+    // org-identifying and would show up in network logs.
+    if (HIDE_PARTNER_IDENTITIES) return;
     let active = true;
     const ok = [];
     let pending = SHOWCASE.length;
@@ -143,9 +148,9 @@ const FeaturedPartners = () => {
             </Link>
           </div>
 
-          {/* Crossfade photo */}
+          {/* Crossfade photo — org photos are withheld during the blackout */}
           <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-soft-xl border border-slate-700 min-h-[18.75rem] md:min-h-[28.125rem]">
-            {loaded.length > 0 ? (
+            {!HIDE_PARTNER_IDENTITIES && loaded.length > 0 ? (
               loaded.map((si, pos) => (
                 <img
                   key={si}
@@ -157,18 +162,42 @@ const FeaturedPartners = () => {
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 to-slate-900"></div>
             )}
+            {HIDE_PARTNER_IDENTITIES && (
+              <div className="absolute inset-0 flex items-center justify-center p-8">
+                <CornerConstellation
+                  corner="top-right"
+                  width={360}
+                  height={280}
+                  density={18}
+                  maxR={2.6}
+                  jitter={0}
+                  className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
+                />
+                <p className="relative text-center text-xs md:text-sm font-bold uppercase tracking-[0.35em] text-indigo-300/80">
+                  Partners<br />announced soon
+                </p>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
           </div>
         </div>
 
         {/* Auto-scrolling logo marquee — reveals together with the block above */}
-        <div className="relative marquee-mask py-2 mt-14 md:mt-20">
-          <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
-            {[...PARTNERS, ...PARTNERS].map((p, i) => (
-              <PartnerLogo key={`${p.slug}-${i}`} partner={p} />
-            ))}
+        {HIDE_PARTNER_IDENTITIES ? (
+          <div className="mt-14 md:mt-20 border-t border-slate-800 pt-8 text-center">
+            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-slate-500">
+              Our partner organizations will be announced soon
+            </p>
           </div>
-        </div>
+        ) : (
+          <div className="relative marquee-mask py-2 mt-14 md:mt-20">
+            <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
+              {[...PARTNERS, ...PARTNERS].map((p, i) => (
+                <PartnerLogo key={`${p.slug}-${i}`} partner={p} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

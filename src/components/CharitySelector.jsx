@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 import { partners, partnerLogo } from '../data/partners';
+import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 
 // One selectable org tile: logo (or name fallback), name, category, and a
 // brief description. Clicking toggles selection; once `max` are chosen, the
@@ -56,6 +57,19 @@ const CharitySelector = ({ value = [], onChange, max = 4 }) => {
   };
 
   const atMax = value.length >= max;
+
+  // Partner blackout: never render names or logos here either.
+  if (HIDE_PARTNER_IDENTITIES) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 px-6 py-10 text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-3">Coming soon</p>
+        <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed max-w-md mx-auto">
+          Choosing which organizations your giving supports opens as soon as our partners are
+          announced. Until then, your donation is split evenly among all of them.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>

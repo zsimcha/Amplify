@@ -7,6 +7,7 @@ import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
 import { supabase } from '../lib/supabase';
 import { saveMyCauses, setPendingCauses } from '../lib/charities';
+import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { useAuth } from '../context/AuthContext';
 
 const US_STATES = [
@@ -73,7 +74,9 @@ const CheckoutPage = ({ appData, setAppData }) => {
   // between the payment form and the final confirmation screen.
   const [causeSlugs, setCauseSlugs] = useState([]);
   const [savingCauses, setSavingCauses] = useState(false);
-  const [causesStepDone, setCausesStepDone] = useState(false);
+  // During the partner blackout there's nothing to choose from, so the causes
+  // step starts already complete and checkout goes straight to confirmation.
+  const [causesStepDone, setCausesStepDone] = useState(HIDE_PARTNER_IDENTITIES);
   const [causesSaved, setCausesSaved] = useState(false);
   const [causesError, setCausesError] = useState(null);
 

@@ -16,6 +16,7 @@ import CharitySelector from '../components/CharitySelector';
 import RequestCauseModal from '../components/RequestCauseModal';
 import { supabase } from '../lib/supabase';
 import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities';
+import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
 
@@ -485,7 +486,15 @@ const AccountPage = () => {
           ) : (
             /* Collapsed: just the selected orgs */
             <>
-              {savedCauses.length === 0 ? (
+              {HIDE_PARTNER_IDENTITIES ? (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-2.5">
+                  <Info size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                  <p className="text-xs md:text-[0.8125rem] text-slate-600 font-medium leading-relaxed">
+                    Choosing your causes opens as soon as our partner organizations are announced.
+                    Until then, your donation is split evenly among all of them.
+                  </p>
+                </div>
+              ) : savedCauses.length === 0 ? (
                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-2.5">
                   <Info size={15} className="text-slate-400 shrink-0 mt-0.5" />
                   <p className="text-xs md:text-[0.8125rem] text-slate-600 font-medium leading-relaxed">
@@ -510,12 +519,14 @@ const AccountPage = () => {
                 </ul>
               )}
               <div className="mt-5 flex flex-wrap items-center gap-2">
-                <button
-                  onClick={() => { setCausesDraft(savedCauses); setCausesFeedback(null); setEditingCauses(true); }}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
-                >
-                  <ArrowUpDown size={12} /> {savedCauses.length === 0 ? 'Choose causes' : 'Change causes'}
-                </button>
+                {!HIDE_PARTNER_IDENTITIES && (
+                  <button
+                    onClick={() => { setCausesDraft(savedCauses); setCausesFeedback(null); setEditingCauses(true); }}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
+                  >
+                    <ArrowUpDown size={12} /> {savedCauses.length === 0 ? 'Choose causes' : 'Change causes'}
+                  </button>
+                )}
                 <button
                   onClick={() => setRequestOpen(true)}
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-200 text-slate-600 text-[0.625rem] font-black uppercase tracking-widest hover:bg-slate-50 hover:border-slate-300 transition-colors"
