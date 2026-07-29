@@ -15,7 +15,7 @@ import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
 import RequestCauseModal from '../components/RequestCauseModal';
 import { supabase } from '../lib/supabase';
-import { getMyCauses, saveMyCauses, applyPendingCauses, getMyCauseRequests } from '../lib/charities';
+import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities';
 import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
 
@@ -30,13 +30,6 @@ const STATUS_STYLES = {
   active:    'bg-emerald-50 text-emerald-700 border-emerald-200',
   past_due:  'bg-amber-50 text-amber-700 border-amber-200',
   cancelled: 'bg-slate-100 text-slate-500 border-slate-200',
-};
-
-const REQUEST_STATUS_STYLES = {
-  pending:   'bg-slate-100 text-slate-500 border-slate-200',
-  reviewing: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  approved:  'bg-emerald-50 text-emerald-700 border-emerald-200',
-  declined:  'bg-slate-100 text-slate-400 border-slate-200',
 };
 
 const SectionCard = ({ icon, title, children }) => (
@@ -113,7 +106,6 @@ const AccountPage = () => {
   const [causesFeedback, setCausesFeedback] = useState(null);
   const [editingCauses, setEditingCauses] = useState(false);
   const [requestOpen, setRequestOpen] = useState(false);
-  const [causeRequests, setCauseRequests] = useState([]);
 
   // Route guard: this page requires a session.
   useEffect(() => {
@@ -140,15 +132,6 @@ const AccountPage = () => {
     if (user) fetchSubscriptions();
   }, [user, fetchSubscriptions]);
 
-  const loadCauseRequests = useCallback(async () => {
-    // Non-critical: if this fails we simply don't show the pending list.
-    try {
-      setCauseRequests(await getMyCauseRequests());
-    } catch {
-      setCauseRequests([]);
-    }
-  }, []);
-
   const loadCauses = useCallback(async () => {
     try {
       // Flush any selection made during a confirmation-pending checkout, then
@@ -161,8 +144,7 @@ const AccountPage = () => {
       setCausesLoadError(true);
       setSavedCauses([]);
     }
-    loadCauseRequests();
-  }, [loadCauseRequests]);
+  }, []);
 
   useEffect(() => {
     if (user) loadCauses();
@@ -542,46 +524,12 @@ const AccountPage = () => {
                 </button>
               </div>
 
-              {/* The member's own submissions, so a request doesn't vanish
-                  into a void once it's sent. */}
-              {causeRequests.length > 0 && (
-                <div className="mt-5 pt-5 border-t border-slate-100">
-                  <p className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mb-3">Your requests</p>
-                  <ul className="space-y-2">
-                    {causeRequests.map((r) => (
-                      <li key={r.id} className="flex items-center justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-sm font-bold text-slate-700 truncate">{r.org_name}</p>
-                          <a
-                            href={r.org_url}
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                            className="text-[0.625rem] text-slate-400 font-medium hover:text-indigo-600 transition-colors break-all"
-                          >
-                            {r.org_url.replace(/^https?:\/\//, '')}
-                          </a>
-                        </div>
-                        <span className={`text-[0.5625rem] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border shrink-0 ${
-                          REQUEST_STATUS_STYLES[r.status] || REQUEST_STATUS_STYLES.pending
-                        }`}>
-                          {r.status === 'reviewing' ? 'In Review' : r.status}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
               {causesFeedback && <Feedback kind={causesFeedback.kind}>{causesFeedback.text}</Feedback>}
             </>
           )}
         </SectionCard>
 
-        <RequestCauseModal
-          open={requestOpen}
-          onClose={() => setRequestOpen(false)}
-          onSubmitted={loadCauseRequests}
-        />
+        <RequestCauseModal open={requestOpen} onClose={() => setRequestOpen(false)} />
 
         {/* ============ EMAIL ============ */}
         <SectionCard icon={<Mail size={18} className="text-slate-400" />} title="Email Address">
