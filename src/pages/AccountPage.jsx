@@ -8,13 +8,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart, Info
+  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart, Info, PlusCircle
 } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
+import RequestCauseModal from '../components/RequestCauseModal';
 import { supabase } from '../lib/supabase';
-import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities';
+import { getMyCauses, saveMyCauses, applyPendingCauses, getMyCauseRequests } from '../lib/charities';
 import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
 
@@ -29,6 +30,13 @@ const STATUS_STYLES = {
   active:    'bg-emerald-50 text-emerald-700 border-emerald-200',
   past_due:  'bg-amber-50 text-amber-700 border-amber-200',
   cancelled: 'bg-slate-100 text-slate-500 border-slate-200',
+};
+
+const REQUEST_STATUS_STYLES = {
+  pending:   'bg-slate-100 text-slate-500 border-slate-200',
+  reviewing: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  approved:  'bg-emerald-50 text-emerald-700 border-emerald-200',
+  declined:  'bg-slate-100 text-slate-400 border-slate-200',
 };
 
 const SectionCard = ({ icon, title, children }) => (
@@ -104,6 +112,8 @@ const AccountPage = () => {
   const [causesSaving, setCausesSaving] = useState(false);
   const [causesFeedback, setCausesFeedback] = useState(null);
   const [editingCauses, setEditingCauses] = useState(false);
+  const [requestOpen, setRequestOpen] = useState(false);
+  const [causeRequests, setCauseRequests] = useState([]);
 
   // Route guard: this page requires a session.
   useEffect(() => {
@@ -130,6 +140,15 @@ const AccountPage = () => {
     if (user) fetchSubscriptions();
   }, [user, fetchSubscriptions]);
 
+  const loadCauseRequests = useCallback(async () => {
+    // Non-critical: if this fails we simply don't show the pending list.
+    try {
+      setCauseRequests(await getMyCauseRequests());
+    } catch {
+      setCauseRequests([]);
+    }
+  }, []);
+
   const loadCauses = useCallback(async () => {
     try {
       // Flush any selection made during a confirmation-pending checkout, then
@@ -142,7 +161,8 @@ const AccountPage = () => {
       setCausesLoadError(true);
       setSavedCauses([]);
     }
-  }, []);
+    loadCauseRequests();
+  }, [loadCauseRequests]);
 
   useEffect(() => {
     if (user) loadCauses();
@@ -444,9 +464,17 @@ const AccountPage = () => {
           ) : editingCauses ? (
             /* Expanded: full tile picker */
             <>
-              <p className="text-sm text-slate-600 font-medium mb-6">
-                Choose up to 4 organizations for your monthly giving to support.
-              </p>
+              <div className="flex items-start justify-between gap-4 mb-6">
+                <p className="text-sm text-slate-600 font-medium">
+                  Choose up to 4 organizations for your monthly giving to support.
+                </p>
+                <button
+                  onClick={() => setRequestOpen(true)}
+                  className="inline-flex items-center gap-1.5 text-[0.625rem] font-black uppercase tracking-widest text-indigo-600 hover:text-indigo-800 transition-colors shrink-0 whitespace-nowrap"
+                >
+                  <PlusCircle size={12} /> Request an org
+                </button>
+              </div>
               <CharitySelector value={causesDraft} onChange={setCausesDraft} max={4} />
               <div className="mt-5 bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-start gap-2.5">
                 <Info size={14} className="text-slate-400 shrink-0 mt-0.5" />
@@ -499,16 +527,61 @@ const AccountPage = () => {
                   })}
                 </ul>
               )}
-              <button
-                onClick={() => { setCausesDraft(savedCauses); setCausesFeedback(null); setEditingCauses(true); }}
-                className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
-              >
-                <ArrowUpDown size={12} /> {savedCauses.length === 0 ? 'Choose causes' : 'Change causes'}
-              </button>
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => { setCausesDraft(savedCauses); setCausesFeedback(null); setEditingCauses(true); }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
+                >
+                  <ArrowUpDown size={12} /> {savedCauses.length === 0 ? 'Choose causes' : 'Change causes'}
+                </button>
+                <button
+                  onClick={() => setRequestOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-200 text-slate-600 text-[0.625rem] font-black uppercase tracking-widest hover:bg-slate-50 hover:border-slate-300 transition-colors"
+                >
+                  <PlusCircle size={12} /> Request an organization
+                </button>
+              </div>
+
+              {/* The member's own submissions, so a request doesn't vanish
+                  into a void once it's sent. */}
+              {causeRequests.length > 0 && (
+                <div className="mt-5 pt-5 border-t border-slate-100">
+                  <p className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mb-3">Your requests</p>
+                  <ul className="space-y-2">
+                    {causeRequests.map((r) => (
+                      <li key={r.id} className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-slate-700 truncate">{r.org_name}</p>
+                          <a
+                            href={r.org_url}
+                            target="_blank"
+                            rel="noopener noreferrer nofollow"
+                            className="text-[0.625rem] text-slate-400 font-medium hover:text-indigo-600 transition-colors break-all"
+                          >
+                            {r.org_url.replace(/^https?:\/\//, '')}
+                          </a>
+                        </div>
+                        <span className={`text-[0.5625rem] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border shrink-0 ${
+                          REQUEST_STATUS_STYLES[r.status] || REQUEST_STATUS_STYLES.pending
+                        }`}>
+                          {r.status === 'reviewing' ? 'In Review' : r.status}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {causesFeedback && <Feedback kind={causesFeedback.kind}>{causesFeedback.text}</Feedback>}
             </>
           )}
         </SectionCard>
+
+        <RequestCauseModal
+          open={requestOpen}
+          onClose={() => setRequestOpen(false)}
+          onSubmitted={loadCauseRequests}
+        />
 
         {/* ============ EMAIL ============ */}
         <SectionCard icon={<Mail size={18} className="text-slate-400" />} title="Email Address">

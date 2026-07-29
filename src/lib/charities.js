@@ -21,6 +21,28 @@ export async function saveMyCauses(slugs) {
   if (error) throw error;
 }
 
+// --- Organization requests ----------------------------------------------------
+// Members can nominate an organization for the roster. Validation (name, URL
+// shape, open-request cap) is enforced server-side by the request_cause RPC.
+export async function submitCauseRequest({ name, url, note }) {
+  const { error } = await supabase.rpc('request_cause', {
+    p_org_name: name,
+    p_org_url: url,
+    p_note: note || null,
+  });
+  if (error) throw error;
+}
+
+// The caller's own requests, newest first. RLS scopes this to their rows.
+export async function getMyCauseRequests() {
+  const { data, error } = await supabase
+    .from('cause_requests')
+    .select('id, org_name, org_url, status, created_at')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
 // --- Pending selection bridge -------------------------------------------------
 // A brand-new member checking out may not have a session yet (email
 // confirmation pending), so their post-checkout selection can't be written
