@@ -1,10 +1,13 @@
 // src/pages/CheckoutPage.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info } from 'lucide-react';
+import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info, Eye, EyeOff } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
+import CharitySelector from '../components/CharitySelector';
 import { supabase } from '../lib/supabase';
+import { saveMyCauses, setPendingCauses } from '../lib/charities';
+import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { useAuth } from '../context/AuthContext';
 
 const US_STATES = [
@@ -50,6 +53,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
   // stored in application tables or sent anywhere else.
   const [accountPassword, setAccountPassword] = useState('');
   const [accountPasswordConfirm, setAccountPasswordConfirm] = useState('');
+  const [showAccountPassword, setShowAccountPassword] = useState(false);
+  const [showAccountPasswordConfirm, setShowAccountPasswordConfirm] = useState(false);
 
   // Signed-in members check out under their existing account.
   useEffect(() => {
@@ -64,6 +69,37 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
+
+  // Post-checkout charity selection (up to 4 orgs). This runs as its own step
+  // between the payment form and the final confirmation screen.
+  const [causeSlugs, setCauseSlugs] = useState([]);
+  const [savingCauses, setSavingCauses] = useState(false);
+  // During the partner blackout there's nothing to choose from, so the causes
+  // step starts already complete and checkout goes straight to confirmation.
+  const [causesStepDone, setCausesStepDone] = useState(HIDE_PARTNER_IDENTITIES);
+  const [causesSaved, setCausesSaved] = useState(false);
+  const [causesError, setCausesError] = useState(null);
+
+  const handleSaveCauses = async () => {
+    setCausesError(null);
+    setSavingCauses(true);
+    try {
+      if (user) {
+        // Session available (existing member, or signup returned a session).
+        await saveMyCauses(causeSlugs);
+      } else {
+        // New member whose email confirmation is still pending — stash the
+        // selection locally; it's applied the first time they sign in.
+        setPendingCauses(causeSlugs);
+      }
+      setCausesSaved(true);
+      setCausesStepDone(true);
+    } catch {
+      setCausesError('Could not save your causes just now. You can set them anytime from My Account.');
+    } finally {
+      setSavingCauses(false);
+    }
+  };
 
   // ---- NEW: Payment state ----
   const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' | 'bank' | 'wallet'
@@ -86,11 +122,16 @@ const CheckoutPage = ({ appData, setAppData }) => {
   }, [summaryExpanded]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); 
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     const handleClickOutside = (event) => { if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false); };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Each post-checkout step is its own screen — start them at the top.
+  useEffect(() => {
+    if (signupSuccess) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [signupSuccess, causesStepDone]);
 
   const toTitleCaseForCommunity = (str) => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   
@@ -446,16 +487,71 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
       <div className="max-w-7xl mx-auto px-4 py-8 md:py-20 flex-grow w-full">
         <div className="max-w-5xl mx-auto">
-          {signupSuccess ? (
+          {signupSuccess && !causesStepDone ? (
+            /* ============ STEP: CHOOSE YOUR CAUSES ============
+               Its own screen, shown before the final confirmation. */
+            <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-16 animate-in fade-in slide-in-from-bottom-2 duration-500 border border-slate-100">
+              <div className="text-center mb-8 md:mb-10">
+                <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">Last step</p>
+                <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 italic uppercase tracking-tighter">Pick your causes.</h4>
+                <p className="text-slate-500 text-base md:text-lg font-medium max-w-xl mx-auto leading-relaxed">
+                  Choose up to 4 Chessed organizations for your giving to support. You can change them anytime.
+                </p>
+              </div>
+
+              <CharitySelector value={causeSlugs} onChange={setCauseSlugs} max={4} />
+
+              <div className="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3 max-w-2xl mx-auto">
+                <Info size={15} className="text-slate-400 shrink-0 mt-0.5" />
+                <p className="text-xs md:text-[0.8125rem] text-slate-600 font-medium leading-relaxed">
+                  If you don't pick any causes, your donation is split evenly among all of our partner organizations.
+                </p>
+              </div>
+
+              {causesError && (
+                <div className="mt-4 max-w-2xl mx-auto bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2">
+                  <AlertCircle size={14} className="mt-0.5 shrink-0" /> <p>{causesError}</p>
+                </div>
+              )}
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button
+                  onClick={handleSaveCauses}
+                  disabled={savingCauses || causeSlugs.length === 0}
+                  className="w-full sm:w-auto px-12 py-4 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs md:text-sm hover:bg-black transition-all shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {savingCauses ? 'Saving...' : 'Continue'}
+                </button>
+                <button
+                  onClick={() => setCausesStepDone(true)}
+                  disabled={savingCauses}
+                  className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Skip, split among all
+                </button>
+              </div>
+            </div>
+          ) : signupSuccess ? (
+            /* ============ STEP: CONFIRMATION ============ */
             <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-24 text-center animate-in zoom-in-95 duration-500 border border-slate-100">
                 <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
                 <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
-                <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-12">
-              Welcome to the {selectedCommunity} community. Your monthly impact starts today.
-
+                <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-6 md:mb-8">
+                  Welcome to the {selectedCommunity} community. Your monthly impact starts today.
                 </p>
+
+                <div className="max-w-md mx-auto mb-8 md:mb-10 p-4 rounded-xl bg-indigo-50/70 border border-indigo-100">
+                  <p className="text-xs md:text-sm text-indigo-900 font-medium leading-relaxed">
+                    {causesSaved
+                      ? (user
+                          ? `You're supporting ${causeSlugs.length} ${causeSlugs.length === 1 ? 'organization' : 'organizations'}. Update your causes anytime from My Account.`
+                          : `We've saved your ${causeSlugs.length} ${causeSlugs.length === 1 ? 'cause' : 'causes'} and will apply them the moment you confirm your email and sign in.`)
+                      : 'Your donation will be split evenly among all of our partner organizations. You can choose specific causes anytime from My Account.'}
+                  </p>
+                </div>
+
                 {!user && (
-                  <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-10 -mt-4 md:-mt-8">
+                  <p className="text-slate-400 text-xs md:text-sm font-medium max-w-md mx-auto leading-relaxed mb-8 md:mb-10">
                     We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage your membership anytime from <span className="font-bold text-slate-500">My Account</span>.
                   </p>
                 )}
@@ -564,12 +660,22 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             </div>
                             <div>
                               <label htmlFor="accountPassword" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Password</label>
-                              <input id="accountPassword" type="password" autoComplete="new-password" value={accountPassword} onChange={e => setAccountPassword(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPassword ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="At least 8 characters" />
+                              <div className="relative">
+                                <input id="accountPassword" type={showAccountPassword ? 'text' : 'password'} autoComplete="new-password" value={accountPassword} onChange={e => setAccountPassword(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPassword ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 pr-10 text-sm outline-none transition-all`} placeholder="At least 8 characters" />
+                                <button type="button" onClick={() => setShowAccountPassword(v => !v)} tabIndex={-1} aria-label={showAccountPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                                  {showAccountPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                              </div>
                               {validationErrors.accountPassword && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.accountPassword}</p>}
                             </div>
                             <div>
                               <label htmlFor="accountPasswordConfirm" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Confirm Password</label>
-                              <input id="accountPasswordConfirm" type="password" autoComplete="new-password" value={accountPasswordConfirm} onChange={e => setAccountPasswordConfirm(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPasswordConfirm ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 text-sm outline-none transition-all`} placeholder="Re-enter your password" />
+                              <div className="relative">
+                                <input id="accountPasswordConfirm" type={showAccountPasswordConfirm ? 'text' : 'password'} autoComplete="new-password" value={accountPasswordConfirm} onChange={e => setAccountPasswordConfirm(e.target.value)} className={`w-full bg-slate-50 border ${validationErrors.accountPasswordConfirm ? 'border-red-400 ring-1 ring-red-400 bg-red-50/30' : 'border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100'} rounded-xl p-3 pr-10 text-sm outline-none transition-all`} placeholder="Re-enter your password" />
+                                <button type="button" onClick={() => setShowAccountPasswordConfirm(v => !v)} tabIndex={-1} aria-label={showAccountPasswordConfirm ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                                  {showAccountPasswordConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                              </div>
                               {validationErrors.accountPasswordConfirm && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.accountPasswordConfirm}</p>}
                             </div>
                           </div>
