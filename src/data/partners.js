@@ -43,7 +43,6 @@ export const partners = [
   {
     name: 'Chai Lifeline',
     slug: 'chai-lifeline',
-    logo: '/ChaiLifeline.png',
     category: 'Crisis & Illness',
     description: 'Wrapping families in support the moment a child faces serious illness, at no cost to them.',
   },
