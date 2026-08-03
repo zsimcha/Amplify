@@ -497,7 +497,7 @@ const HowItWorksPage = ({ appData }) => {
 
   const timeline = [
     { num: '01', title: 'Joining',              titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
-    { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: "Pick one Chessed organization, split across a few, or request a new one. Keep it forever, or change it anytime." },
+    { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: "Pick one Chessed organization, split across a few, or request a new one. Keep it the same, or change it anytime." },
     { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Charged automatically each month once your circle fills. Pause or cancel any time, no penalty, no runaround.' },
     { num: '04', title: "Tax & Ma'aser",         titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
