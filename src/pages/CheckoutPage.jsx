@@ -537,7 +537,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                 <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8 md:mb-10"><CheckCircle size={48} className="text-green-600 md:w-16 md:h-16" /></div>
                 <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 md:mb-6 italic uppercase tracking-tighter">You're in.</h4>
                 <p className="text-slate-500 text-base md:text-xl font-medium max-w-md mx-auto leading-relaxed mb-6 md:mb-8">
-                  Welcome to the {selectedCommunity} community. Your monthly impact starts today.
+                  Welcome to the {selectedCommunity} circle. Your monthly impact starts today.
                 </p>
 
                 <div className="max-w-md mx-auto mb-8 md:mb-10 p-4 rounded-xl bg-indigo-50/70 border border-indigo-100">
