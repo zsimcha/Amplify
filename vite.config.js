@@ -6,6 +6,11 @@ export default defineConfig({
   server: {
     historyApiFallback: true,
   },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    globals: true,
+  },
   build: {
     // Suppress the warning limit
     chunkSizeWarningLimit: 1000,

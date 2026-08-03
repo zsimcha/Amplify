@@ -19,6 +19,7 @@ import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities'
 import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
+import { fieldClass } from '../lib/formStyles';
 
 // Display-only; authoritative pricing lives server-side in process_checkout.
 const TIER_DISPLAY = {
@@ -51,7 +52,7 @@ const Feedback = ({ kind, children }) => (
   </div>
 );
 
-const inputClass = 'w-full bg-slate-50 border border-transparent focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:shadow-soft hover:bg-slate-100 rounded-xl p-3 text-sm outline-none transition-all';
+const inputClass = fieldClass(false);
 
 // Small logo for the collapsed causes list; falls back to the org's initial
 // when the logo file isn't uploaded yet.
