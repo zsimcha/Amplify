@@ -14,10 +14,7 @@ import { computeCheckoutErrors } from '../lib/checkoutValidation';
 import CheckoutSummary from './checkout/CheckoutSummary';
 import CausesStep from './checkout/CausesStep';
 import ConfirmationStep from './checkout/ConfirmationStep';
-
-// Stripe processing fee for cards. Adjust to match your actual Stripe contract.
-const STRIPE_FEE_RATE = 0.029;
-const STRIPE_FEE_FIXED = 0.30;
+import { totalWithFeeCovered, feeCoveredAmount } from '../lib/pricing';
 
 const CheckoutPage = ({ appData, setAppData }) => {
   const location = useLocation();
@@ -191,11 +188,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
   // ---- Pricing calculations ----
   const basePrice = appData.tierData[selectedTier].price;
-  const processingFee = paymentMethod === 'bank' 
-    ? 0 
-    : (basePrice * STRIPE_FEE_RATE) + STRIPE_FEE_FIXED;
+  const processingFee = paymentMethod === 'bank'
+    ? 0
+    : feeCoveredAmount(basePrice);
   const feeBeingCovered = (paymentMethod !== 'bank') && coverFee;
-  const totalCharged = feeBeingCovered ? basePrice + processingFee : basePrice;
+  const totalCharged = feeBeingCovered ? totalWithFeeCovered(basePrice) : basePrice;
 
   // Pure: derives the current error set from form state (no side effects), so
   // it can be reused for both submit-time and live (on-change) validation.
