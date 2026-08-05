@@ -612,7 +612,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             />
                             <div className="flex-grow text-sm">
                               <p className="font-bold text-slate-900">
-                                Cover the ${processingFee.toFixed(2)} processing fee
+                                Cover the processing fee
                               </p>
                               <p className="text-slate-600 font-medium mt-0.5 text-[0.8125rem] leading-relaxed">
                                 So your full <span className="font-bold text-slate-900">${basePrice.toFixed(2)}</span> reaches the giving pool. None absorbed by card processing costs.
