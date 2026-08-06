@@ -73,12 +73,12 @@ const ImpactBand = () => {
   return (
     <section ref={ref} className="py-16 md:py-24 px-4 bg-white border-b border-slate-100">
       <div className="max-w-6xl mx-auto">
-        <p className="text-xs font-bold text-indigo-600 uppercase tracking-wide md:tracking-[0.15em] mb-4">
-          The real-world impact of the Chessed organizations Amplify supports
-        </p>
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.02] text-slate-900 max-w-2xl">
           Giving that adds up.
         </h2>
+        <p className="mt-4 md:mt-5 text-base md:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl">
+          The real-world impact of the Chessed organizations Amplify supports.
+        </p>
 
         <div className="mt-10 md:mt-14 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10 md:gap-y-14">
           {impactStats.map((s) => (
