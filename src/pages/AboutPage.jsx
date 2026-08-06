@@ -215,7 +215,7 @@ const AboutPage = () => {
               </div>
 
               <div className="relative">
-                <Link to="/grant" className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs uppercase tracking-widest hover:gap-2.5 transition-all">
+                <Link to="/causes" className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs uppercase tracking-widest hover:gap-2.5 transition-all">
   How partners are vetted <ArrowRight size={14} />
 </Link>
               </div>

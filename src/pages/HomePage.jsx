@@ -101,7 +101,7 @@ const HomePage = ({ appData }) => {
   { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members showing up month after month, and that consistency is what lets Amplify deliver significantly larger grants than traditional monthly giving programs. We spend less on prizes than most charities spend just to find a new donor. That's not a compromise. That's how we optimize."
  },
   { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are pooled together. Each member directs their donation to the causes they choose, so one pool funds many grants across our partners. When the circle fills, that month's grants are deployed and the cycle begins again." },
-  { q: "How do we select our charity partners?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where a large grant hits a real milestone. <Link to="/grant" className="text-indigo-600 hover:underline">The full process is on the Causes page.</Link></> }
+  { q: "How do we select our charity partners?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where a large grant hits a real milestone. <Link to="/causes" className="text-indigo-600 hover:underline">The full process is on the Causes page.</Link></> }
 ];
 
   const [openFaq, setOpenFaq] = useState(null);

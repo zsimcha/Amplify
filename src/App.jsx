@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import HomePage from './pages/HomePage';
 import HowItWorksPage from './pages/HowItWorksPage';
@@ -125,7 +125,9 @@ function App() {
         
         <Route path="/how-it-works" element={<HowItWorksPage appData={appState} />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route path="/grant" element={<GrantPage />} />
+        <Route path="/causes" element={<GrantPage />} />
+        {/* Old URL — kept as a redirect so existing links/bookmarks don't break. */}
+        <Route path="/grant" element={<Navigate to="/causes" replace />} />
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/circles" element={<CirclesPage appData={appState} />} />
 
