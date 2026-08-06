@@ -19,7 +19,7 @@ const FaqPage = () => {
  },
         { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are pooled together. Each member directs their donation to the causes they choose, so one pool funds many grants across our partners. When the circle fills, that month’s grants are deployed and the cycle begins again. Each cycle also includes a prize drawing as part of the participation model." },
         { q: "How many circles run at once?", a: "Multiple circles can run simultaneously across all three tiers. As Amplify grows, the total monthly grant impact grows with it." },
-        { q: "How do we choose our charity partners?", a: <>We vet every partner in full before a dollar moves, looking for organizations where a large grant hits a real milestone. From that vetted list, you choose which causes your own giving supports. <Link to="/grant" className="text-indigo-600 hover:underline">The full process is on the Causes page.</Link></> },
+        { q: "How do we choose our charity partners?", a: <>We vet every partner in full before a dollar moves, looking for organizations where a large grant hits a real milestone. From that vetted list, you choose which causes your own giving supports. <Link to="/causes" className="text-indigo-600 hover:underline">The full process is on the Causes page.</Link></> },
         { q: "Why not just give directly?", a: "Direct giving is powerful and encouraged. Amplify is designed for people who want their monthly giving pooled with others into far larger grants, directed to the causes they choose." }
       ]
     },

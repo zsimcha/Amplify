@@ -141,7 +141,7 @@ const FeaturedPartners = () => {
             </div>
 
             <Link
-              to="/grant"
+              to="/causes"
               className="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors uppercase tracking-widest text-xs md:text-sm"
             >
               See our causes <ChevronRight size={16} />
