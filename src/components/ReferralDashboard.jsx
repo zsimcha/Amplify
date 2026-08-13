@@ -100,6 +100,7 @@ const ReferralDashboard = () => {
   const {
     affiliate, totals, referrals,
     click_count: clickCount,
+    converted_click_count: convertedClicks,
     hold_days: holdDays,
     payout_1_amount_cents: payout1,
     payout_2_amount_cents: payout2,
@@ -164,7 +165,8 @@ const ReferralDashboard = () => {
 
       <p className="text-[0.625rem] text-slate-400 font-medium mb-6 leading-relaxed flex items-center gap-1.5">
         <MousePointerClick size={11} className="shrink-0" />
-        {clickCount} {clickCount === 1 ? 'click' : 'clicks'} on your link so far.
+        {clickCount} {clickCount === 1 ? 'click' : 'clicks'} on your link so far
+        {clickCount > 0 && `, ${convertedClicks || 0} of which became a member`}.
       </p>
 
       {/* ---------- Referral list ---------- */}

@@ -33,44 +33,66 @@ const readCookie = (name) => {
   return match ? decodeURIComponent(match[1]) : null;
 };
 
+// The stored value is JSON: { s: slug, t: clickToken }. Cookies written before
+// the click token existed hold a bare slug string, so parsing falls back to
+// treating an unparseable value as a slug with no token.
+const decodeValue = (raw) => {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object' && parsed.s) {
+      return { slug: parsed.s, token: parsed.t ?? null };
+    }
+  } catch {
+    // Legacy bare-slug cookie.
+  }
+  return { slug: raw, token: null };
+};
+
 /**
  * Stores the referring ambassador's slug and starts the attribution window.
  * Called by the vanity-link landing page once the slug is confirmed real.
+ *
+ * `clickToken` identifies the specific click this visit created. It is opaque
+ * — the server holds the timestamp and validates that the token belongs to the
+ * affiliate being claimed, so nothing here is trusted on its own.
  */
-export const captureReferral = (slug) => {
+export const captureReferral = (slug, clickToken = null) => {
   if (!slug) return;
+  const value = JSON.stringify({ s: slug, t: clickToken });
   const secure = window.location.protocol === 'https:' ? '; Secure' : '';
   try {
     document.cookie =
-      `${COOKIE_NAME}=${encodeURIComponent(slug)}` +
+      `${COOKIE_NAME}=${encodeURIComponent(value)}` +
       `; path=/; max-age=${Math.floor(WINDOW_MS / 1000)}; SameSite=Lax${secure}${cookieDomain()}`;
   } catch {
     // Cookies unavailable (rare privacy settings) — localStorage still covers us.
   }
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ slug, ts: Date.now() }));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ slug, token: clickToken, ts: Date.now() }));
   } catch {
     // Storage unavailable (Safari private mode) — the cookie still covers us.
   }
 };
 
 /**
- * Returns the stored slug, or null if there isn't one or the window has closed.
- * The cookie expires on its own; the localStorage copy is age-checked here.
+ * Returns { slug, token } for the stored attribution, or null if there isn't
+ * one or the window has closed. The cookie expires on its own; the
+ * localStorage copy is age-checked here.
  */
-export const getReferralSlug = () => {
+export const getReferralAttribution = () => {
   const fromCookie = readCookie(COOKIE_NAME);
-  if (fromCookie) return fromCookie;
+  if (fromCookie) return decodeValue(fromCookie);
 
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const { slug, ts } = JSON.parse(raw);
+    const { slug, token, ts } = JSON.parse(raw);
     if (!slug || !ts || Date.now() - ts > WINDOW_MS) {
       window.localStorage.removeItem(STORAGE_KEY);
       return null;
     }
-    return slug;
+    return { slug, token: token ?? null };
   } catch {
     return null;
   }

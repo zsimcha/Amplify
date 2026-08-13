@@ -38,8 +38,10 @@ const ReferralLandingPage = () => {
           return;
         }
 
-        // Store the canonical slug the server resolved, not the raw URL text.
-        captureReferral(data.slug);
+        // Store the canonical slug the server resolved, not the raw URL text,
+        // plus the token identifying this exact click so the eventual signup
+        // can be traced back to it.
+        captureReferral(data.slug, data.click_token ?? null);
         navigate('/', { replace: true });
       } catch {
         if (!cancelled) setState('notfound');

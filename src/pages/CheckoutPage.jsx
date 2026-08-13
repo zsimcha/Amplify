@@ -6,7 +6,7 @@ import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { getReferralSlug, clearReferral } from '../lib/referral';
+import { getReferralAttribution, clearReferral } from '../lib/referral';
 
 const US_STATES = [
   "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL", "GA", 
@@ -281,6 +281,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
         // the moment the member confirms their email.
       }
 
+      const referral = getReferralAttribution();
+
       const { error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
         p_display_name: checkoutForm.displayName || checkoutForm.fullName, 
@@ -294,11 +296,13 @@ const CheckoutPage = ({ appData, setAppData }) => {
         p_tier: selectedTier,
         p_community_name: selectedCommunity,
         // Referral attribution, if this visitor arrived via an ambassador link.
-        // The slug is only a hint — process_checkout validates that it belongs
-        // to a live affiliate, rejects self-referrals and existing donors, and
-        // silently records nothing if any check fails. Attribution can never
-        // fail a checkout.
-        p_referral_slug: getReferralSlug()
+        // Both values are only hints — process_checkout validates that the slug
+        // belongs to a live affiliate, that the click token belongs to that same
+        // affiliate, and rejects self-referrals and existing donors. It silently
+        // records nothing if any check fails. Attribution can never fail a
+        // checkout.
+        p_referral_slug: referral?.slug ?? null,
+        p_click_token: referral?.token ?? null
       });
 
       if (error) {

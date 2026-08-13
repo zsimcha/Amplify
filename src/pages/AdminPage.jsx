@@ -260,6 +260,7 @@ const AdminPage = () => {
                           <p className="text-[0.625rem] font-medium text-slate-400 truncate">
                             /{a.slug} · {a.email}
                             {a.payout_handle ? ` · ${a.payout_method || 'payout'} ${a.payout_handle}` : ''}
+                            {a.click_count > 0 ? ` · ${a.converted_click_count}/${a.click_count} clicks converted` : ''}
                           </p>
                         </div>
                       </div>
@@ -289,7 +290,7 @@ const AdminPage = () => {
                           <p className="text-xs text-slate-400 font-medium animate-pulse">Loading referrals...</p>
                         ) : rows.length === 0 ? (
                           <p className="text-xs text-slate-500 font-medium">
-                            No referrals yet. {a.click_count} {a.click_count === 1 ? 'click' : 'clicks'} on their link.
+                            No referrals yet. {a.click_count} {a.click_count === 1 ? 'click' : 'clicks'} on their link, none converted.
                           </p>
                         ) : (
                           <div className="space-y-2">
