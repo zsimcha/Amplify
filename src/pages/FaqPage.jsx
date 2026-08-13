@@ -24,6 +24,16 @@ const FaqPage = () => {
       ]
     },
     {
+      title: "Your Causes",
+      faqs: [
+        { q: "How many organizations can I support?", a: "You can choose up to 4 vetted Chessed organizations for your monthly giving to support. Your contribution splits evenly across whichever you pick." },
+        { q: "What if I don't pick any causes?", a: "Your donation is split evenly among all of our partner organizations. You can leave it that way indefinitely, or choose specific causes anytime." },
+        { q: "Do I have to choose causes when I join?", a: "No. You can skip this step during signup and split evenly among all partners, then choose specific causes anytime from My Account." },
+        { q: "Can I change my causes later?", a: "Yes, anytime from My Account." },
+        { q: "Can I suggest an organization that isn't on the list?", a: "Yes. Use the request an organization option next to the cause selector in your account page. Our team reviews every submission, checking financials, impact, and track record, so not every request becomes a partner, but every one gets a real look." }
+      ]
+    },
+    {
       title: "Ma'aser & Halacha",
       faqs: [
         { q: "Can I use Ma'aser toward my Amplify membership?", a: <>This is an important question and one we take seriously. Our Rabbinic Panel has reviewed the model and approved the use of Ma'aser funds for it. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">Learn more on our About page →</Link><br/><br/>We also encourage you to check with your own posek if you have specific questions about your situation.</> },
