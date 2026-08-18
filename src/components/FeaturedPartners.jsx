@@ -47,9 +47,12 @@ const CollectiveMark = ({ className = '' }) => (
 // impact-photo.jpg ships today, so the banner always has at least one frame.
 const SHOWCASE = [
   { name: 'Chai Lifeline', src: '/impact-photo.jpg' },
+  { name: 'Aish', src: '/partners/photos/aish.jpg' },
+  { name: 'Chabad on Campus', src: '/partners/photos/chabad-on-campus.jpg' },
+  { name: 'Camp HASC', src: '/partners/photos/camp-hasc.jpg' },
+  { name: 'Zaka', src: '/partners/photos/zaka.jpg' },
   { name: 'Renewal', src: '/partners/photos/renewal.jpg' },
   { name: 'United Hatzalah', src: '/partners/photos/united-hatzalah.jpg' },
-  { name: 'Camp HASC', src: '/partners/photos/camp-hasc.jpg' },
   { name: 'Leket Israel', src: '/partners/photos/leket-israel.jpg' },
   { name: 'Bonei Olam', src: '/partners/photos/bonei-olam.jpg' },
 ];
