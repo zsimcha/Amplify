@@ -429,31 +429,6 @@ const CheckoutPage = ({ appData, setAppData }) => {
                 <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-8 space-y-6">
                   <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Join Your Circle</h2>
 
-                  {/* ---- Billing cycle ---- */}
-                  <div className="mb-6 md:mb-8">
-                    <label className="block text-[0.625rem] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Billing</label>
-                    <div className="inline-flex bg-slate-100 rounded-full p-1" role="radiogroup" aria-label="Billing cycle">
-                      <button
-                        type="button"
-                        role="radio"
-                        aria-checked={billingCycle === 'monthly'}
-                        onClick={() => setBillingCycle('monthly')}
-                        className={`px-5 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-wide transition-all ${billingCycle === 'monthly' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                      >
-                        Monthly
-                      </button>
-                      <button
-                        type="button"
-                        role="radio"
-                        aria-checked={billingCycle === 'annual'}
-                        onClick={() => setBillingCycle('annual')}
-                        className={`px-5 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-wide transition-all ${billingCycle === 'annual' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                      >
-                        Annual
-                      </button>
-                    </div>
-                  </div>
-
                   {/* ---- Community selector (existing) ---- */}
                   <div className="mb-6 md:mb-8 relative z-30">
                       <label id="community-label" className="block text-[0.625rem] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Select Community</label>
@@ -614,6 +589,32 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-2 border-b border-slate-200 pb-4 flex items-center gap-2">
                           <Lock size={18} className="text-slate-400"/> Payment Method
                         </h3>
+
+                        {/* Billing cycle — affects every amount below (express
+                            checkout, cover-fee, total), so it comes first. */}
+                        <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-50">
+                          <span className="text-sm font-bold text-slate-900">Billing Cycle</span>
+                          <div className="inline-flex bg-white border border-slate-200 rounded-full p-0.5 shrink-0" role="radiogroup" aria-label="Billing cycle">
+                            <button
+                              type="button"
+                              role="radio"
+                              aria-checked={billingCycle === 'monthly'}
+                              onClick={() => setBillingCycle('monthly')}
+                              className={`px-3.5 py-1.5 rounded-full text-[0.6875rem] font-black uppercase tracking-wide transition-all ${billingCycle === 'monthly' ? 'bg-indigo-900 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                              Monthly
+                            </button>
+                            <button
+                              type="button"
+                              role="radio"
+                              aria-checked={billingCycle === 'annual'}
+                              onClick={() => setBillingCycle('annual')}
+                              className={`px-3.5 py-1.5 rounded-full text-[0.6875rem] font-black uppercase tracking-wide transition-all ${billingCycle === 'annual' ? 'bg-indigo-900 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                              Annual
+                            </button>
+                          </div>
+                        </div>
 
                         {/* Express checkout — Apple Pay / Google Pay placeholder.
                             Stripe's PaymentElement auto-renders these when supported. */}
