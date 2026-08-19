@@ -592,7 +592,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
                         {/* Billing cycle — affects every amount below (express
                             checkout, cover-fee, total), so it comes first. */}
-                        <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-slate-50">
+                        <div className="flex items-center justify-between gap-3 p-4 rounded-xl bg-slate-50">
                           <span className="text-sm font-bold text-slate-900">Billing Cycle</span>
                           <div className="inline-flex bg-white border border-slate-200 rounded-full p-0.5 shrink-0" role="radiogroup" aria-label="Billing cycle">
                             <button
@@ -600,7 +600,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               role="radio"
                               aria-checked={billingCycle === 'monthly'}
                               onClick={() => setBillingCycle('monthly')}
-                              className={`px-3.5 py-1.5 rounded-full text-[0.6875rem] font-black uppercase tracking-wide transition-all ${billingCycle === 'monthly' ? 'bg-indigo-900 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                              className={`px-3.5 py-2 rounded-full text-[0.6875rem] font-black uppercase tracking-wide transition-all ${billingCycle === 'monthly' ? 'bg-indigo-900 text-white' : 'text-slate-500 hover:text-slate-700'}`}
                             >
                               Monthly
                             </button>
@@ -609,7 +609,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               role="radio"
                               aria-checked={billingCycle === 'annual'}
                               onClick={() => setBillingCycle('annual')}
-                              className={`px-3.5 py-1.5 rounded-full text-[0.6875rem] font-black uppercase tracking-wide transition-all ${billingCycle === 'annual' ? 'bg-indigo-900 text-white' : 'text-slate-500 hover:text-slate-700'}`}
+                              className={`px-3.5 py-2 rounded-full text-[0.6875rem] font-black uppercase tracking-wide transition-all ${billingCycle === 'annual' ? 'bg-indigo-900 text-white' : 'text-slate-500 hover:text-slate-700'}`}
                             >
                               Annual
                             </button>
