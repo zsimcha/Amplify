@@ -22,6 +22,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const initialTier = location.state?.tier || 'silver';
 
   const [selectedTier] = useState(initialTier);
+  const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'annual'
   const [selectedCommunity, setSelectedCommunity] = useState("General");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -187,7 +188,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
   };
 
   // ---- Pricing calculations ----
-  const basePrice = appData.tierData[selectedTier].price;
+  // Annual billing charges 12x the monthly price as a single basePrice through
+  // the exact same fee math below -- no separate annual formula needed.
+  const monthlyPrice = appData.tierData[selectedTier].price;
+  const basePrice = billingCycle === 'annual' ? monthlyPrice * 12 : monthlyPrice;
   const processingFee = paymentMethod === 'bank'
     ? 0
     : feeCoveredAmount(basePrice);
@@ -249,12 +253,20 @@ const CheckoutPage = ({ appData, setAppData }) => {
       //  3. Confirm payment via Stripe's PaymentElement (it returns a paymentMethodId)
       //  4. POST /customers/{customerId}/checkout (or /payment-intents) with:
       //       mode: 'subscription'
-      //       amount: basePrice * 100 (in cents)
+      //       interval: billingCycle === 'annual' ? 'year' : 'month'
+      //       amount: basePrice * 100 (in cents) -- already 12x for annual
       //       customerCoveringFee: coverFee
       //       paymentMethodId: <from Stripe>
       //  5. Then call the Supabase RPC below with the resulting Stripe customer id
-      // 
+      //
       // For now we just fire the existing Supabase RPC.
+      //
+      // NOTE: billingCycle is not sent below -- process_checkout has no
+      // parameter for it today, so annual vs. monthly is not yet persisted
+      // server-side (this whole flow is pre-Stripe scaffolding anyway; no
+      // real subscription is created either way yet). The RPC needs a new
+      // p_billing_cycle parameter, and the Subscriptions table needs to
+      // record it, before this is more than a frontend preview.
       // ============================================================
 
       // 0. Create the member's account first (Supabase Auth handles the
@@ -309,8 +321,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
         throw new Error("Something went wrong processing your request. Please try again.");
       }
 
-      // Optimistic UI Update with Community Race Condition Fix
-      const tierPrice = appData.tierData[selectedTier].price;
+      // Optimistic UI Update with Community Race Condition Fix. The
+      // community's running "monthly" total reflects the recurring monthly
+      // amount regardless of billing cycle, so this uses monthlyPrice, not
+      // the (possibly annual, lump-sum) basePrice charged today.
+      const tierPrice = monthlyPrice;
       setAppData(prev => {
         const isNewCommunity = !prev.allCommunityNames.includes(selectedCommunity);
         const updatedNames = isNewCommunity 
@@ -362,7 +377,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
               <div className={`w-2 h-2 rounded-full shrink-0 ${TIER_ACCENT[selectedTier].dot}`}></div>
               <div className="min-w-0">
                 <p className={`text-[0.5625rem] font-black uppercase tracking-widest leading-none mb-1 ${TIER_ACCENT[selectedTier].text}`}>{selectedTier} Circle</p>
-                <p className="text-sm font-bold truncate">${totalCharged.toFixed(2)}<span className="font-medium text-indigo-300">/mo</span></p>
+                <p className="text-sm font-bold truncate">${totalCharged.toFixed(2)}<span className="font-medium text-indigo-300">{billingCycle === 'annual' ? '/yr' : '/mo'}</span></p>
               </div>
             </div>
             <div className="flex items-center gap-1.5 text-indigo-300 shrink-0">
@@ -374,6 +389,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
             <div id="mobile-summary-detail" className="px-4 pb-5 pt-2 border-t border-indigo-900 animate-in slide-in-from-top-2 duration-200">
               <CheckoutSummary
                 selectedTier={selectedTier}
+                billingCycle={billingCycle}
                 basePrice={basePrice}
                 tierData={appData.tierData}
                 feeBeingCovered={feeBeingCovered}
@@ -412,7 +428,32 @@ const CheckoutPage = ({ appData, setAppData }) => {
               <div className="lg:col-span-7 space-y-6 md:space-y-8">
                 <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-8 space-y-6">
                   <h2 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 mb-6 md:mb-8 tracking-tight">Join Your Circle</h2>
-                  
+
+                  {/* ---- Billing cycle ---- */}
+                  <div className="mb-6 md:mb-8">
+                    <label className="block text-[0.625rem] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Billing</label>
+                    <div className="inline-flex bg-slate-100 rounded-full p-1" role="radiogroup" aria-label="Billing cycle">
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={billingCycle === 'monthly'}
+                        onClick={() => setBillingCycle('monthly')}
+                        className={`px-5 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-wide transition-all ${billingCycle === 'monthly' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                        Monthly
+                      </button>
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={billingCycle === 'annual'}
+                        onClick={() => setBillingCycle('annual')}
+                        className={`px-5 md:px-6 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-wide transition-all ${billingCycle === 'annual' ? 'bg-indigo-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                        Annual
+                      </button>
+                    </div>
+                  </div>
+
                   {/* ---- Community selector (existing) ---- */}
                   <div className="mb-6 md:mb-8 relative z-30">
                       <label id="community-label" className="block text-[0.625rem] md:text-xs font-black uppercase tracking-widest text-slate-400 mb-2 md:mb-3">Select Community</label>
@@ -684,7 +725,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             <Check size={14} strokeWidth={3} className="text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
                           </div>
                           <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed select-none">
-                            I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring monthly contribution.
+                            I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring {billingCycle === 'annual' ? 'annual' : 'monthly'} contribution.
                           </p>
                         </label>
 
@@ -705,13 +746,13 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         )}
 
                         <button type="submit" disabled={isLoading} className="w-full py-4 bg-indigo-900 text-white rounded-xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-xs md:text-sm flex items-center justify-center gap-2 md:gap-3 disabled:opacity-70 disabled:cursor-not-allowed active:bg-black">
-                          {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Lock size={16} /> Pay ${totalCharged.toFixed(2)} / Month</>}
+                          {isLoading ? <span className="animate-pulse italic">Processing Securely...</span> : <><Lock size={16} /> Pay ${totalCharged.toFixed(2)} / {billingCycle === 'annual' ? 'Year' : 'Month'}</>}
                         </button>
 
                         {/* Auto-renewal disclosure — plain text adjacent to the payment
                             authorization, per auto-renewal laws (e.g. CA ARL). */}
                         <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed text-center mt-4">
-                          Your contribution renews every month until you cancel your subscription.
+                          Your contribution renews every {billingCycle === 'annual' ? 'year' : 'month'} until you cancel your subscription.
                         </p>
 
                         <div className="flex items-center justify-center gap-4 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mt-4">
@@ -737,6 +778,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                     </div>
                     <CheckoutSummary
                       selectedTier={selectedTier}
+                      billingCycle={billingCycle}
                       basePrice={basePrice}
                       tierData={appData.tierData}
                       feeBeingCovered={feeBeingCovered}

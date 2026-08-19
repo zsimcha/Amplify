@@ -5,8 +5,9 @@ import { TIER_ACCENT } from '../../lib/constants';
 // Order summary — used in both the desktop sticky card and the mobile
 // expanded view. Pulled from the original inline SummaryContent, so styling
 // stays identical.
-const CheckoutSummary = ({ selectedTier, basePrice, tierData, feeBeingCovered, processingFee, totalCharged }) => {
+const CheckoutSummary = ({ selectedTier, billingCycle, basePrice, tierData, feeBeingCovered, processingFee, totalCharged }) => {
   const tierColor = TIER_ACCENT[selectedTier].text;
+  const isAnnual = billingCycle === 'annual';
 
   return (
     <>
@@ -18,7 +19,7 @@ const CheckoutSummary = ({ selectedTier, basePrice, tierData, feeBeingCovered, p
         <div className="w-full h-px bg-white/10"></div>
         <div className="flex justify-between items-end">
           <div>
-            <p className="text-[0.5625rem] md:text-[0.625rem] font-bold text-indigo-400 uppercase tracking-widest mb-1">Monthly Gift</p>
+            <p className="text-[0.5625rem] md:text-[0.625rem] font-bold text-indigo-400 uppercase tracking-widest mb-1">{isAnnual ? 'Annual Gift' : 'Monthly Gift'}</p>
             <p className="text-lg md:text-xl font-bold">${basePrice.toLocaleString()}</p>
           </div>
           <div className="text-right">
@@ -44,7 +45,7 @@ const CheckoutSummary = ({ selectedTier, basePrice, tierData, feeBeingCovered, p
         {/* Total */}
         <div className="w-full h-px bg-white/10"></div>
         <div className="flex justify-between items-center pt-1">
-          <p className="text-xs md:text-sm font-black text-white uppercase tracking-widest">Total / Month</p>
+          <p className="text-xs md:text-sm font-black text-white uppercase tracking-widest">Total / {isAnnual ? 'Year' : 'Month'}</p>
           <p className="text-2xl md:text-3xl font-black tabular-nums">${totalCharged.toFixed(2)}</p>
         </div>
 

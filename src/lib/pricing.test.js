@@ -39,3 +39,31 @@ describe('feeCoveredAmount', () => {
     expect(feeCoveredAmount(1000)).toBeCloseTo(30.18, 2);
   });
 });
+
+// Annual billing charges monthlyPrice * 12 as a single basePrice through the
+// exact same functions above -- no separate annual formula. These pin the
+// resulting dollar amounts and the one real economic difference: Stripe's
+// $0.30 fixed fee is paid once per annual charge instead of once per month.
+describe('annual billing (12x monthly base, same functions)', () => {
+  it.each([250, 500, 1000])('nets exactly 12x the monthly price after Stripe\'s cut (monthly=%d)', (monthlyPrice) => {
+    const annualBase = monthlyPrice * 12;
+    const charged = totalWithFeeCovered(annualBase);
+    const stripeCut = charged * STRIPE_FEE_RATE + STRIPE_FEE_FIXED;
+    expect(charged - stripeCut).toBeCloseTo(annualBase, 9);
+  });
+
+  it('matches known dollar amounts for the three membership tiers', () => {
+    expect(totalWithFeeCovered(250 * 12)).toBeCloseTo(3089.91, 2);
+    expect(totalWithFeeCovered(500 * 12)).toBeCloseTo(6179.51, 2);
+    expect(totalWithFeeCovered(1000 * 12)).toBeCloseTo(12358.70, 2);
+  });
+
+  it('covering the fee annually costs less than covering it monthly 12 times, since the $0.30 fixed fee is only paid once', () => {
+    for (const monthlyPrice of [250, 500, 1000]) {
+      const annualFee = feeCoveredAmount(monthlyPrice * 12);
+      const twelveMonthlyFees = feeCoveredAmount(monthlyPrice) * 12;
+      expect(annualFee).toBeLessThan(twelveMonthlyFees);
+      expect(twelveMonthlyFees - annualFee).toBeCloseTo(3.40, 2);
+    }
+  });
+});

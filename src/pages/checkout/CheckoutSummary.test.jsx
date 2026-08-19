@@ -38,4 +38,18 @@ describe('CheckoutSummary', () => {
     expect(screen.getByText('+$7.55')).toBeInTheDocument();
     expect(screen.getByText('$257.55')).toBeInTheDocument();
   });
+
+  it('labels the gift and total as monthly by default', () => {
+    renderSummary({ selectedTier: 'gold', basePrice: 500, feeBeingCovered: false, processingFee: 0, totalCharged: 500 });
+    expect(screen.getByText('Monthly Gift')).toBeInTheDocument();
+    expect(screen.getByText('Total / Month')).toBeInTheDocument();
+  });
+
+  it('labels the gift and total as annual, and shows the annual lump sum, when billingCycle is annual', () => {
+    renderSummary({ selectedTier: 'gold', billingCycle: 'annual', basePrice: 6000, feeBeingCovered: false, processingFee: 0, totalCharged: 6000 });
+    expect(screen.getByText('Annual Gift')).toBeInTheDocument();
+    expect(screen.getByText('Total / Year')).toBeInTheDocument();
+    expect(screen.queryByText('Monthly Gift')).not.toBeInTheDocument();
+    expect(screen.getByText('$6,000')).toBeInTheDocument();
+  });
 });
