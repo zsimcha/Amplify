@@ -47,6 +47,12 @@ export const partners = [
     description: 'Wrapping families in support the moment a child faces serious illness, at no cost to them.',
   },
   {
+    name: 'FIDF',
+    slug: 'fidf',
+    category: 'Soldier Support',
+    description: 'Supporting the wellbeing of IDF soldiers and their families through educational, social, and financial assistance programs.',
+  },
+  {
     name: 'Leket Israel',
     slug: 'leket-israel',
     category: 'Food Security',
