@@ -59,6 +59,12 @@ export const partners = [
     description: "Israel's national food bank, rescuing healthy surplus food for hundreds of thousands in need.",
   },
   {
+    name: 'Misaskim',
+    slug: 'misaskim',
+    category: 'Crisis & Illness',
+    description: 'Volunteers providing immediate, hands-on support to families in the first hours of a crisis or loss.',
+  },
+  {
     name: 'Mizrachi',
     slug: 'mizrachi',
     category: 'Torah & Education',
