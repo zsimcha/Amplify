@@ -389,7 +389,7 @@ const WhyPrizes = () => {
 
         <div className="max-w-3xl mx-auto text-center reveal">
           <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed mb-8">
-            We allocate less to prizes than most charities spend to acquire donors. A smaller percentage of a much larger pool delivers more.
+            We allocate less to prizes than most charities spend to acquire donors.
           </p>
           <p className="text-sm md:text-base font-black uppercase tracking-widest border-t-4 border-amber-400 inline-block pt-6 text-slate-900">
             That's not a compromise. That's how we optimize.
@@ -611,21 +611,21 @@ const HowItWorksPage = ({ appData }) => {
         <div className="flex-1 flex items-center mb-3 md:mb-4">
           <div>
             <p className="text-3xl md:text-4xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
-              Straight to Chessed.
+              No Fundraising Overhead.
             </p>
             <p className="text-base md:text-lg text-amber-200/65 font-normal italic">
-              That's it.
+              No galas. No mailers. No agency fees.
             </p>
           </div>
         </div>
 
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
-            <p className="text-2xl md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
-            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Spent Finding Donors</p>
+            <p className="text-2xl md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">$0</p>
+            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Spent On Overhead</p>
           </div>
           <p className="text-[0.8125rem] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
-            All of it reaches the mission.
+            Every dollar funds a grant, or fuels next month's giving.
           </p>
         </div>
       </div>
