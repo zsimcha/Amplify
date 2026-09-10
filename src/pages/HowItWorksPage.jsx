@@ -622,10 +622,10 @@ const HowItWorksPage = ({ appData }) => {
         <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
           <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
             <p className="text-2xl md:text-3xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
-            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Spent On Fundraising</p>
+            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Spent Fundraising</p>
           </div>
           <p className="text-[0.8125rem] md:text-sm text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
-            Most of it reaches Chessed. The rest fuels the drawing that keeps members coming back.
+            Instead, we give members a reason to keep giving.
           </p>
         </div>
       </div>
