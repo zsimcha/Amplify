@@ -105,19 +105,24 @@ export const partners = [
 // Resolve a partner's logo path (explicit override or slug-based default).
 export const partnerLogo = (p) => p.logo || `/partners/logos/${p.slug}.png`;
 
-// ⚠️ PLACEHOLDER IMPACT FIGURES — replace `value` with the real numbers before
-// launch. `value` is the number the counter animates to; `abbrev: true` renders
-// it compactly (2000000 -> "2M", 800000 -> "800K"), otherwise it shows in full
+// `value` is the number the counter animates to; `abbrev: true` renders it
+// compactly (2000000 -> "2M", 800000 -> "800K"), otherwise it shows in full
 // with commas ("10,000"). All are shown with a trailing "+". `org` is not
 // displayed (the band is framed as Amplify's collective impact, not
 // per-partner) — it's kept only as a stable React key.
+//
+// ⚠️ Renewal, Leket Israel, TorahAnytime, and United Hatzalah are still
+// placeholder figures — replace before launch. Everyone else below is a real,
+// partner-sourced number.
 export const impactStats = [
   { org: 'Renewal',         value: 1000,    abbrev: false, label: 'Living kidney donations facilitated' },
   { org: 'Leket Israel',    value: 2000000, abbrev: true,  label: 'Meals rescued every year' },
   { org: 'United Hatzalah', value: 2000000, abbrev: true,  label: 'Emergencies answered' },
-  { org: 'Bonei Olam',      value: 10000,   abbrev: false, label: 'Babies born through treatment' },
-  { org: 'Chai Lifeline',   value: 6000,    abbrev: false, label: 'Children & families supported' },
+  { org: 'Bonei Olam',      value: 15000,   abbrev: false, label: 'Babies born through treatment' },
+  { org: 'Chai Lifeline',   value: 50000,   abbrev: false, label: 'Families supported nationwide' },
   { org: 'Camp HASC',       value: 500,     abbrev: false, label: 'Campers with disabilities each summer' },
+  { org: 'Chabad on Campus', value: 160000, abbrev: true,  label: 'Jewish students reached on campus' },
   { org: 'TorahAnytime',    value: 800000,  abbrev: true,  label: 'Free Torah classes on demand' },
-  { org: 'Zaka',            value: 3000,    abbrev: false, label: 'Volunteer first responders' },
+  { org: 'FIDF',            value: 170000,  abbrev: true,  label: 'Soldiers, veterans & families supported' },
+  { org: 'Zaka',            value: 10000,   abbrev: false, label: 'Emergency responses each year' },
 ];
