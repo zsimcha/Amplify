@@ -44,38 +44,38 @@ const CollectiveMark = ({ className = '' }) => (
 // Rotating showcase photos for the crossfade banner. Drop org photos into
 // /public/partners/photos/ and list them here; the banner preloads every entry
 // and quietly skips any that fail, so it's safe to list images before upload.
-// impact-photo.jpg ships today, so the banner always has at least one frame.
 const SHOWCASE = [
-  { name: 'Chai Lifeline', src: '/impact-photo.jpg' },
+  { name: 'Chai Lifeline', src: '/partners/photos/chai-lifeline.jpg' },
   { name: 'FIDF', src: '/partners/photos/fidf.jpg' },
   { name: 'Aish', src: '/partners/photos/aish.jpg' },
   { name: 'Chabad on Campus', src: '/partners/photos/chabad-on-campus.jpg' },
   { name: 'Camp HASC', src: '/partners/photos/camp-hasc.jpg' },
   { name: 'Zaka', src: '/partners/photos/zaka.jpg' },
-  { name: 'Renewal', src: '/partners/photos/renewal.jpg' },
-  { name: 'United Hatzalah', src: '/partners/photos/united-hatzalah.jpg' },
-  { name: 'Leket Israel', src: '/partners/photos/leket-israel.jpg' },
   { name: 'Bonei Olam', src: '/partners/photos/bonei-olam.jpg' },
 ];
 
-// One logo in the marquee. Tries the image, falls back to the org name.
+// One logo in the marquee. Most logo ink is dark/colored and reads poorly
+// straight on the dark section background, so each one sits on its own white
+// card — same trick as the causes-grid tiles. Falls back to the org name.
 const PartnerLogo = ({ partner }) => {
   const [failed, setFailed] = useState(false);
   const src = partnerLogo(partner);
 
   return (
-    <div className="flex items-center justify-center h-9 md:h-12 px-6 md:px-8 shrink-0">
+    <div className="flex items-center justify-center px-2.5 md:px-3 shrink-0">
       {failed ? (
         <span className="text-sm md:text-base font-black uppercase tracking-wider text-slate-400 whitespace-nowrap">
           {partner.name}
         </span>
       ) : (
-        <img
-          src={src}
-          alt={partner.name}
-          onError={() => setFailed(true)}
-          className="h-full w-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
-        />
+        <div className="flex items-center justify-center h-12 md:h-16 px-4 md:px-5 bg-white rounded-xl shadow-sm transition-shadow duration-300 hover:shadow-md">
+          <img
+            src={src}
+            alt={partner.name}
+            onError={() => setFailed(true)}
+            className="h-6 md:h-8 w-auto object-contain"
+          />
+        </div>
       )}
     </div>
   );
@@ -110,7 +110,7 @@ const FeaturedPartners = () => {
 
   useEffect(() => {
     if (loaded.length <= 1) return;
-    const t = setInterval(() => setIdx((p) => (p + 1) % loaded.length), 4500);
+    const t = setInterval(() => setIdx((p) => (p + 1) % loaded.length), 3000);
     return () => clearInterval(t);
   }, [loaded]);
 

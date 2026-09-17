@@ -53,12 +53,6 @@ export const partners = [
     description: 'Supporting the wellbeing of IDF soldiers and their families through educational, social, and financial assistance programs.',
   },
   {
-    name: 'Leket Israel',
-    slug: 'leket-israel',
-    category: 'Food Security',
-    description: "Israel's national food bank, rescuing healthy surplus food for hundreds of thousands in need.",
-  },
-  {
     name: 'Misaskim',
     slug: 'misaskim',
     category: 'Crisis & Illness',
@@ -69,30 +63,6 @@ export const partners = [
     slug: 'mizrachi',
     category: 'Torah & Education',
     description: 'Advancing religious Zionism worldwide through Torah, education, and connection to Israel.',
-  },
-  {
-    name: 'Renewal',
-    slug: 'renewal',
-    category: 'Medical',
-    description: 'Facilitating living kidney donations that give patients with kidney failure a second chance at life.',
-  },
-  {
-    name: 'StandWithUs',
-    slug: 'stand-with-us',
-    category: 'Israel Advocacy',
-    description: 'Educating and empowering communities to stand up for Israel and confront antisemitism.',
-  },
-  {
-    name: 'TorahAnytime',
-    slug: 'torah-anytime',
-    category: 'Torah & Education',
-    description: 'Tens of thousands of free Torah classes, making Jewish learning accessible anywhere, anytime.',
-  },
-  {
-    name: 'United Hatzalah',
-    slug: 'united-hatzalah',
-    category: 'Emergency Response',
-    description: 'Volunteer first responders reaching any emergency in Israel within minutes, free of charge.',
   },
   {
     name: 'Zaka',
@@ -109,20 +79,13 @@ export const partnerLogo = (p) => p.logo || `/partners/logos/${p.slug}.png`;
 // compactly (2000000 -> "2M", 800000 -> "800K"), otherwise it shows in full
 // with commas ("10,000"). All are shown with a trailing "+". `org` is not
 // displayed (the band is framed as Amplify's collective impact, not
-// per-partner) — it's kept only as a stable React key.
-//
-// ⚠️ Renewal, Leket Israel, TorahAnytime, and United Hatzalah are still
-// placeholder figures — replace before launch. Everyone else below is a real,
-// partner-sourced number.
+// per-partner) — it's kept only as a stable React key. Only orgs with a
+// live logo (see `partners` above) get a stat here.
 export const impactStats = [
-  { org: 'Renewal',         value: 1000,    abbrev: false, label: 'Living kidney donations facilitated' },
-  { org: 'Leket Israel',    value: 2000000, abbrev: true,  label: 'Meals rescued every year' },
-  { org: 'United Hatzalah', value: 2000000, abbrev: true,  label: 'Emergencies answered' },
-  { org: 'Bonei Olam',      value: 15000,   abbrev: false, label: 'Babies born through treatment' },
-  { org: 'Chai Lifeline',   value: 50000,   abbrev: false, label: 'Families supported nationwide' },
-  { org: 'Camp HASC',       value: 500,     abbrev: false, label: 'Campers with disabilities each summer' },
+  { org: 'Bonei Olam',       value: 15000,  abbrev: false, label: 'Babies born through treatment' },
+  { org: 'Chai Lifeline',    value: 50000,  abbrev: false, label: 'Families supported nationwide' },
+  { org: 'Camp HASC',        value: 500,    abbrev: false, label: 'Campers with disabilities each summer' },
   { org: 'Chabad on Campus', value: 160000, abbrev: true,  label: 'Jewish students reached on campus' },
-  { org: 'TorahAnytime',    value: 800000,  abbrev: true,  label: 'Free Torah classes on demand' },
-  { org: 'FIDF',            value: 170000,  abbrev: true,  label: 'Soldiers, veterans & families supported' },
-  { org: 'Zaka',            value: 10000,   abbrev: false, label: 'Emergency responses each year' },
+  { org: 'FIDF',             value: 170000, abbrev: true,  label: 'Soldiers, veterans & families supported' },
+  { org: 'Zaka',             value: 10000,  abbrev: false, label: 'Emergency responses each year' },
 ];
