@@ -54,28 +54,27 @@ const SHOWCASE = [
   { name: 'Bonei Olam', src: '/partners/photos/bonei-olam.jpg' },
 ];
 
-// One logo in the marquee. Most logo ink is dark/colored and reads poorly
-// straight on the dark section background, so each one sits on its own white
-// card — same trick as the causes-grid tiles. Falls back to the org name.
+// One logo in the marquee, sitting directly on the white band. Every slot is a
+// fixed size on purpose: the track's total width has to be settled before the
+// images load, or the -33.3333% loop endpoint shifts underneath the animation
+// and the logos visibly jump as each one arrives. Falls back to the org name.
 const PartnerLogo = ({ partner }) => {
   const [failed, setFailed] = useState(false);
   const src = partnerLogo(partner);
 
   return (
-    <div className="flex items-center justify-center px-2.5 md:px-3 shrink-0">
+    <div className="flex items-center justify-center shrink-0 w-28 md:w-44 h-10 md:h-14 px-3 md:px-4">
       {failed ? (
-        <span className="text-sm md:text-base font-black uppercase tracking-wider text-slate-400 whitespace-nowrap">
+        <span className="text-xs md:text-sm font-black uppercase tracking-wider text-slate-400 text-center leading-tight">
           {partner.name}
         </span>
       ) : (
-        <div className="flex items-center justify-center h-12 md:h-16 px-4 md:px-5 bg-white rounded-xl shadow-sm transition-shadow duration-300 hover:shadow-md">
-          <img
-            src={src}
-            alt={partner.name}
-            onError={() => setFailed(true)}
-            className="h-6 md:h-8 w-auto object-contain"
-          />
-        </div>
+        <img
+          src={src}
+          alt={partner.name}
+          onError={() => setFailed(true)}
+          className="max-h-full max-w-full w-auto object-contain"
+        />
       )}
     </div>
   );
@@ -185,24 +184,32 @@ const FeaturedPartners = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
           </div>
         </div>
+      </div>
 
-        {/* Auto-scrolling logo marquee — reveals together with the block above */}
-        {HIDE_PARTNER_IDENTITIES ? (
-          <div className="mt-14 md:mt-20 border-t border-slate-800 pt-8 text-center">
-            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-slate-500">
-              Our partner organizations will be announced soon
-            </p>
-          </div>
-        ) : (
-          <div className="relative marquee-mask py-2 mt-14 md:mt-20">
-            <div className="flex w-max animate-marquee hover:[animation-play-state:paused]">
-              {[...PARTNERS, ...PARTNERS].map((p, i) => (
+      {/* Auto-scrolling logo marquee — reveals together with the block above.
+          Lives outside the max-width wrapper so the white band can run the full
+          width of the section; -mx-4 cancels the section's own padding. */}
+      {HIDE_PARTNER_IDENTITIES ? (
+        <div className="max-w-6xl mx-auto reveal mt-14 md:mt-20 border-t border-slate-800 pt-8 text-center">
+          <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] text-slate-500">
+            Our partner organizations will be announced soon
+          </p>
+        </div>
+      ) : (
+        <div className="reveal reveal-fade -mx-4 mt-14 md:mt-20 bg-white py-5 md:py-7">
+          <div className="relative overflow-hidden">
+            <div className="flex w-max animate-marquee">
+              {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((p, i) => (
                 <PartnerLogo key={`${p.slug}-${i}`} partner={p} />
               ))}
             </div>
+            {/* Edge fades. Plain gradients rather than a CSS mask — masking a
+                layer that's animating underneath drops logos on mobile Safari. */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-10 md:w-24 bg-gradient-to-r from-white to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-10 md:w-24 bg-gradient-to-l from-white to-transparent" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

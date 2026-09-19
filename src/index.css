@@ -43,6 +43,17 @@ body {
   transform: translateY(0);
 }
 
+/* Opacity-only variant, for blocks that run their own transform animation
+   inside. A transform on the ancestor makes mobile browsers drop frames of the
+   animating child. Used with `reveal` so the same observer picks it up. */
+.reveal-fade {
+  transform: none;
+  transition-property: opacity;
+}
+.reveal-fade.active {
+  transform: none;
+}
+
 /* Smoother scrollbar hiding for carousels (you already use this pattern) */
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
@@ -53,23 +64,29 @@ body {
   background-size: 8px 8px;
 }
 
-/* Infinite logo marquee. The track holds two copies of the partner list, so
-   sliding it exactly -50% loops seamlessly back to the start. */
+/* Infinite logo marquee. The track holds three copies of the partner list and
+   slides exactly -33.3333% (one copy's width), so it loops seamlessly back to
+   the start. Three copies rather than two keeps the strip filled on ultrawide
+   displays, where a single copy is narrower than the viewport. */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-33.3333%, 0, 0); }
 }
 .animate-marquee {
   animation: marquee 45s linear infinite;
+  /* Keep the strip on its own compositor layer. Without this, mobile Safari
+     re-rasterizes mid-animation and logos flicker out as they scroll. */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+/* Pause on hover only where hovering is real. On touch, :hover sticks after a
+   tap and would leave the marquee frozen. */
+@media (hover: hover) and (pointer: fine) {
+  .animate-marquee:hover { animation-play-state: paused; }
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee { animation: none; }
-}
-
-/* Fade the marquee edges into the background instead of a hard cutoff. */
-.marquee-mask {
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
 }
 
 /* Scroll hint: three chevrons pulse from dim to bright. Staggered animation
