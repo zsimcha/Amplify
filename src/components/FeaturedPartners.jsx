@@ -54,27 +54,31 @@ const SHOWCASE = [
   { name: 'Bonei Olam', src: '/partners/photos/bonei-olam.jpg' },
 ];
 
-// One logo in the marquee, sitting directly on the white band. Every slot is a
-// fixed size on purpose: the track's total width has to be settled before the
-// images load, or the -33.3333% loop endpoint shifts underneath the animation
-// and the logos visibly jump as each one arrives. Falls back to the org name.
+// One logo in the marquee, sitting directly on the white band. The box hugs the
+// logo (see .logo-slot) and the spacing lives in this wrapper's padding, so the
+// gap between every pair of logos is the same 2x padding regardless of whether
+// the logo is a wide wordmark or a square badge. Keeping the space as padding
+// rather than a flex `gap` also keeps each copy of the roster exactly one third
+// of the track, which is what makes the loop seamless.
 const PartnerLogo = ({ partner }) => {
   const [failed, setFailed] = useState(false);
   const src = partnerLogo(partner);
 
   return (
-    <div className="flex items-center justify-center shrink-0 w-28 md:w-44 h-10 md:h-14 px-3 md:px-4">
+    <div className="flex items-center justify-center shrink-0 h-10 md:h-14 px-6 md:px-9">
       {failed ? (
-        <span className="text-xs md:text-sm font-black uppercase tracking-wider text-slate-400 text-center leading-tight">
+        <span className="w-20 md:w-28 text-xs md:text-sm font-black uppercase tracking-wider text-slate-400 text-center leading-tight">
           {partner.name}
         </span>
       ) : (
-        <img
-          src={src}
-          alt={partner.name}
-          onError={() => setFailed(true)}
-          className="max-h-full max-w-full w-auto object-contain"
-        />
+        <div className="logo-slot" style={{ '--logo-aspect': partner.aspect }}>
+          <img
+            src={src}
+            alt={partner.name}
+            onError={() => setFailed(true)}
+            className="w-full h-full object-contain"
+          />
+        </div>
       )}
     </div>
   );

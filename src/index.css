@@ -80,6 +80,26 @@ body {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+/* One logo's box in the marquee. The files are cropped tight to their ink, so
+   sizing the box to exactly what renders is what makes the gap between any two
+   logos identical — a fixed-width slot instead leaves wide logos nearly
+   touching and narrow ones marooned in empty space. Width is derived in CSS
+   from --logo-aspect rather than measured off the image, so the track's total
+   width is settled before a single file loads. Caps on both axes keep a very
+   wide wordmark from dwarfing a square badge. */
+.logo-slot {
+  --logo-h: 2.5rem;
+  --logo-max-w: 5.5rem;
+  height: min(var(--logo-h), calc(var(--logo-max-w) / var(--logo-aspect)));
+  width: min(var(--logo-max-w), calc(var(--logo-h) * var(--logo-aspect)));
+}
+@media (min-width: 768px) {
+  .logo-slot {
+    --logo-h: 3.5rem;
+    --logo-max-w: 9rem;
+  }
+}
+
 /* Pause on hover only where hovering is real. On touch, :hover sticks after a
    tap and would leave the marquee frozen. */
 @media (hover: hover) and (pointer: fine) {
