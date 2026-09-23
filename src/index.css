@@ -100,11 +100,6 @@ body {
   }
 }
 
-/* Pause on hover only where hovering is real. On touch, :hover sticks after a
-   tap and would leave the marquee frozen. */
-@media (hover: hover) and (pointer: fine) {
-  .animate-marquee:hover { animation-play-state: paused; }
-}
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee { animation: none; }
 }
