@@ -47,30 +47,33 @@ const CollectiveMark = ({ className = '' }) => (
 // /about#rabbinic-panel; this just points there.
 const RABBI_PHOTOS = ['/rabbi-1.png', '/rabbi-2.png', '/rabbi-3.png'];
 
-// Phone sizes are set so the label breaks into two lines ("Reviewed &
-// approved by / our Rabbinic Panel") down to 360px wide rather than three.
+// Phone and tablet sizes are set so the label breaks into two lines
+// ("Reviewed & approved by / our Rabbinic Panel") down to 360px wide rather
+// than three. Desktop (lg+) roughly doubles the md size — this is the
+// section's closing beat, and it was reading as a small afterthought in the
+// large stretch of dark ground below the marquee.
 const RabbinicPill = () => (
-  <div className="mt-10 md:mt-14 flex justify-center reveal">
+  <div className="mt-10 md:mt-14 lg:mt-16 flex justify-center reveal">
     <Link
       to="/about#rabbinic-panel"
-      className="inline-flex items-center gap-2.5 md:gap-4 rounded-full border border-white/15 bg-white/[0.06] pl-2 pr-4 py-2 md:pl-2.5 md:pr-7 md:py-2.5 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      className="inline-flex items-center gap-2.5 md:gap-4 lg:gap-7 rounded-full border border-white/15 lg:border-2 bg-white/[0.06] pl-2 pr-4 py-2 md:pl-2.5 md:pr-7 md:py-2.5 lg:pl-4 lg:pr-12 lg:py-4 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
     >
-      <span className="flex -space-x-3.5 md:-space-x-3 shrink-0">
+      <span className="flex -space-x-3.5 md:-space-x-3 lg:-space-x-6 shrink-0">
         {RABBI_PHOTOS.map((src, i) => (
           <img
             key={src}
             src={src}
             alt=""
             aria-hidden
-            className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover object-top grayscale bg-slate-800 border-2 border-slate-900"
+            className="w-10 h-10 md:w-14 md:h-14 lg:w-28 lg:h-28 rounded-full object-cover object-top grayscale bg-slate-800 border-2 lg:border-4 border-slate-900"
             style={{ zIndex: RABBI_PHOTOS.length - i }}
           />
         ))}
       </span>
-      <span className="text-sm md:text-lg font-bold md:tracking-wide text-indigo-50 leading-snug">
+      <span className="text-sm md:text-lg lg:text-4xl font-bold md:tracking-wide text-indigo-50 leading-snug">
         Reviewed &amp; approved by our Rabbinic Panel
       </span>
-      <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-amber-400 shrink-0" />
+      <ChevronRight className="w-4 h-4 md:w-5 md:h-5 lg:w-9 lg:h-9 text-amber-400 shrink-0" />
     </Link>
   </div>
 );
