@@ -4,6 +4,7 @@ import { Check, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDo
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 import FeaturedPartners from '../components/FeaturedPartners';
+import HeroBackdrop from '../components/HeroBackdrop';
 import CornerConstellation from '../components/CornerConstellation';
 import ScrollHint from '../components/ScrollHint';
 
@@ -112,62 +113,52 @@ const HomePage = ({ appData }) => {
 
       <MainNavbar />
 
-      {/* DARK HERO */}
-      <header className="bg-indigo-950 pt-20 md:pt-24 pb-0 flex flex-col overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 pb-4 md:pb-6 relative z-10 flex-grow">
-          <div className="grid lg:grid-cols-12 gap-10 md:gap-16 items-center">
-            <div className="text-left lg:col-span-6 animate-hero">
-  <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9] uppercase">
-    Give Together.<br/>
-    <span className="text-amber-400 italic">Amplify</span>
-    <span className="text-amber-400 italic"> Your Impact.</span>
-  </h1>
+      {/* HERO — full-bleed rotating cause photos in the brand duotone, copy on
+          the dark side, stats on a glass card along the bottom. */}
+      <header className="relative isolate overflow-hidden bg-indigo-950 flex flex-col md:min-h-screen">
+        <HeroBackdrop />
 
-  <p className="text-indigo-200 text-xl md:text-2xl lg:text-3xl mb-10 font-medium leading-snug max-w-2xl">
-    Support your favorite Chessed organizations. Get a <strong className="text-white font-semibold">real shot at winning up to <span className="text-amber-400">$100,000</span></strong>. Every month.
-  </p>
+        <div className="relative z-10 flex-1 flex items-center">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 md:pt-36 md:pb-14">
+            <div className="max-w-2xl animate-hero">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9] uppercase">
+                Give Together.<br/>
+                <span className="text-amber-400 italic">Amplify Your Impact.</span>
+              </h1>
 
-  <div className="flex flex-col sm:flex-row gap-4 text-left">
-    <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'smooth'}); }} className="w-full md:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
-      Join the Circle
-    </button>
-  </div>
-</div>
+              <p className="text-slate-200 text-xl md:text-2xl lg:text-3xl mb-10 font-medium leading-snug max-w-xl">
+                Support your favorite Chessed organizations. Get a <strong className="text-white font-semibold">real shot at winning up to <span className="text-amber-400">$100,000</span></strong>. Every month.
+              </p>
 
-            <div className="lg:col-span-6 relative mt-8 md:mt-0 animate-hero flex justify-center">
-              <div className="aspect-[4/3] md:aspect-video w-full rounded-2xl overflow-hidden bg-indigo-900 relative shadow-soft-xl ring-1 ring-white/10">
-                <iframe 
-                  className="absolute top-0 left-0 w-full h-full"
-                  src="https://www.youtube-nocookie.com/embed/T6RxmZmNZME?rel=0&modestbranding=1" 
-                  title="Amplify Promotional Video" 
-                  frameBorder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                  allowFullScreen
-                ></iframe>
+              <div>
+                <button onClick={() => { const el = document.getElementById('tiers'); if(el) window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - navOffset(), behavior: 'smooth'}); }} className="w-full sm:w-auto px-10 py-4 bg-amber-400 text-slate-900 rounded-lg font-bold text-sm md:text-base hover:bg-amber-300 transition-all uppercase tracking-widest shadow-amber-glow">
+                  Join the Circle
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Stats Ribbon */}
-        <div className="w-full flex flex-col mt-auto relative z-10 reveal">
-          <div className="w-full h-12 md:h-16 bg-gradient-to-b from-indigo-950 to-slate-700"></div>
-          <div className="w-full bg-slate-700 border-b border-slate-600 pb-8 md:pb-10 pt-2">
-            <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-6 md:gap-x-8 items-center justify-items-center">
-              {[
-                { top: "Over", num: "$200K", label: "Total Monthly Prizes", colorClass: "text-amber-400", labelClass: "text-amber-400/90" },
-                { top: "Projected", num: "$5M+", label: "Yearly To Charity", colorClass: "text-white", labelClass: "text-slate-300" },
-                { top: "Up to", num: "1/25", label: "Winning Odds", colorClass: "text-white md:text-amber-400", labelClass: "text-slate-300 md:text-amber-400/90" },
-                { top: "Goal", num: "$400K+", label: "Monthly Grants", colorClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/90 md:text-slate-300" }
-              ].map((stat, i) => (
-                <div key={i} className="flex flex-col items-center text-center w-full">
-                  <p className={`text-xs font-bold uppercase tracking-widest mb-1 min-h-[0.875rem] leading-none ${stat.labelClass}`}>{stat.top}</p>
-                  <p className={`text-3xl sm:text-4xl md:text-5xl font-black tabular-nums leading-none tracking-tighter ${stat.colorClass}`}>{stat.num}</p>
-                  <p className={`text-xs font-bold uppercase tracking-widest mt-2 md:mt-3 ${stat.labelClass}`}>{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+        {/* Stats — the qualifiers (Over / Projected / Up to / Goal) stay: this
+            is a sweepstakes, and "1/25 Winning Odds" or "$5M+ Yearly To
+            Charity" without them reads as a promise we can't make yet. */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12">
+          <ul className="animate-hero-late grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-4 rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-md px-4 py-6 md:px-8 md:py-7 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]">
+            {/* Amber alternates across the row; in the 2x2 phone grid the
+                bottom pair swaps so it runs diagonally instead of in a column. */}
+            {[
+              { top: "Over", num: "$200K", label: "Total Monthly Prizes", numClass: "text-amber-400", labelClass: "text-amber-400/80" },
+              { top: "Projected", num: "$5M+", label: "Yearly To Charity", numClass: "text-white", labelClass: "text-indigo-200" },
+              { top: "Up to", num: "1/25", label: "Winning Odds", numClass: "text-white md:text-amber-400", labelClass: "text-indigo-200 md:text-amber-400/80" },
+              { top: "Goal", num: "$400K+", label: "Monthly Grants", numClass: "text-amber-400 md:text-white", labelClass: "text-amber-400/80 md:text-indigo-200" },
+            ].map((stat) => (
+              <li key={stat.label} className="flex flex-col items-center text-center">
+                <span className={`text-[0.625rem] md:text-[0.6875rem] font-bold uppercase tracking-widest leading-none mb-1.5 ${stat.labelClass}`}>{stat.top}</span>
+                <span className={`text-3xl md:text-4xl font-black tabular-nums leading-none tracking-tighter ${stat.numClass}`}>{stat.num}</span>
+                <span className={`text-[0.625rem] md:text-xs font-bold uppercase tracking-widest leading-tight mt-2 ${stat.labelClass}`}>{stat.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </header>
 
