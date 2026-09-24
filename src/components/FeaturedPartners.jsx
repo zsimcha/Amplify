@@ -23,20 +23,10 @@ const VerifiedMark = ({ className = '' }) => (
 
 const CollectiveMark = ({ className = '' }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
-    {/* many givers pooling toward one shared goal */}
-    <g stroke="currentColor" strokeWidth="1" opacity="0.4">
-      <line x1="12" y1="12" x2="12" y2="4.2" />
-      <line x1="12" y1="12" x2="19.4" y2="8.6" />
-      <line x1="12" y1="12" x2="17.3" y2="18.4" />
-      <line x1="12" y1="12" x2="6.7" y2="18.4" />
-      <line x1="12" y1="12" x2="4.6" y2="8.6" />
-    </g>
-    <circle cx="12" cy="12" r="3" fill="currentColor" />
-    <circle cx="12" cy="4.2" r="1.5" fill="currentColor" opacity="0.85" />
-    <circle cx="19.4" cy="8.6" r="1.5" fill="currentColor" opacity="0.85" />
-    <circle cx="17.3" cy="18.4" r="1.5" fill="currentColor" opacity="0.85" />
-    <circle cx="6.7" cy="18.4" r="1.5" fill="currentColor" opacity="0.85" />
-    <circle cx="4.6" cy="8.6" r="1.5" fill="currentColor" opacity="0.85" />
+    {/* ascending bars — growth toward the monthly goal */}
+    <rect x="4" y="14" width="3.4" height="7" rx="0.6" fill="currentColor" opacity="0.55" />
+    <rect x="10.3" y="9.5" width="3.4" height="11.5" rx="0.6" fill="currentColor" opacity="0.8" />
+    <rect x="16.6" y="4.5" width="3.4" height="16.5" rx="0.6" fill="currentColor" />
   </svg>
 );
 
