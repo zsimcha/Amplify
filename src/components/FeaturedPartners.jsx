@@ -52,6 +52,7 @@ const SHOWCASE = [
   { name: 'Camp HASC', src: '/partners/photos/camp-hasc.jpg' },
   { name: 'Zaka', src: '/partners/photos/zaka.jpg' },
   { name: 'Bonei Olam', src: '/partners/photos/bonei-olam.jpg' },
+  { name: 'Misaskim', src: '/partners/photos/misaskim.jpg' },
 ];
 
 // One logo in the marquee, sitting directly on the white band. The box hugs the
