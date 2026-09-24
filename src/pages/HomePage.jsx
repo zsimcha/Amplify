@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Check, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
+import { Check, HelpCircle, ChevronRight, TrendingUp, Gift, ChevronUp, ChevronDown } from 'lucide-react';
 import MainNavbar from '../components/layout/MainNavbar';
 import Footer from '../components/layout/Footer';
 import FeaturedPartners from '../components/FeaturedPartners';
 import HeroBackdrop from '../components/HeroBackdrop';
-import CornerConstellation from '../components/CornerConstellation';
 import ScrollHint from '../components/ScrollHint';
 
 // Anchor-scroll offset tied to the root font size: the navbar is rem-sized, so
@@ -232,92 +231,7 @@ const HomePage = ({ appData }) => {
   </div>
 </section>
 
-      {/* MANIFESTO — CornerConstellation replaces hand-placed dots and eyebrow row */}
-      <section className="py-16 md:py-24 bg-indigo-950 px-6 md:px-8 relative overflow-hidden">
-        {/* Subtle ambient gradient */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse at 85% 15%, rgba(251, 191, 36, 0.09), transparent 55%)'
-        }}></div>
-
-        {/* Primary constellation — rigid grid, top-right */}
-        <CornerConstellation
-          corner="top-right"
-          width={420}
-          height={320}
-          density={18}
-          maxR={2.6}
-          jitter={0}
-          className="absolute -top-8 -right-8 w-[18.75rem] md:w-[32.5rem] h-[15rem] md:h-[25rem] pointer-events-none"
-        />
-
-        {/* Faint secondary — rigid grid, bottom-left for asymmetry */}
-        <CornerConstellation
-          corner="bottom-left"
-          width={240}
-          height={180}
-          density={32}
-          maxR={1.8}
-          seed={11}
-          jitter={0}
-          className="absolute -bottom-6 -left-6 w-[200px] h-[160px] pointer-events-none opacity-30"
-        />
-
-        <div className="max-w-4xl mx-auto relative z-10">
-          {/* Headline — starts cold, no eyebrow */}
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1] mb-6 md:mb-10">
-            <span className="text-white">People give.</span><br/>
-            <span className="text-indigo-300 italic font-normal">That's not the problem.</span>
-          </h2>
-
-          {/* Connector */}
-          <p className="text-xl md:text-2xl lg:text-3xl text-indigo-100 font-medium leading-[1.25] mb-6 md:mb-10 max-w-3xl">
-            What changes things is showing up the same way, every month.{' '}
-            <span className="text-white font-semibold italic">Together.</span>
-          </p>
-
-          {/* Closing beats */}
-          <div className="space-y-2 md:space-y-3">
-            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              One mission.
-            </p>
-            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              Different causes.
-            </p>
-            <p className="text-2xl md:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-[1.1]">
-              Up to <span className="text-amber-400 font-black tabular-nums">$100,000</span> as a thank you.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Rabbinic Endorsement — compact bar */}
-      <section className="py-12 md:py-20 bg-white border-t border-slate-100 px-4">
-        <div className="max-w-5xl mx-auto reveal">
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl md:rounded-3xl p-6 md:p-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 shadow-soft">
-            <div className="shrink-0 flex flex-row md:flex-col items-center gap-4 md:gap-3 md:w-32">
-              <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-indigo-950 flex items-center justify-center shadow-md shrink-0">
-                <ShieldCheck className="w-6 h-6 md:w-7 md:h-7 text-amber-400" strokeWidth={2.25} />
-              </div>
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 leading-tight md:text-center">
-                Rabbinic Panel
-              </p>
-            </div>
-
-            <div className="flex-1">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1] mb-2 md:mb-3">
-                Approved by leading <span className="italic">Poskim</span>.
-              </h2>
-              <p className="text-sm md:text-base text-slate-600 font-medium leading-relaxed">Our Rabbinic Panel has formally approved the model, including the use of Ma'aser, prize allocation, and charitable disbursement.</p>
-            </div>
-
-            <Link to="/about#rabbinic-panel" className="shrink-0 inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition-colors uppercase tracking-widest text-xs md:text-sm self-start md:self-center whitespace-nowrap">
-              See the panel <ChevronRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Partners — crossfade photo banner + auto-scrolling logo marquee */}
+      {/* Featured Partners — copy + promo video, logo marquee, Rabbinic Panel pill */}
       <FeaturedPartners />
 
       {/* Tiers Section */}
