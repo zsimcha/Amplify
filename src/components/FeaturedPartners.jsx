@@ -49,31 +49,31 @@ const RABBI_PHOTOS = ['/rabbi-1.png', '/rabbi-2.png', '/rabbi-3.png'];
 
 // Phone sizes are set so the label breaks into two lines ("Reviewed &
 // approved by / our Rabbinic Panel") down to 360px wide rather than three.
-// The md size (56px portraits, 18px text) holds from tablet through desktop
-// — no lg: bump — to land at roughly the same scale as the logo marquee
-// above it (its logos are also capped at 56px tall from md up).
+// md (tablet) matches the logo marquee's ~56px scale; lg (1024px+) steps up
+// a size from there — noticeably bigger than the marquee, but well short of
+// the ~112px/36px it was at when "roughly doubled" turned out too big.
 const RabbinicPill = () => (
-  <div className="mt-10 md:mt-14 flex justify-center reveal">
+  <div className="mt-10 md:mt-14 lg:mt-16 flex justify-center reveal">
     <Link
       to="/about#rabbinic-panel"
-      className="inline-flex items-center gap-2.5 md:gap-4 rounded-full border border-white/15 bg-white/[0.06] pl-2 pr-4 py-2 md:pl-2.5 md:pr-7 md:py-2.5 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      className="inline-flex items-center gap-2.5 md:gap-4 lg:gap-5 rounded-full border border-white/15 bg-white/[0.06] pl-2 pr-4 py-2 md:pl-2.5 md:pr-7 md:py-2.5 lg:pl-3 lg:pr-9 lg:py-3 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
     >
-      <span className="flex -space-x-3.5 md:-space-x-3 shrink-0">
+      <span className="flex -space-x-3.5 md:-space-x-3 lg:-space-x-4 shrink-0">
         {RABBI_PHOTOS.map((src, i) => (
           <img
             key={src}
             src={src}
             alt=""
             aria-hidden
-            className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover object-top grayscale bg-slate-800 border-2 border-slate-900"
+            className="w-10 h-10 md:w-14 md:h-14 lg:w-20 lg:h-20 rounded-full object-cover object-top grayscale bg-slate-800 border-2 border-slate-900"
             style={{ zIndex: RABBI_PHOTOS.length - i }}
           />
         ))}
       </span>
-      <span className="text-sm md:text-lg font-bold md:tracking-wide text-indigo-50 leading-snug">
+      <span className="text-sm md:text-lg lg:text-2xl font-bold md:tracking-wide text-indigo-50 leading-snug">
         Reviewed &amp; approved by our Rabbinic Panel
       </span>
-      <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-amber-400 shrink-0" />
+      <ChevronRight className="w-4 h-4 md:w-5 md:h-5 lg:w-7 lg:h-7 text-amber-400 shrink-0" />
     </Link>
   </div>
 );
