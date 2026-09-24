@@ -5,12 +5,21 @@ import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 // object-position. On phones and portrait tablets the frame keeps only about
 // half of each landscape photo's width, so the x value picks which half —
 // it has to land on the people (for Aish, the rabbi and the table).
+//
+// bnai-akiva.jpg is the one portrait source in the set (1335x2000, everyone
+// else is landscape). object-cover on a portrait image in a landscape hero is
+// always width-matched, so x never crops anything — only y matters, and it's
+// cropped much more tightly on desktop (roughly the middle 30-40% of the
+// photo's height) than on phones, where the hero band's own aspect is close
+// enough to the photo's that nearly all of it shows. 55% keeps both guys'
+// caps and the full flag emblem in frame at both extremes; tried 35-65%.
 const HERO_PHOTOS = [
   { src: '/partners/photos/chai-lifeline.jpg', position: '42% 35%' },
   { src: '/partners/photos/chabad-on-campus.jpg', position: '80% 35%' },
   { src: '/partners/photos/zaka.jpg', position: '50% 45%' },
   { src: '/partners/photos/camp-hasc.jpg', position: '55% 35%' },
   { src: '/partners/photos/misaskim.jpg', position: '50% 35%' },
+  { src: '/partners/photos/bnai-akiva.jpg', position: '50% 55%' },
   { src: '/partners/photos/fidf.jpg', position: '75% 35%' },
   { src: '/partners/photos/aish.jpg', position: '92% 40%' },
 ];
