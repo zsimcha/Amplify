@@ -32,6 +32,12 @@ body {
 .animate-hero > *:nth-child(2) { animation-delay: 0.2s; }
 .animate-hero > *:nth-child(3) { animation-delay: 0.3s; }
 .animate-hero > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-hero-late {
+  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero > *, .animate-hero-late { animation: none; }
+}
 
 .reveal {
   opacity: 0;
@@ -62,6 +68,58 @@ body {
 .bg-hatch {
   background-image: linear-gradient(135deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 8px 8px;
+}
+
+/* Homepage hero: brand duotone over the rotating cause photos (HeroBackdrop).
+   The photo goes grayscale and, via the luminosity blend, takes its hue from
+   the indigo-950 ground behind it. The grade recolors it toward amber on the
+   right (color blend). The scrim is plain darkening for legibility. */
+.hero-photo {
+  filter: grayscale(1) contrast(1.15);
+  mix-blend-mode: luminosity;
+}
+.hero-grade {
+  background: linear-gradient(115deg, rgb(30 27 75) 0%, rgb(30 27 75 / 0.55) 45%, rgb(217 119 6 / 0.35) 100%);
+  mix-blend-mode: color;
+}
+/* Phones: a landscape photo stretched over a tall portrait hero keeps under a
+   quarter of its width. So below md the photo is a band across the top — a
+   little taller than wide, which keeps about half the frame — fading into the
+   indigo ground. The headline sits on the fade and the rest of the copy on
+   solid ground below. --hero-band-h is also what places the headline; the 75vh
+   cap stops the band swallowing a landscape phone's whole screen. */
+.hero {
+  --hero-band-h: min(118vw, 36rem, 75vh);
+}
+.hero-backdrop {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--hero-band-h);
+}
+/* The top band is heavier than on desktop: there's no left-side darkening
+   under the logo here, and several photos have a bright sky right behind it. */
+.hero-scrim {
+  background:
+    linear-gradient(180deg, rgb(15 15 35 / 0.85) 0%, rgb(15 15 35 / 0.6) 4.5rem, rgb(15 15 35 / 0) 8.5rem),
+    linear-gradient(180deg, rgb(30 27 75 / 0) 38%, rgb(30 27 75 / 0.82) 74%, rgb(30 27 75) 100%);
+}
+@media (min-width: 768px) {
+  .hero-backdrop {
+    inset: 0;
+    height: auto;
+  }
+}
+/* Wider: dark on the copy side, opening up toward the right. The stops are
+   pinned to the centered content column with max(), so on an ultrawide screen
+   the copy — which sits well right of the viewport's left 42% — stays on the
+   dark part. The top band keeps the transparent nav readable. */
+@media (min-width: 768px) {
+  .hero-scrim {
+    background:
+      linear-gradient(180deg, rgb(15 15 35 / 0.6) 0%, rgb(15 15 35 / 0) 10rem),
+      linear-gradient(to top, rgb(15 15 35 / 0.55) 0%, rgb(15 15 35 / 0) 14rem),
+      linear-gradient(100deg, rgb(15 15 35 / 0.94) 0%, rgb(15 15 35 / 0.66) max(42%, calc(50% + 2rem)), rgb(15 15 35 / 0.22) max(75%, calc(50% + 26rem)));
+  }
 }
 
 /* Infinite logo marquee. The track holds three copies of the partner list and

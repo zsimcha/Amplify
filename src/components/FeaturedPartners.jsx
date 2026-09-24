@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { partners as PARTNERS, partnerLogo } from '../data/partners';
 import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
-import CornerConstellation from './CornerConstellation';
 
 // Bespoke marks (hand-drawn SVG instead of stock icons) so the trust badges
 // feel unique to Amplify. Swap these paths to restyle.
@@ -41,20 +40,6 @@ const CollectiveMark = ({ className = '' }) => (
   </svg>
 );
 
-// Rotating showcase photos for the crossfade banner. Drop org photos into
-// /public/partners/photos/ and list them here; the banner preloads every entry
-// and quietly skips any that fail, so it's safe to list images before upload.
-const SHOWCASE = [
-  { name: 'Chai Lifeline', src: '/partners/photos/chai-lifeline.jpg' },
-  { name: 'FIDF', src: '/partners/photos/fidf.jpg' },
-  { name: 'Aish', src: '/partners/photos/aish.jpg' },
-  { name: 'Chabad on Campus', src: '/partners/photos/chabad-on-campus.jpg' },
-  { name: 'Camp HASC', src: '/partners/photos/camp-hasc.jpg' },
-  { name: 'Zaka', src: '/partners/photos/zaka.jpg' },
-  { name: 'Bonei Olam', src: '/partners/photos/bonei-olam.jpg' },
-  { name: 'Misaskim', src: '/partners/photos/misaskim.jpg' },
-];
-
 // One logo in the marquee, sitting directly on the white band. The box hugs the
 // logo (see .logo-slot) and the spacing lives in this wrapper's padding, so the
 // gap between every pair of logos is the same 2x padding regardless of whether
@@ -86,38 +71,6 @@ const PartnerLogo = ({ partner }) => {
 };
 
 const FeaturedPartners = () => {
-  // Preload the showcase photos and keep only the indices that actually load,
-  // so a not-yet-uploaded photo never leaves a blank frame in the rotation.
-  const [loaded, setLoaded] = useState([]);
-  const [idx, setIdx] = useState(0);
-
-  useEffect(() => {
-    // During the blackout, don't even request the photos — the filenames are
-    // org-identifying and would show up in network logs.
-    if (HIDE_PARTNER_IDENTITIES) return;
-    let active = true;
-    const ok = [];
-    let pending = SHOWCASE.length;
-    const finish = () => {
-      if (!active) return;
-      ok.sort((a, b) => a - b);
-      setLoaded(ok);
-    };
-    SHOWCASE.forEach((item, i) => {
-      const img = new Image();
-      img.onload = () => { ok.push(i); if (--pending === 0) finish(); };
-      img.onerror = () => { if (--pending === 0) finish(); };
-      img.src = item.src;
-    });
-    return () => { active = false; };
-  }, []);
-
-  useEffect(() => {
-    if (loaded.length <= 1) return;
-    const t = setInterval(() => setIdx((p) => (p + 1) % loaded.length), 3000);
-    return () => clearInterval(t);
-  }, [loaded]);
-
   return (
     <section id="causes" className="py-20 md:py-28 bg-slate-900 px-4 text-white overflow-hidden">
       <div className="max-w-6xl mx-auto reveal">
@@ -156,37 +109,19 @@ const FeaturedPartners = () => {
             </Link>
           </div>
 
-          {/* Crossfade photo — org photos are withheld during the blackout */}
-          <div className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-soft-xl border border-slate-700 min-h-[18.75rem] md:min-h-[28.125rem]">
-            {!HIDE_PARTNER_IDENTITIES && loaded.length > 0 ? (
-              loaded.map((si, pos) => (
-                <img
-                  key={si}
-                  src={SHOWCASE[si].src}
-                  alt={SHOWCASE[si].name}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${pos === idx ? 'opacity-80' : 'opacity-0'}`}
-                />
-              ))
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 to-slate-900"></div>
-            )}
-            {HIDE_PARTNER_IDENTITIES && (
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <CornerConstellation
-                  corner="top-right"
-                  width={360}
-                  height={280}
-                  density={18}
-                  maxR={2.6}
-                  jitter={0}
-                  className="absolute inset-0 w-full h-full pointer-events-none opacity-40"
-                />
-                <p className="relative text-center text-xs md:text-sm font-bold uppercase tracking-[0.35em] text-indigo-300/80">
-                  Partners<br />announced soon
-                </p>
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent"></div>
+          {/* Promo video — moved here from the hero when the cause photos took
+              its place. Lazy: it's well below the fold and YouTube's player is
+              heavy. Not partner-identifying, so it shows during the blackout. */}
+          <div className="relative aspect-video w-full overflow-hidden rounded-2xl md:rounded-3xl bg-slate-800 shadow-soft-xl ring-1 ring-white/10">
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src="https://www.youtube-nocookie.com/embed/T6RxmZmNZME?rel=0&modestbranding=1"
+              title="Amplify Promotional Video"
+              loading="lazy"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </div>
