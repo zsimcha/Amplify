@@ -115,18 +115,18 @@ const HomePage = ({ appData }) => {
 
       {/* HERO — full-bleed rotating cause photos in the brand duotone, copy on
           the dark side, stats on a glass card along the bottom. */}
-      <header className="relative isolate overflow-hidden bg-indigo-950 flex flex-col md:min-h-screen">
+      <header className="hero relative isolate overflow-hidden bg-indigo-950 flex flex-col md:min-h-screen">
         <HeroBackdrop />
 
         <div className="relative z-10 flex-1 flex items-center">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 md:pt-36 md:pb-14">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(var(--hero-band-h)_-_8.5rem)] pb-10 md:pt-36 md:pb-14 short:pt-28 short:pb-8">
             <div className="max-w-2xl animate-hero">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter mb-6 leading-[0.9] uppercase">
+              <h1 className="text-[clamp(2.25rem,11.2vw,3rem)] md:text-6xl lg:text-7xl short:text-6xl font-black text-white tracking-tighter mb-5 md:mb-6 leading-[0.9] uppercase">
                 Give Together.<br/>
                 <span className="text-amber-400 italic">Amplify Your Impact.</span>
               </h1>
 
-              <p className="text-slate-200 text-xl md:text-2xl lg:text-3xl mb-10 font-medium leading-snug max-w-xl">
+              <p className="text-slate-200 text-lg md:text-2xl lg:text-3xl short:text-2xl mb-8 md:mb-10 short:mb-7 font-medium leading-snug max-w-xl">
                 Support your favorite Chessed organizations. Get a <strong className="text-white font-semibold">real shot at winning up to <span className="text-amber-400">$100,000</span></strong>. Every month.
               </p>
 
@@ -142,8 +142,8 @@ const HomePage = ({ appData }) => {
         {/* Stats — the qualifiers (Over / Projected / Up to / Goal) stay: this
             is a sweepstakes, and "1/25 Winning Odds" or "$5M+ Yearly To
             Charity" without them reads as a promise we can't make yet. */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12">
-          <ul className="animate-hero-late grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-4 rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-md px-4 py-6 md:px-8 md:py-7 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12 short:pb-6">
+          <ul className="animate-hero-late grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-4 rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-md px-4 py-6 md:px-8 md:py-7 short:py-5 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]">
             {/* Amber alternates across the row; in the 2x2 phone grid the
                 bottom pair swaps so it runs diagonally instead of in a column. */}
             {[

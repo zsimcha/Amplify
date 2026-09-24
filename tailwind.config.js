@@ -6,6 +6,14 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        // Desktop-width but short: most laptops once browser chrome is taken
+        // off the height. Used to tighten the hero so its stats stay on screen.
+        // From 1536px the root font scales with width (see index.css), so the
+        // hero's height grows with width too; there, "short" is an aspect
+        // ratio — e.g. a 1080p monitor's 1920x960 browser viewport.
+        short: { raw: '(min-width: 768px) and (max-height: 820px), (min-width: 1536px) and (min-aspect-ratio: 19/10)' },
+      },
       fontFamily: {
         sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },

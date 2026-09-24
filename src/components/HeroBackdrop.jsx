@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 
-// Cause photos behind the homepage hero, in rotation order. They're shown
-// full-bleed, so a photo has to survive being stretched across a desktop
-// screen. Deliberately left out: misaskim.jpg (550x250 — too soft at this
-// size) and zaka.jpg (its censor mosaic over the recovery scene is large and
-// conspicuous at full-bleed). `position` is the object-position: on phones the
-// portrait crop keeps only a narrow vertical slice of each landscape photo, so
-// it has to land on people.
+// Cause photos behind the homepage hero, in rotation order. `position` is the
+// object-position. On phones and portrait tablets the frame keeps only about
+// half of each landscape photo's width, so the x value picks which half —
+// it has to land on the people (for Aish, the rabbi and the table).
 const HERO_PHOTOS = [
   { src: '/partners/photos/chai-lifeline.jpg', position: '42% 35%' },
-  { src: '/partners/photos/chabad-on-campus.jpg', position: '70% 35%' },
+  { src: '/partners/photos/chabad-on-campus.jpg', position: '80% 35%' },
+  { src: '/partners/photos/zaka.jpg', position: '50% 45%' },
   { src: '/partners/photos/camp-hasc.jpg', position: '55% 35%' },
-  { src: '/partners/photos/fidf.jpg', position: '74% 35%' },
-  { src: '/partners/photos/aish.jpg', position: '68% 40%' },
+  { src: '/partners/photos/misaskim.jpg', position: '50% 35%' },
+  { src: '/partners/photos/fidf.jpg', position: '75% 35%' },
+  { src: '/partners/photos/aish.jpg', position: '92% 40%' },
 ];
 
 const ROTATE_MS = 3400;
@@ -21,7 +20,8 @@ const ROTATE_MS = 3400;
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// Full-bleed layers only — the caller supplies the positioned, isolated parent.
+// Full-bleed layers only (a top band on phones — see .hero-backdrop). The
+// caller supplies the positioned, isolated parent with the .hero class.
 // The photos go grayscale and take their tint from the indigo behind them; the
 // grade then pushes the right side toward amber; the scrim keeps the copy
 // legible. See .hero-photo / .hero-grade / .hero-scrim in index.css.
@@ -59,7 +59,7 @@ const HeroBackdrop = () => {
   }, [loaded, stillOnly]);
 
   return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden">
+    <div aria-hidden className="hero-backdrop overflow-hidden">
       {/* The first photo is fetched straight away; the rest wait until it has
           settled so they never compete with it for bandwidth, and aren't
           fetched at all under reduced motion, where only the first shows.

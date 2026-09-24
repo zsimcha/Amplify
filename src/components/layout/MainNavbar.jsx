@@ -53,7 +53,7 @@ const MainNavbar = () => {
             </span>
           </Link>
           
-          <div className={`hidden md:flex items-center gap-7 lg:gap-8 text-[0.6875rem] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
+          <div className={`hidden lg:flex items-center gap-8 text-[0.6875rem] font-bold uppercase tracking-widest text-left transition-colors ${isScrolled ? 'text-slate-500' : 'text-indigo-200'}`}>
             <NavLink to="/how-it-works" className={desktopNavClass}>How it works</NavLink>
             <NavLink to="/about" className={desktopNavClass}>About</NavLink>
 	    <NavLink to="/causes" className={desktopNavClass}>Causes</NavLink>
@@ -61,11 +61,11 @@ const MainNavbar = () => {
             <NavLink to="/faq" className={desktopNavClass}>FAQ</NavLink>
           </div>
           
-          <button className={`md:hidden p-2 transition-colors ${isScrolled ? 'text-indigo-900' : 'text-white'}`} onClick={() => setIsMenuOpen(true)} aria-label="Open Menu">
+          <button className={`lg:hidden p-2 transition-colors ${isScrolled ? 'text-indigo-900' : 'text-white'}`} onClick={() => setIsMenuOpen(true)} aria-label="Open Menu">
             <Menu size={24} />
           </button>
           
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <Link to="/circles" className="flex items-center justify-center bg-amber-400 text-slate-900 px-6 py-2.5 rounded-lg text-xs font-bold hover:bg-amber-300 transition-all uppercase tracking-widest shadow-lg shadow-amber-400/20">
               Join the Circle
             </Link>
@@ -83,7 +83,7 @@ const MainNavbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog">
+        <div className="fixed inset-0 z-50 lg:hidden bg-white animate-in slide-in-from-right duration-300 flex flex-col" role="dialog">
             <div className="p-4 flex justify-between items-center border-b border-slate-100 shrink-0 text-left">
                 <span className="text-xl font-black tracking-tighter text-indigo-950 uppercase">Amplify</span>
                 <button onClick={() => setIsMenuOpen(false)} className="text-indigo-950 p-2"><X size={28}/></button>

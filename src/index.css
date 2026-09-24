@@ -82,10 +82,32 @@ body {
   background: linear-gradient(115deg, rgb(30 27 75) 0%, rgb(30 27 75 / 0.55) 45%, rgb(217 119 6 / 0.35) 100%);
   mix-blend-mode: color;
 }
-/* Phones: the copy runs the full width, so darken evenly rather than from the
-   left, a little heavier at the top (nav) and bottom (stats). */
+/* Phones: a landscape photo stretched over a tall portrait hero keeps under a
+   quarter of its width. So below md the photo is a band across the top — a
+   little taller than wide, which keeps about half the frame — fading into the
+   indigo ground. The headline sits on the fade and the rest of the copy on
+   solid ground below. --hero-band-h is also what places the headline; the 75vh
+   cap stops the band swallowing a landscape phone's whole screen. */
+.hero {
+  --hero-band-h: min(118vw, 36rem, 75vh);
+}
+.hero-backdrop {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--hero-band-h);
+}
+/* The top band is heavier than on desktop: there's no left-side darkening
+   under the logo here, and several photos have a bright sky right behind it. */
 .hero-scrim {
-  background: linear-gradient(180deg, rgb(15 15 35 / 0.82) 0%, rgb(15 15 35 / 0.66) 35%, rgb(15 15 35 / 0.72) 70%, rgb(15 15 35 / 0.9) 100%);
+  background:
+    linear-gradient(180deg, rgb(15 15 35 / 0.85) 0%, rgb(15 15 35 / 0.6) 4.5rem, rgb(15 15 35 / 0) 8.5rem),
+    linear-gradient(180deg, rgb(30 27 75 / 0) 38%, rgb(30 27 75 / 0.82) 74%, rgb(30 27 75) 100%);
+}
+@media (min-width: 768px) {
+  .hero-backdrop {
+    inset: 0;
+    height: auto;
+  }
 }
 /* Wider: dark on the copy side, opening up toward the right. The stops are
    pinned to the centered content column with max(), so on an ultrawide screen
