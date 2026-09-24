@@ -143,7 +143,13 @@ const HomePage = ({ appData }) => {
             is a sweepstakes, and "1/25 Winning Odds" or "$5M+ Yearly To
             Charity" without them reads as a promise we can't make yet. */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8 md:pb-12 short:pb-6">
-          <ul className="animate-hero-late grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-4 rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-md px-4 py-6 md:px-8 md:py-7 short:py-5 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]">
+          {/* Liquid-glass on phones: lighter tint and an inset top highlight for
+              the catch-the-light edge, instead of the flat near-opaque panel.
+              The blur/saturate are along for consistency — the card sits below
+              the capped photo band, over flat indigo, so there's no texture
+              behind it to actually reveal. Desktop reverts to the original,
+              more opaque card. */}
+          <ul className="animate-hero-late grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-4 rounded-2xl border border-white/25 md:border-white/15 bg-white/10 md:bg-slate-950/70 backdrop-blur-xl backdrop-saturate-150 md:backdrop-blur-md md:backdrop-saturate-100 px-4 py-6 md:px-8 md:py-7 short:py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.3),0_24px_60px_-12px_rgba(0,0,0,0.55)] md:shadow-[0_24px_60px_-12px_rgba(0,0,0,0.55)]">
             {/* Amber alternates across the row; in the 2x2 phone grid the
                 bottom pair swaps so it runs diagonally instead of in a column. */}
             {[
