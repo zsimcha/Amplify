@@ -150,11 +150,19 @@ const GrantPage = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 reveal">
-              {partners.map((p) => (
-                <PartnerTile key={p.slug} partner={p} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5 reveal">
+                {partners.map((p) => (
+                  <PartnerTile key={p.slug} partner={p} />
+                ))}
+              </div>
+
+              <p className="mt-10 md:mt-14 text-center text-sm text-slate-500 font-medium leading-relaxed max-w-xl mx-auto reveal">
+                Want to support an organization that's not listed? Members can always request to allocate
+                their funds to other Chessed organizations from their{' '}
+                <Link to="/account" className="text-indigo-600 font-bold hover:underline">account page</Link>.
+              </p>
+            </>
           )}
         </div>
       </section>

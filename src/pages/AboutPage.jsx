@@ -141,7 +141,7 @@ const AboutPage = () => {
                 {
                   icon: <Check size={24} className="text-indigo-600" />,
                   title: "Effortless Giving",
-                  body: "Your membership puts your giving on autopilot, ensuring you make a powerful impact every month. No reminders, no forgetting."
+                  body: "Your membership puts your giving on autopilot, ensuring you never forget to make a powerful impact every month."
                 },
                 {
                   icon: <Gift size={24} className="text-amber-500" />,
