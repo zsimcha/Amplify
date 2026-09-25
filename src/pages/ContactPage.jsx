@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SecondaryNavbar from '../components/layout/SecondaryNavbar';
-import Footer from '../components/layout/Footer';
+import PageLayout from '../components/layout/PageLayout';
 import { Mail, MessageSquare, Send, AlertCircle, Loader2 } from 'lucide-react';
 
 // SECURITY FIX: Pulls securely from environment variables. No fallback exposed to the public.
@@ -64,20 +63,11 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
-      <SecondaryNavbar />
-
-      <div className="flex-grow max-w-3xl mx-auto px-4 py-16 md:py-24 w-full">
-        {/* Friendly Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-black text-indigo-950 uppercase italic tracking-tighter mb-4">
-            Let's Chat
-          </h1>
-          <p className="text-lg text-slate-600 font-medium px-4">
-            Have a question about how the circles work, need a hand with your membership, or just want to say hi? We'd love to hear from you.
-          </p>
-        </div>
-
+    <PageLayout
+      title="Let's Chat"
+      intro="Have a question about how the circles work, need a hand with your membership, or just want to say hi? We'd love to hear from you."
+    >
+      <div className="max-w-3xl mx-auto px-4 py-16 md:py-24 w-full">
         <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-slate-100">
           
           {/* Direct Email Callout */}
@@ -185,9 +175,7 @@ const ContactPage = () => {
           )}
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

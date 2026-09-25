@@ -1,0 +1,25 @@
+insert into public.communities (name, members, monthly, silver, gold, diamond)
+values
+  ('Bergen County', 0, 0, 0, 0, 0),
+  ('Five Towns', 0, 0, 0, 0, 0),
+  ('Los Angeles', 0, 0, 0, 0, 0),
+  ('Miami', 0, 0, 0, 0, 0),
+  ('Lakewood', 0, 0, 0, 0, 0),
+  ('Baltimore', 0, 0, 0, 0, 0),
+  ('Silver Spring', 0, 0, 0, 0, 0),
+  ('Chicago', 0, 0, 0, 0, 0),
+  ('Boston', 0, 0, 0, 0, 0),
+  ('Monsey', 0, 0, 0, 0, 0),
+  ('Passaic', 0, 0, 0, 0, 0),
+  ('Brooklyn', 0, 0, 0, 0, 0),
+  ('Queens', 0, 0, 0, 0, 0),
+  ('Boca Raton', 0, 0, 0, 0, 0),
+  ('Dallas', 0, 0, 0, 0, 0),
+  ('Atlanta', 0, 0, 0, 0, 0),
+  ('Cleveland', 0, 0, 0, 0, 0),
+  ('Detroit', 0, 0, 0, 0, 0),
+  ('Philadelphia', 0, 0, 0, 0, 0),
+  ('Houston', 0, 0, 0, 0, 0),
+  ('Seattle', 0, 0, 0, 0, 0),
+  ('Denver', 0, 0, 0, 0, 0)
+on conflict (name) do nothing;;
