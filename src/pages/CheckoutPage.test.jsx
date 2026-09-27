@@ -62,7 +62,10 @@ async function fillRequiredFields({ includeAccountCredentials }) {
   await user.type(screen.getByLabelText('Phone'), '5551234567');
   await user.type(screen.getByLabelText('Address'), '123 Main St');
   await user.type(screen.getByLabelText('City'), 'New York');
-  await user.selectOptions(screen.getByLabelText('State'), 'NY');
+  // State is a custom listbox (not a native <select>), so it opens like any
+  // other button and the option is picked by its visible name.
+  await user.click(screen.getByLabelText('State'));
+  await user.click(screen.getByRole('option', { name: 'New York' }));
   await user.type(screen.getByLabelText('Zip Code'), '10001');
   // Date inputs don't reliably accept user.type() keystrokes across browsers
   // under jsdom; set the value directly like a native date picker would.

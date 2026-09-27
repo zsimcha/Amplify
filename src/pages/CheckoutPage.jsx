@@ -4,11 +4,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Shield, CheckCircle, ChevronDown, ChevronUp, Search, Plus, AlertCircle, Check, CreditCard, Landmark, Smartphone, Lock, Info, Eye, EyeOff } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
+import StateSelect from '../components/StateSelect';
 import { supabase } from '../lib/supabase';
 import { saveMyCauses, setPendingCauses } from '../lib/charities';
 import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { useAuth } from '../context/AuthContext';
-import { US_STATES, TIER_ACCENT } from '../lib/constants';
+import { TIER_ACCENT } from '../lib/constants';
 import { fieldClass } from '../lib/formStyles';
 import { computeCheckoutErrors } from '../lib/checkoutValidation';
 import CheckoutSummary from './checkout/CheckoutSummary';
@@ -566,40 +567,32 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-6 gap-4">
-                          <div className="col-span-6 md:col-span-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
                             <label htmlFor="city" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
                             <input id="city" name="address-level2" autoComplete="address-level2" type="text" maxLength={100} value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={fieldClass(!!validationErrors.city)} placeholder="New York" />
                             {validationErrors.city && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.city}</p>}
                           </div>
-                          <div className="col-span-3 md:col-span-1">
+                          <div>
                             <label htmlFor="state" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
-                            <div className="relative">
-                              <select id="state" name="address-level1" value={checkoutForm.state} onChange={e => setCheckoutForm({...checkoutForm, state: e.target.value})} className={fieldClass(!!validationErrors.state, 'appearance-none cursor-pointer')}>
-                                <option value="" disabled>--</option>
-                                {US_STATES.map(state => (
-                                  <option key={state} value={state}>{state}</option>
-                                ))}
-                              </select>
-                              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
-                            </div>
+                            <StateSelect id="state" value={checkoutForm.state} onChange={(state) => setCheckoutForm({...checkoutForm, state})} hasError={!!validationErrors.state} />
                             {validationErrors.state && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.state}</p>}
-                          </div>
-                          <div className="col-span-3 md:col-span-2">
-                            <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
-                            <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
-                            {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
+                            <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
+                            {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
+                          </div>
                           <div>
                             <label htmlFor="dateOfBirth" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Date of Birth</label>
                             <input id="dateOfBirth" name="bday" autoComplete="bday" type="date" max={TODAY_ISO} value={checkoutForm.dateOfBirth} onChange={e => setCheckoutForm({...checkoutForm, dateOfBirth: e.target.value})} className={fieldClass(!!validationErrors.dateOfBirth)} />
                             {validationErrors.dateOfBirth ? (
                               <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.dateOfBirth}</p>
                             ) : (
-                              <p className="text-[0.5625rem] text-slate-400 mt-1.5 font-medium">Must meet the minimum entry age for your state. See <Link to="/rules" className="underline">official rules</Link>.</p>
+                              <p className="text-[0.5625rem] text-slate-400 mt-1.5 font-medium">Minimum age varies by state.</p>
                             )}
                           </div>
                         </div>
@@ -684,25 +677,19 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               {validationErrors.billingLine1 && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingLine1}</p>}
                             </div>
                             <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className={fieldClass(false)} placeholder="Apt, suite, etc. (optional)" />
-                            <div className="grid grid-cols-6 gap-3">
-                              <div className="col-span-6 md:col-span-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div>
                                 <input id="billingCity" type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={fieldClass(!!validationErrors.billingCity)} placeholder="City" />
                                 {validationErrors.billingCity && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingCity}</p>}
                               </div>
-                              <div className="col-span-3 md:col-span-1">
-                                <div className="relative">
-                                  <select id="billingState" value={billingAddress.state} onChange={e => setBillingAddress({...billingAddress, state: e.target.value})} className={fieldClass(!!validationErrors.billingState, 'appearance-none cursor-pointer')}>
-                                    <option value="" disabled>--</option>
-                                    {US_STATES.map(state => (<option key={state} value={state}>{state}</option>))}
-                                  </select>
-                                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
-                                </div>
+                              <div>
+                                <StateSelect id="billingState" value={billingAddress.state} onChange={(state) => setBillingAddress({...billingAddress, state})} hasError={!!validationErrors.billingState} placeholder="State" />
                                 {validationErrors.billingState && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingState}</p>}
                               </div>
-                              <div className="col-span-3 md:col-span-2">
-                                <input id="billingZip" type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={fieldClass(!!validationErrors.billingZip)} placeholder="ZIP" />
-                                {validationErrors.billingZip && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingZip}</p>}
-                              </div>
+                            </div>
+                            <div className="md:w-1/2 md:pr-1.5">
+                              <input id="billingZip" type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={fieldClass(!!validationErrors.billingZip)} placeholder="ZIP" />
+                              {validationErrors.billingZip && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingZip}</p>}
                             </div>
                           </div>
                         )}
