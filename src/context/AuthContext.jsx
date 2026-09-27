@@ -20,13 +20,13 @@ export const AuthProvider = ({ children }) => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session ?? null);
       setLoading(false);
-      if (data.session) applyPendingCauses().catch(() => {});
+      if (data.session) applyPendingCauses(data.session.user?.email).catch(() => {});
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setLoading(false);
-      if (newSession) applyPendingCauses().catch(() => {});
+      if (newSession) applyPendingCauses(newSession.user?.email).catch(() => {});
     });
 
     return () => subscription.unsubscribe();

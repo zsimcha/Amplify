@@ -44,19 +44,19 @@ const useInView = (threshold = 0.3) => {
 // ============================================================================
 // ODDS VISUALIZER
 // ============================================================================
+// Each winner dot fills with `color` and carries a `drop-shadow` halo in
+// `glow`. The "pop" comes from a deep, high-contrast fill paired with a
+// *lighter* glow, which reads as a two-tone luminous halo. Keep that recipe
+// consistent across all three tiers so gold and diamond read as strongly as
+// silver.
+const tierConfig = {
+  silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
+  gold:    { winners: 8,  color: '#eab308', glow: '#facc15' },
+  diamond: { winners: 16, color: '#4f46e5', glow: '#818cf8' },
+};
+
 const OddsVisualizer = ({ tierData }) => {
   const [activeTier, setActiveTier] = useState('diamond');
-
-  // Each winner dot fills with `color` and carries a `drop-shadow` halo in
-  // `glow`. The "pop" comes from a deep, high-contrast fill paired with a
-  // *lighter* glow, which reads as a two-tone luminous halo. Keep that recipe
-  // consistent across all three tiers so gold and diamond read as strongly as
-  // silver.
-  const tierConfig = {
-    silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
-    gold:    { winners: 8,  color: '#eab308', glow: '#facc15' },
-    diamond: { winners: 16, color: '#4f46e5', glow: '#818cf8' },
-  };
 
   const winnerSet = useMemo(() => {
     const GRID = 20;

@@ -164,3 +164,41 @@ describe('applyPendingCauses', () => {
     expect(getPendingCauses()).toEqual(['a', 'b']);
   });
 });
+
+describe('applyPendingCauses ownership and concurrency', () => {
+  it("applies a selection only to the account it was made for", async () => {
+    rpcMock.mockResolvedValue({ error: null });
+    setPendingCauses(['a'], 'Jane@Example.com');
+
+    // Someone else signs in on the same device: left untouched for Jane.
+    expect(await applyPendingCauses('someone@example.com')).toBeNull();
+    expect(rpcMock).not.toHaveBeenCalled();
+    expect(getPendingCauses()).toEqual(['a']);
+
+    // Jane signs in (email compared case-insensitively).
+    expect(await applyPendingCauses('jane@example.com')).toEqual(['a']);
+    expect(rpcMock).toHaveBeenCalledWith('set_my_causes', { p_slugs: ['a'] });
+    expect(getPendingCauses()).toBeNull();
+  });
+
+  it('still applies an older stash that was saved without an owner', async () => {
+    rpcMock.mockResolvedValue({ error: null });
+    localStorage.setItem(PENDING_KEY, JSON.stringify(['legacy']));
+
+    expect(await applyPendingCauses('anyone@example.com')).toEqual(['legacy']);
+  });
+
+  it('shares one save between calls that overlap', async () => {
+    let resolveRpc;
+    rpcMock.mockReturnValue(new Promise((r) => { resolveRpc = r; }));
+    setPendingCauses(['a', 'b'], 'jane@example.com');
+
+    const first = applyPendingCauses('jane@example.com');
+    const second = applyPendingCauses('jane@example.com');
+    resolveRpc({ error: null });
+
+    expect(await first).toEqual(['a', 'b']);
+    expect(await second).toEqual(['a', 'b']);
+    expect(rpcMock).toHaveBeenCalledTimes(1);
+  });
+});

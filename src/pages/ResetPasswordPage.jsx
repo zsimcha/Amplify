@@ -1,18 +1,21 @@
 // src/pages/ResetPasswordPage.jsx
 // Landing page for the password-recovery email link. Supabase JS picks the
 // recovery token out of the URL and establishes a temporary session; we then
-// let the user set a new password via auth.updateUser.
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// let the user set a new password via auth.updateUser. Ambassador invites
+// land here too (?invite=1), since an invited account has no password yet.
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Lock, AlertCircle, CheckCircle } from 'lucide-react';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
-import { supabase } from '../lib/supabase';
+import { supabase, authRedirectError } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, loading } = useAuth();
+  const isInvite = new URLSearchParams(location.search).get('invite') === '1';
 
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -33,8 +36,10 @@ const ResetPasswordPage = () => {
         setError(updateError.message || 'Could not update password. The link may have expired.');
         return;
       }
+      // A reset usually means the old password is compromised or forgotten:
+      // end every other session so a stolen one can't outlive it.
+      await supabase.auth.signOut({ scope: 'others' }).catch(() => {});
       setDone(true);
-      setTimeout(() => navigate('/account', { replace: true }), 1500);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -42,24 +47,36 @@ const ResetPasswordPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (!done) return;
+    const t = setTimeout(() => navigate('/account', { replace: true }), 1500);
+    return () => clearTimeout(t);
+  }, [done, navigate]);
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
       <SecondaryNavbar />
       <div className="flex-grow flex items-center justify-center px-4 py-12 md:py-20">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-10">
-            <h1 className="text-2xl md:text-3xl font-semibold text-indigo-950 tracking-tight mb-2">New Password</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold text-indigo-950 tracking-tight mb-2">{isInvite ? 'Set Your Password' : 'New Password'}</h1>
 
             {loading ? (
               <p className="text-sm text-slate-500 font-medium animate-pulse">Verifying your link...</p>
             ) : !user ? (
               <div className="space-y-5">
                 <p className="text-sm text-slate-500 font-medium">
-                  This reset link is invalid or has expired.
+                  {isInvite
+                    ? 'This invitation link is invalid, has expired, or was already used. Contact us at support@amplifygive.com and we\'ll send a new one.'
+                    : authRedirectError
+                      ? 'This reset link has expired or was already used. Links only work once, so request a fresh one below.'
+                      : 'This reset link is invalid or has expired.'}
                 </p>
-                <Link to="/login" className="inline-block text-xs font-bold text-indigo-600 hover:text-indigo-900 transition-colors uppercase tracking-widest">
-                  Request a new link
-                </Link>
+                {!isInvite && (
+                  <Link to="/login" className="inline-block text-xs font-bold text-indigo-600 hover:text-indigo-900 transition-colors uppercase tracking-widest">
+                    Request a new link
+                  </Link>
+                )}
               </div>
             ) : done ? (
               <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl text-sm font-bold flex items-start gap-2 animate-in fade-in">
@@ -68,7 +85,7 @@ const ResetPasswordPage = () => {
               </div>
             ) : (
               <>
-                <p className="text-sm text-slate-500 font-medium mb-8">Choose a new password for your account.</p>
+                <p className="text-sm text-slate-500 font-medium mb-8">{isInvite ? 'Choose a password to activate your ambassador account.' : 'Choose a new password for your account.'}</p>
 
                 {error && (
                   <div className="mb-5 bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold flex items-start gap-2 animate-in fade-in">

@@ -311,7 +311,11 @@ describe('AccountPage email change', () => {
     await userEvent.type(field, 'new@example.com');
     await userEvent.click(screen.getByText('Update Email'));
 
-    await waitFor(() => expect(mocks.updateUser).toHaveBeenCalledWith({ email: 'new@example.com' }));
+    // Confirmation links land back on My Account.
+    await waitFor(() => expect(mocks.updateUser).toHaveBeenCalledWith(
+      { email: 'new@example.com' },
+      { emailRedirectTo: `${window.location.origin}/account` },
+    ));
     expect(await screen.findByText(/confirmation links were sent/)).toBeInTheDocument();
     expect(field).toHaveValue('');
   });
@@ -350,7 +354,9 @@ describe('AccountPage password change', () => {
   it('submits a valid password and clears both fields', async () => {
     await fillPassword('longenoughpw', 'longenoughpw');
     await waitFor(() => expect(mocks.updateUser).toHaveBeenCalledWith({ password: 'longenoughpw' }));
-    expect(await screen.findByText('Your password has been updated.')).toBeInTheDocument();
+    // Every other session is ended, the current one kept.
+    await waitFor(() => expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'others' }));
+    expect(await screen.findByText(/Your password has been updated and other devices have been signed out/)).toBeInTheDocument();
     expect(screen.getByLabelText('New Password')).toHaveValue('');
     expect(screen.getByLabelText('Confirm Password')).toHaveValue('');
   });

@@ -16,10 +16,28 @@ import CausesStep from './checkout/CausesStep';
 import ConfirmationStep from './checkout/ConfirmationStep';
 import { totalWithFeeCovered, feeCoveredAmount } from '../lib/pricing';
 
+const TIERS = ['silver', 'gold', 'diamond'];
+
+// Tier comes from the tier card that linked here (router state) or a
+// shareable ?tier= link. Anything else falls back to silver rather than
+// crashing the price lookup below.
+const resolveTier = (location) => {
+  const requested = location.state?.tier || new URLSearchParams(location.search).get('tier');
+  return TIERS.includes(requested) ? requested : 'silver';
+};
+
+// Messages raised by process_checkout's own validation (plain RAISE, SQLSTATE
+// P0001) are written for members; anything else stays generic.
+const checkoutErrorMessage = (error) => (
+  error?.code === 'P0001' && error.message
+    ? error.message
+    : 'Something went wrong processing your request. Please try again.'
+);
+
 const CheckoutPage = ({ appData, setAppData }) => {
   const location = useLocation();
   const { user } = useAuth();
-  const initialTier = location.state?.tier || 'silver';
+  const initialTier = resolveTier(location);
 
   const [selectedTier] = useState(initialTier);
   const [selectedCommunity, setSelectedCommunity] = useState("General");
@@ -50,10 +68,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [showAccountPassword, setShowAccountPassword] = useState(false);
   const [showAccountPasswordConfirm, setShowAccountPasswordConfirm] = useState(false);
 
-  // Signed-in members check out under their existing account.
+  // Signed-in members check out under their existing account email (the
+  // server enforces this too), so the field is locked to it.
   useEffect(() => {
     if (user?.email) {
-      setCheckoutForm(prev => (prev.email ? prev : { ...prev, email: user.email }));
+      setCheckoutForm(prev => (prev.email === user.email ? prev : { ...prev, email: user.email }));
     }
   }, [user]);
   
@@ -84,7 +103,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
       } else {
         // New member whose email confirmation is still pending — stash the
         // selection locally; it's applied the first time they sign in.
-        setPendingCauses(causeSlugs);
+        setPendingCauses(causeSlugs, checkoutForm.email);
       }
       setCausesSaved(true);
       setCausesStepDone(true);
@@ -294,7 +313,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
         p_full_name: checkoutForm.fullName,
         p_display_name: checkoutForm.displayName || checkoutForm.fullName, 
         p_is_anonymous: checkoutForm.isAnonymous, 
-        p_email: checkoutForm.email,
+        p_email: checkoutForm.email.trim(),
         p_phone: checkoutForm.phone,
         p_address: checkoutForm.address,
         p_city: checkoutForm.city,
@@ -306,7 +325,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
       if (error) {
         console.error("Checkout Error:", error);
-        throw new Error("Something went wrong processing your request. Please try again.");
+        throw new Error(checkoutErrorMessage(error));
       }
 
       // Optimistic UI Update with Community Race Condition Fix
@@ -455,12 +474,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label htmlFor="fullName" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Full Name</label>
-                            <input id="fullName" name="name" autoComplete="name" type="text" value={checkoutForm.fullName} onChange={handleNameChange} className={fieldClass(!!validationErrors.fullName)} placeholder="John Doe" />
+                            <input id="fullName" name="name" autoComplete="name" type="text" maxLength={120} value={checkoutForm.fullName} onChange={handleNameChange} className={fieldClass(!!validationErrors.fullName)} placeholder="John Doe" />
                             {validationErrors.fullName && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.fullName}</p>}
                           </div>
                           <div>
                             <label htmlFor="email" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Email</label>
-                            <input id="email" name="email" autoComplete="email" type="email" value={checkoutForm.email} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className={fieldClass(!!validationErrors.email)} placeholder="john@example.com" />
+                            <input id="email" name="email" autoComplete="email" type="email" value={checkoutForm.email} readOnly={!!user} onChange={e => setCheckoutForm({...checkoutForm, email: e.target.value})} className={fieldClass(!!validationErrors.email, user ? 'text-slate-500 cursor-not-allowed' : '')} placeholder="john@example.com" />
                             {validationErrors.email && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.email}</p>}
                           </div>
 
@@ -476,6 +495,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             <input 
                               id="displayName" 
                               type="text" 
+                              maxLength={80}
                               value={checkoutForm.displayName} 
                               disabled={checkoutForm.isAnonymous}
                               onChange={handleDisplayNameChange}
@@ -531,12 +551,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                           <div>
                             <label htmlFor="phone" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
-                            <input id="phone" name="phone" autoComplete="tel" type="tel" value={checkoutForm.phone} onChange={handlePhoneChange} className={fieldClass(!!validationErrors.phone)} placeholder="555-123-4567" />
+                            <input id="phone" name="phone" autoComplete="tel" type="tel" maxLength={30} value={checkoutForm.phone} onChange={handlePhoneChange} className={fieldClass(!!validationErrors.phone)} placeholder="555-123-4567" />
                             {validationErrors.phone && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.phone}</p>}
                           </div>
                           <div>
                             <label htmlFor="address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
-                            <input id="address" name="street-address" autoComplete="street-address" type="text" value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={fieldClass(!!validationErrors.address)} placeholder="123 Main St" />
+                            <input id="address" name="street-address" autoComplete="street-address" type="text" maxLength={200} value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={fieldClass(!!validationErrors.address)} placeholder="123 Main St" />
                             {validationErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.address}</p>}
                           </div>
                         </div>
@@ -544,7 +564,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         <div className="grid grid-cols-6 gap-4">
                           <div className="col-span-6 md:col-span-3">
                             <label htmlFor="city" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
-                            <input id="city" name="address-level2" autoComplete="address-level2" type="text" value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={fieldClass(!!validationErrors.city)} placeholder="New York" />
+                            <input id="city" name="address-level2" autoComplete="address-level2" type="text" maxLength={100} value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={fieldClass(!!validationErrors.city)} placeholder="New York" />
                             {validationErrors.city && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.city}</p>}
                           </div>
                           <div className="col-span-3 md:col-span-1">
