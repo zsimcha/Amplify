@@ -18,6 +18,9 @@ import { totalWithFeeCovered, feeCoveredAmount } from '../lib/pricing';
 
 const TIERS = ['silver', 'gold', 'diamond'];
 
+// Used as the date input's `max` so no one can enter a future birthdate.
+const TODAY_ISO = new Date().toISOString().slice(0, 10);
+
 // Tier comes from the tier card that linked here (router state) or a
 // shareable ?tier= link. Anything else falls back to silver rather than
 // crashing the price lookup below.
@@ -53,9 +56,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
     email: '', 
     phone: '', 
     address: '', 
-    city: '', 
-    state: '', 
-    zipCode: '' 
+    city: '',
+    state: '',
+    zipCode: '',
+    dateOfBirth: '',
   });
   const [hasEditedDisplayName, setHasEditedDisplayName] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -320,7 +324,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
         p_state: checkoutForm.state,
         p_zip_code: checkoutForm.zipCode,
         p_tier: selectedTier,
-        p_community_name: selectedCommunity
+        p_community_name: selectedCommunity,
+        p_date_of_birth: checkoutForm.dateOfBirth,
       });
 
       if (error) {
@@ -584,6 +589,18 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
                             <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
                             {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label htmlFor="dateOfBirth" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Date of Birth</label>
+                            <input id="dateOfBirth" name="bday" autoComplete="bday" type="date" max={TODAY_ISO} value={checkoutForm.dateOfBirth} onChange={e => setCheckoutForm({...checkoutForm, dateOfBirth: e.target.value})} className={fieldClass(!!validationErrors.dateOfBirth)} />
+                            {validationErrors.dateOfBirth ? (
+                              <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.dateOfBirth}</p>
+                            ) : (
+                              <p className="text-[0.5625rem] text-slate-400 mt-1.5 font-medium">Must meet the minimum entry age for your state. See <Link to="/rules" className="underline">official rules</Link>.</p>
+                            )}
                           </div>
                         </div>
                       </section>

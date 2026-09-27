@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import CheckoutPage from './CheckoutPage';
@@ -64,6 +64,9 @@ async function fillRequiredFields({ includeAccountCredentials }) {
   await user.type(screen.getByLabelText('City'), 'New York');
   await user.selectOptions(screen.getByLabelText('State'), 'NY');
   await user.type(screen.getByLabelText('Zip Code'), '10001');
+  // Date inputs don't reliably accept user.type() keystrokes across browsers
+  // under jsdom; set the value directly like a native date picker would.
+  fireEvent.change(screen.getByLabelText('Date of Birth'), { target: { value: '1990-01-01' } });
 
   if (includeAccountCredentials) {
     await user.type(screen.getByLabelText('Password'), 'password123');
