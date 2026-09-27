@@ -202,14 +202,18 @@ const OddsVisualizer = ({ tierData }) => {
   <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
 </div>
 
-          <div className="grid grid-cols-2 gap-3 md:gap-4 pt-2">
+          <div className="grid grid-cols-3 gap-3 md:gap-4 pt-2">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Members</p>
-              <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter tabular-nums">400</p>
+              <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tighter tabular-nums">400</p>
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Winners</p>
-              <p className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{cfg.winners}</p>
+              <p className="text-xl md:text-2xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{cfg.winners}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Grand Prize</p>
+              <p className="text-xl md:text-2xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{tierData[activeTier].prize}</p>
             </div>
           </div>
 
