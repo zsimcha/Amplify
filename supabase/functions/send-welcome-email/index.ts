@@ -11,13 +11,21 @@ const esc = (s: string) => String(s ?? "")
   .replace(/>/g, "&gt;")
   .replace(/"/g, "&quot;");
 
-serve(async (req) => {
-  console.log("Function invoked!");
+// Constant-time comparison, so response timing can't be used to guess the
+// shared secret one character at a time.
+const secretsMatch = (provided: string | null, expected: string) => {
+  const a = new TextEncoder().encode(provided ?? "");
+  const b = new TextEncoder().encode(expected);
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < b.length; i++) diff |= (a[i] ?? 0) ^ b[i];
+  return diff === 0;
+};
 
+serve(async (req) => {
   // Reject anything that doesn't carry our shared secret
   const expectedSecret = Deno.env.get("WELCOME_HOOK_SECRET");
   const providedSecret = req.headers.get("x-webhook-secret");
-  if (!expectedSecret || providedSecret !== expectedSecret) {
+  if (!expectedSecret || !secretsMatch(providedSecret, expectedSecret)) {
     console.log("Unauthorized webhook call");
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
@@ -37,7 +45,6 @@ serve(async (req) => {
     // 2. Initialize Clients
     const resend = new Resend(resendApiKey);
     const supabase = createClient(supabaseUrl, supabaseKey);
-    console.log("Clients initialized successfully.");
 
     // 3. Parse Webhook Payload
     const payload = await req.json();
@@ -48,6 +55,16 @@ serve(async (req) => {
 
     if (!email) {
       throw new Error("No email found in payload.");
+    }
+
+    // "Your monthly contribution has been secured" is only true of an active
+    // membership. Once billing goes live, rows that are inserted before
+    // payment clears must not trigger this email.
+    if (payload?.record?.status !== 'active') {
+      return new Response(JSON.stringify({ skipped: "not active" }), {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      });
     }
 
     // 4. Fetch Community Name
@@ -74,8 +91,6 @@ serve(async (req) => {
     };
     // Ensure we have valid data even if a weird tier string comes through
     const currentTierDetails = tierData[tier as keyof typeof tierData] || tierData.silver;
-
-    console.log(`Sending to: ${email} for tier: ${tier} in community: ${communityName}`);
 
     // 6. Send Email
     const data = await resend.emails.send({
@@ -151,15 +166,13 @@ serve(async (req) => {
       `,
     });
 
-    console.log("Email sent successfully!");
-
     return new Response(JSON.stringify(data), {
       headers: { "Content-Type": "application/json" },
       status: 200,
     })
   } catch (error) {
-    console.error("CATCH BLOCK ERROR:", error.message);
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("CATCH BLOCK ERROR:", (error as Error).message);
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       headers: { "Content-Type": "application/json" },
       status: 400,
     })

@@ -380,6 +380,17 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# Both functions are webhooks that authenticate themselves (a shared secret
+# for the welcome email, a Standard Webhooks signature for the auth hook) and
+# are never called with a user JWT. Production runs them with JWT verification
+# off; without these entries a plain `supabase functions deploy` turns it back
+# on and every call is rejected before reaching the function.
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.send-auth-email]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327
