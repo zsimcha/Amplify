@@ -444,7 +444,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       
                       {/* ============ SECTION 1: YOUR DETAILS ============ */}
                       <section className="space-y-4">
-                        <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-4 border-b border-slate-200 pb-4 flex items-center gap-2"><Shield size={18} className="text-slate-400"/> Your Details</h3>
+                        <h3 className="text-lg md:text-xl font-bold tracking-tight text-indigo-950 mb-4 border-b border-slate-200 pb-4 flex items-center gap-2"><Shield size={18} className="text-slate-400"/> Your Details</h3>
                         
                         {submitError && (
                             <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium flex items-start gap-2 animate-in fade-in">
@@ -570,7 +570,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
 
                       {/* ============ SECTION 2: PAYMENT METHOD (NEW) ============ */}
                       <section className="space-y-4 pt-2">
-                        <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-2 border-b border-slate-200 pb-4 flex items-center gap-2">
+                        <h3 className="text-lg md:text-xl font-bold tracking-tight text-indigo-950 mb-2 border-b border-slate-200 pb-4 flex items-center gap-2">
                           <Lock size={18} className="text-slate-400"/> Payment Method
                         </h3>
 
@@ -733,7 +733,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                 <div className="sticky top-24 bg-indigo-950 text-white p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] shadow-2xl relative overflow-hidden">
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-6 md:mb-8">
-                      <h3 className="text-lg md:text-xl font-black uppercase tracking-widest text-indigo-300">Summary</h3>
+                      <h3 className="text-lg md:text-xl font-bold tracking-tight text-indigo-300">Summary</h3>
                     </div>
                     <CheckoutSummary
                       selectedTier={selectedTier}

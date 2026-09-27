@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SecondaryNavbar from '../components/layout/SecondaryNavbar';
-import Footer from '../components/layout/Footer';
+import PageLayout from '../components/layout/PageLayout';
 import { Mail, MessageSquare, Send, AlertCircle, Loader2 } from 'lucide-react';
 
 // SECURITY FIX: Pulls securely from environment variables. No fallback exposed to the public.
@@ -64,20 +63,11 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
-      <SecondaryNavbar />
-
-      <div className="flex-grow max-w-3xl mx-auto px-4 py-16 md:py-24 w-full">
-        {/* Friendly Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-black text-indigo-950 uppercase italic tracking-tighter mb-4">
-            Let's Chat
-          </h1>
-          <p className="text-lg text-slate-600 font-medium px-4">
-            Have a question about how the circles work, need a hand with your membership, or just want to say hi? We'd love to hear from you.
-          </p>
-        </div>
-
+    <PageLayout
+      title="Let's Chat"
+      intro="Have a question about how the circles work, need a hand with your membership, or just want to say hi? We'd love to hear from you."
+    >
+      <div className="max-w-3xl mx-auto px-4 py-16 md:py-24 w-full">
         <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-slate-100">
           
           {/* Direct Email Callout */}
@@ -85,7 +75,7 @@ const ContactPage = () => {
             <div className="bg-indigo-100 p-4 rounded-2xl text-indigo-600 mb-4">
               <Mail size={32} />
             </div>
-            <h2 className="text-xl font-black uppercase text-indigo-950 tracking-tight mb-2">Email Us Directly</h2>
+            <h2 className="text-xl font-bold text-indigo-950 tracking-tight mb-2">Email Us Directly</h2>
             <a 
               href="mailto:support@amplifygive.com" 
               className="text-lg md:text-xl font-bold text-indigo-600 hover:text-indigo-900 transition-colors"
@@ -101,7 +91,7 @@ const ContactPage = () => {
               <div className="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageSquare size={32} />
               </div>
-              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-2">Message Sent!</h3>
+              <h3 className="text-2xl font-semibold text-slate-900 tracking-tight mb-2">Message Sent!</h3>
               <p className="text-slate-600 font-medium">Thanks for reaching out. We've received your note and will get back to you soon.</p>
               <button 
                 onClick={() => {
@@ -185,9 +175,7 @@ const ContactPage = () => {
           )}
         </div>
       </div>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

@@ -48,7 +48,7 @@ const ResetPasswordPage = () => {
       <div className="flex-grow flex items-center justify-center px-4 py-12 md:py-20">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-10">
-            <h1 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 tracking-tight mb-2">New Password</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold text-indigo-950 tracking-tight mb-2">New Password</h1>
 
             {loading ? (
               <p className="text-sm text-slate-500 font-medium animate-pulse">Verifying your link...</p>

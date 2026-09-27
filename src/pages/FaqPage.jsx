@@ -67,7 +67,7 @@ const FaqPage = () => {
         <div className="max-w-6xl mx-auto">
           {faqSections.map((section, sectionIndex) => (
             <div key={sectionIndex} className="mb-16">
-              <h2 className="text-2xl font-black text-slate-900 uppercase tracking-wide mb-8 pl-4 border-l-4 border-indigo-500">{section.title}</h2>
+              <h2 className="text-2xl font-semibold text-slate-900 tracking-tight mb-8 pl-4 border-l-4 border-indigo-500">{section.title}</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {section.faqs.map((faq, itemIndex) => {
                   const id = `${sectionIndex}-${itemIndex}`;

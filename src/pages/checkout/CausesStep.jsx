@@ -8,7 +8,7 @@ const CausesStep = ({ causeSlugs, onChangeCauseSlugs, savingCauses, causesError,
   <div className="bg-white rounded-3xl md:rounded-[3rem] shadow-xl p-8 md:p-16 animate-in fade-in slide-in-from-bottom-2 duration-500 border border-slate-100">
     <div className="text-center mb-8 md:mb-10">
       <p className="text-xs font-bold text-indigo-600 uppercase tracking-[0.3em] mb-3">Last step</p>
-      <h4 className="text-3xl md:text-5xl font-black text-indigo-950 mb-4 italic uppercase tracking-tighter">Pick your causes.</h4>
+      <h4 className="text-3xl md:text-5xl font-semibold text-indigo-950 mb-4 tracking-tight">Pick your causes.</h4>
       <p className="text-slate-500 text-base md:text-lg font-medium max-w-xl mx-auto leading-relaxed">
         Choose up to 4 Chessed organizations for your giving to support. You can change them anytime.
       </p>

@@ -41,31 +41,6 @@ const useInView = (threshold = 0.3) => {
   return [ref, inView];
 };
 
-const useCarouselActive = (count) => {
-  const ref = useRef(null);
-  const [activeIdx, setActiveIdx] = useState(0);
-  const handleScroll = () => {
-    const el = ref.current;
-    if (!el) return;
-    const center = el.scrollLeft + el.clientWidth / 2;
-    const cards = el.querySelectorAll('[data-card]');
-    if (!cards.length) return;
-    let closest = 0;
-    let minDist = Infinity;
-    cards.forEach((card, i) => {
-      const cardCenter = card.offsetLeft + card.clientWidth / 2;
-      const dist = Math.abs(cardCenter - center);
-      if (dist < minDist) {
-        minDist = dist;
-        closest = i;
-      }
-    });
-    setActiveIdx(Math.min(closest, count - 1));
-  };
-  return [ref, activeIdx, handleScroll];
-};
-
-
 // ============================================================================
 // ODDS VISUALIZER
 // ============================================================================
@@ -227,14 +202,18 @@ const OddsVisualizer = ({ tierData }) => {
   <p className="text-xs text-slate-400 font-medium mt-1.5">when the circle fills</p>
 </div>
 
-          <div className="grid grid-cols-2 gap-3 md:gap-4 pt-2">
+          <div className="grid grid-cols-3 gap-3 md:gap-4 pt-2">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Members</p>
-              <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter tabular-nums">400</p>
+              <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tighter tabular-nums">400</p>
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Winners</p>
-              <p className="text-2xl md:text-3xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{cfg.winners}</p>
+              <p className="text-xl md:text-2xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{cfg.winners}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1.5">Grand Prize</p>
+              <p className="text-xl md:text-2xl font-black tracking-tighter tabular-nums" style={{color: winnersStatColor}}>{tierData[activeTier].prize}</p>
             </div>
           </div>
 
@@ -353,7 +332,7 @@ const WhyPrizes = () => {
             <p className="text-sm text-slate-500 font-medium leading-relaxed mb-auto">Donations become inconsistent. Momentum fades. Funding stays limited.</p>
             <div className="mt-6 pt-5 border-t border-slate-200">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Recurring Donor Fatigue</p>
-              <p className="text-xl font-black text-slate-400 tracking-tight tabular-nums">Funding Dries Up</p>
+              <p className="text-xl font-black text-slate-400 tracking-tight tabular-nums">Hundreds of Hours</p>
             </div>
           </div>
 
@@ -382,7 +361,7 @@ const WhyPrizes = () => {
             <p className="text-sm text-slate-300 font-medium leading-relaxed mb-auto">Prizes keep members showing up, month after month. That consistency is what turns modest monthly gifts into six-figure grants for the causes you choose.</p>
             <div className="mt-6 pt-5 border-t border-slate-800">
               <p className="text-xs font-bold text-amber-400/70 uppercase tracking-widest mb-1">Retention Based Model</p>
-              <p className="text-xl font-black text-amber-400 tracking-tight tabular-nums">Built For Consistency</p>
+              <p className="text-xl font-black text-amber-400 tracking-tight tabular-nums">0 Hours Fundraising</p>
             </div>
           </div>
         </div>
@@ -408,41 +387,6 @@ const HowItWorksPage = ({ appData }) => {
   const membershipSectionRef = useRef(null);
   const [membershipProgress, setMembershipProgress] = useState(0);
   const [membershipHintOn, setMembershipHintOn] = useState(false);
-  const [prizeRef, prizeActiveIdx, handlePrizeScroll] = useCarouselActive(3);
-
-  // Renders one tier's prize card. `compact` tightens spacing for the mobile
-  // carousel so all three fit in a fraction of the stacked height.
-  const renderPrizeCard = (tier, index, compact = false) => {
-    const headerColor = tier === 'silver' ? 'text-slate-500' : tier === 'gold' ? 'text-[#eab308]' : 'text-[#818cf8]';
-    return (
-      <div className={`bg-white border border-slate-100 rounded-3xl shadow-soft reveal ${compact ? 'p-6 h-full' : 'p-8'}`} style={{ transitionDelay: `${index * 100}ms` }}>
-        <h3 className={`font-black uppercase tracking-widest text-sm mb-5 pb-4 border-b border-slate-200 ${headerColor}`}>{tier} Circle Prizes</h3>
-        <div className="flex justify-between items-center mb-5 pb-4 border-b border-slate-200">
-          <span className="font-bold text-slate-400 uppercase text-xs tracking-widest">Grand Prize</span>
-          <span className="font-black text-slate-900 text-3xl">{appData.tierData[tier].prize}</span>
-        </div>
-        <div className="space-y-3.5">
-          {appData.tierData[tier].otherPrizes.map((p, i) => {
-            let qty = '1 winner';
-            let amount = p;
-            const lowerP = p.toLowerCase();
-            if (lowerP.includes('x')) {
-              const parts = lowerP.split('x');
-              const count = parseInt(parts[0].trim());
-              qty = count === 1 ? '1 winner' : `${count} winners`;
-              amount = p.substring(lowerP.indexOf('x') + 1).trim();
-            }
-            return (
-              <div key={i} className="flex justify-between items-center text-base">
-                <span className="text-slate-500 font-bold">{qty}</span>
-                <span className="font-black text-slate-700">{amount}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
 
   // Standard observer for .reveal elements on the page
   useEffect(() => {
@@ -525,152 +469,28 @@ const HowItWorksPage = ({ appData }) => {
   </div>
 </section>
 
-{/* THE GRANT */}
-<section className="py-8 md:py-12 px-4 bg-slate-950 text-white relative overflow-hidden">
-  <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
-    backgroundImage: 'radial-gradient(circle, #fbbf24 1px, transparent 1px)',
-    backgroundSize: '40px 40px'
-  }}></div>
-
-  <div className="max-w-5xl mx-auto relative">
-    {/* Header */}
-    <div className="mb-6 md:mb-8 reveal max-w-3xl">
-      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-400 mb-3">The Grants</p>
-      <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3 leading-[1.1] text-white">
-        Your Giving Goes Further
-      </h2>
-      <p className="text-sm md:text-base text-slate-400 font-normal leading-relaxed">
-        With most donations, part of every dollar pays to raise the next one. Not here.
-      </p>
+{/* The Drawing + Odds Visualizer */}
+<section className="py-16 md:py-24 px-4 bg-slate-50 border-y border-slate-200">
+  <div className="max-w-6xl mx-auto">
+    <div className="text-center mb-10 md:mb-14 reveal">
+      <p className="text-xs font-bold text-slate-900 uppercase tracking-[0.3em] mb-4">The Drawing</p>
+      <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-[1.1]">You give real Tzedakah.
+        <span className="italic text-indigo-600"> We give you real odds.</span></h2>
     </div>
 
-    {/* Cards side by side at all sizes */}
-    <div className="grid grid-cols-2 gap-2 md:gap-4">
+    <div className="mb-10 reveal max-w-5xl mx-auto">
+      <OddsVisualizer tierData={appData.tierData} />
+    </div>
 
-       {/* OLD WAY — now a visible box + subtle cool halo */}
-      <div
-        className="rounded-xl md:rounded-2xl bg-white/[0.05] border border-white/[0.14] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_48px_-8px_rgba(148,163,184,0.22),inset_0_1px_0_rgba(255,255,255,0.06)]"
-      >
-        <div className="mb-3 md:mb-4">
-          <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mb-1 md:mb-2">The Old Way</p>
-          <h3 className="text-lg md:text-xl font-semibold text-white tracking-tight leading-tight">
-            Where A Normal Dollar Goes:
-          </h3>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 mb-3 md:mb-4 flex-1">
-          {[
-            'Plan annual galas',
-            'Hire grant writers',
-            'Run direct mail',
-            'Manage donor relations',
-            'Pay venue & agency fees',
-            'Months of pursuit',
-          ].map((task, i, arr) => {
-            const isLast = i === arr.length - 1;
-            const isInLastDesktopRow = i >= arr.length - 2;
-            return (
-              <div
-                key={i}
-                className={`flex items-start gap-1.5 md:gap-2.5 py-1.5 md:py-2.5 border-white/[0.08] ${
-                  isLast ? 'border-b-0' : 'border-b'
-                } ${
-                  isInLastDesktopRow && !isLast ? 'md:border-b-0' : ''
-                }`}
-              >
-                <span className="text-rose-500/55 text-xs md:text-sm font-bold mt-[0.1875rem] md:mt-[0.3125rem] leading-none shrink-0" aria-hidden>✕</span>
-                <span className="text-sm md:text-base text-slate-300 font-normal leading-snug">{task}</span>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="pt-3 md:pt-4 border-t border-white/[0.1]">
-          <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
-            <p className="text-2xl md:text-3xl font-bold text-slate-200 tracking-tight leading-none">Hundreds</p>
-            <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-slate-500 mt-0.5 md:mt-0">of hours</p>
-          </div>
-          <p className="text-[0.8125rem] md:text-sm text-slate-500 font-normal mt-1 md:mt-1.5 leading-snug">
-            Funded by donations, every year.
-          </p>
-        </div>
-      </div>
-
-      {/* AMPLIFY WAY — stronger amber halo */}
-      <div
-        className="rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400/[0.07] via-amber-400/[0.02] to-transparent border border-amber-400/[0.3] p-3.5 md:p-6 reveal flex flex-col shadow-[0_0_55px_-10px_rgba(251,191,36,0.32),inset_0_1px_0_rgba(251,191,36,0.12)]"
-        style={{ transitionDelay: '120ms' }}
-      >
-        <div className="mb-3 md:mb-4">
-          <p className="text-[0.6875rem] md:text-xs font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-amber-300 mb-1 md:mb-2">The Amplify Way</p>
-          <h3 className="text-lg md:text-xl font-semibold text-white tracking-tight leading-tight">
-            Where Your Dollar Goes:
-          </h3>
-        </div>
-
-        <div className="flex-1 flex items-center mb-3 md:mb-4">
-          <div>
-            <p className="text-3xl md:text-5xl font-semibold text-white tracking-tight leading-[1.05] mb-1.5 md:mb-2">
-              More Chessed.
-            </p>
-            <p className="text-base md:text-xl text-amber-200/65 font-normal italic">
-              No galas. No mailers. No donor chasing.
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-3 md:pt-4 border-t border-amber-400/[0.18]">
-          <div className="flex flex-col md:flex-row md:items-baseline md:gap-2.5">
-            <p className="text-2xl md:text-4xl font-bold text-emerald-400 tracking-tight tabular-nums leading-none">0</p>
-            <p className="text-[0.6875rem] md:text-sm font-semibold uppercase tracking-[0.18em] md:tracking-[0.25em] text-emerald-400/85 mt-0.5 md:mt-0">Hours Spent Fundraising</p>
-          </div>
-          <p className="text-[0.8125rem] md:text-base text-slate-300 font-normal mt-1 md:mt-1.5 leading-snug">
-            Instead, we give members a reason to keep giving.
-          </p>
-        </div>
-      </div>
-
+    <div className="text-center reveal">
+      <Link to="/circles" className="inline-flex items-center gap-2 font-bold text-sm uppercase tracking-widest text-indigo-600 hover:text-indigo-900 transition-colors">
+        See the full tier and prize breakdown →
+      </Link>
     </div>
   </div>
 </section>
 
       <WhyPrizes />
-
-      {/* The Drawings + Odds Visualizer */}
-      <section className="py-16 md:py-24 px-4 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-10 md:mb-14 reveal">
-            <p className="text-xs font-bold text-slate-900 uppercase tracking-[0.3em] mb-4">The Drawing</p>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-4 leading-[1.1]">You give real Tzedakah. 
-	<span className="italic text-indigo-600"> We give you real odds.</span> </h2>
-          </div>
-
-          <div className="mb-12 reveal max-w-5xl mx-auto">
-            <OddsVisualizer tierData={appData.tierData} />
-          </div>
-
-          {/* Desktop: three columns side by side */}
-          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
-            {['silver', 'gold', 'diamond'].map((tier, index) => renderPrizeCard(tier, index))}
-          </div>
-
-          {/* Mobile: horizontal carousel keeps the height down to a single card */}
-          <div className="md:hidden -mx-4">
-            <div ref={prizeRef} onScroll={handlePrizeScroll} className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-[8%] pb-2 scrollbar-none">
-              {['silver', 'gold', 'diamond'].map((tier, index) => (
-                <div key={tier} data-card className="snap-center shrink-0 w-[85%]">
-                  {renderPrizeCard(tier, index, true)}
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center gap-2 mt-4">
-              {['silver', 'gold', 'diamond'].map((_, i) => (
-                <div key={i} className={`h-2 rounded-full transition-all duration-300 ${i === prizeActiveIdx ? 'w-6 bg-indigo-500' : 'w-2 bg-slate-300'}`} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
 {/* Your Membership — Sticky Scroll Section */}
 <section className="bg-white border-t border-slate-200">

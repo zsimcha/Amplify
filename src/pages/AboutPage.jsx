@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import PageLayout from '../components/layout/PageLayout';
-import { ChevronRight, ShieldCheck, Lock, CreditCard, FileText, TrendingUp, Building, Check, Gift, ArrowRight } from 'lucide-react';
+import { ChevronRight, ShieldCheck, Lock, CreditCard, FileText, TrendingUp, Building, Check, Heart, ArrowRight } from 'lucide-react';
 
 const AboutPage = () => {
   const location = useLocation();
@@ -144,9 +144,9 @@ const AboutPage = () => {
                   body: "Your membership puts your giving on autopilot, ensuring you never forget to make a powerful impact every month."
                 },
                 {
-                  icon: <Gift size={24} className="text-amber-500" />,
-                  title: "Reliable Every Month",
-                  body: "Monthly rewards keep members engaged, helping charities receive larger and more reliable funding."
+                  icon: <Heart size={24} className="text-amber-500" />,
+                  title: "You Choose the Cause",
+                  body: "Every month, you decide exactly which organizations your share supports. Change it as often as you like."
                 }
               ].map((item, i) => (
                 <div key={i} className="py-8 md:py-10 first:pt-2 md:first:pt-10 flex gap-6 md:gap-8 group reveal" style={{ transitionDelay: `${i * 100}ms` }}>
@@ -192,7 +192,7 @@ const AboutPage = () => {
 
               <div className="relative my-6 md:my-auto md:py-4 space-y-1">
                 {[
-                  { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: '100% transferred' },
+                  { num: '01', label: 'You contribute', detail: 'Monthly via Stripe', meta: 'Cancel Anytime' },
                   { num: '02', label: '(Nonprofit) · 501(c)(3) DAF', detail: 'Donor-advised fund', meta: 'Tax receipt issued', highlight: true },
                   { num: '03', label: 'Vetted Organizations', detail: 'Grants to your chosen causes', meta: 'Full Report' },
                 ].map((item, i, arr) => (

@@ -97,12 +97,11 @@ const HomePage = ({ appData }) => {
   const showStep3 = lineProgress >= 88;
 
   const primaryFaqs = [
-  { q: "What is Amplify?", a: "Amplify is a monthly giving platform where members pool their Tzedakah, and each member chooses which vetted Chessed organizations their donation supports. Every cycle also includes a prize drawing, designed to keep participation consistent month over month." },
-  { q: "Why prizes? Doesn't that take money from charity?", a: "The prizes are what keep members showing up month after month, and that consistency is what lets Amplify deliver significantly larger grants than traditional monthly giving programs. We spend less on prizes than most charities spend just to find a new donor. That's not a compromise. That's how we optimize."
- },
-  { q: "How does the circle model work?", a: "Each circle is a fixed group of 400 members whose monthly contributions are pooled together. Each member directs their donation to the causes they choose, so one pool funds many grants across our partners. When the circle fills, that month's grants are deployed and the cycle begins again." },
-  { q: "How do we select our charity partners?", a: <>We vet every partner in full before a dollar moves, and we look for organizations where a large grant hits a real milestone. <Link to="/causes" className="text-indigo-600 hover:underline">The full process is on the Causes page.</Link></> }
-];
+    { q: "What is Amplify?", a: "A monthly giving circle: you pick the causes, we pool the contributions, and a prize drawing keeps everyone showing up." },
+    { q: "Why prizes? Doesn't that take money from charity?", a: "Consistency is what turns modest monthly gifts into six-figure grants — and we spend less on prizes than most charities spend finding one new donor." },
+    { q: "How does the circle model work?", a: "400 members, one pool, monthly grants to the causes each member chooses. Then the cycle restarts." },
+    { q: "How do we select our charity partners?", a: <>Every organization is vetted before a dollar moves. <Link to="/causes" className="text-indigo-600 hover:underline">See the full process.</Link></> }
+  ];
 
   const [openFaq, setOpenFaq] = useState(null);
 
@@ -238,7 +237,7 @@ const HomePage = ({ appData }) => {
       <section id="tiers" className="py-16 md:py-24 bg-white px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-16 reveal">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">Pick your impact.</h2>
+            <h2 className="text-4xl md:text-5xl font-semibold text-slate-900 tracking-tight mb-4">Pick your impact.</h2>
             <p className="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest">Each circle funds major monthly grants. Real Tzedakah, real odds.</p>
           </div>
           

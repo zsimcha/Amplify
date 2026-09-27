@@ -100,7 +100,7 @@ const LoginPage = () => {
       <div className="flex-grow flex items-center justify-center px-4 py-12 md:py-20">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-10">
-            <h1 className="text-2xl md:text-3xl font-black uppercase italic text-indigo-950 tracking-tight mb-2">
+            <h1 className="text-2xl md:text-3xl font-semibold text-indigo-950 tracking-tight mb-2">
               {mode === 'signin' ? 'Sign In' : 'Reset Password'}
             </h1>
             <p className="text-sm text-slate-500 font-medium mb-8">
