@@ -30,7 +30,7 @@ const LegalPageLayout = ({ title, children }) => (
         {title && (
           <header className="mb-10 md:mb-14 pb-8 border-b border-slate-200">
             <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-3">Legal</p>
-            <h1 className="text-3xl md:text-5xl font-black uppercase italic text-indigo-950 tracking-tighter leading-[1.05]">{title}</h1>
+            <h1 className="text-3xl md:text-5xl font-semibold text-indigo-950 tracking-tight leading-[1.05]">{title}</h1>
             <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 mt-4">Last updated: January 2026</p>
           </header>
         )}

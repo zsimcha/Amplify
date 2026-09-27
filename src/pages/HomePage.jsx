@@ -120,7 +120,7 @@ const HomePage = ({ appData }) => {
         <div className="relative z-10 flex-1 flex items-center">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[calc(var(--hero-band-h)_-_8.5rem)] pb-10 md:pt-36 md:pb-14 short:pt-28 short:pb-8">
             <div className="max-w-2xl animate-hero">
-              <h1 className="text-[clamp(2.25rem,11.2vw,3rem)] md:text-6xl lg:text-7xl short:text-6xl font-black text-white tracking-tighter mb-5 md:mb-6 leading-[0.9] uppercase">
+              <h1 className="text-[clamp(2.25rem,11.2vw,3rem)] md:text-6xl lg:text-7xl short:text-6xl font-semibold text-white tracking-tight mb-5 md:mb-6 leading-[0.9]">
                 Give Together.<br/>
                 <span className="text-amber-400 italic">Amplify Your Impact.</span>
               </h1>
