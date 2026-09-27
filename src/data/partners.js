@@ -27,7 +27,7 @@ export const partners = [
     description: 'Making Jewish wisdom and connection accessible to people at every stage of their journey.',
   },
   {
-    name: 'Bnai Akiva',
+    name: 'World Bnei Akiva',
     slug: 'bnai-akiva',
     aspect: 1.0,
     category: 'Youth',
@@ -76,7 +76,7 @@ export const partners = [
     description: 'Volunteers providing immediate, hands-on support to families in the first hours of a crisis or loss.',
   },
   {
-    name: 'Mizrachi',
+    name: 'World Mizrachi',
     slug: 'mizrachi',
     aspect: 1.077,
     category: 'Torah & Education',
@@ -101,10 +101,13 @@ export const partnerLogo = (p) => p.logo || `/partners/logos/${p.slug}.png`;
 // per-partner) — it's kept only as a stable React key. Only orgs with a
 // live logo (see `partners` above) get a stat here.
 export const impactStats = [
-  { org: 'Bonei Olam',       value: 15000,  abbrev: false, label: 'Babies born through treatment' },
-  { org: 'Chai Lifeline',    value: 50000,  abbrev: false, label: 'Families supported nationwide' },
-  { org: 'Camp HASC',        value: 500,    abbrev: false, label: 'Campers with disabilities each summer' },
-  { org: 'Chabad on Campus', value: 160000, abbrev: true,  label: 'Jewish students reached on campus' },
-  { org: 'FIDF',             value: 170000, abbrev: true,  label: 'Soldiers, veterans & families supported' },
-  { org: 'Zaka',             value: 10000,  abbrev: false, label: 'Emergency responses each year' },
+  { org: 'Bonei Olam',       value: 15000,   abbrev: false, label: 'Babies born through treatment' },
+  { org: 'Chai Lifeline',    value: 50000,   abbrev: false, label: 'Families supported nationwide' },
+  { org: 'Camp HASC',        value: 500,     abbrev: false, label: 'Campers with disabilities each summer' },
+  { org: 'Chabad on Campus', value: 160000,  abbrev: true,  label: 'Jewish students reached on campus' },
+  { org: 'FIDF',             value: 170000,  abbrev: true,  label: 'Soldiers, veterans & families supported' },
+  { org: 'Zaka',             value: 10000,   abbrev: false, label: 'Emergency responses each year' },
+  { org: 'Aish',             value: 4000000, abbrev: true,  label: "People reached through Aish's Torah content" },
+  { org: 'World Bnei Akiva', value: 125000,  abbrev: true,  label: 'Youth engaged in the global movement' },
+  { org: 'Misaskim',         value: 8000,    abbrev: false, label: 'Mourners supported through loss each year' },
 ];
