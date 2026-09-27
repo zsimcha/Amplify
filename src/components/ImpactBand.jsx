@@ -85,11 +85,6 @@ const ImpactBand = () => {
             <Stat key={s.org} item={s} run={inView} />
           ))}
         </div>
-
-        {/* Remove this note once the figures above are final. */}
-        <p className="mt-12 text-[0.6875rem] font-medium text-slate-400">
-          Illustrative figures, pending final impact reporting from our partners.
-        </p>
       </div>
     </section>
   );
