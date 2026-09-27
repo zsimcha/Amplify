@@ -105,7 +105,7 @@ const FeaturedPartners = () => {
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           {/* Copy */}
           <div className="text-center md:text-left">
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight uppercase leading-[0.95]">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white mb-6 tracking-tight leading-[0.95]">
               The Chessed<br/>
               <span className="italic text-amber-400">you choose</span>.
             </h2>

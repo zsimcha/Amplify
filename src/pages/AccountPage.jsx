@@ -36,7 +36,7 @@ const STATUS_STYLES = {
 
 const SectionCard = ({ icon, title, children }) => (
   <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-8">
-    <h2 className="text-lg md:text-xl font-black uppercase tracking-tight text-indigo-950 mb-6 border-b border-slate-200 pb-4 flex items-center gap-2">
+    <h2 className="text-lg md:text-xl font-bold tracking-tight text-indigo-950 mb-6 border-b border-slate-200 pb-4 flex items-center gap-2">
       {icon} {title}
     </h2>
     {children}
@@ -293,7 +293,7 @@ const AccountPage = () => {
         <div className="flex items-end justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">My Account</p>
-            <h1 className="text-3xl md:text-4xl font-black uppercase italic text-indigo-950 tracking-tighter">Welcome back.</h1>
+            <h1 className="text-3xl md:text-4xl font-semibold text-indigo-950 tracking-tight">Welcome back.</h1>
           </div>
           <button
             onClick={handleSignOut}
@@ -725,7 +725,7 @@ const AccountPage = () => {
                               <X size={18} />
                             </button>
 
-                            <h3 className="text-xl md:text-2xl font-black uppercase italic text-indigo-950 tracking-tight mb-3 pr-6">Before you go</h3>
+                            <h3 className="text-xl md:text-2xl font-semibold text-indigo-950 tracking-tight mb-3 pr-6">Before you go</h3>
                             <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
                               Prefer to lower your monthly contribution instead of leaving? You can move to a lower tier and stay in a circle for less each month.
                             </p>

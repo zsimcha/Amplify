@@ -75,7 +75,7 @@ const ContactPage = () => {
             <div className="bg-indigo-100 p-4 rounded-2xl text-indigo-600 mb-4">
               <Mail size={32} />
             </div>
-            <h2 className="text-xl font-black uppercase text-indigo-950 tracking-tight mb-2">Email Us Directly</h2>
+            <h2 className="text-xl font-bold text-indigo-950 tracking-tight mb-2">Email Us Directly</h2>
             <a 
               href="mailto:support@amplifygive.com" 
               className="text-lg md:text-xl font-bold text-indigo-600 hover:text-indigo-900 transition-colors"
@@ -91,7 +91,7 @@ const ContactPage = () => {
               <div className="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MessageSquare size={32} />
               </div>
-              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-2">Message Sent!</h3>
+              <h3 className="text-2xl font-semibold text-slate-900 tracking-tight mb-2">Message Sent!</h3>
               <p className="text-slate-600 font-medium">Thanks for reaching out. We've received your note and will get back to you soon.</p>
               <button 
                 onClick={() => {

@@ -6,16 +6,16 @@ const RulesContent = () => (
       NO PURCHASE, PAYMENT, OR DONATION OF ANY KIND IS NECESSARY TO ENTER OR WIN. NEITHER A PURCHASE NOR A DONATION WILL INCREASE YOUR CHANCES OF WINNING. VOID WHERE PROHIBITED BY LAW.
     </p>
     
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Sponsor, Administrator, and Designated Beneficiary</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">1 &nbsp;&nbsp; Sponsor, Administrator, and Designated Beneficiary</h3>
     <p className="mb-6">The Amplify Sweepstakes (the "Sweepstakes") is sponsored and administered by Amplify LLC, [Insert Address] ("Sponsor")[cite: 4]. Voluntary contributions are remitted to a donor-advised fund administered by (Nonprofit), Inc., [Insert Address] ("DAF Administrator"), which subsequently grants net proceeds to a designated charitable beneficiary specifically identified on the Platform for each separate Promotional Period.</p>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Promotional Periods</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Promotional Periods</h3>
     <p className="mb-6">The Sweepstakes operates through a series of distinct, recurring calendar-month promotional periods (each, a "Promotional Period"). Each Promotional Period commences on the first day of the calendar month at 12:00:00 AM Eastern Time ("ET") and concludes on the last day of the calendar month at 11:59:59 PM ET.</p>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Eligibility</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Eligibility</h3>
     <p className="mb-6">The Sweepstakes is strictly open to legal residents of the fifty (50) United States and the District of Columbia who are eighteen (18) years of age or older (19 in Alabama and Nebraska, and 21 in Mississippi) at the time of entry[cite: 4]. Employees, independent contractors, officers, and directors of the Sponsor, the DAF Administrator, the designated charitable beneficiary, their respective affiliates, advertising agencies, and immediate family members (spouse, parents, siblings, children) or persons living in the same household are ineligible to participate. Entrants must not be listed on any state or federal sanctions lists and must successfully pass all required identity verification protocols.</p>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">4 &nbsp;&nbsp; Circle Mechanics and Draw Triggers</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">4 &nbsp;&nbsp; Circle Mechanics and Draw Triggers</h3>
     <p className="mb-6">The Sweepstakes utilizes a tiered structure ($250, $500, and $1,000 Tiers). Within each Tier, entries are organized into groups defined as "Circles."</p>
     <ul className="list-disc pl-6 space-y-4 mb-6">
       <li className="pl-2"><strong>Capacity:</strong> Each Circle is capped at exactly four hundred (400) paid participants. Multiple Circles may be generated and filled concurrently within a single Tier.</li>
@@ -24,13 +24,13 @@ const RulesContent = () => (
       <li className="pl-2"><strong>Rollover Provision:</strong> If a Circle fails to reach the 400-paid-participant threshold by the end date of the Promotional Period, the Sponsor reserves the absolute right to either (a) roll the existing participants into the corresponding filling Circle for the subsequent Promotional Period, or (b) execute the drawing for the partially filled Circle. No participant is entitled to a drawing or prize until a Circle achieves Active status.</li>
     </ul>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">5 &nbsp;&nbsp; Methods of Entry</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">5 &nbsp;&nbsp; Methods of Entry</h3>
     <p className="mb-6">Participants may enter the Sweepstakes via one of the following two methods:</p>
     
-    <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 uppercase tracking-tight">Method A: Paid Voluntary Contribution</h4>
+    <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 tracking-tight">Method A: Paid Voluntary Contribution</h4>
     <p className="mb-6">During a Promotional Period, eligible individuals may visit the Platform, select a specific Tier, and authorize a voluntary contribution. Upon successful clearance of funds, the participant is allocated sequentially to the currently filling Circle in the selected Tier. Limit: One (1) paid entry per person, per Tier, per calendar month.</p>
     
-    <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 uppercase tracking-tight">Method B: Alternative Method of Entry (AMOE) – Free Mail-In</h4>
+    <h4 className="text-base md:text-lg font-bold text-slate-800 mt-8 mb-3 tracking-tight">Method B: Alternative Method of Entry (AMOE) – Free Mail-In</h4>
     <p className="mb-6">To enter without making a financial contribution, eligible individuals must handwrite their complete first and last name, valid email address, physical mailing address (no P.O. Boxes), telephone number, date of birth, the specific Calendar Month of entry, the unique monthly phrase (posted on the Platform on the 1st of each month), and the Specific Tier ($250, $500, or $1,000) they wish to enter on a standard 3.5" x 5" postcard.</p>
     <ul className="list-disc pl-6 space-y-4 mb-6">
       <li className="pl-2"><strong>Mailing Address:</strong> Mail the postcard with proper postage affixed to: Amplify AMOE, [Insert Address][cite: 4].</li>
@@ -38,7 +38,7 @@ const RulesContent = () => (
       <li className="pl-2"><strong>AMOE Allocation Algorithm:</strong> Valid AMOE entries are aggregated by Tier. Immediately prior to the Drawing Date, the Sponsor will utilize a deterministic algorithm to allocate the AMOE entries in a round-robin fashion across all Active Circles within that specific Tier. In the event of a tie during allocation, postmark dates and digital scan timestamps will be utilized to determine placement. This protocol ensures that all AMOE entries are treated with equal dignity and possess the exact same mathematical probability of winning as paid entries within their assigned Circle.</li>
     </ul>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">6 &nbsp;&nbsp; Prize Structure and Odds of Winning</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">6 &nbsp;&nbsp; Prize Structure and Odds of Winning</h3>
     <p className="mb-6">For each Active Circle successfully drawn, the following prizes will be awarded based on the Tier:</p>
     <div className="overflow-x-auto my-10">
       <table className="w-full text-left border-collapse border border-slate-200 rounded-xl overflow-hidden shadow-sm">
@@ -69,11 +69,11 @@ const RulesContent = () => (
     </div>
     <p className="text-sm text-slate-500 italic mb-6"><strong>*Odds Disclosure:</strong> The "Mathematical Base Odds" listed above represent the probability based strictly on the 400-paid-participant cap per Circle. However, the actual odds of winning depend entirely on the total number of eligible entries received for the specific drawing, including all allocated free AMOE entries. The injection of AMOE entries into an Active Circle mathematically dilutes the odds equally for all participants within that Circle.</p>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">7 &nbsp;&nbsp; Winner Selection and Prize Allocation</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">7 &nbsp;&nbsp; Winner Selection and Prize Allocation</h3>
     <p className="mb-6">On the designated Drawing Date, the Sponsor will execute a drawing for each Active Circle utilizing a provably fair, deterministically seeded Random Number Generator (RNG) or a certified third-party auditing service.</p>
     <p className="mb-6">For a given Active Circle, the Sponsor will randomly select <em>k</em> unique eligible entries (where <em>k</em> represents the total number of prize slots for that specific Tier) from the combined pool of paid and AMOE entries assigned to that Circle, forming the "Winners Pool." No entrant may be selected more than once in the same monthly drawing. Following the population of the Winners Pool, the specific prizes (Grand, Second, Third, etc.) will be randomly assigned to the unique individuals within the pool without replacement until all prizes are exhausted.</p>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">8 &nbsp;&nbsp; Winner Notification, Verification, and Taxation</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">8 &nbsp;&nbsp; Winner Notification, Verification, and Taxation</h3>
     <p className="mb-6">Potential Winners will be notified via email and/or telephone within forty-eight (48) hours following the drawing.</p>
     <ul className="list-disc pl-6 space-y-4 mb-6">
       <li className="pl-2"><strong>Response and Verification:</strong> Potential Winners must respond within three (3) business days. Verification requires the execution and return of an Affidavit of Eligibility, a Liability Release, and a Publicity Release (where permitted by law).</li>
@@ -81,13 +81,13 @@ const RulesContent = () => (
       <li className="pl-2"><strong>Tax Liability:</strong> All federal, state, and local taxes, and any other costs associated with prize acceptance, are the sole responsibility of the Winner. The Sponsor will issue an IRS Form 1099-MISC to all Winners. If a Winner fails to respond, fails identity verification, or refuses to provide a W-9, the prize is forfeited, and an alternate winner will be selected.</li>
     </ul>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">9 &nbsp;&nbsp; State Registration and Bonding</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">9 &nbsp;&nbsp; State Registration and Bonding</h3>
     <p className="mb-6">In compliance with state regulations governing high-value promotions, this Sweepstakes has been formally registered, and a surety bond covering the aggregate retail value of all prizes has been posted with the Florida Department of Agriculture and Consumer Services and the New York State Department of State.</p>
 
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">10 &nbsp;&nbsp; General Conditions</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">10 &nbsp;&nbsp; General Conditions</h3>
     <p className="mb-6">The Sponsor reserves the right to suspend, modify, or cancel the Sweepstakes in the event of technical failure, network attacks, fraud, force majeure, or any other circumstance that destroys the integrity or viability of the promotion. Disputes will be governed by the laws of Florida and resolved via binding arbitration as stipulated in the Platform Terms of Service.</p>
     
-    <h3 className="text-lg md:text-xl font-black uppercase text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">11 &nbsp;&nbsp; Winners List</h3>
+    <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">11 &nbsp;&nbsp; Winners List</h3>
     <p className="mb-6">To request a list of winners, send a self-addressed, stamped envelope to: Amplify Winners List Request, [Insert Address][cite: 4]. Requests must be received within sixty (60) days following the conclusion of the applicable Promotional Period[cite: 4]. Residents of Vermont and Washington may omit return postage[cite: 4].</p>
   </>
 );

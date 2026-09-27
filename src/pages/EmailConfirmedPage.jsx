@@ -26,7 +26,7 @@ const EmailConfirmedPage = () => {
                 <div className="bg-green-100 w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mx-auto mb-8">
                   <CheckCircle size={44} className="text-green-600 md:w-14 md:h-14" />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-black text-indigo-950 mb-4 italic uppercase tracking-tighter">
+                <h1 className="text-3xl md:text-4xl font-semibold text-indigo-950 mb-4 tracking-tight">
                   Email confirmed.
                 </h1>
                 <p className="text-slate-500 text-base md:text-lg font-medium leading-relaxed mb-8 md:mb-10">

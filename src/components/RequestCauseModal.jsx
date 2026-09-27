@@ -91,7 +91,7 @@ const RequestCauseModal = ({ open, onClose, onSubmitted }) => {
             <div className="bg-emerald-50 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle size={26} className="text-emerald-600" />
             </div>
-            <h3 className="text-xl md:text-2xl font-black uppercase italic text-indigo-950 tracking-tight mb-2">Request sent</h3>
+            <h3 className="text-xl md:text-2xl font-semibold text-indigo-950 tracking-tight mb-2">Request sent</h3>
             <p className="text-sm text-slate-600 font-medium leading-relaxed mb-6">
               Thanks for the suggestion. Our team reviews every organization that's submitted, and we'll
               reach out if we need anything else.
@@ -105,7 +105,7 @@ const RequestCauseModal = ({ open, onClose, onSubmitted }) => {
           </div>
         ) : (
           <>
-            <h3 className="text-xl md:text-2xl font-black uppercase italic text-indigo-950 tracking-tight mb-2 pr-6">
+            <h3 className="text-xl md:text-2xl font-semibold text-indigo-950 tracking-tight mb-2 pr-6">
               Request an organization
             </h3>
             <p className="text-sm text-slate-600 font-medium leading-relaxed mb-5">
