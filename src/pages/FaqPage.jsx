@@ -44,7 +44,7 @@ const FaqPage = () => {
       title: "Membership & Payments",
       faqs: [
         { q: "When am I charged?", a: "Your first contribution processes immediately upon joining. Subsequent charges occur on the same date each month, after your circle reaches 400 members and goes live." },
-        { q: "Can I cancel?", a: <>Yes. Memberships can be paused or canceled at any time before your next scheduled monthly charge. Just send a quick email to <a href="mailto:support@amplifygive.com" className="text-indigo-600 hover:underline">support@amplifygive.com</a> and we'll take care of it.</> },
+        { q: "Can I cancel?", a: <>Yes. Cancel anytime from <Link to="/account" className="text-indigo-600 hover:underline">My Account</Link> — it takes effect immediately and you won't be charged again. Prefer we handle it for you? Email <a href="mailto:support@amplifygive.com" className="text-indigo-600 hover:underline">support@amplifygive.com</a> and we'll take care of it.</> },
         { q: "Is my contribution tax-deductible?", a: "Contributions are made to (Nonprofit), a registered 501(c)(3) donor-advised fund, and are tax-deductible to the extent permitted by law. Prize winnings are subject to applicable tax regulations. We recommend consulting your tax advisor for your specific situation." },
         { q: "How are winners notified?", a: "Winners are contacted directly via the email on their account and announced publicly on our Winners page with their consent." },
         { q: "Is my payment information secure?", a: "Yes. All payments are processed via Stripe. Your card details are never stored on Amplify's servers." }
