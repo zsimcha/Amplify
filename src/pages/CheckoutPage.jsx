@@ -561,10 +561,20 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             {validationErrors.phone && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.phone}</p>}
                           </div>
                           <div>
-                            <label htmlFor="address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
-                            <input id="address" name="street-address" autoComplete="street-address" type="text" maxLength={200} value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={fieldClass(!!validationErrors.address)} placeholder="123 Main St" />
-                            {validationErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.address}</p>}
+                            <label htmlFor="dateOfBirth" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Date of Birth</label>
+                            <input id="dateOfBirth" name="bday" autoComplete="bday" type="date" max={TODAY_ISO} value={checkoutForm.dateOfBirth} onChange={e => setCheckoutForm({...checkoutForm, dateOfBirth: e.target.value})} className={fieldClass(!!validationErrors.dateOfBirth)} />
+                            {validationErrors.dateOfBirth ? (
+                              <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.dateOfBirth}</p>
+                            ) : (
+                              <p className="text-[0.5625rem] text-slate-400 mt-1.5 font-medium">Minimum age varies by state.</p>
+                            )}
                           </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
+                          <input id="address" name="street-address" autoComplete="street-address" type="text" maxLength={200} value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={fieldClass(!!validationErrors.address)} placeholder="123 Main St" />
+                          {validationErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.address}</p>}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -580,21 +590,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
-                            <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
-                            {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
-                          </div>
-                          <div>
-                            <label htmlFor="dateOfBirth" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Date of Birth</label>
-                            <input id="dateOfBirth" name="bday" autoComplete="bday" type="date" max={TODAY_ISO} value={checkoutForm.dateOfBirth} onChange={e => setCheckoutForm({...checkoutForm, dateOfBirth: e.target.value})} className={fieldClass(!!validationErrors.dateOfBirth)} />
-                            {validationErrors.dateOfBirth ? (
-                              <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.dateOfBirth}</p>
-                            ) : (
-                              <p className="text-[0.5625rem] text-slate-400 mt-1.5 font-medium">Minimum age varies by state.</p>
-                            )}
-                          </div>
+                        <div className="md:w-1/2 md:pr-1.5">
+                          <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
+                          <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
+                          {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
                         </div>
                       </section>
 
