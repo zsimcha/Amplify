@@ -7,6 +7,12 @@ const FORMSPREE_ENDPOINT = import.meta.env.VITE_FORMSPREE_ENDPOINT;
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  // Honeypot: a field real visitors never see or fill in (off-screen, and
+  // never focusable). Bots that fill every input in a scraped form trip it;
+  // we accept the submission but quietly drop it instead of sending to
+  // Formspree, so a bot gets the same "success" response either way and has
+  // no signal to adapt against.
+  const [website, setWebsite] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,10 +24,16 @@ const ContactPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    // Honeypot tripped: pretend to succeed without actually sending anything.
+    if (website) {
+      setSubmitted(true);
+      return;
+    }
+
     // Strict email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    
+
     if (!emailRegex.test(formData.email)) {
       setEmailError('Please enter a complete email address (e.g., name@domain.com)');
       return;
@@ -97,6 +109,7 @@ const ContactPage = () => {
                 onClick={() => {
                   setSubmitted(false);
                   setFormData({ name: '', email: '', message: '' }); // Reset form
+                  setWebsite('');
                 }}
                 className="mt-8 text-sm font-bold text-indigo-600 hover:text-indigo-900 transition-colors uppercase tracking-widest"
               >
@@ -105,6 +118,24 @@ const ContactPage = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot — off-screen but present in the DOM/tab order isn't
+                  used on purpose: a plain visually-hidden field is what most
+                  form-filling bots trip over, while staying invisible and
+                  unreachable (aria-hidden + tabIndex=-1) for real visitors,
+                  including screen reader users. */}
+              <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+                <label htmlFor="website">Leave this field blank</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-xs font-black uppercase tracking-widest text-slate-500 mb-2">Your Name</label>

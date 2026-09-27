@@ -4,8 +4,8 @@
 // own auth emails and POSTs here instead, letting us render + send them from
 // an Amplify address via Resend (the same provider send-welcome-email uses).
 //
-// Handles: signup confirmation, password recovery, magic link, email change,
-// and reauthentication OTP.
+// Handles: signup confirmation, ambassador invite, password recovery, magic
+// link, email change, and reauthentication OTP.
 //
 // ── Activation (one-time, in the Supabase dashboard) ────────────────────────
 //   1. Authentication → Hooks → "Send Email" hook → enable, point at this
@@ -21,8 +21,9 @@
 //      and the Vercel preview domain). The link itself lives on supabase.co
 //      and works regardless, but the post-verify redirect must be allowlisted.
 //
-// Deployed with verify_jwt = false: auth hooks authenticate with a Standard
-// Webhooks signature (verified below), not a user JWT.
+// Deployed with verify_jwt = false (see supabase/config.toml): auth hooks
+// authenticate with a Standard Webhooks signature (verified below), not a
+// user JWT.
 
 import { Webhook } from "https://esm.sh/standardwebhooks@1.0.0";
 import { Resend } from "https://esm.sh/resend@3.2.0";
@@ -49,16 +50,35 @@ type EmailData = {
   old_email?: string;
 };
 
+type HookUser = { email: string; new_email?: string };
+
+type OutgoingEmail = { to: string; subject: string; html: string };
+
 // The verification link lives on the Supabase Auth server (always reachable);
 // after verifying the token it redirects the user to redirect_to.
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
-const buildConfirmationURL = (d: EmailData, tokenHash: string) => {
+const buildConfirmationURL = (d: EmailData, tokenHash: string, redirectTo?: string) => {
   const params = new URLSearchParams({
     token: tokenHash,
     type: d.email_action_type,
-    redirect_to: d.redirect_to,
+    redirect_to: redirectTo ?? d.redirect_to,
   });
   return `${SUPABASE_URL}/auth/v1/verify?${params.toString()}`;
+};
+
+// Invites must land somewhere the recipient can actually set a password.
+// Supabase's dashboard "Invite user" button sends them to the bare Site URL,
+// which would drop a brand-new ambassador on the marketing homepage with a
+// session and no password. Overriding it here means the destination is right
+// no matter how the invite was sent.
+//
+// NOTE: this URL must be listed under Authentication → URL Configuration →
+// Redirect URLs, or Supabase will refuse the redirect after verification.
+const inviteRedirect = (d: EmailData) => {
+  const base = (d.redirect_to || d.site_url || "").replace(/\/+$/, "");
+  // Respect an explicit destination if the invite was sent with one.
+  if (base.includes("/reset-password")) return d.redirect_to;
+  return `${base}/reset-password?invite=1`;
 };
 
 // Branded shell shared by every message, mirroring send-welcome-email.
@@ -107,7 +127,7 @@ const otpBlock = (token: string) => `
   </div>
 `;
 
-// Returns { subject, html } for the given auth email event.
+// Returns { subject, html } for every single-recipient auth email event.
 function renderMessage(d: EmailData) {
   switch (d.email_action_type) {
     case "signup":
@@ -119,6 +139,24 @@ function renderMessage(d: EmailData) {
             para("Welcome to <strong>Amplify</strong>. Confirm your email address to activate your account and manage your membership, receipts, and payment details anytime.") +
             button(buildConfirmationURL(d, d.token_hash), "Confirm My Account"),
           footerNote: "You're receiving this because someone signed up for Amplify with this email. If that wasn't you, you can safely ignore it.",
+        }),
+      };
+
+    // Sent by supabase.auth.admin.inviteUserByEmail — how referral
+    // ambassadors are onboarded. Without this case these fell through to the
+    // generic "account notification" default, which reads as spam to someone
+    // who has never had an Amplify account.
+    case "invite":
+      return {
+        subject: "You're invited to the Amplify Referral Program",
+        html: shell({
+          heading: "You're invited",
+          bodyHtml:
+            para("You've been invited to join the <strong>Amplify</strong> Referral Program as an ambassador.") +
+            para("Set your password to activate your account. Your personal referral link and earnings dashboard are waiting inside, under <strong>My Account</strong>.") +
+            button(buildConfirmationURL(d, d.token_hash, inviteRedirect(d)), "Set My Password") +
+            para("This invitation link can only be used once. If it expires before you get to it, just ask us to send another."),
+          footerNote: "If you weren't expecting this invitation, you can safely ignore this email.",
         }),
       };
 
@@ -146,25 +184,6 @@ function renderMessage(d: EmailData) {
         }),
       };
 
-    // Secure email change sends one message per address. The message to the
-    // NEW address carries token_hash_new; the one to the current address
-    // carries token_hash. Fall back to token_hash when the new hash is absent.
-    case "email_change":
-    case "email_change_new":
-    case "email_change_current": {
-      const tokenHash = d.token_hash_new || d.token_hash;
-      return {
-        subject: "Confirm your new Amplify email",
-        html: shell({
-          heading: "Confirm your email change",
-          bodyHtml:
-            para("Confirm this email address to finish updating the address on your <strong>Amplify</strong> account.") +
-            button(buildConfirmationURL(d, tokenHash), "Confirm Email Change"),
-          footerNote: "If you didn't request this change, please contact us at Support@AmplifyGive.com right away.",
-        }),
-      };
-    }
-
     case "reauthentication":
       return {
         subject: "Your Amplify verification code",
@@ -191,6 +210,59 @@ function renderMessage(d: EmailData) {
   }
 }
 
+// Email change is the one event that can need two messages, and GoTrue's
+// field names for it are reversed for backward compatibility (see "Email
+// change behavior and token hash mapping" in the Send Email Hook docs):
+//
+//   token_hash      → the NEW address   (user.new_email)
+//   token_hash_new  → the CURRENT address (user.email)
+//
+// With Secure Email Change on, both hashes are present and both addresses
+// must confirm before the change applies. With it off, only token_hash is
+// present and only the new address is mailed. The previous version mailed a
+// single link to the current address, so the new address never received its
+// confirmation and the change could never complete.
+function renderEmailChange(user: HookUser, d: EmailData): OutgoingEmail[] {
+  const newAddress = user.new_email;
+  const messages: OutgoingEmail[] = [];
+
+  if (newAddress && d.token_hash) {
+    messages.push({
+      to: newAddress,
+      subject: "Confirm your new Amplify email",
+      html: shell({
+        heading: "Confirm your new email",
+        bodyHtml:
+          para(`Confirm <strong>${esc(newAddress)}</strong> as the new email address for your <strong>Amplify</strong> account.`) +
+          button(buildConfirmationURL(d, d.token_hash), "Confirm New Email"),
+        footerNote: "If you didn't request this change, you can safely ignore this email.",
+      }),
+    });
+  }
+
+  if (d.token_hash_new) {
+    messages.push({
+      to: user.email,
+      subject: "Approve your Amplify email change",
+      html: shell({
+        heading: "Approve your email change",
+        bodyHtml:
+          para(`Someone asked to change the email on your <strong>Amplify</strong> account${newAddress ? ` to <strong>${esc(newAddress)}</strong>` : ""}. Approve it below. The change finishes once the new address is confirmed too.`) +
+          button(buildConfirmationURL(d, d.token_hash_new), "Approve Email Change"),
+        footerNote: "If you didn't request this change, don't click the link — contact us at Support@AmplifyGive.com right away.",
+      }),
+    });
+  }
+
+  return messages;
+}
+
+function renderMessages(user: HookUser, d: EmailData): OutgoingEmail[] {
+  if (d.email_action_type === "email_change") return renderEmailChange(user, d);
+  const { subject, html } = renderMessage(d);
+  return [{ to: user.email, subject, html }];
+}
+
 const resend = new Resend(Deno.env.get("RESEND_API_KEY") as string);
 const rawHookSecret = Deno.env.get("SEND_EMAIL_HOOK_SECRET") ?? "";
 const hookSecret = rawHookSecret.replace("v1,whsec_", "");
@@ -203,12 +275,12 @@ Deno.serve(async (req) => {
   const payload = await req.text();
   const headers = Object.fromEntries(req.headers);
 
-  let user: { email: string };
+  let user: HookUser;
   let email_data: EmailData;
   try {
     if (!hookSecret) throw new Error("SEND_EMAIL_HOOK_SECRET is not configured.");
     const wh = new Webhook(hookSecret);
-    const verified = wh.verify(payload, headers) as { user: typeof user; email_data: EmailData };
+    const verified = wh.verify(payload, headers) as { user: HookUser; email_data: EmailData };
     user = verified.user;
     email_data = verified.email_data;
   } catch (error) {
@@ -220,9 +292,12 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { subject, html } = renderMessage(email_data);
-    const { error } = await resend.emails.send({ from: FROM, to: [user.email], subject, html });
-    if (error) throw error;
+    const messages = renderMessages(user, email_data);
+    if (messages.length === 0) throw new Error(`Nothing to send for ${email_data.email_action_type}.`);
+    for (const { to, subject, html } of messages) {
+      const { error } = await resend.emails.send({ from: FROM, to: [to], subject, html });
+      if (error) throw error;
+    }
   } catch (error) {
     // Surface send failures to GoTrue so it can retry / show an error.
     return new Response(

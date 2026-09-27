@@ -1,12 +1,27 @@
 // Pure validation logic for the checkout form. Extracted from CheckoutPage so
 // it can be unit tested without rendering the page, and reused if another
 // entry point ever needs the same checks.
+import { minAgeForState } from './constants';
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 export const ZIP_REGEX = /^\d{5}(-\d{4})?$/;
 
 export function isValidZip(zip) {
   return ZIP_REGEX.test(zip);
+}
+
+// Age in whole years as of `asOf` (defaults to now). `dob` is a
+// YYYY-MM-DD string, the shape an <input type="date"> gives us. Returns
+// null for anything that doesn't parse, so callers don't have to guard
+// against NaN creeping into a comparison.
+export function calculateAge(dob, asOf = new Date()) {
+  if (!dob) return null;
+  const birth = new Date(`${dob}T00:00:00`);
+  if (Number.isNaN(birth.getTime())) return null;
+  let age = asOf.getFullYear() - birth.getFullYear();
+  const monthDiff = asOf.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && asOf.getDate() < birth.getDate())) age--;
+  return age;
 }
 
 function isInvalidPhone(phone) {
@@ -36,6 +51,19 @@ export function computeCheckoutErrors({
   if (!checkoutForm.city.trim()) errors.city = 'City is required.';
   if (!checkoutForm.state) errors.state = 'Select a state.';
   if (!isValidZip(checkoutForm.zipCode)) errors.zipCode = 'Enter a valid zip code.';
+
+  // Official Rules §3: 18+ everywhere, except 19 in AL/NE and 21 in MS.
+  const age = calculateAge(checkoutForm.dateOfBirth);
+  if (age === null) {
+    errors.dateOfBirth = 'Enter your date of birth.';
+  } else {
+    const minAge = minAgeForState(checkoutForm.state);
+    if (age < minAge) {
+      errors.dateOfBirth = minAge > 18
+        ? `${checkoutForm.state} requires entrants to be at least ${minAge}.`
+        : 'You must be at least 18 to join.';
+    }
+  }
 
   // Account credentials (new visitors only — signed-in members already have one)
   if (!isSignedIn) {

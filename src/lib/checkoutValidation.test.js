@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { computeCheckoutErrors, isValidZip } from './checkoutValidation';
+import { computeCheckoutErrors, isValidZip, calculateAge } from './checkoutValidation';
 
 const validForm = {
   fullName: 'Jane Doe',
@@ -11,6 +11,7 @@ const validForm = {
   city: 'Springfield',
   state: 'IL',
   zipCode: '62704',
+  dateOfBirth: '1990-01-01',
 };
 
 const validBilling = { line1: '456 Oak Ave', line2: '', city: 'Springfield', state: 'IL', zipCode: '62704' };
@@ -119,5 +120,62 @@ describe('computeCheckoutErrors', () => {
 
   it('requires agreement to terms', () => {
     expect(computeCheckoutErrors(baseArgs({ agreedToTerms: false })).terms).toBeDefined();
+  });
+
+  describe('date of birth / minimum age', () => {
+    it('requires a date of birth', () => {
+      expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, dateOfBirth: '' } })).dateOfBirth).toBeDefined();
+    });
+
+    it('rejects an unparseable date of birth', () => {
+      expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, dateOfBirth: 'not-a-date' } })).dateOfBirth).toBeDefined();
+    });
+
+    it('accepts an 18-year-old in a default-minimum-age state', () => {
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+      const dob = eighteenYearsAgo.toISOString().slice(0, 10);
+      expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, state: 'NY', dateOfBirth: dob } })).dateOfBirth).toBeUndefined();
+    });
+
+    it('rejects someone a day short of 18', () => {
+      const almostEighteen = new Date();
+      almostEighteen.setFullYear(almostEighteen.getFullYear() - 18);
+      almostEighteen.setDate(almostEighteen.getDate() + 1);
+      const dob = almostEighteen.toISOString().slice(0, 10);
+      expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, state: 'NY', dateOfBirth: dob } })).dateOfBirth).toBeDefined();
+    });
+
+    it('rejects an 18-year-old in Alabama, Nebraska, and Mississippi (19/19/21 minimum)', () => {
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+      const dob = eighteenYearsAgo.toISOString().slice(0, 10);
+      for (const state of ['AL', 'NE', 'MS']) {
+        expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, state, dateOfBirth: dob } })).dateOfBirth).toBeDefined();
+      }
+    });
+
+    it('accepts a 21-year-old in Mississippi', () => {
+      const twentyOneYearsAgo = new Date();
+      twentyOneYearsAgo.setFullYear(twentyOneYearsAgo.getFullYear() - 21);
+      const dob = twentyOneYearsAgo.toISOString().slice(0, 10);
+      expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, state: 'MS', dateOfBirth: dob } })).dateOfBirth).toBeUndefined();
+    });
+  });
+});
+
+describe('calculateAge', () => {
+  it('computes whole years elapsed', () => {
+    expect(calculateAge('1990-06-15', new Date('2026-06-15'))).toBe(36);
+  });
+
+  it('has not turned the year yet if the birthday has not occurred', () => {
+    expect(calculateAge('1990-06-15', new Date('2026-06-14'))).toBe(35);
+  });
+
+  it('returns null for missing or invalid input', () => {
+    expect(calculateAge('')).toBeNull();
+    expect(calculateAge(null)).toBeNull();
+    expect(calculateAge('not-a-date')).toBeNull();
   });
 });

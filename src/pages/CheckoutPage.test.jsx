@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import CheckoutPage from './CheckoutPage';
@@ -54,15 +54,22 @@ function renderCheckout({ setAppData = vi.fn() } = {}) {
 async function fillRequiredFields({ includeAccountCredentials }) {
   const user = userEvent.setup();
   await user.type(screen.getByLabelText('Full Name'), 'Jane Donor');
-  // Signed-in members get their email pre-filled from the session; clear it
-  // first so typing doesn't append to that value.
-  await user.clear(screen.getByLabelText('Email'));
-  await user.type(screen.getByLabelText('Email'), 'jane@example.com');
+  // Signed-in members check out under their account email, which is locked;
+  // only guests type one.
+  if (includeAccountCredentials) {
+    await user.type(screen.getByLabelText('Email'), 'jane@example.com');
+  }
   await user.type(screen.getByLabelText('Phone'), '5551234567');
   await user.type(screen.getByLabelText('Address'), '123 Main St');
   await user.type(screen.getByLabelText('City'), 'New York');
-  await user.selectOptions(screen.getByLabelText('State'), 'NY');
+  // State is a custom listbox (not a native <select>), so it opens like any
+  // other button and the option is picked by its visible name.
+  await user.click(screen.getByLabelText('State'));
+  await user.click(screen.getByRole('option', { name: 'New York' }));
   await user.type(screen.getByLabelText('Zip Code'), '10001');
+  // Date inputs don't reliably accept user.type() keystrokes across browsers
+  // under jsdom; set the value directly like a native date picker would.
+  fireEvent.change(screen.getByLabelText('Date of Birth'), { target: { value: '1990-01-01' } });
 
   if (includeAccountCredentials) {
     await user.type(screen.getByLabelText('Password'), 'password123');
@@ -186,11 +193,50 @@ describe('CheckoutPage submit orchestration', () => {
     const setAppData = vi.fn();
 
     renderCheckout({ setAppData });
+    expect(screen.getByLabelText('Email')).toHaveAttribute('readonly');
+    expect(screen.getByLabelText('Email')).toHaveValue('existing@example.com');
     const user = await fillRequiredFields({ includeAccountCredentials: false });
     await submit(user);
 
     await waitFor(() => expect(mocks.rpc).toHaveBeenCalled());
     expect(mocks.signUp).not.toHaveBeenCalled();
+    expect(mocks.rpc).toHaveBeenCalledWith('process_checkout', expect.objectContaining({
+      p_email: 'existing@example.com',
+    }));
     await waitFor(() => expect(screen.getByText("You're in.")).toBeInTheDocument());
+  });
+
+  it("shows the server's own validation message (e.g. a duplicate tier) instead of the generic error", async () => {
+    mocks.useAuth.mockReturnValue({ user: { email: 'existing@example.com' } });
+    mocks.rpc.mockResolvedValue({
+      error: { code: 'P0001', message: 'You already have an active Silver membership. You can manage it from My Account.' },
+    });
+
+    renderCheckout();
+    const user = await fillRequiredFields({ includeAccountCredentials: false });
+    await submit(user);
+
+    expect(await screen.findByText(/already have an active Silver membership/)).toBeInTheDocument();
+    expect(screen.queryByText("You're in.")).not.toBeInTheDocument();
+  });
+
+  it('falls back to Silver for an unknown tier instead of crashing', async () => {
+    mocks.useAuth.mockReturnValue({ user: null });
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/checkout', state: { tier: 'platinum' } }]}>
+        <CheckoutPage appData={appDataStub} setAppData={vi.fn()} />
+      </MemoryRouter>
+    );
+    expect(screen.getAllByText(/\$250/).length).toBeGreaterThan(0);
+  });
+
+  it('honors a ?tier= link', async () => {
+    mocks.useAuth.mockReturnValue({ user: null });
+    render(
+      <MemoryRouter initialEntries={['/checkout?tier=diamond']}>
+        <CheckoutPage appData={appDataStub} setAppData={vi.fn()} />
+      </MemoryRouter>
+    );
+    expect(screen.getAllByText(/\$1,000/).length).toBeGreaterThan(0);
   });
 });

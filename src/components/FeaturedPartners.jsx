@@ -46,7 +46,10 @@ const RabbinicPill = () => (
   <div className="mt-10 md:mt-14 lg:mt-16 flex justify-center reveal">
     <Link
       to="/about#rabbinic-panel"
-      className="inline-flex items-center gap-2.5 md:gap-4 lg:gap-5 rounded-full border border-white/15 bg-white/[0.06] pl-2 pr-4 py-2 md:pl-2.5 md:pr-7 md:py-2.5 lg:pl-3 lg:pr-9 lg:py-3 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      // scale-90 shrinks the whole pill ~10% as one unit (avatars, text, icon,
+      // padding all together) rather than nudging each size utility below on
+      // its own, which would drift their proportions relative to each other.
+      className="inline-flex items-center gap-2.5 md:gap-4 lg:gap-5 rounded-full border border-white/15 bg-white/[0.06] pl-2 pr-4 py-2 md:pl-2.5 md:pr-7 md:py-2.5 lg:pl-3 lg:pr-9 lg:py-3 hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 scale-90"
     >
       <span className="flex -space-x-3.5 md:-space-x-3 lg:-space-x-4 shrink-0">
         {RABBI_PHOTOS.map((src, i) => (

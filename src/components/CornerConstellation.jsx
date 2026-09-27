@@ -1,5 +1,14 @@
 import { useMemo } from 'react';
 
+// Seeded pseudo-random generator, so dots stay stable across renders.
+const makeRng = (seed) => {
+  let s = seed * 9301 + 49297;
+  return () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+};
+
 /**
  * Generates a constellation-style dot pattern that's densest in one corner
  * and fades toward the opposite corner. Used in PageLayout headers and
@@ -18,12 +27,7 @@ const CornerConstellation = ({
   style,
 }) => {
   const dots = useMemo(() => {
-    // Seeded pseudo-random so dots stay stable across renders
-    let s = seed * 9301 + 49297;
-    const rand = () => {
-      s = (s * 9301 + 49297) % 233280;
-      return s / 233280;
-    };
+    const rand = makeRng(seed);
 
     const result = [];
     const cornerX = corner.includes('right') ? width : 0;

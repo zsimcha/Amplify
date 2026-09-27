@@ -68,7 +68,9 @@ const LoginPage = () => {
       await supabase.auth.resend({
         type: 'signup',
         email,
-        options: { emailRedirectTo: `${window.location.origin}/account` },
+        // Same landing page as the original signup link, which reports an
+        // expired or already-used link instead of bouncing to sign-in.
+        options: { emailRedirectTo: `${window.location.origin}/welcome` },
       });
     } catch {
       // Ignore — we show the same confirmation regardless (no enumeration).

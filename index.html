@@ -35,19 +35,34 @@
       }
     </script>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L9BB1FT5GE"></script>
+    <!-- Analytics (Google Analytics + Microsoft Clarity) load only when:
+         - the browser isn't sending a Global Privacy Control opt-out, which the
+           Privacy Policy commits to honoring; and
+         - the URL doesn't carry auth tokens. Email-link landings (password
+           reset, signup confirmation, invites) hold the session in the
+           #fragment until supabase-js consumes it, and Clarity's session
+           replay would otherwise record it. -->
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-L9BB1FT5GE');
-    </script>
-    <script type="text/javascript">
+      (function () {
+        var optedOut = navigator.globalPrivacyControl === true;
+        var hasAuthTokens = /(^|[#&])(access_token|refresh_token)=/.test(location.hash);
+        if (optedOut || hasAuthTokens) return;
+
+        var ga = document.createElement('script');
+        ga.async = true;
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-L9BB1FT5GE';
+        document.head.appendChild(ga);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-L9BB1FT5GE');
+
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
             t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "w0b9lhhs16");
+      })();
     </script>
   </head>
   <body>

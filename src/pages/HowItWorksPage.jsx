@@ -44,19 +44,19 @@ const useInView = (threshold = 0.3) => {
 // ============================================================================
 // ODDS VISUALIZER
 // ============================================================================
+// Each winner dot fills with `color` and carries a `drop-shadow` halo in
+// `glow`. The "pop" comes from a deep, high-contrast fill paired with a
+// *lighter* glow, which reads as a two-tone luminous halo. Keep that recipe
+// consistent across all three tiers so gold and diamond read as strongly as
+// silver.
+const tierConfig = {
+  silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
+  gold:    { winners: 8,  color: '#eab308', glow: '#facc15' },
+  diamond: { winners: 16, color: '#4f46e5', glow: '#818cf8' },
+};
+
 const OddsVisualizer = ({ tierData }) => {
   const [activeTier, setActiveTier] = useState('diamond');
-
-  // Each winner dot fills with `color` and carries a `drop-shadow` halo in
-  // `glow`. The "pop" comes from a deep, high-contrast fill paired with a
-  // *lighter* glow, which reads as a two-tone luminous halo. Keep that recipe
-  // consistent across all three tiers so gold and diamond read as strongly as
-  // silver.
-  const tierConfig = {
-    silver:  { winners: 4,  color: '#475569', glow: '#64748b' },
-    gold:    { winners: 8,  color: '#eab308', glow: '#facc15' },
-    diamond: { winners: 16, color: '#4f46e5', glow: '#818cf8' },
-  };
 
   const winnerSet = useMemo(() => {
     const GRID = 20;
@@ -442,7 +442,7 @@ const HowItWorksPage = ({ appData }) => {
   const timeline = [
     { num: '01', title: 'Joining',              titleColor: 'text-indigo-600',  body: "Choose your circle, enter your details and your first contribution processes immediately. You're in." },
     { num: '02', title: 'Choosing Your Causes',  titleColor: 'text-sky-600',     body: "Pick one Chessed organization, split across a few, or request a new one. Keep it the same, or change it anytime." },
-    { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Charged automatically each month once your circle fills. Pause or cancel any time, no penalty, no runaround.' },
+    { num: '03', title: 'Recurring Giving',      titleColor: 'text-amber-700',   body: 'Charged automatically each month once your circle fills. Cancel anytime from My Account, no penalty, no runaround.' },
     { num: '04', title: "Tax & Ma'aser",         titleColor: 'text-emerald-600', body: <>Your donation is tax deductible. And our Rabbinic Panel has approved using Ma'aser funds. <Link to="/about#rabbinic-panel" className="text-indigo-600 hover:underline">See guidance.</Link></> },
   ];
 

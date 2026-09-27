@@ -54,6 +54,8 @@ const Feedback = ({ kind, children }) => (
 
 const inputClass = fieldClass(false);
 
+const KNOWN_CAUSES = new Set(partners.map((p) => p.slug));
+
 // Small logo for the collapsed causes list; falls back to the org's initial
 // when the logo file isn't uploaded yet.
 const CauseLogo = ({ partner }) => {
@@ -109,6 +111,13 @@ const AccountPage = () => {
   const [editingCauses, setEditingCauses] = useState(false);
   const [requestOpen, setRequestOpen] = useState(false);
 
+  useEffect(() => {
+    if (cancelModalId === null) return;
+    const onKey = (e) => { if (e.key === 'Escape') setCancelModalId(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [cancelModalId]);
+
   // Route guard: this page requires a session.
   useEffect(() => {
     if (!loading && !user) {
@@ -134,12 +143,14 @@ const AccountPage = () => {
     if (user) fetchSubscriptions();
   }, [user, fetchSubscriptions]);
 
-  const loadCauses = useCallback(async () => {
+  const loadCauses = useCallback(async (email) => {
     try {
       // Flush any selection made during a confirmation-pending checkout, then
       // read the authoritative set.
-      await applyPendingCauses().catch(() => {});
-      const slugs = await getMyCauses();
+      await applyPendingCauses(email).catch(() => {});
+      // Drop slugs for organizations no longer on the roster. Kept, they'd
+      // count toward the 4-cause cap without a tile to deselect them by.
+      const slugs = (await getMyCauses()).filter((slug) => KNOWN_CAUSES.has(slug));
       setSavedCauses(slugs);
       setCausesDraft(slugs);
     } catch {
@@ -149,7 +160,7 @@ const AccountPage = () => {
   }, []);
 
   useEffect(() => {
-    if (user) loadCauses();
+    if (user) loadCauses(user.email);
   }, [user, loadCauses]);
 
   const causesDirty = savedCauses !== null && JSON.stringify(causesDraft) !== JSON.stringify(savedCauses);
@@ -227,7 +238,10 @@ const AccountPage = () => {
     }
     setEmailSubmitting(true);
     try {
-      const { error } = await supabase.auth.updateUser({ email: newEmail });
+      const { error } = await supabase.auth.updateUser(
+        { email: newEmail.trim() },
+        { emailRedirectTo: `${window.location.origin}/account` },
+      );
       if (error) {
         setEmailFeedback({ kind: 'error', text: error.message || 'Could not update email.' });
         return;
@@ -259,7 +273,10 @@ const AccountPage = () => {
         setPasswordFeedback({ kind: 'error', text: error.message || 'Could not update password.' });
         return;
       }
-      setPasswordFeedback({ kind: 'success', text: 'Your password has been updated.' });
+      // End every other session, so a device that shouldn't have access (the
+      // usual reason to change a password) loses it now.
+      await supabase.auth.signOut({ scope: 'others' }).catch(() => {});
+      setPasswordFeedback({ kind: 'success', text: 'Your password has been updated and other devices have been signed out.' });
       setNewPassword('');
       setConfirmPassword('');
     } catch {
@@ -329,7 +346,7 @@ const AccountPage = () => {
                 const statusStyle = STATUS_STYLES[sub.status] || STATUS_STYLES.cancelled;
                 const isActive = sub.status === 'active';
                 return (
-                  <div key={sub.id} className="border border-slate-200 rounded-xl md:rounded-2xl p-4 md:p-5">
+                  <div key={sub.id} id={`membership-${sub.id}`} className="border border-slate-200 rounded-xl md:rounded-2xl p-4 md:p-5">
                     <div className="flex items-center justify-between flex-wrap gap-3">
                       <div className="flex items-center gap-3">
                         <div className={`w-2.5 h-2.5 rounded-full ${tierStyle.dot}`}></div>
@@ -731,7 +748,12 @@ const AccountPage = () => {
                             </p>
 
                             <button
-                              onClick={() => { setCancelModalId(null); setChangePlanId(sub.id); setPendingTier(null); }}
+                              onClick={() => {
+                                setCancelModalId(null);
+                                setChangePlanId(sub.id);
+                                setPendingTier(null);
+                                document.getElementById(`membership-${sub.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                              }}
                               className="w-full py-3.5 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-black transition-colors flex items-center justify-center gap-2"
                             >
                               <ArrowUpDown size={14} /> See lower plans
@@ -759,9 +781,9 @@ const AccountPage = () => {
                     </div>
                   );
                 })}
-                {cancelFeedback && <Feedback kind={cancelFeedback.kind}>{cancelFeedback.text}</Feedback>}
               </div>
             )}
+            {cancelFeedback && <Feedback kind={cancelFeedback.kind}>{cancelFeedback.text}</Feedback>}
           </div>
         </SectionCard>
 
