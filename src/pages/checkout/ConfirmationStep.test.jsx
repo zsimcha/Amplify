@@ -50,8 +50,18 @@ describe('ConfirmationStep', () => {
     expect(screen.queryByText(/We've created your account/)).not.toBeInTheDocument();
   });
 
-  it('links back home', () => {
+  it('always offers a way back to the homepage', () => {
     renderStep({ selectedCommunity: 'General', causesSaved: false, causeSlugs: [], isSignedIn: true });
-    expect(screen.getByText('Return Home')).toHaveAttribute('href', '/');
+    expect(screen.getByText('Return home')).toHaveAttribute('href', '/');
+  });
+
+  it('sends a signed-in member to My Account', () => {
+    renderStep({ selectedCommunity: 'General', causesSaved: false, causeSlugs: [], isSignedIn: true });
+    expect(screen.getByText('Go to My Account')).toHaveAttribute('href', '/account');
+  });
+
+  it('sends a signed-out member to sign in', () => {
+    renderStep({ selectedCommunity: 'General', causesSaved: false, causeSlugs: [], isSignedIn: false });
+    expect(screen.getByText('Sign In')).toHaveAttribute('href', '/login');
   });
 });

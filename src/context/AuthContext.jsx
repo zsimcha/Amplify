@@ -4,6 +4,7 @@
 // (GoTrue) handles hashing, sessions, and email verification.
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { applyPendingCauses } from '../lib/charities';
 
 const AuthContext = createContext({ session: null, user: null, loading: true });
 
@@ -12,14 +13,20 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // A new member's post-checkout cause selection is stashed in localStorage
+    // until a session exists (see lib/charities.js). Flush it here, app-wide,
+    // the moment any session appears — not just when the member happens to
+    // visit My Account — so it isn't silently stranded on one device.
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session ?? null);
       setLoading(false);
+      if (data.session) applyPendingCauses().catch(() => {});
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession);
       setLoading(false);
+      if (newSession) applyPendingCauses().catch(() => {});
     });
 
     return () => subscription.unsubscribe();

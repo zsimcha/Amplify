@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, ChevronRight } from 'lucide-react';
 
 // Final "You're in" confirmation screen shown once checkout (and, if
 // applicable, the causes step) has completed.
@@ -27,7 +27,17 @@ const ConfirmationStep = ({ selectedCommunity, causesSaved, causeSlugs, isSigned
         We've created your account — if a confirmation email lands in your inbox, click it to activate sign-in. You can manage your membership anytime from <span className="font-bold text-slate-500">My Account</span>.
       </p>
     )}
-    <Link to="/" className="inline-block px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl">Return Home</Link>
+    <Link
+      to={isSignedIn ? '/account' : '/login'}
+      className="inline-flex items-center gap-2 px-12 py-4 md:py-5 bg-indigo-900 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl"
+    >
+      {isSignedIn ? 'Go to My Account' : 'Sign In'} <ChevronRight size={16} />
+    </Link>
+    <p className="mt-6">
+      <Link to="/" className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors">
+        Return home
+      </Link>
+    </p>
   </div>
 );
 
