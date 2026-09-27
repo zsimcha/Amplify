@@ -571,29 +571,30 @@ const CheckoutPage = ({ appData, setAppData }) => {
                           </div>
                         </div>
 
-                        <div>
-                          <label htmlFor="address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
-                          <input id="address" name="street-address" autoComplete="street-address" type="text" maxLength={200} value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={fieldClass(!!validationErrors.address)} placeholder="123 Main St" />
-                          {validationErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.address}</p>}
-                        </div>
-
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label htmlFor="address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
+                            <input id="address" name="street-address" autoComplete="street-address" type="text" maxLength={200} value={checkoutForm.address} onChange={e => setCheckoutForm({...checkoutForm, address: e.target.value})} className={fieldClass(!!validationErrors.address)} placeholder="123 Main St" />
+                            {validationErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.address}</p>}
+                          </div>
                           <div>
                             <label htmlFor="city" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
                             <input id="city" name="address-level2" autoComplete="address-level2" type="text" maxLength={100} value={checkoutForm.city} onChange={e => setCheckoutForm({...checkoutForm, city: e.target.value})} className={fieldClass(!!validationErrors.city)} placeholder="New York" />
                             {validationErrors.city && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.city}</p>}
                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label htmlFor="state" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
                             <StateSelect id="state" value={checkoutForm.state} onChange={(state) => setCheckoutForm({...checkoutForm, state})} hasError={!!validationErrors.state} />
                             {validationErrors.state && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.state}</p>}
                           </div>
-                        </div>
-
-                        <div className="md:w-1/2 md:pr-1.5">
-                          <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
-                          <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
-                          {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
+                          <div>
+                            <label htmlFor="zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
+                            <input id="zip" name="postal-code" autoComplete="postal-code" type="text" value={checkoutForm.zipCode} onChange={e => setCheckoutForm({...checkoutForm, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" className={fieldClass(!!validationErrors.zipCode)} placeholder="10001" />
+                            {validationErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.zipCode}</p>}
+                          </div>
                         </div>
                       </section>
 
@@ -675,20 +676,22 @@ const CheckoutPage = ({ appData, setAppData }) => {
                               <input id="billingLine1" type="text" value={billingAddress.line1} onChange={e => setBillingAddress({...billingAddress, line1: e.target.value})} autoComplete="billing street-address" className={fieldClass(!!validationErrors.billingLine1)} placeholder="Street address" />
                               {validationErrors.billingLine1 && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingLine1}</p>}
                             </div>
-                            <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className={fieldClass(false)} placeholder="Apt, suite, etc. (optional)" />
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <input type="text" value={billingAddress.line2} onChange={e => setBillingAddress({...billingAddress, line2: e.target.value})} autoComplete="billing address-line2" className={fieldClass(false)} placeholder="Apt, suite, etc. (optional)" />
                               <div>
                                 <input id="billingCity" type="text" value={billingAddress.city} onChange={e => setBillingAddress({...billingAddress, city: e.target.value})} autoComplete="billing address-level2" className={fieldClass(!!validationErrors.billingCity)} placeholder="City" />
                                 {validationErrors.billingCity && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingCity}</p>}
                               </div>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               <div>
                                 <StateSelect id="billingState" value={billingAddress.state} onChange={(state) => setBillingAddress({...billingAddress, state})} hasError={!!validationErrors.billingState} placeholder="State" />
                                 {validationErrors.billingState && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingState}</p>}
                               </div>
-                            </div>
-                            <div className="md:w-1/2 md:pr-1.5">
-                              <input id="billingZip" type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={fieldClass(!!validationErrors.billingZip)} placeholder="ZIP" />
-                              {validationErrors.billingZip && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingZip}</p>}
+                              <div>
+                                <input id="billingZip" type="text" value={billingAddress.zipCode} onChange={e => setBillingAddress({...billingAddress, zipCode: e.target.value.replace(/[^\d-]/g, '')})} maxLength="10" autoComplete="billing postal-code" className={fieldClass(!!validationErrors.billingZip)} placeholder="ZIP" />
+                                {validationErrors.billingZip && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{validationErrors.billingZip}</p>}
+                              </div>
                             </div>
                           </div>
                         )}
