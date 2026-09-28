@@ -38,7 +38,13 @@ const PartnerTile = ({ partner }) => {
               src={src}
               alt={partner.name}
               onError={() => setLogoFailed(true)}
-              className="max-h-[50%] max-w-[82%] w-auto object-contain"
+              // Two caps (vs. one shared box) because logos range from very wide
+              // wordmarks to square/tall badges. A single box sized for the wide
+              // ones left square logos (Bnei Akiva, Bonei Olam, Zaka, Mizrachi)
+              // stuck at the height cap while barely using any width, so they
+              // read as noticeably smaller. 65% height roughly matches a square
+              // logo's rendered area to a wide logo's at 82% width.
+              className="max-h-[65%] max-w-[82%] w-auto object-contain"
             />
           )}
           <span className="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-colors">
