@@ -21,6 +21,8 @@ import DrawingAddendumContent from './components/DrawingAddendumContent';
 import PrivacyPolicyContent from './components/PrivacyPolicyContent';
 import TermsContent from './components/TermsContent';
 import ReferralProgramContent from './components/ReferralProgramContent';
+import DisclosuresContent from './components/DisclosuresContent';
+import WinnersListContent from './components/WinnersListContent';
 import SecondaryNavbar from './components/layout/SecondaryNavbar';
 import Footer from './components/layout/Footer';
 
@@ -138,8 +140,14 @@ function App() {
         <Route path="/account" element={<AccountPage />} />
 
         <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /><DrawingAddendumContent /></LegalPageLayout>} />
+        {/* The Official Rules themselves cite https://amplifygive.com/official-rules as their own
+            canonical URL (Master Rules §1, §24, §25; Terms §9) — /rules is the actual route, so this
+            alias keeps that citation from 404ing without duplicating the page under two routes. */}
+        <Route path="/official-rules" element={<Navigate to="/rules" replace />} />
         <Route path="/privacy" element={<LegalPageLayout title="Privacy Policy"><PrivacyPolicyContent /></LegalPageLayout>} />
         <Route path="/terms" element={<LegalPageLayout title="Terms of Service"><TermsContent /></LegalPageLayout>} />
+        <Route path="/disclosures" element={<LegalPageLayout title="Charitable Solicitation Disclosures"><DisclosuresContent /></LegalPageLayout>} />
+        <Route path="/winners" element={<LegalPageLayout title="Winners List"><WinnersListContent /></LegalPageLayout>} />
         <Route path="/referral" element={<LegalPageLayout title="Referral Program Terms"><ReferralProgramContent /></LegalPageLayout>} />
 
         <Route path="*" element={<NotFoundPage />} />
