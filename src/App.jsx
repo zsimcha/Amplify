@@ -15,7 +15,9 @@ import EmailConfirmedPage from './pages/EmailConfirmedPage';
 import AccountPage from './pages/AccountPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { AuthProvider } from './context/AuthContext';
+import { TIER_DATA } from './data/tierData';
 import RulesContent from './components/RulesContent';
+import DrawingAddendumContent from './components/DrawingAddendumContent';
 import PrivacyPolicyContent from './components/PrivacyPolicyContent';
 import TermsContent from './components/TermsContent';
 import ReferralProgramContent from './components/ReferralProgramContent';
@@ -62,11 +64,7 @@ function ScrollToTop() {
 }
 
 const appData = {
-  tierData: {
-    silver: { price: 250, prize: "$25,000", totalOdds: "1 / 100", otherPrizes: ["1x $1,250", "2x $750"] },
-    gold: { price: 500, prize: "$50,000", totalOdds: "1 / 50", otherPrizes: ["1x $2,500", "6x $1,000"] },
-    diamond: { price: 1000, prize: "$100,000", totalOdds: "1 / 25", otherPrizes: ["1x $5,000", "2x $3,000", "12x $2,000"] }
-  },
+  tierData: TIER_DATA,
   allCommunityNames: ["General"],
   communities: { "General": { members: 0, monthly: 0, silver: 0, gold: 0, diamond: 0 } }
 };
@@ -139,7 +137,7 @@ function App() {
         <Route path="/welcome" element={<EmailConfirmedPage />} />
         <Route path="/account" element={<AccountPage />} />
 
-        <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /></LegalPageLayout>} />
+        <Route path="/rules" element={<LegalPageLayout title="Official Sweepstakes Rules"><RulesContent /><DrawingAddendumContent /></LegalPageLayout>} />
         <Route path="/privacy" element={<LegalPageLayout title="Privacy Policy"><PrivacyPolicyContent /></LegalPageLayout>} />
         <Route path="/terms" element={<LegalPageLayout title="Terms of Service"><TermsContent /></LegalPageLayout>} />
         <Route path="/referral" element={<LegalPageLayout title="Referral Program Terms"><ReferralProgramContent /></LegalPageLayout>} />

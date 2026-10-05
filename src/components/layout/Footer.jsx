@@ -54,7 +54,7 @@ const Footer = () => {
             Amplify is a sweepstakes-based giving platform. A portion of each circle's pool funds prize drawings. Charitable contributions are administered through (Nonprofit), a registered 501(c)(3) DAF, and granted to our partner organizations. No purchase necessary to enter or win. See <Link to="/rules" className="text-slate-300 hover:text-white underline">official rules</Link> for full details.
           </p>
           <p className="text-[0.6875rem] text-slate-500 shrink-0 font-medium">
-            © {new Date().getFullYear()} Amplify LLC. All rights reserved.
+            © {new Date().getFullYear()} Amplify Give LLC. All rights reserved.
           </p>
         </div>
       </div>

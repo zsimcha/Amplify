@@ -19,7 +19,7 @@ const RulesContent = () => (
     <p className="mb-6">There are two types of Drawing Addendum. A "Circle Launch Addendum" is filed before a Circle opens for enrollment and covers only that Circle's guaranteed first Drawing. A "Monthly Drawing Addendum" is filed for each monthly Drawing period and covers the recurring monthly Drawings of Active Circles for that period.</p>
 
     <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">2 &nbsp;&nbsp; Promotion Period</h3>
-    <p className="mb-6">The entry period, opening date, Drawing Date, and, for a Circle Launch Addendum, the Backstop End Date applicable to any given Drawing are stated in that Drawing's Addendum, which is posted on the Platform at amplifygive.com/official-rules. All times are Eastern Time, and the Sponsor's computer is the official timekeeper.</p>
+    <p className="mb-6">The entry period, opening date, Drawing Date, and, for a Circle Launch Addendum, the Backstop End Date applicable to any given Drawing are stated in that Drawing's Addendum, which is posted on the Platform at https://amplifygive.com/official-rules. All times are Eastern Time, and the Sponsor's computer is the official timekeeper.</p>
     <p className="mb-6">Each Circle's first Drawing is guaranteed to occur on or before the Backstop End Date stated in that Circle's Launch Addendum, as described in Section 8.</p>
 
     <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">3 &nbsp;&nbsp; Definitions</h3>
@@ -122,10 +122,10 @@ const RulesContent = () => (
     <p className="mb-6">If a Participant does not wish to continue participating under a revised Master Rules Version, the Participant may cancel at any time as described in Section 17.</p>
 
     <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">24 &nbsp;&nbsp; Winners List and Rules Access</h3>
-    <p className="mb-6">For a copy of these Master Official Rules, any Drawing Addendum, or a list of winners, visit amplifygive.com/official-rules or write to Amplify Give LLC, 7901 4th St N, Ste 32498, St. Petersburg, FL 33702. The winners list is provided free of charge. Residents of Vermont may omit return postage.</p>
+    <p className="mb-6">For a copy of these Master Official Rules, any Drawing Addendum, or a list of winners, visit https://amplifygive.com/official-rules or write to Amplify Give LLC, 7901 4th St N, Ste 32498, St. Petersburg, FL 33702. The winners list is provided free of charge. Residents of Vermont may omit return postage.</p>
 
     <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">25 &nbsp;&nbsp; Privacy; Data Storage; Opt-Out</h3>
-    <p className="mb-6">Information submitted is handled per the Sponsor's Privacy Policy at amplifygive.com/privacy. Data is stored in the United States. Entrants may opt out of promotional communications as described in the Privacy Policy.</p>
+    <p className="mb-6">Information submitted is handled per the Sponsor's Privacy Policy at https://amplifygive.com/privacy. Data is stored in the United States. Entrants may opt out of promotional communications as described in the Privacy Policy.</p>
 
     <h3 className="text-lg md:text-xl font-bold text-slate-900 mt-12 md:mt-16 mb-4 tracking-tight">26 &nbsp;&nbsp; Disputes</h3>
     <p className="mb-6 uppercase font-bold text-sm tracking-wide text-slate-700">

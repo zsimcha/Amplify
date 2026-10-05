@@ -20,6 +20,7 @@ const HERO_PHOTOS = [
   { src: '/partners/photos/camp-hasc.jpg', position: '55% 35%' },
   { src: '/partners/photos/misaskim.jpg', position: '50% 35%' },
   { src: '/partners/photos/bnai-akiva.jpg', position: '50% 55%' },
+  { src: '/partners/photos/mizrachi.jpg', position: '48% 40%' },
   { src: '/partners/photos/fidf.jpg', position: '75% 35%' },
   { src: '/partners/photos/aish.jpg', position: '92% 40%' },
 ];
