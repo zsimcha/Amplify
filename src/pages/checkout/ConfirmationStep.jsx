@@ -17,7 +17,7 @@ const ConfirmationStep = ({ selectedCommunity, causesSaved, causeSlugs, isSigned
         {causesSaved
           ? (isSignedIn
               ? `You're supporting ${causeSlugs.length} ${causeSlugs.length === 1 ? 'organization' : 'organizations'}. Update your causes anytime from My Account.`
-              : `We've saved your ${causeSlugs.length} ${causeSlugs.length === 1 ? 'cause' : 'causes'} and will apply them the moment you confirm your email and sign in.`)
+              : `We've saved your ${causeSlugs.length} ${causeSlugs.length === 1 ? 'cause' : 'causes'} on this device and will apply them the moment you confirm your email and sign in here. Confirming on another device? Just pick them again from My Account.`)
           : 'Your donation will be split evenly among all of our partner organizations. You can choose specific causes anytime from My Account.'}
       </p>
     </div>

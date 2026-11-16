@@ -5,6 +5,7 @@ import { minAgeForState } from './constants';
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 export const ZIP_REGEX = /^\d{5}(-\d{4})?$/;
+export const MAX_PLAUSIBLE_AGE = 120;
 
 export function isValidZip(zip) {
   return ZIP_REGEX.test(zip);
@@ -52,10 +53,14 @@ export function computeCheckoutErrors({
   if (!checkoutForm.state) errors.state = 'Select a state.';
   if (!isValidZip(checkoutForm.zipCode)) errors.zipCode = 'Enter a valid zip code.';
 
-  // Official Rules §3: 18+ everywhere, except 19 in AL/NE and 21 in MS.
+  // Official Rules §4: 18+ everywhere, except 19 in AL/NE and 21 in MS.
   const age = calculateAge(checkoutForm.dateOfBirth);
   if (age === null) {
     errors.dateOfBirth = 'Enter your date of birth.';
+  } else if (age > MAX_PLAUSIBLE_AGE) {
+    // A mistyped year (e.g. 0199 or 1890) parses as a real date and sails
+    // past a minimum-age check; it's a typo, not a 130-year-old.
+    errors.dateOfBirth = 'Enter a valid date of birth.';
   } else {
     const minAge = minAgeForState(checkoutForm.state);
     if (age < minAge) {

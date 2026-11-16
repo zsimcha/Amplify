@@ -5,7 +5,7 @@
 // scaffolded for Stripe (Customer Portal) and clearly disabled until
 // billing goes live — card data must only ever touch Stripe-hosted UI.
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
   CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart, Info, PlusCircle
@@ -306,7 +306,9 @@ const AccountPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex flex-col">
       <SecondaryNavbar />
-      <div className="max-w-3xl mx-auto px-4 py-10 md:py-16 flex-grow w-full space-y-6 md:space-y-8">
+      {/* data-clarity-mask keeps the member's email, membership, and causes out
+          of session replays, as the Privacy Policy promises. */}
+      <div className="max-w-3xl mx-auto px-4 py-10 md:py-16 flex-grow w-full space-y-6 md:space-y-8" data-clarity-mask="true">
         <div className="flex items-end justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 mb-2">My Account</p>
@@ -788,7 +790,7 @@ const AccountPage = () => {
         </SectionCard>
 
         <p className="text-[0.625rem] text-slate-400 font-medium text-center flex items-center justify-center gap-1.5">
-          <User size={11} /> Need help? <a href="/contact" className="underline hover:text-slate-600 transition-colors">Contact support</a>
+          <User size={11} /> Need help? <Link to="/contact" className="underline hover:text-slate-600 transition-colors">Contact support</Link>
         </p>
       </div>
       <Footer />

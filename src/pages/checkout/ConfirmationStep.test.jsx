@@ -35,7 +35,9 @@ describe('ConfirmationStep', () => {
 
   it('shows the pending-confirmation causes message when signed out', () => {
     renderStep({ selectedCommunity: 'General', causesSaved: true, causeSlugs: ['a'], isSignedIn: false });
-    expect(screen.getByText(/We've saved your 1 cause and will apply them/)).toBeInTheDocument();
+    // The selection is only stashed in this browser until a session exists, so
+    // the copy must not promise it follows the member to another device.
+    expect(screen.getByText(/We've saved your 1 cause on this device and will apply them/)).toBeInTheDocument();
   });
 
   it('shows the account-creation notice only when signed out', () => {

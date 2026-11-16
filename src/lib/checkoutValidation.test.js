@@ -127,6 +127,11 @@ describe('computeCheckoutErrors', () => {
       expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, dateOfBirth: '' } })).dateOfBirth).toBeDefined();
     });
 
+    it('rejects an implausibly old date of birth (a mistyped year) rather than treating it as of age', () => {
+      expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, dateOfBirth: '1850-06-15' } })).dateOfBirth)
+        .toBe('Enter a valid date of birth.');
+    });
+
     it('rejects an unparseable date of birth', () => {
       expect(computeCheckoutErrors(baseArgs({ checkoutForm: { ...validForm, dateOfBirth: 'not-a-date' } })).dateOfBirth).toBeDefined();
     });

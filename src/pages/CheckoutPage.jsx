@@ -72,6 +72,13 @@ const CheckoutPage = ({ appData, setAppData }) => {
   const [accountPasswordConfirm, setAccountPasswordConfirm] = useState('');
   const [showAccountPassword, setShowAccountPassword] = useState(false);
   const [showAccountPasswordConfirm, setShowAccountPasswordConfirm] = useState(false);
+  // The email an account was already created for during this visit. Account
+  // creation and the checkout RPC are two separate calls, so if the RPC fails
+  // after signUp succeeded, a retry must not call signUp again: Supabase Auth
+  // would re-send the confirmation email and reject the attempt outright
+  // while its per-address email cooldown is running ("you can only request
+  // this after N seconds"), stranding a member who has done nothing wrong.
+  const signedUpEmailRef = useRef(null);
 
   // Signed-in members check out under their existing account email (the
   // server enforces this too), so the field is locked to it.
@@ -284,7 +291,8 @@ const CheckoutPage = ({ appData, setAppData }) => {
       // 0. Create the member's account first (Supabase Auth handles the
       //    password — hashed server-side, never stored in our tables).
       //    Signed-in members skip this and check out under their account.
-      if (!user) {
+      const signUpEmail = checkoutForm.email.trim().toLowerCase();
+      if (!user && signedUpEmailRef.current !== signUpEmail) {
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email: checkoutForm.email,
           password: accountPassword,
@@ -312,6 +320,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
         // subscription links to the account immediately. If email confirmation
         // is required (no session yet), the subscription links automatically
         // the moment the member confirms their email.
+        signedUpEmailRef.current = signUpEmail;
       }
 
       const { error } = await supabase.rpc('process_checkout', {
@@ -465,7 +474,12 @@ const CheckoutPage = ({ appData, setAppData }) => {
                       </div>
                   </div>
 
-                  <form onSubmit={handleCheckoutSubmit} onBlur={handleFieldBlur} className="space-y-6">
+                  {/* data-clarity-mask: the Privacy Policy states that sensitive
+                      form content is masked in session replays. Clarity masks
+                      inputs by default; this also covers the surrounding text
+                      (e.g. "You're signed in as …") regardless of the masking
+                      mode set in the Clarity dashboard. */}
+                  <form onSubmit={handleCheckoutSubmit} onBlur={handleFieldBlur} className="space-y-6" data-clarity-mask="true">
                       
                       {/* ============ SECTION 1: YOUR DETAILS ============ */}
                       <section className="space-y-4">
@@ -710,7 +724,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                             <Check size={14} strokeWidth={3} className="text-white absolute opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" />
                           </div>
                           <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed select-none">
-                            I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Service</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring monthly contribution.
+                            I agree to the <Link to="/rules" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Official Rules</Link>, <Link to="/terms" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Terms of Use</Link>, and <Link to="/privacy" className="text-indigo-600 font-bold hover:text-indigo-900 transition-colors">Privacy Policy</Link>, and authorize this recurring monthly contribution.
                           </p>
                         </label>
 

@@ -35,7 +35,10 @@ const LegalPageLayout = ({ title, children }) => (
           <header className="mb-10 md:mb-14 pb-8 border-b border-slate-200">
             <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-[0.3em] text-indigo-600 mb-3">Legal</p>
             <h1 className="text-3xl md:text-5xl font-semibold text-indigo-950 tracking-tight leading-[1.05]">{title}</h1>
-            <p className="text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 mt-4">Last updated: January 2026</p>
+            {/* No shared "last updated" line here: each document states its
+                own version and effective date in its first paragraph, and a
+                single hard-coded date across all of them went stale the first
+                time one document was revised without the others. */}
           </header>
         )}
         <div className="text-slate-700 font-medium leading-relaxed text-sm md:text-base">
@@ -61,6 +64,61 @@ function ScrollToTop() {
     if (hash) return; // Let the destination page handle hash navigation
     window.scrollTo(0, 0);
   }, [pathname, hash]);
+
+  return null;
+}
+
+// Per-route <title>, canonical URL, and indexing hint. index.html ships one
+// static title and a canonical pointing at the homepage; left alone, every
+// route would tell search engines it is a duplicate of "/", and every browser
+// tab and history entry would read just "Amplify".
+const SITE_ORIGIN = 'https://amplifygive.com';
+const ROUTE_TITLES = {
+  '/': 'Amplify',
+  '/how-it-works': 'How It Works | Amplify',
+  '/about': 'About | Amplify',
+  '/causes': 'Our Causes | Amplify',
+  '/faq': 'FAQ | Amplify',
+  '/circles': 'Circles & Prizes | Amplify',
+  '/checkout': 'Join Your Circle | Amplify',
+  '/contact': 'Contact | Amplify',
+  '/login': 'Sign In | Amplify',
+  '/reset-password': 'Reset Password | Amplify',
+  '/welcome': 'Email Confirmed | Amplify',
+  '/account': 'My Account | Amplify',
+  '/rules': 'Official Rules | Amplify',
+  '/privacy': 'Privacy Policy | Amplify',
+  '/terms': 'Terms of Use | Amplify',
+  '/disclosures': 'Charitable Solicitation Disclosures | Amplify',
+  '/winners': 'Winners List | Amplify',
+  '/referral': 'Referral Program Terms | Amplify',
+};
+// Account-specific or transactional pages have no business in search results.
+const NOINDEX_ROUTES = new Set(['/checkout', '/login', '/reset-password', '/welcome', '/account']);
+
+function RouteMeta() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const path = pathname.replace(/\/+$/, '') || '/';
+    const known = Object.hasOwn(ROUTE_TITLES, path);
+    document.title = known ? ROUTE_TITLES[path] : 'Page Not Found | Amplify';
+
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', `${SITE_ORIGIN}${path}`);
+
+    let robots = document.querySelector('meta[name="robots"]');
+    if (!known || NOINDEX_ROUTES.has(path)) {
+      if (!robots) {
+        robots = document.createElement('meta');
+        robots.setAttribute('name', 'robots');
+        document.head.appendChild(robots);
+      }
+      robots.setAttribute('content', 'noindex');
+    } else if (robots) {
+      robots.remove();
+    }
+  }, [pathname]);
 
   return null;
 }
@@ -120,6 +178,7 @@ function App() {
     <AuthProvider>
     <Router>
       <ScrollToTop />
+      <RouteMeta />
       <Routes>
         <Route path="/" element={<HomePage appData={appState} />} />
         
@@ -145,7 +204,7 @@ function App() {
             alias keeps that citation from 404ing without duplicating the page under two routes. */}
         <Route path="/official-rules" element={<Navigate to="/rules" replace />} />
         <Route path="/privacy" element={<LegalPageLayout title="Privacy Policy"><PrivacyPolicyContent /></LegalPageLayout>} />
-        <Route path="/terms" element={<LegalPageLayout title="Terms of Service"><TermsContent /></LegalPageLayout>} />
+        <Route path="/terms" element={<LegalPageLayout title="Terms of Use"><TermsContent /></LegalPageLayout>} />
         <Route path="/disclosures" element={<LegalPageLayout title="Charitable Solicitation Disclosures"><DisclosuresContent /></LegalPageLayout>} />
         <Route path="/winners" element={<LegalPageLayout title="Winners List"><WinnersListContent /></LegalPageLayout>} />
         <Route path="/referral" element={<LegalPageLayout title="Referral Program Terms"><ReferralProgramContent /></LegalPageLayout>} />

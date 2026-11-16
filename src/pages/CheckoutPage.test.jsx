@@ -187,6 +187,27 @@ describe('CheckoutPage submit orchestration', () => {
     expect(screen.getByText(/something went wrong processing your request/i)).toBeInTheDocument();
   });
 
+  it('does not call auth.signUp a second time when the member retries after process_checkout failed', async () => {
+    // A second signUp for the same address re-sends the confirmation email
+    // and is rejected while Supabase Auth's per-address email cooldown runs,
+    // which would block the retry of an otherwise recoverable failure.
+    mocks.useAuth.mockReturnValue({ user: null });
+    mocks.signUp.mockResolvedValue({ data: { user: { identities: [{}] } }, error: null });
+    mocks.rpc.mockResolvedValueOnce({ error: { message: 'db exploded' } });
+    mocks.rpc.mockResolvedValueOnce({ error: null });
+
+    renderCheckout();
+    const user = await fillRequiredFields({ includeAccountCredentials: true });
+    await submit(user);
+    await waitFor(() => expect(screen.getByText(/something went wrong processing your request/i)).toBeInTheDocument());
+
+    await submit(user);
+    await waitFor(() => expect(screen.getByText("You're in.")).toBeInTheDocument());
+
+    expect(mocks.signUp).toHaveBeenCalledTimes(1);
+    expect(mocks.rpc).toHaveBeenCalledTimes(2);
+  });
+
   it('skips auth.signUp entirely for an already-signed-in member and checks out under their account', async () => {
     mocks.useAuth.mockReturnValue({ user: { email: 'existing@example.com' } });
     mocks.rpc.mockResolvedValue({ error: null });

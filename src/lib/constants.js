@@ -22,7 +22,7 @@ export const US_STATE_NAMES = {
   WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
 };
 
-// Minimum entry age by state of residence (Official Rules §3: "eighteen (18)
+// Minimum entry age by state of residence (Official Rules §4: "eighteen (18)
 // ... or older (19 in Alabama and Nebraska, and 21 in Mississippi)"). Default
 // is 18; only the three exceptions are listed here.
 const MIN_AGE_OVERRIDES = { AL: 19, NE: 19, MS: 21 };
