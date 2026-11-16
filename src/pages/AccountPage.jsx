@@ -8,8 +8,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   User, Mail, Lock, CreditCard, Receipt, LogOut, AlertCircle,
-  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart, Info, PlusCircle
+  CheckCircle, ShieldCheck, ChevronRight, ArrowUpDown, X, Heart, Info, PlusCircle, MapPin, Pencil
 } from 'lucide-react';
+import StateSelect from '../components/StateSelect';
+import { isInvalidPhone, isValidZip } from '../lib/checkoutValidation';
 import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
@@ -93,6 +95,14 @@ const AccountPage = () => {
   const [changingId, setChangingId] = useState(null);
   const [changeFeedback, setChangeFeedback] = useState(null);
 
+  // Contact details (phone, address, display name). Stored per membership,
+  // edited as one set; see update_my_contact_details.
+  const [editingDetails, setEditingDetails] = useState(false);
+  const [detailsForm, setDetailsForm] = useState(null);
+  const [detailsErrors, setDetailsErrors] = useState({});
+  const [detailsSaving, setDetailsSaving] = useState(false);
+  const [detailsFeedback, setDetailsFeedback] = useState(null);
+
   const [newEmail, setNewEmail] = useState('');
   const [emailFeedback, setEmailFeedback] = useState(null);
   const [emailSubmitting, setEmailSubmitting] = useState(false);
@@ -129,7 +139,7 @@ const AccountPage = () => {
     // RLS restricts this to rows where user_id = auth.uid().
     const { data, error } = await supabase
       .from('Subscriptions')
-      .select('id, tier, status, display_name, is_anonymous, created_at, communities(name)')
+      .select('id, tier, status, display_name, is_anonymous, phone, address, city, state, zip_code, created_at, communities(name)')
       .order('created_at', { ascending: true });
     if (error) {
       setSubsError('Could not load your membership. Please refresh the page.');
@@ -225,6 +235,71 @@ const AccountPage = () => {
       setChangeFeedback({ kind: 'error', text: 'Something went wrong. Please try again.' });
     } finally {
       setChangingId(null);
+    }
+  };
+
+  // Contact details are the same across a member's memberships (the server
+  // updates them together), so any current one is representative. Cancelled
+  // memberships keep whatever was on file and aren't editable.
+  const currentSub = subscriptions?.find((s) => s.status === 'active' || s.status === 'past_due') || null;
+
+  const startEditingDetails = () => {
+    setDetailsForm({
+      displayName: currentSub.is_anonymous ? '' : (currentSub.display_name || ''),
+      isAnonymous: !!currentSub.is_anonymous,
+      phone: currentSub.phone || '',
+      address: currentSub.address || '',
+      city: currentSub.city || '',
+      state: currentSub.state || '',
+      zipCode: currentSub.zip_code || '',
+    });
+    setDetailsErrors({});
+    setDetailsFeedback(null);
+    setEditingDetails(true);
+  };
+
+  const handleSaveDetails = async (e) => {
+    e.preventDefault();
+    setDetailsFeedback(null);
+
+    const errors = {};
+    if (isInvalidPhone(detailsForm.phone)) errors.phone = 'Enter a valid 10-digit phone number.';
+    if (!detailsForm.address.trim()) errors.address = 'Address is required.';
+    if (!detailsForm.city.trim()) errors.city = 'City is required.';
+    if (!detailsForm.state) errors.state = 'Select a state.';
+    if (!isValidZip(detailsForm.zipCode)) errors.zipCode = 'Enter a valid zip code.';
+    setDetailsErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    setDetailsSaving(true);
+    try {
+      const { error } = await supabase.rpc('update_my_contact_details', {
+        p_display_name: detailsForm.displayName,
+        p_is_anonymous: detailsForm.isAnonymous,
+        p_phone: detailsForm.phone,
+        p_address: detailsForm.address,
+        p_city: detailsForm.city,
+        p_state: detailsForm.state,
+        p_zip_code: detailsForm.zipCode,
+      });
+      if (error) {
+        // Plain RAISE messages (SQLSTATE P0001) are written for members, e.g.
+        // the state minimum-age rule; anything else stays generic.
+        setDetailsFeedback({
+          kind: 'error',
+          text: error.code === 'P0001' && error.message
+            ? error.message
+            : 'Could not update your details. Please try again or contact us.',
+        });
+        return;
+      }
+      await fetchSubscriptions();
+      setEditingDetails(false);
+      setDetailsFeedback({ kind: 'success', text: 'Your contact details have been updated.' });
+    } catch {
+      setDetailsFeedback({ kind: 'error', text: 'Something went wrong. Please try again.' });
+    } finally {
+      setDetailsSaving(false);
     }
   };
 
@@ -457,6 +532,159 @@ const AccountPage = () => {
             </div>
           )}
         </SectionCard>
+
+        {/* ============ CONTACT DETAILS ============ */}
+        {currentSub && (
+          <SectionCard icon={<MapPin size={18} className="text-slate-400" />} title="Contact Details">
+            {editingDetails && detailsForm ? (
+              <form onSubmit={handleSaveDetails} className="space-y-4" noValidate>
+                <div>
+                  <div className="flex justify-between items-end mb-2">
+                    <label htmlFor="details-display-name" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500">Display Name</label>
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        checked={detailsForm.isAnonymous}
+                        onChange={(e) => setDetailsForm({ ...detailsForm, isAnonymous: e.target.checked })}
+                        className="accent-indigo-900 w-3.5 h-3.5 cursor-pointer rounded-sm"
+                      />
+                      <span className="text-[0.625rem] font-bold text-slate-500 uppercase tracking-widest group-hover:text-slate-700 transition-colors select-none">Make Anonymous</span>
+                    </label>
+                  </div>
+                  <input
+                    id="details-display-name"
+                    type="text"
+                    maxLength={80}
+                    disabled={detailsForm.isAnonymous}
+                    value={detailsForm.isAnonymous ? 'Anonymous' : detailsForm.displayName}
+                    onChange={(e) => setDetailsForm({ ...detailsForm, displayName: e.target.value })}
+                    className={fieldClass(false, detailsForm.isAnonymous ? 'bg-slate-100 text-slate-400 italic' : '')}
+                    placeholder="How you'll appear to others"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="details-phone" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Phone</label>
+                  <input
+                    id="details-phone"
+                    type="tel"
+                    autoComplete="tel"
+                    maxLength={30}
+                    value={detailsForm.phone}
+                    onChange={(e) => { if (/^[\d\s()+-]*$/.test(e.target.value)) setDetailsForm({ ...detailsForm, phone: e.target.value }); }}
+                    className={fieldClass(!!detailsErrors.phone)}
+                  />
+                  {detailsErrors.phone && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{detailsErrors.phone}</p>}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="details-address" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Address</label>
+                    <input
+                      id="details-address"
+                      type="text"
+                      autoComplete="street-address"
+                      maxLength={200}
+                      value={detailsForm.address}
+                      onChange={(e) => setDetailsForm({ ...detailsForm, address: e.target.value })}
+                      className={fieldClass(!!detailsErrors.address)}
+                    />
+                    {detailsErrors.address && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{detailsErrors.address}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="details-city" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">City</label>
+                    <input
+                      id="details-city"
+                      type="text"
+                      autoComplete="address-level2"
+                      maxLength={100}
+                      value={detailsForm.city}
+                      onChange={(e) => setDetailsForm({ ...detailsForm, city: e.target.value })}
+                      className={fieldClass(!!detailsErrors.city)}
+                    />
+                    {detailsErrors.city && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{detailsErrors.city}</p>}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="details-state" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">State</label>
+                    <StateSelect
+                      id="details-state"
+                      value={detailsForm.state}
+                      onChange={(state) => setDetailsForm({ ...detailsForm, state })}
+                      hasError={!!detailsErrors.state}
+                    />
+                    {detailsErrors.state && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{detailsErrors.state}</p>}
+                  </div>
+                  <div>
+                    <label htmlFor="details-zip" className="block text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Zip Code</label>
+                    <input
+                      id="details-zip"
+                      type="text"
+                      autoComplete="postal-code"
+                      maxLength={10}
+                      value={detailsForm.zipCode}
+                      onChange={(e) => setDetailsForm({ ...detailsForm, zipCode: e.target.value.replace(/[^\d-]/g, '') })}
+                      className={fieldClass(!!detailsErrors.zipCode)}
+                    />
+                    {detailsErrors.zipCode && <p className="text-red-500 text-[0.625rem] mt-1 font-bold">{detailsErrors.zipCode}</p>}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-1">
+                  <button
+                    type="submit"
+                    disabled={detailsSaving}
+                    className="px-6 py-3 bg-indigo-900 text-white rounded-xl font-black uppercase tracking-widest text-[0.625rem] md:text-xs hover:bg-black transition-all disabled:opacity-70"
+                  >
+                    {detailsSaving ? 'Saving...' : 'Save Details'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setEditingDetails(false); setDetailsFeedback(null); }}
+                    disabled={detailsSaving}
+                    className="text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <p className="text-[0.625rem] text-slate-400 font-medium leading-relaxed">
+                  Need to correct the legal name on your membership? Email <a href="mailto:support@amplifygive.com" className="underline hover:text-slate-600 transition-colors">support@amplifygive.com</a>.
+                </p>
+              </form>
+            ) : (
+              <>
+                <dl className="space-y-3 text-sm">
+                  <div className="flex gap-4">
+                    <dt className="w-28 shrink-0 text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 pt-0.5">Display Name</dt>
+                    <dd className="font-medium text-slate-800 min-w-0 break-words">{currentSub.is_anonymous ? 'Anonymous' : (currentSub.display_name || '—')}</dd>
+                  </div>
+                  <div className="flex gap-4">
+                    <dt className="w-28 shrink-0 text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 pt-0.5">Phone</dt>
+                    <dd className="font-medium text-slate-800 min-w-0 break-words">{currentSub.phone || '—'}</dd>
+                  </div>
+                  <div className="flex gap-4">
+                    <dt className="w-28 shrink-0 text-[0.625rem] md:text-xs font-bold uppercase tracking-widest text-slate-400 pt-0.5">Address</dt>
+                    <dd className="font-medium text-slate-800 min-w-0 break-words">
+                      {currentSub.address || '—'}
+                      {(currentSub.city || currentSub.state || currentSub.zip_code) && (
+                        <><br />{[currentSub.city, [currentSub.state, currentSub.zip_code].filter(Boolean).join(' ')].filter(Boolean).join(', ')}</>
+                      )}
+                    </dd>
+                  </div>
+                </dl>
+                <button
+                  onClick={startEditingDetails}
+                  className="mt-5 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
+                >
+                  <Pencil size={12} /> Edit details
+                </button>
+              </>
+            )}
+            {detailsFeedback && <Feedback kind={detailsFeedback.kind}>{detailsFeedback.text}</Feedback>}
+          </SectionCard>
+        )}
 
         {/* ============ YOUR CAUSES ============ */}
         <SectionCard icon={<Heart size={18} className="text-slate-400" />} title="Your Causes">

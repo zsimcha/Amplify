@@ -94,7 +94,13 @@ const ROUTE_TITLES = {
   '/referral': 'Referral Program Terms | Amplify',
 };
 // Account-specific or transactional pages have no business in search results.
-const NOINDEX_ROUTES = new Set(['/checkout', '/login', '/reset-password', '/welcome', '/account']);
+// Neither do the three pages that exist only because the legal documents cite
+// their URLs and aren't linked from the site yet (the referral program hasn't
+// launched; disclosures and the winners list are "coming soon" stubs).
+const NOINDEX_ROUTES = new Set([
+  '/checkout', '/login', '/reset-password', '/welcome', '/account',
+  '/referral', '/disclosures', '/winners',
+]);
 
 function RouteMeta() {
   const { pathname } = useLocation();

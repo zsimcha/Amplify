@@ -463,3 +463,98 @@ describe('AccountPage sign out', () => {
     expect(mocks.navigate).toHaveBeenCalledWith('/');
   });
 });
+
+// ---------------------------------------------------------------------------
+describe('AccountPage contact details', () => {
+  const withDetails = (overrides = {}) => sub({
+    phone: '555-123-4567',
+    address: '123 Main St',
+    city: 'Springfield',
+    state: 'IL',
+    zip_code: '62704',
+    ...overrides,
+  });
+
+  it('shows the details on file for a current membership', async () => {
+    mocks.order.mockResolvedValue({ data: [withDetails()], error: null });
+    await renderLoaded();
+
+    expect(screen.getByText('555-123-4567')).toBeInTheDocument();
+    expect(screen.getByText(/123 Main St/)).toBeInTheDocument();
+    expect(screen.getByText(/Springfield, IL 62704/)).toBeInTheDocument();
+  });
+
+  it('offers no contact details to edit when every membership is cancelled', async () => {
+    // Cancelled rows are the record of what was on file; the server only
+    // updates current memberships, so there's nothing to edit.
+    mocks.order.mockResolvedValue({ data: [withDetails({ status: 'cancelled' })], error: null });
+    await renderLoaded();
+
+    expect(screen.queryByText('Edit details')).not.toBeInTheDocument();
+  });
+
+  it('saves edited details through the RPC and reloads the membership', async () => {
+    mocks.order.mockResolvedValue({ data: [withDetails()], error: null });
+    await renderLoaded();
+
+    await userEvent.click(screen.getByText('Edit details'));
+    const phone = screen.getByLabelText('Phone');
+    await userEvent.clear(phone);
+    await userEvent.type(phone, '555-987-6543');
+    await userEvent.click(screen.getByText('Save Details'));
+
+    await waitFor(() => expect(mocks.rpc).toHaveBeenCalledWith('update_my_contact_details', {
+      p_display_name: 'Jane',
+      p_is_anonymous: false,
+      p_phone: '555-987-6543',
+      p_address: '123 Main St',
+      p_city: 'Springfield',
+      p_state: 'IL',
+      p_zip_code: '62704',
+    }));
+    expect(await screen.findByText('Your contact details have been updated.')).toBeInTheDocument();
+    // Once for the initial load, once to pick up the saved values.
+    expect(mocks.order).toHaveBeenCalledTimes(2);
+  });
+
+  it('blocks an invalid zip before calling the server', async () => {
+    mocks.order.mockResolvedValue({ data: [withDetails()], error: null });
+    await renderLoaded();
+
+    await userEvent.click(screen.getByText('Edit details'));
+    const zip = screen.getByLabelText('Zip Code');
+    await userEvent.clear(zip);
+    await userEvent.type(zip, '123');
+    await userEvent.click(screen.getByText('Save Details'));
+
+    expect(screen.getByText('Enter a valid zip code.')).toBeInTheDocument();
+    expect(mocks.rpc).not.toHaveBeenCalled();
+  });
+
+  it("surfaces the server's own message when a move fails the state age rule, and keeps the form open", async () => {
+    mocks.order.mockResolvedValue({ data: [withDetails()], error: null });
+    mocks.rpc.mockResolvedValue({
+      data: null,
+      error: { code: 'P0001', message: 'Members in MS must be at least 21. Please email support@amplifygive.com so we can update your address.' },
+    });
+    await renderLoaded();
+
+    await userEvent.click(screen.getByText('Edit details'));
+    await userEvent.click(screen.getByText('Save Details'));
+
+    expect(await screen.findByText(/Members in MS must be at least 21/)).toBeInTheDocument();
+    expect(screen.getByText('Save Details')).toBeInTheDocument();
+  });
+
+  it('does not leak an unexpected database error to the member', async () => {
+    mocks.order.mockResolvedValue({ data: [withDetails()], error: null });
+    mocks.rpc.mockResolvedValue({ data: null, error: { code: '42501', message: 'permission denied for table Subscriptions' } });
+    await renderLoaded();
+
+    await userEvent.click(screen.getByText('Edit details'));
+    await userEvent.click(screen.getByText('Save Details'));
+
+    expect(await screen.findByText(/Could not update your details/)).toBeInTheDocument();
+    expect(screen.queryByText(/permission denied/)).not.toBeInTheDocument();
+  });
+});

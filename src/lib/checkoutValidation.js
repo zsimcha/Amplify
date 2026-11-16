@@ -25,7 +25,7 @@ export function calculateAge(dob, asOf = new Date()) {
   return age;
 }
 
-function isInvalidPhone(phone) {
+export function isInvalidPhone(phone) {
   const cleaned = phone.replace(/\D/g, '');
   return cleaned.length < 10 || /^(\d)\1{9}$/.test(cleaned);
 }

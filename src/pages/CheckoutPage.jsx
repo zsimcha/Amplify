@@ -751,7 +751,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
                         {/* Auto-renewal disclosure — plain text adjacent to the payment
                             authorization, per auto-renewal laws (e.g. CA ARL). */}
                         <p className="text-[0.625rem] md:text-xs text-slate-500 font-medium leading-relaxed text-center mt-4">
-                          Your contribution renews every month until you cancel your subscription.
+                          You're charged today, then monthly once your circle fills, until you cancel.
                         </p>
 
                         <div className="flex items-center justify-center gap-4 text-[0.625rem] font-bold uppercase tracking-widest text-slate-400 mt-4">
