@@ -1,6 +1,6 @@
 // Member charity selection (up to 4). Reads are RLS-scoped to the signed-in
-// user; writes go through the set_my_causes RPC, which enforces auth + the cap
-// server-side.
+// user; writes go through the set_my_causes RPC (or, right after a guest
+// checkout, set_checkout_causes), which enforce auth + the cap server-side.
 import { supabase } from './supabase';
 
 const PENDING_KEY = 'amplify_pending_causes';
@@ -33,73 +33,20 @@ export async function submitCauseRequest({ name, url, note }) {
   if (error) throw error;
 }
 
-// --- Pending selection bridge -------------------------------------------------
-// A brand-new member checking out may not have a session yet (email
-// confirmation pending), so their post-checkout selection can't be written
-// server-side. We stash it locally and flush it the next time a session exists.
-//
-// The stash records whose selection it is, so on a shared computer it is only
-// ever applied to that member's account — not to whoever signs in next.
-function readPending() {
-  try {
-    const raw = localStorage.getItem(PENDING_KEY);
-    const parsed = raw ? JSON.parse(raw) : null;
-    // Older stashes were a bare array with no owner.
-    if (Array.isArray(parsed)) return { email: null, slugs: parsed };
-    if (parsed && Array.isArray(parsed.slugs)) {
-      return { email: typeof parsed.email === 'string' ? parsed.email : null, slugs: parsed.slugs };
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-export function getPendingCauses() {
-  return readPending()?.slugs ?? null;
-}
-
-export function setPendingCauses(slugs, email = null) {
-  try {
-    localStorage.setItem(PENDING_KEY, JSON.stringify({
-      email: email ? email.trim().toLowerCase() : null,
-      slugs,
-    }));
-  } catch {
-    /* storage unavailable — non-fatal */
-  }
-}
-
-export function clearPendingCauses() {
-  try {
-    localStorage.removeItem(PENDING_KEY);
-  } catch {
-    /* non-fatal */
-  }
-}
-
-// Session start fires this from more than one place at once (initial session,
-// the auth-state event, My Account's own load); share a single save.
-let inFlight = null;
-
-// Flush any locally-stashed selection to the signed-in account. Returns the
-// applied slugs, or null if there was nothing to apply for this account.
-export function applyPendingCauses(email = null) {
-  if (inFlight) return inFlight;
-
-  const pending = readPending();
-  if (!pending || !pending.slugs.length) return Promise.resolve(null);
-  if (pending.email && email && pending.email !== email.trim().toLowerCase()) {
-    // Someone else's selection: leave it for them.
-    return Promise.resolve(null);
-  }
-
-  inFlight = (async () => {
-    await saveMyCauses(pending.slugs);
-    clearPendingCauses();
-    return pending.slugs;
-  })().finally(() => {
-    inFlight = null;
+// --- Selection made right after a guest checkout ----------------------------
+// A brand-new member has no session yet at the post-checkout causes step
+// (their email isn't confirmed), so set_my_causes can't be used. Instead,
+// process_checkout returns a one-time token for the new membership; sending
+// the selection with it stores it server-side, and it's applied to the
+// account the moment the email is confirmed, on whatever device that happens.
+// Returns { applied } — true if the account was already confirmed and the
+// selection is live now.
+export async function saveCheckoutCauses({ subscriptionId, token, slugs }) {
+  const { data, error } = await supabase.rpc('set_checkout_causes', {
+    p_subscription_id: subscriptionId,
+    p_token: token,
+    p_slugs: slugs,
   });
-  return inFlight;
+  if (error) throw error;
+  return { applied: !!data?.applied };
 }

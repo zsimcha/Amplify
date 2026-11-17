@@ -1,6 +1,14 @@
 // supabase/functions/send-welcome-email/index.ts
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { Resend } from "https://esm.sh/resend@3.2.0"
+//
+// Called by the database (pg_net) when a membership is created, and again by
+// the retry_welcome_emails() cron job for any active membership whose email
+// hasn't been confirmed as sent. Each call:
+//   1. checks the row's welcome_email_sent_at and skips it if already sent,
+//   2. sends through Resend with an Idempotency-Key, so a retry of a send that
+//      actually went through can't produce a second email,
+//   3. stamps welcome_email_sent_at once Resend accepts the message.
+// A failure returns a non-2xx status and leaves the row unstamped, which is
+// what the retry job looks for.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3"
 
 // Escapes the four characters that let a string become live HTML.
@@ -21,7 +29,7 @@ const secretsMatch = (provided: string | null, expected: string) => {
   return diff === 0;
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Reject anything that doesn't carry our shared secret
   const expectedSecret = Deno.env.get("WELCOME_HOOK_SECRET");
   const providedSecret = req.headers.get("x-webhook-secret");
@@ -42,25 +50,50 @@ serve(async (req) => {
     if (!resendApiKey) throw new Error("RESEND_API_KEY is missing.");
     if (!supabaseUrl || !supabaseKey) throw new Error("Supabase environment variables missing.");
 
-    // 2. Initialize Clients
-    const resend = new Resend(resendApiKey);
+    // 2. Initialize Client
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // 3. Parse Webhook Payload
+    // 3. Parse Webhook Payload, then read the row's current state: the payload
+    // may be a snapshot from a retry, and the row is the source of truth for
+    // whether this email already went out.
     const payload = await req.json();
-    const email = payload?.record?.email;
-    const fullName = payload?.record?.['full name'];
-    const tier = payload?.record?.tier?.toLowerCase() || 'silver'; // Default to silver if missing
-    const communityId = payload?.record?.community_id;
+    const subscriptionId = payload?.record?.id;
+    if (!subscriptionId) {
+      throw new Error("No subscription id found in payload.");
+    }
+
+    const { data: row, error: rowError } = await supabase
+      .from('Subscriptions')
+      .select('id, email, "full name", tier, community_id, status, welcome_email_sent_at')
+      .eq('id', subscriptionId)
+      .maybeSingle();
+    if (rowError) throw new Error(`Could not load subscription ${subscriptionId}: ${rowError.message}`);
+    if (!row) {
+      return new Response(JSON.stringify({ skipped: "subscription not found" }), {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+    if (row.welcome_email_sent_at) {
+      return new Response(JSON.stringify({ skipped: "already sent" }), {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+
+    const email = row.email;
+    const fullName = row['full name'];
+    const tier = row.tier?.toLowerCase() || 'silver'; // Default to silver if missing
+    const communityId = row.community_id;
 
     if (!email) {
-      throw new Error("No email found in payload.");
+      throw new Error("No email found for subscription.");
     }
 
     // "Your monthly contribution has been secured" is only true of an active
     // membership. Once billing goes live, rows that are inserted before
     // payment clears must not trigger this email.
-    if (payload?.record?.status !== 'active') {
+    if (row.status !== 'active') {
       return new Response(JSON.stringify({ skipped: "not active" }), {
         headers: { "Content-Type": "application/json" },
         status: 200,
@@ -85,15 +118,15 @@ serve(async (req) => {
 
     // 5. Define Tier Rewards
     const tierData = {
-      silver: { prize: '$25,000', odds: '1/100' },
-      gold: { prize: '$50,000', odds: '1/50' },
-      diamond: { prize: '$100,000', odds: '1/25' }
+      silver: { prize: '$25,000', odds: '1/100', price: '$250' },
+      gold: { prize: '$50,000', odds: '1/50', price: '$500' },
+      diamond: { prize: '$100,000', odds: '1/25', price: '$1,000' }
     };
     // Ensure we have valid data even if a weird tier string comes through
     const currentTierDetails = tierData[tier as keyof typeof tierData] || tierData.silver;
 
     // 6. Send Email
-    const data = await resend.emails.send({
+    const message = {
       from: 'Simcha from Amplify <simcha@amplifygive.com>',
       to: [email],
       subject: 'Welcome to the Circle!',
@@ -151,6 +184,10 @@ serve(async (req) => {
               </p>
             </div>
 
+            <p style="color: #64748b; font-size: 13px; text-align: center; line-height: 1.6; margin: 0 0 24px 0;">
+              <span style="text-transform: capitalize;">${esc(tier)}</span> Circle &middot; ${currentTierDetails.price}/month. Charged today, then monthly once your circle fills. Cancel anytime at <a href="https://amplifygive.com/account" style="color: #64748b; text-decoration: underline;">amplifygive.com/account</a>.
+            </p>
+
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin-bottom: 24px;" />
 
             <p style="color: #94a3b8; font-size: 11px; text-align: center; line-height: 1.5; margin: 0 0 12px 0;">
@@ -164,17 +201,41 @@ serve(async (req) => {
           </div>
         </div>
       `,
-    });
+    };
 
-    return new Response(JSON.stringify(data), {
+    const sendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+        // Resend returns the original result instead of sending again when the
+        // same key is reused within 24 hours.
+        "Idempotency-Key": `welcome-email-${row.id}`,
+      },
+      body: JSON.stringify(message),
+    });
+    const sendResult = await sendResponse.json().catch(() => ({}));
+    if (!sendResponse.ok) {
+      throw new Error(`Resend rejected the welcome email (${sendResponse.status}): ${JSON.stringify(sendResult)}`);
+    }
+
+    // 7. Record the send. If this update fails the email still went out; the
+    // idempotency key keeps a retry within 24h from sending it twice.
+    const { error: stampError } = await supabase
+      .from('Subscriptions')
+      .update({ welcome_email_sent_at: new Date().toISOString() })
+      .eq('id', row.id);
+    if (stampError) console.error("Sent, but could not record welcome_email_sent_at:", stampError.message);
+
+    return new Response(JSON.stringify(sendResult), {
       headers: { "Content-Type": "application/json" },
       status: 200,
     })
   } catch (error) {
-    console.error("CATCH BLOCK ERROR:", (error as Error).message);
+    console.error("Welcome email failed:", (error as Error).message);
     return new Response(JSON.stringify({ error: (error as Error).message }), {
       headers: { "Content-Type": "application/json" },
-      status: 400,
+      status: 500,
     })
   }
 })

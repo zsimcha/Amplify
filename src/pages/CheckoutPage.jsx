@@ -6,7 +6,7 @@ import SecondaryNavbar from '../components/layout/SecondaryNavbar';
 import Footer from '../components/layout/Footer';
 import StateSelect from '../components/StateSelect';
 import { supabase } from '../lib/supabase';
-import { saveMyCauses, setPendingCauses } from '../lib/charities';
+import { saveMyCauses, saveCheckoutCauses } from '../lib/charities';
 import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { useAuth } from '../context/AuthContext';
 import { TIER_ACCENT } from '../lib/constants';
@@ -103,7 +103,11 @@ const CheckoutPage = ({ appData, setAppData }) => {
   // step starts already complete and checkout goes straight to confirmation.
   const [causesStepDone, setCausesStepDone] = useState(HIDE_PARTNER_IDENTITIES);
   const [causesSaved, setCausesSaved] = useState(false);
+  const [causesApplied, setCausesApplied] = useState(false);
   const [causesError, setCausesError] = useState(null);
+  // { subscriptionId, token } from process_checkout, used by a guest (no
+  // session yet) to attach their cause selection to the new membership.
+  const [checkoutCausesClaim, setCheckoutCausesClaim] = useState(null);
 
   const handleSaveCauses = async () => {
     setCausesError(null);
@@ -112,10 +116,13 @@ const CheckoutPage = ({ appData, setAppData }) => {
       if (user) {
         // Session available (existing member, or signup returned a session).
         await saveMyCauses(causeSlugs);
+        setCausesApplied(true);
       } else {
-        // New member whose email confirmation is still pending — stash the
-        // selection locally; it's applied the first time they sign in.
-        setPendingCauses(causeSlugs, checkoutForm.email);
+        // New member whose email confirmation is still pending: the selection
+        // is stored server-side and applied when they confirm, on any device.
+        if (!checkoutCausesClaim) throw new Error('No checkout token');
+        const { applied } = await saveCheckoutCauses({ ...checkoutCausesClaim, slugs: causeSlugs });
+        setCausesApplied(applied);
       }
       setCausesSaved(true);
       setCausesStepDone(true);
@@ -323,7 +330,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
         signedUpEmailRef.current = signUpEmail;
       }
 
-      const { error } = await supabase.rpc('process_checkout', {
+      const { data: checkoutData, error } = await supabase.rpc('process_checkout', {
         p_full_name: checkoutForm.fullName,
         p_display_name: checkoutForm.displayName || checkoutForm.fullName, 
         p_is_anonymous: checkoutForm.isAnonymous, 
@@ -341,6 +348,10 @@ const CheckoutPage = ({ appData, setAppData }) => {
       if (error) {
         console.error("Checkout Error:", error);
         throw new Error(checkoutErrorMessage(error));
+      }
+
+      if (checkoutData?.subscription_id && checkoutData?.causes_token) {
+        setCheckoutCausesClaim({ subscriptionId: checkoutData.subscription_id, token: checkoutData.causes_token });
       }
 
       // Optimistic UI Update with Community Race Condition Fix
@@ -435,6 +446,7 @@ const CheckoutPage = ({ appData, setAppData }) => {
             <ConfirmationStep
               selectedCommunity={selectedCommunity}
               causesSaved={causesSaved}
+              causesApplied={causesApplied}
               causeSlugs={causeSlugs}
               isSignedIn={!!user}
             />

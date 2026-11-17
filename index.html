@@ -18,13 +18,19 @@
     <meta property="og:url" content="https://amplifygive.com/" />
     <meta property="og:title" content="Amplify | Pool Your Giving" />
     <meta property="og:description" content="Join a Circle to pool your monthly contribution and power transformational grants. Win up to $100,000 while making an impact." />
-    <meta property="og:image" content="https://amplifygive.com/amplify-logo.png" />
+    <!-- 1200x630 share card (public/og-image.png). The square logo was being
+         cropped into the wide preview most apps show. -->
+    <meta property="og:image" content="https://amplifygive.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Amplify: Give Together. Amplify Your Impact." />
 
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://amplifygive.com/" />
-    <meta property="twitter:title" content="Amplify | Pool Your Giving" />
-    <meta property="twitter:description" content="Join a Circle to pool your monthly contribution and power transformational grants. Win up to $100,000 while making an impact." />
-    <meta property="twitter:image" content="https://amplifygive.com/amplify-logo.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://amplifygive.com/" />
+    <meta name="twitter:title" content="Amplify | Pool Your Giving" />
+    <meta name="twitter:description" content="Join a Circle to pool your monthly contribution and power transformational grants. Win up to $100,000 while making an impact." />
+    <meta name="twitter:image" content="https://amplifygive.com/og-image.png" />
+    <meta name="twitter:image:alt" content="Amplify: Give Together. Amplify Your Impact." />
 
     <script type="application/ld+json">
       {
@@ -37,7 +43,10 @@
 
     <!-- Analytics (Google Analytics + Microsoft Clarity) load only when:
          - the browser isn't sending a Global Privacy Control opt-out, which the
-           Privacy Policy commits to honoring; and
+           Privacy Policy commits to honoring;
+         - the visitor hasn't opted out with the button on the Privacy Policy
+           page (src/components/AnalyticsOptOut.jsx), stored in this browser;
+           and
          - the URL doesn't carry auth tokens. Email-link landings (password
            reset, signup confirmation, invites) hold the session in the
            #fragment until supabase-js consumes it, and Clarity's session
@@ -45,6 +54,7 @@
     <script>
       (function () {
         var optedOut = navigator.globalPrivacyControl === true;
+        try { optedOut = optedOut || localStorage.getItem('amplify_analytics_opt_out') === '1'; } catch (e) {}
         var hasAuthTokens = /(^|[#&])(access_token|refresh_token)=/.test(location.hash);
         if (optedOut || hasAuthTokens) return;
 

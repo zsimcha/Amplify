@@ -164,8 +164,8 @@ const GrantPage = () => {
               </div>
 
               <p className="mt-10 md:mt-14 text-center text-sm text-slate-500 font-medium leading-relaxed max-w-xl mx-auto reveal">
-                Want to support an organization that's not listed? Members can always request to allocate
-                their funds to other Chessed organizations from their{' '}
+                Want to support an organization that's not listed? Members can request that we add it
+                from their{' '}
                 <Link to="/account" className="text-indigo-600 font-bold hover:underline">account page</Link>.
               </p>
             </>

@@ -17,7 +17,7 @@ import Footer from '../components/layout/Footer';
 import CharitySelector from '../components/CharitySelector';
 import RequestCauseModal from '../components/RequestCauseModal';
 import { supabase } from '../lib/supabase';
-import { getMyCauses, saveMyCauses, applyPendingCauses } from '../lib/charities';
+import { getMyCauses, saveMyCauses } from '../lib/charities';
 import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
@@ -153,11 +153,8 @@ const AccountPage = () => {
     if (user) fetchSubscriptions();
   }, [user, fetchSubscriptions]);
 
-  const loadCauses = useCallback(async (email) => {
+  const loadCauses = useCallback(async () => {
     try {
-      // Flush any selection made during a confirmation-pending checkout, then
-      // read the authoritative set.
-      await applyPendingCauses(email).catch(() => {});
       // Drop slugs for organizations no longer on the roster. Kept, they'd
       // count toward the 4-cause cap without a tile to deselect them by.
       const slugs = (await getMyCauses()).filter((slug) => KNOWN_CAUSES.has(slug));
@@ -170,7 +167,7 @@ const AccountPage = () => {
   }, []);
 
   useEffect(() => {
-    if (user) loadCauses(user.email);
+    if (user) loadCauses();
   }, [user, loadCauses]);
 
   const causesDirty = savedCauses !== null && JSON.stringify(causesDraft) !== JSON.stringify(savedCauses);

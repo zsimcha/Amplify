@@ -13,18 +13,12 @@ import {
   getMyCauses,
   saveMyCauses,
   submitCauseRequest,
-  getPendingCauses,
-  setPendingCauses,
-  clearPendingCauses,
-  applyPendingCauses,
+  saveCheckoutCauses,
 } from './charities';
-
-const PENDING_KEY = 'amplify_pending_causes';
 
 beforeEach(() => {
   fromMock.mockReset();
   rpcMock.mockReset();
-  localStorage.clear();
 });
 
 describe('getMyCauses', () => {
@@ -104,101 +98,27 @@ describe('submitCauseRequest', () => {
   });
 });
 
-describe('pending causes (localStorage bridge)', () => {
-  it('round-trips through set/get', () => {
-    setPendingCauses(['x', 'y']);
-    expect(getPendingCauses()).toEqual(['x', 'y']);
+describe('saveCheckoutCauses', () => {
+  it('sends the selection with the checkout token and reports whether it applied', async () => {
+    rpcMock.mockResolvedValue({ data: { applied: false }, error: null });
+
+    const result = await saveCheckoutCauses({ subscriptionId: 25, token: 'tok', slugs: ['aish'] });
+
+    expect(rpcMock).toHaveBeenCalledWith('set_checkout_causes', {
+      p_subscription_id: 25,
+      p_token: 'tok',
+      p_slugs: ['aish'],
+    });
+    expect(result).toEqual({ applied: false });
   });
 
-  it('returns null when nothing is stored', () => {
-    expect(getPendingCauses()).toBeNull();
+  it('reports applied when the account was already confirmed', async () => {
+    rpcMock.mockResolvedValue({ data: { applied: true }, error: null });
+    expect(await saveCheckoutCauses({ subscriptionId: 25, token: 'tok', slugs: [] })).toEqual({ applied: true });
   });
 
-  it('returns null for malformed stored data', () => {
-    localStorage.setItem(PENDING_KEY, 'not json');
-    expect(getPendingCauses()).toBeNull();
-  });
-
-  it('returns null when stored data is not an array', () => {
-    localStorage.setItem(PENDING_KEY, JSON.stringify({ not: 'an array' }));
-    expect(getPendingCauses()).toBeNull();
-  });
-
-  it('clears the stored selection', () => {
-    setPendingCauses(['x']);
-    clearPendingCauses();
-    expect(getPendingCauses()).toBeNull();
-  });
-});
-
-describe('applyPendingCauses', () => {
-  it('does nothing and returns null when there is no pending selection', async () => {
-    const result = await applyPendingCauses();
-    expect(result).toBeNull();
-    expect(rpcMock).not.toHaveBeenCalled();
-  });
-
-  it('does nothing and returns null when the pending selection is empty', async () => {
-    setPendingCauses([]);
-    const result = await applyPendingCauses();
-    expect(result).toBeNull();
-    expect(rpcMock).not.toHaveBeenCalled();
-  });
-
-  it('saves the pending selection and clears it on success', async () => {
-    rpcMock.mockResolvedValue({ error: null });
-    setPendingCauses(['a', 'b']);
-
-    const result = await applyPendingCauses();
-
-    expect(rpcMock).toHaveBeenCalledWith('set_my_causes', { p_slugs: ['a', 'b'] });
-    expect(result).toEqual(['a', 'b']);
-    expect(getPendingCauses()).toBeNull();
-  });
-
-  it('leaves the pending selection in place if saving fails', async () => {
-    rpcMock.mockResolvedValue({ error: new Error('offline') });
-    setPendingCauses(['a', 'b']);
-
-    await expect(applyPendingCauses()).rejects.toThrow('offline');
-    expect(getPendingCauses()).toEqual(['a', 'b']);
-  });
-});
-
-describe('applyPendingCauses ownership and concurrency', () => {
-  it("applies a selection only to the account it was made for", async () => {
-    rpcMock.mockResolvedValue({ error: null });
-    setPendingCauses(['a'], 'Jane@Example.com');
-
-    // Someone else signs in on the same device: left untouched for Jane.
-    expect(await applyPendingCauses('someone@example.com')).toBeNull();
-    expect(rpcMock).not.toHaveBeenCalled();
-    expect(getPendingCauses()).toEqual(['a']);
-
-    // Jane signs in (email compared case-insensitively).
-    expect(await applyPendingCauses('jane@example.com')).toEqual(['a']);
-    expect(rpcMock).toHaveBeenCalledWith('set_my_causes', { p_slugs: ['a'] });
-    expect(getPendingCauses()).toBeNull();
-  });
-
-  it('still applies an older stash that was saved without an owner', async () => {
-    rpcMock.mockResolvedValue({ error: null });
-    localStorage.setItem(PENDING_KEY, JSON.stringify(['legacy']));
-
-    expect(await applyPendingCauses('anyone@example.com')).toEqual(['legacy']);
-  });
-
-  it('shares one save between calls that overlap', async () => {
-    let resolveRpc;
-    rpcMock.mockReturnValue(new Promise((r) => { resolveRpc = r; }));
-    setPendingCauses(['a', 'b'], 'jane@example.com');
-
-    const first = applyPendingCauses('jane@example.com');
-    const second = applyPendingCauses('jane@example.com');
-    resolveRpc({ error: null });
-
-    expect(await first).toEqual(['a', 'b']);
-    expect(await second).toEqual(['a', 'b']);
-    expect(rpcMock).toHaveBeenCalledTimes(1);
+  it('throws when the RPC errors (e.g. an expired token)', async () => {
+    rpcMock.mockResolvedValue({ data: null, error: new Error('expired') });
+    await expect(saveCheckoutCauses({ subscriptionId: 25, token: 'tok', slugs: ['aish'] })).rejects.toThrow('expired');
   });
 });

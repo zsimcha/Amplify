@@ -14,7 +14,6 @@ const mocks = vi.hoisted(() => ({
   signOut: vi.fn(),
   getMyCauses: vi.fn(),
   saveMyCauses: vi.fn(),
-  applyPendingCauses: vi.fn(),
   hidePartners: { value: false },
 }));
 
@@ -36,7 +35,6 @@ vi.mock('../lib/supabase', () => ({
 vi.mock('../lib/charities', () => ({
   getMyCauses: mocks.getMyCauses,
   saveMyCauses: mocks.saveMyCauses,
-  applyPendingCauses: mocks.applyPendingCauses,
 }));
 
 // The partner blackout flag flips over time; read it through a mutable handle
@@ -104,7 +102,6 @@ beforeEach(() => {
   mocks.signOut.mockResolvedValue({ error: null });
   mocks.getMyCauses.mockResolvedValue([]);
   mocks.saveMyCauses.mockResolvedValue(undefined);
-  mocks.applyPendingCauses.mockResolvedValue(null);
 });
 
 // ---------------------------------------------------------------------------
@@ -370,21 +367,6 @@ describe('AccountPage password change', () => {
 
 // ---------------------------------------------------------------------------
 describe('AccountPage causes', () => {
-  it('flushes any pending checkout selection before reading the saved set', async () => {
-    renderPage();
-    await waitFor(() => expect(mocks.getMyCauses).toHaveBeenCalled());
-    expect(mocks.applyPendingCauses).toHaveBeenCalled();
-    expect(mocks.applyPendingCauses.mock.invocationCallOrder[0])
-      .toBeLessThan(mocks.getMyCauses.mock.invocationCallOrder[0]);
-  });
-
-  it('still loads the saved set when flushing the pending selection fails', async () => {
-    mocks.applyPendingCauses.mockRejectedValue(new Error('offline'));
-    mocks.getMyCauses.mockResolvedValue(['aish']);
-    renderPage();
-    expect(await screen.findByText('Aish')).toBeInTheDocument();
-  });
-
   it('shows a load error when the saved set cannot be read', async () => {
     mocks.getMyCauses.mockRejectedValue(new Error('rls'));
     renderPage();

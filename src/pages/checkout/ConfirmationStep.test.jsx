@@ -35,9 +35,12 @@ describe('ConfirmationStep', () => {
 
   it('shows the pending-confirmation causes message when signed out', () => {
     renderStep({ selectedCommunity: 'General', causesSaved: true, causeSlugs: ['a'], isSignedIn: false });
-    // The selection is only stashed in this browser until a session exists, so
-    // the copy must not promise it follows the member to another device.
-    expect(screen.getByText(/We've saved your 1 cause on this device and will apply them/)).toBeInTheDocument();
+    expect(screen.getByText(/We've saved your 1 cause. They'll apply as soon as you confirm your email./)).toBeInTheDocument();
+  });
+
+  it('says the causes are live when a guest\'s selection was applied immediately (email already confirmed elsewhere)', () => {
+    renderStep({ selectedCommunity: 'General', causesSaved: true, causesApplied: true, causeSlugs: ['a', 'b'], isSignedIn: false });
+    expect(screen.getByText(/You're supporting 2 organizations\./)).toBeInTheDocument();
   });
 
   it('shows the account-creation notice only when signed out', () => {

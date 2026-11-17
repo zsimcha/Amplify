@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   useAuth: vi.fn(),
   signUp: vi.fn(),
   rpc: vi.fn(),
+  hidePartners: { value: true },
 }));
 
 vi.mock('../context/AuthContext', () => ({ useAuth: () => mocks.useAuth() }));
@@ -26,9 +27,14 @@ vi.mock('../lib/supabase', () => ({
   },
 }));
 
-// Real siteConfig defaults to showing the causes step after signup; skip it
-// here so a successful checkout lands directly on ConfirmationStep.
-vi.mock('../config/siteConfig', () => ({ HIDE_PARTNER_IDENTITIES: true }));
+// Real siteConfig shows the causes step after signup; most tests skip it so a
+// successful checkout lands directly on ConfirmationStep. The causes-step
+// tests flip it through this handle.
+vi.mock('../config/siteConfig', () => ({
+  get HIDE_PARTNER_IDENTITIES() {
+    return mocks.hidePartners.value;
+  },
+}));
 
 vi.mock('../components/layout/SecondaryNavbar', () => ({ default: () => <nav /> }));
 vi.mock('../components/layout/Footer', () => ({ default: () => <footer /> }));
@@ -92,6 +98,7 @@ describe('CheckoutPage submit orchestration', () => {
   beforeEach(() => {
     mocks.useAuth.mockReset();
     mocks.signUp.mockReset();
+    mocks.hidePartners.value = true;
     mocks.rpc.mockReset();
   });
 
@@ -206,6 +213,31 @@ describe('CheckoutPage submit orchestration', () => {
 
     expect(mocks.signUp).toHaveBeenCalledTimes(1);
     expect(mocks.rpc).toHaveBeenCalledTimes(2);
+  });
+
+  it("sends a guest's cause selection to the server with the token process_checkout returned", async () => {
+    // A guest has no session at the causes step; the selection must not live
+    // only in this browser, or confirming on another device loses it.
+    mocks.hidePartners.value = false;
+    mocks.useAuth.mockReturnValue({ user: null });
+    mocks.signUp.mockResolvedValue({ data: { user: { identities: [{}] } }, error: null });
+    mocks.rpc.mockImplementation(async (fn) => (fn === 'process_checkout'
+      ? { data: { success: true, subscription_id: 25, causes_token: 'tok-123' }, error: null }
+      : { data: { applied: false }, error: null }));
+
+    renderCheckout();
+    const user = await fillRequiredFields({ includeAccountCredentials: true });
+    await submit(user);
+
+    await user.click(await screen.findByRole('button', { name: /Aish/ }));
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+
+    await waitFor(() => expect(mocks.rpc).toHaveBeenCalledWith('set_checkout_causes', {
+      p_subscription_id: 25,
+      p_token: 'tok-123',
+      p_slugs: ['aish'],
+    }));
+    expect(await screen.findByText(/We've saved your 1 cause\. They'll apply as soon as you confirm your email\./)).toBeInTheDocument();
   });
 
   it('skips auth.signUp entirely for an already-signed-in member and checks out under their account', async () => {
