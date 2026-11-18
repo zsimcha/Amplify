@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
   useAuth: vi.fn(),
   order: vi.fn(),
+  entries: vi.fn(),
   rpc: vi.fn(),
   updateUser: vi.fn(),
   signOut: vi.fn(),
@@ -26,7 +27,9 @@ vi.mock('../context/AuthContext', () => ({ useAuth: () => mocks.useAuth() }));
 
 vi.mock('../lib/supabase', () => ({
   supabase: {
-    from: () => ({ select: () => ({ order: mocks.order }) }),
+    from: (table) => (table === 'drawing_entries'
+      ? { select: () => mocks.entries() }
+      : { select: () => ({ order: mocks.order }) }),
     rpc: mocks.rpc,
     auth: { updateUser: mocks.updateUser, signOut: mocks.signOut },
   },
@@ -97,6 +100,7 @@ beforeEach(() => {
   mocks.hidePartners.value = false;
   mocks.useAuth.mockReturnValue({ user: USER, loading: false });
   mocks.order.mockResolvedValue({ data: [sub()], error: null });
+  mocks.entries.mockResolvedValue({ data: [], error: null });
   mocks.rpc.mockResolvedValue({ data: null, error: null });
   mocks.updateUser.mockResolvedValue({ error: null });
   mocks.signOut.mockResolvedValue({ error: null });
@@ -201,6 +205,14 @@ describe('AccountPage cancellation', () => {
       await screen.findByText('Could not cancel your membership. Please try again or contact us.')
     ).toBeInTheDocument();
     expect(screen.queryByText(/has been cancelled/)).not.toBeInTheDocument();
+  });
+
+  it('tells a member who paid for the next drawing that they stay in it', async () => {
+    mocks.rpc.mockResolvedValue({ data: { success: true, status: 'cancelling', still_entered: true, drawing_date: '2026-12-07' }, error: null });
+    await renderLoaded();
+    await userEvent.click(await screen.findByText('Cancel membership'));
+    await userEvent.click(screen.getByText('Cancel my membership'));
+    expect(await screen.findByText(/You're still in the drawing on December 7, 2026 you've already paid for/)).toBeInTheDocument();
   });
 
   it('dismisses the retention modal without cancelling', async () => {
@@ -538,5 +550,39 @@ describe('AccountPage contact details', () => {
 
     expect(await screen.findByText(/Could not update your details/)).toBeInTheDocument();
     expect(screen.queryByText(/permission denied/)).not.toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
+describe('AccountPage pending cancellation', () => {
+  it('shows the paid drawing a cancelling membership is still in, and lets the member keep it', async () => {
+    mocks.order.mockResolvedValue({ data: [sub({ id: 7, status: 'cancelling' })], error: null });
+    mocks.entries.mockResolvedValue({ data: [{ subscription_id: 7, drawings: { drawing_date: '2026-12-07', status: 'scheduled' } }], error: null });
+    mocks.rpc.mockResolvedValue({ data: { success: true, status: 'active' }, error: null });
+    await renderLoaded();
+
+    expect(screen.getByText('Ending')).toBeInTheDocument();
+    expect(await screen.findByText(/still in the December 7, 2026 drawing you've already paid for/)).toBeInTheDocument();
+    // No cancel button for a membership that's already ending.
+    expect(screen.queryByText('Cancel membership')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByText('Keep my membership'));
+    await waitFor(() => expect(mocks.rpc).toHaveBeenCalledWith('resume_my_subscription', { p_subscription_id: 7 }));
+    expect(await screen.findByText(/You're staying/)).toBeInTheDocument();
+  });
+
+  it("shows the server's reason when the membership already ended", async () => {
+    mocks.order.mockResolvedValue({ data: [sub({ id: 7, status: 'cancelling' })], error: null });
+    mocks.rpc.mockResolvedValue({ data: { success: false, message: 'This membership has already ended. You can join again from the Circles page.' }, error: null });
+    await renderLoaded();
+
+    await userEvent.click(screen.getByText('Keep my membership'));
+    expect(await screen.findByText(/already ended/)).toBeInTheDocument();
+  });
+
+  it('still loads the membership when entries cannot be read (e.g. before the migration)', async () => {
+    mocks.entries.mockResolvedValue({ data: null, error: { message: 'relation "drawing_entries" does not exist' } });
+    await renderLoaded();
+    expect(screen.getByText(/Springfield · \$500\/month/)).toBeInTheDocument();
   });
 });

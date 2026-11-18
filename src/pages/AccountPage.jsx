@@ -22,6 +22,7 @@ import { HIDE_PARTNER_IDENTITIES } from '../config/siteConfig';
 import { partners, partnerLogo } from '../data/partners';
 import { useAuth } from '../context/AuthContext';
 import { fieldClass } from '../lib/formStyles';
+import { describeCancellation, formatDrawingDate, upcomingEntriesBySubscription } from '../lib/membership';
 
 // Display-only; authoritative pricing lives server-side in process_checkout.
 const TIER_DISPLAY = {
@@ -31,10 +32,13 @@ const TIER_DISPLAY = {
 };
 
 const STATUS_STYLES = {
-  active:    'bg-emerald-50 text-emerald-700 border-emerald-200',
-  past_due:  'bg-amber-50 text-amber-700 border-amber-200',
-  cancelled: 'bg-slate-100 text-slate-500 border-slate-200',
+  active:     'bg-emerald-50 text-emerald-700 border-emerald-200',
+  past_due:   'bg-amber-50 text-amber-700 border-amber-200',
+  cancelling: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+  cancelled:  'bg-slate-100 text-slate-500 border-slate-200',
 };
+
+const STATUS_LABELS = { active: 'Active', past_due: 'Past Due', cancelling: 'Ending', cancelled: 'Cancelled' };
 
 const SectionCard = ({ icon, title, children }) => (
   <div className="bg-white rounded-2xl md:rounded-[2rem] border border-slate-100 shadow-soft p-6 md:p-8">
@@ -89,6 +93,8 @@ const AccountPage = () => {
   const [cancelModalId, setCancelModalId] = useState(null); // retention modal (tiers with a lower option)
   const [cancellingId, setCancellingId] = useState(null);
   const [cancelFeedback, setCancelFeedback] = useState(null);
+  const [upcomingEntries, setUpcomingEntries] = useState({});
+  const [resumingId, setResumingId] = useState(null);
 
   const [changePlanId, setChangePlanId] = useState(null); // sub whose plan-picker is open
   const [pendingTier, setPendingTier] = useState(null);   // tier selected, awaiting confirm
@@ -147,6 +153,17 @@ const AccountPage = () => {
       return;
     }
     setSubscriptions(data || []);
+
+    // Best effort: which paid drawings each membership is still entered in.
+    // The membership list never depends on this.
+    try {
+      const { data: entries, error: entriesError } = await supabase
+        .from('drawing_entries')
+        .select('subscription_id, drawings(drawing_date, status)');
+      if (!entriesError) setUpcomingEntries(upcomingEntriesBySubscription(entries));
+    } catch {
+      /* non-fatal */
+    }
   }, []);
 
   useEffect(() => {
@@ -191,12 +208,12 @@ const AccountPage = () => {
     setCancellingId(subscriptionId);
     setCancelFeedback(null);
     try {
-      const { error } = await supabase.rpc('cancel_my_subscription', { p_subscription_id: subscriptionId });
+      const { data, error } = await supabase.rpc('cancel_my_subscription', { p_subscription_id: subscriptionId });
       if (error) {
         setCancelFeedback({ kind: 'error', text: 'Could not cancel your membership. Please try again or contact us.' });
         return;
       }
-      setCancelFeedback({ kind: 'success', text: 'Your membership has been cancelled. You will not be charged again.' });
+      setCancelFeedback({ kind: 'success', text: describeCancellation(data) });
       await fetchSubscriptions();
     } catch {
       setCancelFeedback({ kind: 'error', text: 'Something went wrong. Please try again.' });
@@ -204,6 +221,25 @@ const AccountPage = () => {
       setCancellingId(null);
       setConfirmCancelId(null);
       setCancelModalId(null);
+    }
+  };
+
+  // Undo a cancellation that hasn't taken effect yet (status 'cancelling').
+  const handleResume = async (subscriptionId) => {
+    setResumingId(subscriptionId);
+    setCancelFeedback(null);
+    try {
+      const { data, error } = await supabase.rpc('resume_my_subscription', { p_subscription_id: subscriptionId });
+      if (error || data?.success === false) {
+        setCancelFeedback({ kind: 'error', text: data?.message || 'Could not keep your membership. Please try again or contact us.' });
+        return;
+      }
+      setCancelFeedback({ kind: 'success', text: "You're staying. Your membership continues as before: same circle, same monthly contribution." });
+      await fetchSubscriptions();
+    } catch {
+      setCancelFeedback({ kind: 'error', text: 'Something went wrong. Please try again.' });
+    } finally {
+      setResumingId(null);
     }
   };
 
@@ -238,7 +274,7 @@ const AccountPage = () => {
   // Contact details are the same across a member's memberships (the server
   // updates them together), so any current one is representative. Cancelled
   // memberships keep whatever was on file and aren't editable.
-  const currentSub = subscriptions?.find((s) => s.status === 'active' || s.status === 'past_due') || null;
+  const currentSub = subscriptions?.find((s) => ['active', 'past_due', 'cancelling'].includes(s.status)) || null;
 
   const startEditingDetails = () => {
     setDetailsForm({
@@ -432,9 +468,26 @@ const AccountPage = () => {
                         </div>
                       </div>
                       <span className={`text-[0.625rem] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${statusStyle}`}>
-                        {sub.status === 'past_due' ? 'Past Due' : sub.status}
+                        {STATUS_LABELS[sub.status] || sub.status}
                       </span>
                     </div>
+
+                    {sub.status === 'cancelling' && (
+                      <div className="mt-4 pt-4 border-t border-slate-100">
+                        <p className="text-xs md:text-[0.8125rem] text-slate-600 font-medium leading-relaxed mb-3">
+                          You've cancelled and won't be charged again. You're still in the{' '}
+                          {upcomingEntries[sub.id]?.date ? `${formatDrawingDate(upcomingEntries[sub.id].date)} ` : 'next '}
+                          drawing you've already paid for, and your membership ends after it.
+                        </p>
+                        <button
+                          onClick={() => handleResume(sub.id)}
+                          disabled={resumingId === sub.id}
+                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-indigo-200 text-indigo-700 text-[0.625rem] font-black uppercase tracking-widest hover:bg-indigo-50 hover:border-indigo-300 transition-colors disabled:opacity-60"
+                        >
+                          {resumingId === sub.id ? 'Saving...' : 'Keep my membership'}
+                        </button>
+                      </div>
+                    )}
 
                     {isActive && (
                       <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
@@ -907,7 +960,7 @@ const AccountPage = () => {
                         <div className="bg-red-50 border border-red-200 rounded-xl p-4 animate-in fade-in">
                           <p className="text-xs font-bold text-red-700 mb-1">Cancel your {sub.tier} membership?</p>
                           <p className="text-[0.6875rem] text-red-600/80 font-medium leading-relaxed mb-3">
-                            You'll leave your circle and stop future monthly contributions. This can't be undone from here.
+                            You won't be charged again. Any drawing you've already paid for still counts.
                           </p>
                           <div className="flex gap-2">
                             <button
@@ -993,7 +1046,7 @@ const AccountPage = () => {
                             </div>
 
                             <p className="text-[0.6875rem] text-slate-500 font-medium leading-relaxed mb-3 text-center">
-                              Cancelling leaves your circle and stops future monthly contributions.
+                              Cancelling stops future monthly contributions. Any drawing you've already paid for still counts.
                             </p>
                             <button
                               onClick={() => handleCancel(sub.id)}
